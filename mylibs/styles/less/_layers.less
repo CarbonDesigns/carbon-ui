@@ -1,0 +1,635 @@
+// Layers
+
+& {
+
+    @middle_highlight_height: 10px;
+    @sel_color1: @layer_selected;
+    @sel_color2: lighten(@layer_selected, 3%);
+
+    #layers-panel {
+        .noselect();
+    }
+
+    .layers-panel__layer-filters {
+        padding: @line_air;
+    }
+
+    .layers-panel__layers-container{
+        flex: auto;
+        width: 100%;
+    }
+
+    .layers-panel__layers-box{
+        .rel;
+        //padding-bottom: 5px;
+        padding-bottom: @middle_highlight_height /2;
+    }
+
+    .layers-panel__layers-list {
+        padding-top: @middle_highlight_height /2;
+        flex: auto;
+        display: flex;
+    }
+
+    .layers-panel__rename {
+        min-width: 240px;
+        .abs();
+        left: 0;
+        margin: -@line_air 0 0 @line_air;
+
+        padding: @line_air / 2;
+        .bgc(@bg4_panel_body_lighten);
+        box-shadow: 0 1px 4px @bg2_darkest;
+
+        &-input {
+            .flexstretch();
+        }
+        &-save {
+
+        }
+        &-cancel {
+
+        }
+    }
+
+    @pt : 6px;
+    @h  : 11px;
+
+    .layer{
+        .rel;
+
+        .layers-panel__layers-list_dragging  &_selected {
+            background: @bg2_darkest;
+        }
+
+    }
+
+    .small_icon_size() {
+        width: 13px;
+        height: @h;
+        .bbox;
+    }
+
+    .layers-panel__layers-list_not-dragging {
+
+        .layer__body:hover{
+            .bgfade(2);
+        }
+
+        .layer_selected {
+            & >  .layer__body_selected {
+                background: @sel_color1;
+                &:hover {
+                    background: @sel_color2;
+                }
+            }
+
+            & > .layer__children {
+                background: fadeout(@sel_color1, 40%);
+            }
+
+            & .layer__body:not(.layer__body_selected) {
+                &:hover {
+                    background: fadeout(@sel_color2, 40%);
+                }
+            }
+        }
+    }
+
+    .layers-panel__layers-list_dragging  .layer_selected .layer__body{
+        .trn2;
+        .op40;
+        background: transparent !important;
+    }
+
+    .layer__body{
+        .boxsizing();
+        .divider_color();
+        .clip();
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        .rel;
+        max-height: 100px;
+        .trn(
+                max-height .1s linear
+                , opacity .1s linear .05s;
+        );
+        .layer__children_collapsed &{
+            .op0;
+            border-bottom-width: 0;
+            .clip;
+            max-height: 0;
+            .trn(
+                    max-height .1s linear
+            );
+        }
+    }
+
+    .layer__children {
+        position: relative;
+        .clip();
+    }
+
+
+    @border_color: rgba(75, 75, 75, 0.41);
+
+    @right_icons_width : 20px;
+
+    @layer_height: (@pt)*2 + @h;
+
+    .respo(@param:height, @ratio: 1){
+        .layers-panel__layers-list[data-mode="compact"] & { @{param}: @ratio * ((@pt - 2px)*2 + @h);}
+        .layers-panel__layers-list[data-mode="airy"]    & { @{param}: @ratio * ((@pt + 4px)*2 + @h);}
+    }
+
+
+    .layer__desc {
+        max-width: 100%;
+        height: @layer_height;
+        .cursor_pointer();
+        margin-left: 44px;
+        margin-right: @right_icons_width;
+
+        display: flex;
+        align-items: stretch;
+        flex-wrap: nowrap;
+
+        .respo(height);
+        .layer_vis-0 & { .opacity(.35); }
+    }
+
+
+        .layer__indent {
+            .flex();
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+
+            flex-shrink : 0;
+
+            .trn(width .4s);
+            & {
+                & {
+                    @indent : 12px;
+                    @first_indent : 16px;
+
+                    .layer__body_indent-0  & {width: @first_indent + ((@indent - 0) * 0)  ;}
+                    .layer__body_indent-1  & {width: @first_indent + ((@indent - 1) * 1)  ;}
+                    .layer__body_indent-2  & {width: @first_indent + ((@indent - 2) * 2)  ;}
+                    .layer__body_indent-3  & {width: @first_indent + ((@indent - 3) * 3)  ;}
+                    .layer__body_indent-4  & {width: @first_indent + ((@indent - 4) * 4)  ;}
+                    .layer__body_indent-5  & {width: @first_indent + ((@indent - 6) * 5)  ;}
+                    .layer__body_indent-6  & {width: @first_indent + ((@indent - 6) * 6)  ;}
+                    .layer__body_indent-7  & {width: @first_indent + ((@indent - 6) * 7)  ;}
+                    .layer__body_indent-8  & {width: @first_indent + ((@indent - 8) * 8)  ;}
+                    .layer__body_indent-9  & {width: @first_indent + ((@indent - 8) * 9)  ;}
+                    .layer__body_indent-10 & {width: @first_indent + ((@indent - 8) * 10) ;}
+                    .layer__body_indent-11 & {width: @first_indent + ((@indent - 8) * 11) ;}
+                    .layer__body_indent-12 & {width: @first_indent + ((@indent - 8) * 12) ;}
+                    .layer__body_indent-13 & {width: @first_indent + ((@indent - 8) * 13) ;}
+                                           & {width: @first_indent + ((@indent - 8) * 14) ;}
+                }
+                & {
+                    @indent : 18px;
+                    @first_indent : 18px;
+
+                    .panel[data-mode="widest"] .layer__body_indent-0  & {width: @first_indent + ((@indent - 0) * 0)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-1  & {width: @first_indent + ((@indent - 1) * 1)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-2  & {width: @first_indent + ((@indent - 2) * 2)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-3  & {width: @first_indent + ((@indent - 3) * 3)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-4  & {width: @first_indent + ((@indent - 4) * 4)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-5  & {width: @first_indent + ((@indent - 4) * 5)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-6  & {width: @first_indent + ((@indent - 6) * 6)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-7  & {width: @first_indent + ((@indent - 6) * 7)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-8  & {width: @first_indent + ((@indent - 6) * 8)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-9  & {width: @first_indent + ((@indent - 6) * 9)  ;}
+                    .panel[data-mode="widest"] .layer__body_indent-10 & {width: @first_indent + ((@indent - 7) * 10) ;}
+                    .panel[data-mode="widest"] .layer__body_indent-11 & {width: @first_indent + ((@indent - 8) * 11) ;}
+                    .panel[data-mode="widest"] .layer__body_indent-12 & {width: @first_indent + ((@indent - 9) * 12) ;}
+                    .panel[data-mode="widest"] .layer__body_indent-13 & {width: @first_indent + ((@indent - 10) * 13) ;}
+                    .panel[data-mode="widest"]                        & {width: @first_indent + ((@indent - 10) * 14) ;}
+                }
+                & {
+                    @indent : 16px;
+                    @first_indent : 16px;
+
+                    .panel[data-mode="wide"] .layer__body_indent-0  & {width: @first_indent + ((@indent - 0) * 0)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-1  & {width: @first_indent + ((@indent - 0) * 1)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-2  & {width: @first_indent + ((@indent - 1) * 2)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-3  & {width: @first_indent + ((@indent - 2) * 3)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-4  & {width: @first_indent + ((@indent - 3) * 4)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-5  & {width: @first_indent + ((@indent - 4) * 5)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-6  & {width: @first_indent + ((@indent - 6) * 6)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-7  & {width: @first_indent + ((@indent - 6) * 7)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-8  & {width: @first_indent + ((@indent - 6) * 8)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-9  & {width: @first_indent + ((@indent - 6) * 9)  ;}
+                    .panel[data-mode="wide"] .layer__body_indent-10 & {width: @first_indent + ((@indent - 7) * 10) ;}
+                    .panel[data-mode="wide"] .layer__body_indent-11 & {width: @first_indent + ((@indent - 8) * 11) ;}
+                    .panel[data-mode="wide"] .layer__body_indent-12 & {width: @first_indent + ((@indent - 9) * 12) ;}
+                    .panel[data-mode="wide"] .layer__body_indent-13 & {width: @first_indent + ((@indent - 10) * 13) ;}
+                    .panel[data-mode="wide"]                        & {width: @first_indent + ((@indent - 10) * 14) ;}
+                }
+                & {
+                    @indent : 10px;
+                    @first_indent : 12px;
+
+                    .panel[data-mode="narrow"] .layer__body_indent-0  & {width: @first_indent + ((@indent - 0) * 0)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-1  & {width: @first_indent + ((@indent - 2) * 1)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-2  & {width: @first_indent + ((@indent - 4) * 2)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-3  & {width: @first_indent + ((@indent - 4) * 3)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-4  & {width: @first_indent + ((@indent - 4) * 4)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-5  & {width: @first_indent + ((@indent - 6) * 5)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-6  & {width: @first_indent + ((@indent - 6) * 6)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-7  & {width: @first_indent + ((@indent - 6) * 7)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-8  & {width: @first_indent + ((@indent - 8) * 8)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-9  & {width: @first_indent + ((@indent - 8) * 9)  ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-10 & {width: @first_indent + ((@indent - 8) * 10) ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-11 & {width: @first_indent + ((@indent - 8) * 11) ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-12 & {width: @first_indent + ((@indent - 8) * 12) ;}
+                    .panel[data-mode="narrow"] .layer__body_indent-13 & {width: @first_indent + ((@indent - 8) * 13) ;}
+                    .panel[data-mode="narrow"]                        & {width: @first_indent + ((@indent - 8) * 14) ;}
+                }
+
+            }
+        }
+
+
+        .layer__arrow {
+            @s : 3px;
+            @c : rgb(204, 204, 204);
+            .arr-right(@s, @c);
+            transform: rotateZ(90deg);
+            .trn15;
+            .op30;
+            .transform-origin(50% 50%);
+            margin: 1px @s*2+2px 0 0;
+            .layer__body_collapsed &{
+                .op80;
+                transform: rotateZ(0deg);
+                margin: 0  @s*2+2px 0 0;
+            }
+            .layer__indent:hover & {
+                .op90;
+            }
+        }
+
+
+        .layer__title {
+            .clip;
+            .flexline(nowrap);
+            flex: auto;
+        }
+
+            .layer__icon {
+                flex-shrink: 0;
+                .op60;
+                .small_icon_size();
+                margin-right: 4px;
+                &_with-image {
+                    .bgcover();
+                    .bgcenter();
+                }
+            }
+
+            .layer__name {
+                .f11;
+                line-height: 1;
+                .ellipsis;
+                padding: .2em 14px .2em 0;
+            }
+
+
+
+
+    //——————————————————————————————————————————————————————————————————————
+    // Icons
+    //——————————————————————————————————————————————————————————————————————
+
+
+    .layer__left-icons
+    ,.layer__right-icons
+    {
+        .abs;
+        .h100;
+        top: 0;
+        .flexstretch();
+    }
+
+    .layer__left-icons  { left: 0; }
+
+    .layer__right-icons { width: @right_icons_width; }
+    .layer__right-icons { right: 0;  }
+
+
+
+    .layer__vis
+    ,.layer__lock
+    ,.layer__colors
+    ,.layer__selection
+    {
+        .flexcenter;
+        height: 100%;
+    }
+
+
+    .layer__lock,
+    .layer__vis       {border-right: 1px dotted @border_color;}
+    .layer__selection {border-left:  1px dotted @border_color;}
+
+    .layer__vis,
+    .layer__lock
+    {
+        .cursor_pointer();
+
+        i {
+            margin : 0 4px;
+            .small_icon_size();
+        }
+    }
+
+
+    .layer__vis-icon  {
+    }
+
+
+    .layer__vis-icon {
+        .rel;
+        border: 0 none;
+        background-position: 145% -50%;
+        .norepeat;
+
+        &:before {
+            background-color: @font_color;
+            border: 1px solid @font_color;
+            border-radius: 100px;
+            content: "";
+            display: block;
+            height: 3px;
+            left: 50%;
+            margin-left: -2px;
+            position: absolute;
+            top: 4px;
+            width: 4px;
+        }
+        &:after {
+            border-radius: 100px 100px 0 0;
+            border-top: 2px solid @font_color;
+            content: "";
+            height: 10px;
+            left: 2px;
+            position: absolute;
+            top: 3px;
+            width: 10px;
+        }
+
+        .layer_vis-0 & {
+            .opacity(.6);
+            .ipng('red-diagonal2');
+            background-position: 50% 45%;
+            .transition(opacity .1s linear, background-position .3s linear .2s;)
+        }
+
+        .layer__body_vis-1 & {.opacity(.15)} // locked
+        .layer_vis-0 .layer__body_vis-1 & {.opacity(.4)} // not locked inheritedly
+
+    }
+
+    .layer__lock-icon {
+        .layer__body_lock-0 & {.opacity(.1)} // not locked
+        .layer__body_lock-1 & {.opacity(.6)} // locked
+        .layer_lock-1 .layer__body_lock-0 & {.opacity(.4)} // not locked inheritedly
+    }
+
+    .layer__colors {
+        .abs;
+        right: 100%;
+        margin-right: 4px;
+
+        &-square {
+           .size(6);
+            border-width: 1px;
+            border-style: solid;
+            .rel;
+        }
+
+        &-text-top ,
+        &-text-bottom {
+            .abs;
+            left: 50%;
+        }
+        @h: 30%;
+        &-text-top {
+            @w: 70%;
+            width: @w;
+            margin-left: @w / -2;
+            height: @h;
+            bottom: 50%;
+        }
+        &-text-bottom {
+            top: 50%;
+            width: @h;
+            margin-left: @h / -2;
+            height: 50%;
+        }
+    }
+
+
+
+
+
+    .layer__selection{
+        .cursor_pointer();
+
+        &-icon {
+            .rounded(2);
+            .rel;
+            .bbox;
+            height: @h;
+            width: @h;
+            border: 1px solid rgba(255,255,255, .03);
+            .box-shadow(0 1px 3px rgba(1,2,3, .2) inset);
+
+            margin: 0 4px;
+
+            &:after {
+                .transition(all .1s);
+                top: -10px;
+                .opacity(0);
+                .bef;
+
+                .layer__body_selected & {
+                    .op1;
+                    top  : 1px;
+                    .transition(all .2s);
+
+                    border-width: 0 0 1px 1px;
+                    border-style: solid solid;
+                    border-color: @font_color;
+                    .transform(rotate(-45deg));
+                    right: 1px;
+                    .size(5, 3);
+                }
+            }
+        }
+
+    }
+
+
+    //——————————————————————————————————————————————————————————————————————
+    // OVERLAYS
+    //——————————————————————————————————————————————————————————————————————
+
+    .layer__overlay {
+
+        .hide;
+        .abs;
+        left: 0;
+        width: 100%;
+
+        top: -50%;
+        height: 200%;
+
+
+        .layers-panel__layers-list_dragging  &{
+            .bl;
+        }
+        .layers-panel__layers-list_dragging .layer_selected  &{
+            top: 0;
+            height: 100%;
+        }
+        .layer__children_collapsed & {display: none !important;}
+    }
+
+    .layer__hover-zone {
+        .abs;
+        width: 100%;
+        left: 0;
+        //.grabbing();
+
+        &_top,
+        &_bottom,
+        &_mid
+        {
+            .layers-panel__layers-list_dragging .layer_selected & {
+                .hide;
+            }
+        }
+
+        &_top,
+        &_bottom{
+            height: 50%;
+            .c_layer_drag_single();
+            .layers-panel__layers-list_dragging-multi & { .c_layer_drag_multi(); }
+        }
+
+        &_top{
+            top: 0;
+        }
+
+        &_bottom {
+            bottom: 0;
+        }
+        &_mid {
+            top   : 40%; //@middle_highlight_height / 1.5;
+            bottom: 40%; //@middle_highlight_height / 1.5;
+            .hide;
+            .c_layer_drag_single_into();
+            .layers-panel__layers-list_dragging-multi & { .c_layer_drag_multi_into(); }
+
+
+            .layer__body_is-container &{
+                .bl;
+            }
+        }
+
+        &_none {
+            .c_layer_drag_disabled();
+
+            .stretch();
+            .hide();
+            .layers-panel__layers-list_dragging .layer_selected &{
+                .bl;
+            }
+        }
+    }
+
+    .layers-panel__hover-zone {
+        z-index: 4;
+        .respo(height, .6);
+        .respo(margin-top, -.3);
+        .abs;
+        left: 0;
+        width: 100%;
+
+        .hide;
+        .layers-panel__layers-list_dragging  &{
+            .bl;
+        }
+
+        .c_layer_drag_single();
+        .layers-panel__layers-list_dragging-multi & { .c_layer_drag_multi(); }
+
+        &_first {
+            top: 0;
+        }
+        &_last {
+            top: 100%;
+        }
+    }
+
+
+    .layers-panel__highlight {
+        .abs;
+        left: 0;
+        width: 100%;
+        .pevents;
+
+        height: @layer_height;
+
+        .hide;
+        &_none {
+            &, .layers-panel__layers-list_dragging-inside {
+                opacity: 0 !important;
+                .hide;
+            }
+        }
+        .layers-panel__layers-list_dragging-inside & {
+            .bl;
+        }
+
+        .respo(height);
+
+        &:after {
+            .bgc(@sel_color1);
+            border: 1px solid @sel_color;
+            .aft;
+            left: 0;
+            width: 100%;
+        }
+
+        &_between-top:after {
+            height: @middle_highlight_height;
+            top   : @middle_highlight_height / -2;
+        }
+        &_between-bottom:after {
+            height: @middle_highlight_height;
+            bottom: (@middle_highlight_height / -2) - 1px;
+        }
+        &_into:after {
+            height: 100%;
+            top: 0;
+        }
+        &_first:after {
+            height: @middle_highlight_height;
+            top   : @middle_highlight_height / -2;
+        }
+        &_last:after {
+            height: @middle_highlight_height;
+            top   : @middle_highlight_height / -2;
+        }
+
+    }
+}
+
+
+

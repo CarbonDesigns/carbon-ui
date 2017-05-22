@@ -1,0 +1,57 @@
+.signup {
+    .gradient1();
+    .box-shadow(0 1px 3px rgba(24, 23, 52, 0.12), 0 3px 14px rgba(24, 23, 52, 0.15););
+
+    &__button {
+        .flexcenter();
+        .point;
+        ._green-button();
+        width: 100px;
+        .h100();
+        line-height: @top_side;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+
+    &__with-socials {
+        .flexline(nowrap);
+        justify-content: space-between;
+    }
+
+    &__social {
+        .point;
+        padding: 1rem;
+        .hovering();
+
+        &:hover {
+            .op1;
+        }
+
+        &_google:hover   {.bgc(#dd4b39);}
+        &_twitter:hover  {.bgc(#1da1f2);}
+        &_facebook:hover {.bgc(#3b5998);}
+        &_apple:hover    {.bgc(#b9b9b9);}
+        &_microsoft:hover  {.bgc(#00bcf2);}
+    }
+
+    .form__submit .gui-button > button {
+        .w100;
+    }
+    //##a3aa9e
+}
+
+.loginPage, .registerPage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .h100;
+
+    &__middle{
+        width: 400px;
+    }
+}
+
+.registerPage__middle{
+    width: 600px;
+}

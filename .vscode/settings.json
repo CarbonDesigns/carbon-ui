@@ -1,0 +1,22 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "typescript.validate.enable": true,
+
+    "javascript.validate.enable": false,
+
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/target/": true
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.idea": true,
+        "**/.DS_Store": true,
+        "**/.awcache": true,
+        "**/node_modules": true
+    },
+
+    "editor.trimAutoWhitespace": true,
+    "files.trimTrailingWhitespace": true
+}

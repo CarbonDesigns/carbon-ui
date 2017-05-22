@@ -1,0 +1,52 @@
+@import '../../styles/less/mapple/mMixins';
+@import '../../styles/less/_projectMixins';
+
+
+.data{
+  &__fields{
+    display: flex;
+    flex-wrap: wrap;
+    color: black;
+
+    .stencil{
+      width: 100px;
+      height: 80px;
+      margin-right: 1px;
+      margin-bottom: 1px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+  &__field{
+    .cursor_pointer;
+    .bgc(@bg_stencil);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  &__title{
+    font-weight:bold;
+    font-size: 1.2rem;
+  }
+  &__example{
+    font-style: italic;
+    color: #8d8d8d;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 10px;
+  }
+}
+
+.form__line-dataset{
+  display: flex;
+  align-items: center;
+
+  .gui-input{
+    flex: 1;
+    padding-right: @line_air;
+  }
+}

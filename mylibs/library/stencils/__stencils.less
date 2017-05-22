@@ -1,0 +1,347 @@
+@import '../../styles/less/mapple/mMixins';
+@import '../../styles/less/_projectMixins';
+
+@stencil_margin: 1px 1px 0 0;
+@stencil_padding: 3px;
+
+//not used, this is only to fetch the files
+.toolbox-web{
+    background: url("../../@{res}toolbox/web.png");
+}
+.toolbox-android{
+    background: url("../../@{res}toolbox/android.png");
+}
+
+.stencils-navigator {
+    //@width : @line;
+    @width : 1rem;
+    @shift : 8rem;
+
+
+    //padding-left: @stencils_container_margin; // removed to stick to the left border;
+
+    left: 0;
+    top:0;
+
+    .wrap{
+        height:100%;
+    }
+
+    z-index: 1;
+    .abs;
+    width: @width;
+    .h100;
+    .transition(width .3s);
+
+    & ~ .stencils-container {
+        .transition(transform .3s);
+        margin-left: @width + .1rem;
+        .box-shadow(0 0 25px 10px @bg_inner1);
+    }
+
+    &:hover {
+        .transition(width .2s);
+        width: @width + @shift + .5rem;
+
+        & ~ .stencils-container {
+            .transition(transform .2s);
+            .transform(translateX(@shift));
+        }
+        .antiscroll-inner{
+            width: @width + @shift !important;
+        }
+    }
+
+
+    &__item {
+
+        .cursor_pointer;
+        .bbox;
+        height: @line;
+        .rel;
+        .clip;
+
+        .nowrap;
+        .middler;
+        margin-bottom: 2px;
+
+        padding-left: @line_air * 1.5;
+
+        @item_marker_width :  5px;
+
+        &:after {
+            .aft;
+            top    : 0;
+            bottom : 0;
+            width  : @item_marker_width;
+            left   : @stencils_container_margin;
+            .bgc(rgba(248, 238, 192, 0.17));
+        }
+
+        span {
+            line-height: 1;
+            .inbl_middle;
+            //.opacity(45);
+            .opacity(70);
+        }
+
+        //padding-left: @stencils_container_margin;
+
+        &.active {
+            .bgfade(3);
+
+            span {
+                .opacity(100);
+            }
+            &.active:after {
+                .bgsel();
+            }
+        }
+    }
+}
+
+
+
+//——————————————————————————————————————————————————————————————————————
+
+.stencils-container{
+    border-width: @stencil_margin;
+    border-color: @stencil_container_bg;
+}
+
+
+.stencils-container {
+    .bbox;
+    //for static containers with moving panel inside
+//    padding: @line_air 0;
+    min-height: 100% ;
+    height: 100% ;
+    overflow-y: auto;
+    .rel;
+    z-index: 2;
+    position: relative;
+
+    .tab-page_search  & {
+        .box-shadow(none);
+    }
+
+}
+
+
+.stencils-group{
+    .rel;
+    margin-bottom: 1rem; //should not have whitespace above for scroll positioning
+
+    &__name {
+        padding: @line_air;
+    }
+}
+
+
+
+
+
+.stencil {
+    .cursor_pointer;
+    .rel;
+    .fl;
+    border-color: @bg_panel_inner2;
+    .bgc(@bg_stencil);
+    margin: 0 1px 1px 0;
+
+    .norepeat;
+
+    &__image{
+        .norepeat;
+    }
+
+    i {
+        display: block;
+        color: black;
+        font-style: normal;
+        background-repeat: no-repeat;
+    }
+
+    &.icon-holder{
+        .borderbox();
+        margin: 0;
+        width: 50px;
+        height: 50px;
+        max-width: 75px;
+        padding: 2px 0 0 2px;
+        text-align: center;
+
+        .icon{
+            font-size: 46px;
+            width: 46px;
+            height: 46px;
+            background-size: contain;
+            background-position: center center;
+        }
+    }
+
+    &.image-holder{
+        .image{
+            background: no-repeat center center;
+        }
+    }
+
+    .sidebar &.smart-child {
+        &:before {
+            .bef;
+            .size(0);
+            @c : #8dd217;
+            @s : 4px;
+            border-top    :@s solid @c;
+            border-right  :@s solid @c;
+            border-bottom :@s solid transparent;
+            border-left   :@s solid transparent;
+            top  : 0;
+            right: 0;
+        }
+    }
+
+
+    &__modification-indicator {
+        .clip;
+        .op0;
+        @size: 2.4rem;
+
+        .size(@size);
+
+        .abs;
+        bottom: -4px;
+        right: -2px;
+        z-index: 2;
+        .flexcenter;
+        .rounded();
+        .scale(.5);
+        .bgc(rgba(228, 177, 4, 0.93));
+    }
+
+    &_modified  &__modification-indicator {
+        bottom: -2px;
+        .trn2;
+        .op1;
+        .scale(1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    }
+
+
+    &_modified{
+        box-shadow: inset 0 0 0 10000px fadeout(@bg1_topbar, 40%);
+        .trn2;
+    }
+    &_modified > i {
+        .trn2;
+        .op80;
+    }
+    //& {
+    //    @w : 100% / 8;
+    //    @m : 0;
+    //    padding-top: (@w + @m + @w);
+    //    &.h1 {@s : 1; padding-top: (((@w + @m) * @s) - @m);}
+    //
+    //
+    //
+    //    &.w2 {@s : 2; width: (((@w + @m) * @s) - @m);}
+    //    &.w4 {@s : 4; width: (((@w + @m) * @s) - @m);}
+    //    &.w6 {@s : 6; width: (((@w + @m) * @s) - @m);}
+    //    &.w8 {@s : 8; width: (((@w + @m) * @s) - @m);}
+    //    &.w10 {@s : 8; width: (((@w + @m) * @s) - @m);}
+    //}
+
+
+    .panel[data-mode="narrow"] & {
+        @w : 100% / 6;
+        @m : 0;
+
+
+
+        //&.h1  {@s : 1; padding-top: (((@w + @m) * @s) - @m);}
+        //&             {padding-top: (@w + @m + @w);}
+
+        &.w2  {@s : 2; width: (((@w + @m) * @s) - @m);}
+        &.w4  {@s : 4; width: (((@w + @m) * @s) - @m);}
+        &.w6  {@s : 6; width: (((@w + @m) * @s) - @m);}
+        &.w8  {@s : 6; width: (((@w + @m) * @s) - @m);}
+        &.w10 {@s : 6; width: (((@w + @m) * @s) - @m);}
+    }
+
+
+    .panel[data-mode="widest"]  & {
+        @w : 100% / 10;
+        @m : 0;
+        //padding-top: (@w + @m + @w);
+        //&.h1  {@s : 1; padding-top: (((@w + @m) * @s) - @m);}
+
+        &.w2  {@s : 2;  width: (((@w + @m) * @s) - @m);}
+        &.w4  {@s : 4;  width: (((@w + @m) * @s) - @m);}
+        &.w6  {@s : 4;  width: (((@w + @m) * @s) - @m);}
+        &.w8  {@s : 6; width: (((@w + @m) * @s) - @m);}
+        &.w10 {@s : 10; width: (((@w + @m) * @s) - @m);}
+    }
+
+
+    .library-page__content.disabled &{
+        cursor: not-allowed;
+    }
+}
+
+.dragging{
+    &.icon {
+        width: 36px;
+        height: 36px;
+        font-size: 36px;
+        font-style: normal;
+        background-size: contain;
+        background-position: center center;
+    }
+    &.image {
+        background: no-repeat center center;
+    }
+}
+
+i.custom-stencil{
+    background-position: center center;
+    background-repeat: no-repeat;
+    &:not(.no-scale){
+        background-size: contain;
+    }
+}
+
+
+.thumb {
+    .bl;
+    .fl;
+    img {
+        display: block;
+        height: 55px;
+        width: auto;
+    }
+    margin: 0 0 10px 10px;
+}
+
+
+
+.stencils-refresher {
+
+    .clip;
+    max-height: 20rem;
+    padding: 1rem;
+    .trn4;
+    .op1;
+    &_hidden {
+        .op0;
+        max-height: 0;
+        padding: 0 1rem;
+    }
+    .flexcenter();
+    .tcenter;
+
+    background-color: rgba(65, 51, 70, 0.83);
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 5;
+}

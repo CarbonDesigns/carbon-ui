@@ -1,0 +1,261 @@
+
+@import "./_projectMixins";
+
+
+
+//===========================================================================================
+//   S E T T I N G S ,   Y O U ,   N I G G A
+//===========================================================================================
+
+
+html {
+    .text-font;
+    .size(100%);
+    font-size: 10px;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+
+body {
+    .size(100%);
+    .clip;
+
+    .noselect();
+
+}
+
+
+body.ninja-mode {
+
+    .panel__closer > i {
+        .size(7);
+    }
+}
+
+
+
+
+//===========================================================================================
+//   COMMON UI
+//===========================================================================================
+
+
+
+
+
+i {
+    .inbl;
+}
+
+img {
+    .transform-scale(1.0001);
+}
+
+img.sq {
+    height: 100%;
+    width: auto;
+}
+
+u {
+    .cursor_pointer;
+    .nowrap;
+    .rel;
+    text-decoration: none;
+    &:after {
+        .bef;
+        margin-top: -1px;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        border-top: 1px dotted;
+    }
+}
+
+hr {
+    margin: 5px 0;
+    border-color: @divider_color;
+}
+
+
+
+
+
+h1, h2, h3, h4 {
+    .inl;
+}
+
+h2 {
+    .upper;
+    .text-font-bold;
+    .f18;
+}
+
+h3,h4 {
+
+}
+
+//panel header
+h3 {
+    .f13;
+
+    .text-font-bold;
+    .layout & {text-shadow: 0 1px 1px @shadow_color1;}
+}
+
+
+h4 {
+    .f11;
+    .text-font-bold;
+    text-shadow: 0 1px 1px @shadow_color1;
+}
+
+.cap {
+    .f11;
+    .inl;
+    .upper;
+}
+
+.pill-cap {
+    .inl;
+    .upper;
+    letter-spacing: 0.08em;
+    font-weight: bold;
+    //top: -0.1rem;
+    &, >span {
+        .f10;
+
+    }
+}
+
+
+h5 {
+    .f11;
+    .upper;
+    line-height: @module2;
+}
+
+h6 {
+    .f10;
+
+    .upper;
+    line-height: @module2;
+}
+
+
+//p, span, blockquote, u {
+p, blockquote{
+    .f14;
+    //line-height: 1.4;
+}
+span {
+    //line-height: 1;
+}
+.txt {
+    .f14;
+}
+
+
+strong {
+    font-weight: 800;
+    .f14;
+}
+b {
+    font-weight: 400;
+}
+header {
+    .make_clearfix;
+}
+
+p {
+    //.clip;
+    //.ellipsis;
+}
+
+
+button {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    outline: 0;
+}
+
+hgroup {
+    height: @line;
+    padding: 0 @line_air;
+    .middler();
+
+    h4 ,
+    h5 ,
+    h3 {margin-bottom: 1px}
+
+    & > * {
+        .inbl_middle;
+    }
+    & > i {
+        .opacity(70);
+    }
+
+    color: fadeout(white, 30%);
+}
+
+
+//===========================================================================================
+
+
+.library__tab
+,.tabbar__tab
+,.pill
+,.button
+,.drop
+{
+    .act()
+}
+
+
+.inline-ico {
+    margin-right: 3px;
+}
+
+.icon_top-right {
+    .xyar(@line_air);
+}
+
+
+
+//===========================================================================================
+//   B L O C K S
+//===========================================================================================
+
+
+
+////——————————————————————————————————————————————————————————————————————
+//#workspace {
+//    .transition(transform .5s);
+//    .abs;
+//    top: @top_side;
+//
+//    bottom: 0;
+//    left: 0;
+//    right: 0;
+//    .noselect;
+//    z-index: 0;
+//}
+
+
+//——————————————————————————————————————————————————————————————————————
+#overlays {
+    & > * {z-index : 3010}
+}
+
+#overlay-bg {
+    display: none;
+    .fill();
+}
+
+
+
+

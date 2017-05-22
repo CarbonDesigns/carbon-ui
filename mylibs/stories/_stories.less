@@ -1,0 +1,114 @@
+// Stories panel
+
+#stories-panel {
+    //height:100%;
+    .gui-pages {
+        height: 100%;
+        .gui-page {
+            height: 100%;
+        }
+    }
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+
+    .editable-list {
+        height: 100%;
+    }
+
+}
+
+#stories-container {
+    width: 100%;
+    height: 100%;
+
+}
+
+.stories-panel {
+    @s : @line_air;
+
+    &__controls {
+        .flex();
+        flex-wrap: wrap;
+        justify-content: space-between;
+        //margin: 0 -@s/2;
+        padding: @s;
+    }
+
+    &__button {
+
+        border: 1px solid rgba(255, 255, 255, 0.25);
+
+        .point;
+        .hovering();
+
+        @s2 : @s / 2;
+        width: ~" calc(50% - @{s2})";
+        //width: calc(50% ~"-" @s/2)";
+
+        //margin-left: @s/2;
+        padding: @s*1.2;
+        .flexcenter();
+        .tcenter;
+        z-index: 1;
+        .rel;
+
+        //&-caption {
+        //}
+        >span {
+            line-height: 1;
+        }
+
+        .panel_w1 &
+        {
+            width: 100%;
+        }
+        //&:hover:before {
+        //    .bgfade(5);
+        //}
+        //&:before {
+        //    .bef;
+        //    border: 1px solid rgba(255, 255, 255, 0.5);
+        //    z-index: -1;
+        //    .stretch();
+        //    margin: @s / 2;
+        //}
+    }
+
+    &__list-container {
+        min-height: 300px;
+    }
+
+    &__list {        
+        .editable-list__item-name {.op1;}
+    }
+    &__story-name {
+
+    }
+    &__story-meta {
+        margin-top: .4rem;
+        .flex();
+
+
+    }
+        &__story-parts-amount {
+            margin: 0 .5rem;
+            .op40;
+        }
+        &__story-page {
+            .op60;
+            margin: 0 .5rem;
+        }
+}
+
+
+.story-details {
+    height: 100%;
+    padding: 0 20px;
+
+    .header {
+        height: 24px;
+    }
+}

@@ -1,0 +1,2742 @@
+//@import 'mVars.less';
+//@ie6 : false;
+//@ie7 : false;
+
+
+// //check this! - FROM https://css-tricks.com/snippets/css/useful-css3-less-mixins/
+//.gradient (@startColor: rgba(0,0,0,0.75), @endColor: rgba(0,0,0,0.25), @direction: vertical) {
+//
+//    .setGradientVars(@direction) when (@direction = vertical){
+//        @direct: top;
+//        @directW3: to bottom;
+//        @webkitDirectFrom: left top;
+//        @webkitDirectTo: left bottom;
+//        @ieGradientType: 0;
+//    }
+//    .setGradientVars(@direction) when (@direction = horizontal){
+//        @direct: left;
+//        @directW3: to right;
+//        @webkitDirectFrom: left top;
+//        @webkitDirectTo: right top;
+//        @ieGradientType: 1;
+//    }
+//
+//    .setGradientVars(@direction);
+//
+//    @ieStartColor: argb(@startColor);
+//    @ieEndColor: argb(@endColor);
+//
+//    background-color: @startColor;
+//    background: -moz-linear-gradient(@direct, @startColor 0%, @endColor 100%);
+//    background: -webkit-linear-gradient(@direct, @startColor 0%, @endColor  100%);
+//    background: -webkit-gradient(linear, @webkitDirectFrom, @webkitDirectTo, color-stop(0%, @startColor), color-stop(100%, @endColor));
+//    background: -ms-linear-gradient(@direct, @startColor 0%, @endColor  100%);
+//    background: -o-linear-gradient(@direct, @startColor 0%, @endColor  100%);
+//    background: -linear-gradient(@direct, @startColor 0%, @endColor  100%);
+//    background: linear-gradient(@directW3, @startColor 0%, @endColor 100%);
+//    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=%d)", @ieStartColor, @ieEndColor, @ieGradientType));
+//}
+
+@import "./mVars";
+
+@c_facebook   : #3b5998;
+@c_twitter    : #55acee;
+@c_vkontakte  : #45668e;
+@c_linkedin   : #007bb6;
+@c_googleplus : #dd4b39;
+@c_instagram  : #38729b;
+@c_pinterest  : #bd081c;
+
+
+
+//——————————————————————————————————————————————————————————————————————
+// Images
+//——————————————————————————————————————————————————————————————————————
+
+.bgi(@image_file_name) {
+    background-image: ~"url(@{i}@{image_file_name})";
+}
+
+
+
+
+
+.imwidth(@image)  { width :  image-width("@{_relative_images_path}@{image}");}
+.imheight(@image) { height: image-height("@{_relative_images_path}@{image}");}
+
+.get_imwidth(@image)   { @_width :  image-width("@{_relative_images_path}@{image}");}
+.get_imheight(@image)  { @_height: image-height("@{_relative_images_path}@{image}");}
+.get_image_size(@image)  {
+    @path : "@{_relative_images_path}@{image}";
+    @_width: image-width(@path);
+    @_height: image-height(@path);
+}
+
+.imsize(@image)   {
+    @path : "@{_relative_images_path}@{image}";
+    width: image-width(@path);
+    height: image-height(@path);
+}
+
+.bgiblock(@image, @byratio : no){
+    .bgi(@image);
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+
+    @path : "@{_relative_images_path}@{image}";
+    @_width: image-width(@path);
+    @_height: image-height(@path);
+
+    & when (@byratio = no) {
+        width:  @_width;
+        height: @_height;
+    }
+
+    & when not (@byratio = no) {
+        padding-top: 100% * @_height / @_width;
+        width: 100%;
+    }
+}
+
+
+.bgsvg(@svg) {
+    background-image: url('data:image/svg+xml;utf8,@{svg}');
+}
+
+
+
+.bgsvg(@svg_inner, @w, @h, @q: '"') {
+    @_w: @w * 1px;
+    @_h: @h * 1px;
+    @svg : '<svg xmlns=@{q}http://www.w3.org/2000/svg@{q} version=@{q}1.1@{q} width=@{q}@{_w}@{q} height=@{q}@{_h}@{q} viewBox=@{q}0 0 @{w} @{h}@{q}>@{svg_inner}</svg>';
+    & when (@q = '"')     {
+        background-image: url('data:image/svg+xml;utf8,@{svg}');
+    }
+    & when not (@q = '"') {
+        background-image: url("data:image/svg+xml;utf8,@{svg}");
+    }
+
+}
+
+
+
+
+
+
+
+
+.spritesheet(@class_prefix, @classes, @w, @h, @cols : 1000, @_x:0, @_y:0, @do_set_width : no) {
+    @x : @_x * 1px;
+    @y : @_y * 1px;
+
+    .b(0){}
+    .b(@n) when (@n > 0){
+        @class : extract(@classes, @n);
+        @n-1 : @n - 1;
+        @x_offset : mod(@n-1, @cols);
+        @y_offset : floor(@n-1 / @cols);
+        .@{class_prefix}@{class} {
+            & when (@do_set_width = yes) { width: @w; height: @h }
+            @x_pos : -(@x + (@w * @x_offset));
+            @y_pos : -(@y + (@h * @y_offset));
+            background-position: @x_pos @y_pos;
+        }
+        .b(@n-1);
+    }
+    .b(length(@classes));
+}
+
+.spritesheet(@class_prefix, @classes, @w) {
+    .spritesheet(@class_prefix, @classes, @w, @w);
+}
+
+
+
+//——————————————————————————————————————————————————————————————————————
+// BG PICS
+//——————————————————————————————————————————————————————————————————————
+
+
+.tmppic() {background-color: #882ae3}
+.tmpbg() {background-color: rgba(90,90,90, .08);}
+
+
+.bgc(@color:black){
+    background-color: @color
+}
+.bgc(@color:black, @alpha: 100){
+    background-color: @color;
+    background-color: fadeout(@color, (100%-(@alpha * 1%)));
+}
+
+.bgfade(@fade, @color: white){
+    background-color: @color;
+    background-color: fadeout(@color, (100%-(@fade * 1%)));
+}
+.colorfade(@fade, @color: white){
+    color: @color;
+    color: fadeout(@color, (100%-(@fade * 1%)));
+}
+
+.bgwhite(){
+    background-color: white;
+}
+.bgwhite(@fade){
+    background-color: white;
+    background-color: fadeout(white, (100%-(@fade * 1%)));
+}
+
+.cwhite(){color: white}
+
+
+.bgsize(@sizeX) {
+    background-size: @sizeX;
+    -o-background-size: @sizeX;
+    -webkit-background-size: @sizeX;
+    -moz-background-size: @sizeX;
+}
+.bgsize(@sizeX, @sizeY) {
+    background-size: @sizeX @sizeY;
+    -o-background-size: @sizeX @sizeY;
+    -webkit-background-size: @sizeX @sizeY;
+}
+
+.bgtile(@image_file_name) {
+    background-image: ~"url(@{i}@{image_file_name})";
+    background-repeat: repeat;
+}
+
+.bgtile(@image_file_name, @bgcolor) {
+    background-image: ~"url(@{i}@{image_file_name})";
+    background-repeat: repeat;
+    background-color: @bgcolor;
+}
+
+.bgCover() {background-size: cover;}
+.bgcenter() {background-position: 50% 50%;}
+
+.bgsize(@bgsize){
+    -webkit-background-size: @bgsize;
+    -moz-background-size: @bgsize;
+    -o-background-size: @bgsize;
+    background-size: @bgsize;
+}
+.bgcover() {
+    .bgsize(cover);
+}
+
+.bgcontain() {
+    .bgsize(contain);
+}
+
+.bgstretch()   {
+    .bgsize(100% 100%);
+}
+.bgstretch(@x) {
+    .bgsize((100% + (1% * @x)) (100% + (1% * @x)));
+}
+.bgstretch(@x, @y) {
+    .bgsize((100% + (1% * @x)) (100% + (1% * @y)));
+}
+.bgfixed() {background-attachment: fixed;}
+.bgfix() {background-attachment: fixed;}
+.norepeat(){ background-repeat: no-repeat}
+.repx(){ background-repeat: repeat-x}
+.rept(){ background-repeat: repeat-y}
+
+
+.bgpic() {
+    .bgcover();
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
+.bgpic(@filename) {
+    .bgi(@filename);
+    .bgcover();
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
+.bgpos(@xy)   { background-position: @xy; }
+.bgpos(@x, @y){ background-position: (@x * -1px) (@y * -1px); }
+
+
+
+.bgimg(@image_file_name) {
+    background: no-repeat transparent 50% 50%;
+    .bgi(@image_file_name);
+}
+
+
+.isvg(@image_file_name){
+    //  background-size: 100% 100%;
+    background-repeat: no-repeat;
+    .bgi("@{image_file_name}.png");
+    //css3 with fallback
+    //  .bgi("@{image_file_name}.svg");
+    background: ~"url(@{i}@{image_file_name}.svg), transparent";
+    //    background: ~"url(@{i}@{image_file_name}.svg) transparent";
+}
+
+.ipng(@image_file_name){
+    .bgi("@{image_file_name}.png");
+}
+
+
+.ijpg(@image_file_name){
+    .bgi("@{image_file_name}.jpg");
+}
+
+
+
+
+//——————————————————————————————————————————————————————————————————————
+// SPRITES
+//——————————————————————————————————————————————————————————————————————
+
+.sprite(@w, @h){
+    //background-image:  url('@{url}');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: @w;
+    height: @h;
+}
+
+.sprite( @x, @y, @w, @h){
+    //background-image:  url('@{url}');
+    background-repeat: no-repeat;
+    background-position: (@x * -1px) (@y * -1px);
+    width: (@w * 1px);
+    height: (@h * 1px);
+}
+
+
+
+//._sprite_1   { .bgi ('sprite1.svg'); background-repeat: no-repeat;}
+._sprite_1   {
+    .bgi ('sprite1.svg');
+    background-repeat: no-repeat;
+    //background-size: 717px 690px;
+    background-size: 800px 800px;
+}
+._sprite_2   { .bgi ('sprite2.png'); background-repeat: no-repeat; background-size: 717px 690px;}
+._sprite_3   { .bgi ('sprite3.svg'); background-repeat: no-repeat; background-size: 800px 800px;}
+._sprite_5   { .bgi ('sprite5.png'); background-repeat: no-repeat; background-size: 717px 690px;}
+
+.sprite1(){
+    &:extend(._sprite_1);
+}
+
+.sprite1 (@x, @y) {
+    &:extend(._sprite_1);
+
+    background-position: (@x * -1px) (@y * -1px);
+}
+
+.sprite2 (@x, @y) {
+    &:extend(._sprite_2);
+
+    background-position: (@x * -1px) (@y * -1px);
+}
+
+.sprite3 () {
+    &:extend(._sprite_3);
+}
+.sprite3 (@x, @y) {
+    &:extend(._sprite_3);
+
+    background-position: (@x * -1px) (@y * -1px);
+}
+
+
+.sprite5(){
+    &:extend(._sprite_5);
+}
+
+.sprite5 (@x, @y) {
+    &:extend(._sprite_5);
+
+    background-position: (@x * -1px) (@y * -1px);
+}
+
+.sprite5 (@x, @y) {
+    &:extend(._sprite_5);
+
+    background-position: (@x * -1px) (@y * -1px);
+}
+
+.sprite1 (@x, @y, @w, @h) {
+    &:extend(._sprite_1);
+    .sprite((@x + @sprite1xOffset), (@y + @sprite2xOffset), @w, @h);
+}
+.sprite1 (@x, @y, @w, @h, @no) { //additional variable to remove .bgi
+    .sprite((@x + @sprite1xOffset), (@y + @sprite2xOffset), @w, @h);
+}
+
+.sprite2 (@x, @y, @w, @h) {
+    &:extend(._sprite_2);
+    .sprite((@x + @sprite2xOffset), (@y + @sprite2xOffset), @w, @h);
+}
+
+.sprite2 (@x, @y, @w, @h, @no) { //additional variable to remove .bgi
+    .sprite((@x + @sprite2xOffset), (@y + @sprite2xOffset), @w, @h);
+}
+
+.sprite5 (@x, @y, @w, @h) {
+    &:extend(._sprite_5);
+    .sprite((@x + @sprite1xOffset), (@y + @sprite2xOffset), @w, @h);
+}
+.sprite5 (@x, @y, @w, @h, @no) { //additional variable to remove .bgi
+    .sprite((@x + @sprite1xOffset), (@y + @sprite2xOffset), @w, @h);
+}
+
+.spritevert (@y, @h) {
+    .bgi ('spritevert.png');
+    .sprite(0, @y, 100%, @h);
+    background-repeat: repeat;
+}
+
+
+
+
+.px2percent(@x, @y, @w, @h, @wfull, @hfull) {
+    @x_center: (@x / (@wfull - @w));
+    @y_center: (@y / (@wfull - @h));
+    background-position: (@x_center * 100%) (@y_center * 100%);
+}
+
+
+
+//——————————————————————————————————————————————————————————————————————
+
+
+.spritebox_sprite(@x, @y, @w, @h, @wfull, @hfull) {
+    @Xratio : @wfull / @w;
+    @Yratio : @hfull / @h;
+
+    @spritesheet_width_in_percents : 100% * @Xratio ;
+    @spritesheet_height_in_percents: 100% * @Yratio ;
+    @pX :  -100% * (@x/@w);
+    @pY :  -100% * (@y/@h);
+    .size(@spritesheet_width_in_percents, @spritesheet_height_in_percents);
+    .xy(@pX, @pY);
+}
+
+.spritebox(@x, @y, @w, @h, @wfull, @hfull, @position : rel){
+    .clip;
+    &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        .spritebox_sprite(@x, @y, @w, @h, @wfull, @hfull);
+    }
+
+    & when (@position = rel) {.rel;}
+    & when (@position = abs) {.abs;}
+}
+.spritebox_w(@x, @y, @w, @h, @wfull, @hfull, @position : rel) {
+    .size(@w, @h);
+    .spritebox(@x, @y, @w, @h, @wfull, @hfull, @position : rel);
+}
+
+.spritebox_p(@x, @y, @w, @h, @wfull, @hfull, @position : rel) {
+    width: @w;
+    padding-top: @x * (@y/@x);
+    .spritebox(@x, @y, @w, @h, @wfull, @hfull, @position : rel);
+}
+
+.spritebox_ratio(@x, @y, @sprite_w, @sprite_h, @wfull, @hfull, @position : rel) {
+    padding-top: 100% * @sprite_h / @sprite_w ;
+    .spritebox(@x, @y,  @sprite_w, @sprite_h, @wfull, @hfull, @position : rel);
+}
+
+
+
+
+.responsive_sprite_img(@_x, @_y, @_sprite_w, @_sprite_h, @image, @position : rel) when (isstring(@image)) {
+    @path : "@{_relative_images_path}@{image}";
+    @wfull:  image-width(@path) * 1px;
+    @hfull: image-height(@path) * 1px;
+
+    @x : @_x * 1px;
+    @y : @_y * 1px;
+    @sprite_w : @_sprite_w * 1px;
+    @sprite_h : @_sprite_h * 1px;
+
+
+    .inbl;
+    .clip;
+    & when (@position = rel) {.rel;}
+    & when (@position = abs) {.abs;}
+
+    &:before {
+        display: block;
+        content: "";
+        padding-top: 100% * @sprite_h / @sprite_w ;
+    }
+    &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        .spritebox_sprite(@x, @y, @sprite_w, @sprite_h, @wfull, @hfull);
+    }
+}
+
+
+.responsive_sprite(@_x, @_y, @_sprite_w, @_sprite_h, @_wfull, @_hfull, @position : rel) {
+    @x : @_x * 1px;
+    @y : @_y * 1px;
+    @sprite_w : @_sprite_w * 1px;
+    @sprite_h : @_sprite_h * 1px;
+
+    @wfull : @_wfull * 1px;
+    @hfull : @_hfull * 1px;
+
+
+    .inbl;
+    .clip;
+    & when (@position = rel) {.rel;}
+    & when (@position = abs) {.abs;}
+
+    &:before {
+        display: block;
+        content: "";
+        padding-top: 100% * @sprite_h / @sprite_w ;
+    }
+    &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        .spritebox_sprite(@x, @y, @sprite_w, @sprite_h, @wfull, @hfull);
+    }
+}
+
+.responsive_sprite1(@_x, @_y, @_sprite_w, @_sprite_h, @position : rel) {
+    @image: "sprite1.png";
+    .responsive_sprite_img(@_x, @_y, @_sprite_w, @_sprite_h, @image, @position);
+    &:after {.sprite1(); .bgpic;}
+}
+
+
+//.spritebox_image(@x, @y, @sprite_w, @sprite_h, @wfull, @hfull) {
+//
+//    .spritebox(@x, @y,  @sprite_w, @sprite_h, @wfull, @hfull);
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//.inbl() {
+//    display: -moz-inline-stack; display: inline-block;
+//}
+//for IE
+.inbl() {
+    //  & when (@ie6 = true) {}
+    //  & when (@ie6 = false) {}
+    //    display: -moz-inline-stack;
+    display: inline-block;
+    //    zoom: 1;    *display: inline;
+}
+.inbl(@where) {
+    .inbl;
+    & when (@where = m)      {vertical-align: middle}
+    & when (@where = mid)    {vertical-align: middle}
+    & when (@where = middle) {vertical-align: middle}
+    & when (@where = b)      {vertical-align: bottom}
+    & when (@where = bot)    {vertical-align: bottom}
+    & when (@where = bottom) {vertical-align: bottom}
+    & when (@where = t)      {vertical-align: top   }
+    & when (@where = top)    {vertical-align: top   }
+}
+.inbl_middle () {
+    .inbl(middle);
+}
+
+
+.make_clearfix() {
+    &:before,
+    &:after {content: ""; display: table;}
+    &:after {clear: both;}
+    // IE6
+    //*zoom: 1;
+}
+
+//for IE
+//.minh(@min-height:100%) {
+//  min-height:@min-height * 1px;
+//  height:auto !important;
+//  height:@min-height * 1px;
+//}
+
+//for valid browsers
+.minh(@min-height:100%) {
+    min-height: (@min-height * 1px);
+}
+
+
+
+// IE7 inline-block
+// ----------------
+.ie7-inline-block() {
+    *display: inline; /* IE7 inline-block hack */
+    *zoom: 1;
+}
+
+// IE7 likes to collapse whitespace on either side of the inline-block elements.
+// Ems because we're attempting to match the width of a space character. Left
+// version is for form buttons, which typically come after other elements, and
+// right version is for icons, which come before. Applying both is ok, but it will
+// mean that space between those elements will be .6em (~2 space characters) in IE7,
+// instead of the 1 space in other browsers.
+.ie7-restore-left-whitespace() {
+    *margin-left: .3em;
+
+    &:first-child {
+        *margin-left: 0;
+    }
+}
+
+.ie7-restore-right-whitespace() {
+    *margin-right: .3em;
+}
+
+
+// Webkit-style focus
+// ------------------
+.tab-focus() {
+    // Default
+    outline: thin dotted #333;
+    // Webkit
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+
+.fix() {
+    position: fixed;
+    //  top:0;
+    //  _position:absolute;
+    //  _top:expression( eval(document.body.scrollTop) + 'px' );
+
+}
+
+
+
+.fl()    {float: left}
+.fr()    {float: right}
+.inl()   {display: inline}
+.bl()    {display: block}
+.abs()   {position: absolute}
+.rel()   {position: relative}
+.clip()  {overflow: hidden}
+.point() {cursor: pointer}
+
+.flex()  { display: flex; }
+.flex(@dir)  { display: flex; flex-direction: @dir;}
+
+.flexline(@wrap: nowrap) {
+    display: flex;
+    align-items: center;
+    flex-wrap: @wrap;
+}
+.flexstretch(@wrap: nowrap) {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: @wrap;
+}
+.jcenter()  { justify-content: center; }
+.jmiddle()  { align-items: center; }
+
+.flexcenter() {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cont() {content: ""}
+.bottom1px() {border-bottom-width: 1px;}
+.bottomhr()  {border-bottom-width: 1px; border-bottom-color: #ccc; border-bottom-style: solid;}
+.dotted() {border-bottom-style: dotted; border-bottom-width: 1px;}
+.dashed() {border-bottom-style: dashed; border-bottom-width: 1px;}
+.dotted(@c) {.dotted; border-bottom-color: @c;}
+.dashed(@c) {.dashed; border-bottom-color: @c;}
+.adotted() {& > span {border-bottom-style: dotted; border-bottom-width: 1px;}}
+.adashed() {& > span {border-bottom-style: dashed; border-bottom-width: 1px;}}
+.asolid()  {& > span {text-decoration: underline; }}
+.nodecor() {text-decoration: none;}
+
+.breakbefore() {&:before{white-space: pre; content: '\a';}}
+.breakafter()  {&:after{ white-space: pre; content: '\a';}}
+
+.solid() {border-bottom-style: solid; border-bottom-width: 1px;}
+.noborder () {border: none} // collapse !!!!!
+.pevents (@p: none)  {pointer-events:@p;}
+
+.upper() {text-transform: uppercase}
+
+.upp(@spacing: 0.05) {
+    text-transform: uppercase;
+    & when (@spacing < 2) {
+        letter-spacing: @spacing * 1px;
+    }
+    & when not (@spacing < 2) {
+        letter-spacing: @spacing  / 11 * 0.01em;
+    }
+}
+
+.bold() {font-weight: bold}
+.italic() {font-style: italic}
+.normal() {font-style: normal}
+.vmiddle() {vertical-align: middle}
+.vtop() {vertical-align: top}
+.tleft() {text-align: left}
+.tright() {text-align: right}
+.tcenter() {text-align: center}
+.tjust() {text-align: justify}
+
+.tjustify() {
+    text-align: justify;
+    &:after {
+        content: "";
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+
+.hyphens(@mode: auto) {
+    -ms-word-break: break-all;
+    word-break: break-all;
+
+    // Non standard for webkit
+    word-break: break-word;
+
+    -webkit-hyphenate-before: 2;
+    -webkit-hyphenate-after: 3;
+    hyphenate-lines: 3;
+
+
+    -webkit-hyphens: @mode;
+    -moz-hyphens: @mode;
+    -ms-hyphens: @mode; // IE10+
+    -o-hyphens: @mode;
+    hyphens: @mode;
+}
+
+.ellip() {
+    text-overflow: ellipsis;
+}
+
+.ellipsis() {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.hide() {display: none}
+.none() {display: none}
+.show() {display: inherit}
+.hidden() {visibility: hidden}
+.visible() {visibility: visible}
+.shown() {visibility: visible}
+.collapsed() {visibility: collapse}
+
+
+
+
+.f40() {font-size: 4.0 * @em}
+.f39() {font-size: 3.9 * @em}
+.f38() {font-size: 3.8 * @em}
+.f37() {font-size: 3.7 * @em}
+.f36() {font-size: 3.6 * @em}
+.f35() {font-size: 3.5 * @em}
+.f34() {font-size: 3.4 * @em}
+.f33() {font-size: 3.3 * @em}
+.f32() {font-size: 3.2 * @em}
+.f31() {font-size: 3.1 * @em}
+.f30() {font-size: 3.0 * @em}
+.f29() {font-size: 2.9 * @em}
+.f28() {font-size: 2.8 * @em}
+.f27() {font-size: 2.7 * @em}
+.f26() {font-size: 2.6 * @em}
+.f25() {font-size: 2.5 * @em}
+.f24() {font-size: 2.4 * @em}
+.f23() {font-size: 2.3 * @em}
+.f22() {font-size: 2.2 * @em}
+.f21() {font-size: 2.1 * @em}
+.f20() {font-size: 2.0 * @em}
+.f19() {font-size: 1.9 * @em}
+.f18() {font-size: 1.8 * @em}
+.f17() {font-size: 1.7 * @em}
+.f16() {font-size: 1.6 * @em}
+.f15() {font-size: 1.5 * @em}
+.f14() {font-size: 1.4 * @em}
+.f13() {font-size: 1.3 * @em}
+.f12() {font-size: 1.2 * @em}
+.f11() {font-size: 1.1 * @em}
+.f10() {font-size: 1   * @em}
+.f09() {font-size: .9  * @em}
+.f08() {font-size: .8  * @em}
+.f07() {font-size: .7  * @em}
+.f06() {font-size: .6  * @em}
+.f00() {font-size: 0}
+.f0()  {font-size: 0}
+
+.fsize(@_pxValue){
+    @remValue: (1rem * @_pxValue) / 10;
+    @pxValue:  @_pxValue * 1px;
+    font-size: ~"@{pxValue}";
+    font-size: ~"@{remValue}";
+}
+
+.setfont(@fsize, @lh) {
+    .fsize(@fsize);
+    line-height: (@lh / @fsize);
+}
+
+.w100() {width: 100%;}
+.h100() {height: 100%;}
+.wpart(@n: 1, @k : 1){width: percentage(@k / @n) ;}
+
+.rounded (@rad:1000) {
+    @radius: (0 + @rad) * 1px ;
+    //-webkit-border-radius: @radius;
+    //-khtml-border-radius: @radius;
+    //-moz-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.rounded_full (@_radius : 0) {
+    @radius : @_radius;
+    //-webkit-border-radius: @radius;
+    //-moz-border-radius:  @radius;
+    border-radius: @radius;
+}
+
+.rounded (@r01, @r02, @r03, @r04) {
+    @r1: (1px * (0 + @r01));
+    @r2: (1px * (0 + @r02));
+    @r3: (1px * (0 + @r03));
+    @r4: (1px * (0 + @r04));
+
+    @radius: @r1 @r2 @r3 @r4 ;
+    //-webkit-border-radius: @radius;
+    //-moz-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.rounded (@corner_num, @rad) when (@corner_num = 1) {
+    @radius: 1px * (0 + @rad) ;
+    //-webkit-border-top-left-radius: @radius;
+    //-khtml-border-top-left-radius: @radius;
+    //-moz-border-top-left-radius: @radius;
+    border-top-left-radius: @radius;
+}
+
+.rounded (@corner_num, @rad) when (@corner_num = 2) {
+    @radius: 1px * (0 + @rad) ;
+    //-webkit-border-top-right-radius: @radius;
+    //-khtml-border-top-right-radius: @radius;
+    //-moz-border-top-right-radius: @radius;
+    border-top-right-radius: @radius;
+}
+
+.rounded (@corner_num, @rad) when (@corner_num = 3) {
+    @radius: 1px * (0 + @rad) ;
+    //-webkit-border-bottom-right-radius: @radius;
+    //-khtml-border-bottom-right-radius: @radius;
+    //-moz-border-bottom-right-radius: @radius;
+    border-bottom-right-radius: @radius;
+}
+
+.rounded (@corner_num, @rad) when (@corner_num = 4) {
+    @radius: 1px * (0 + @rad) ;
+    //-webkit-border-bottom-left-radius: @radius;
+    //-khtml-border-bottom-left-radius: @radius;
+    //-moz-border-bottom-left-radius: @radius;
+    border-bottom-left-radius: @radius;
+}
+
+.rounded1  () {.rounded(1 )}  .rnd1  () {.rounded(1 )}
+.rounded2  () {.rounded(2 )}  .rnd2  () {.rounded(2 )}
+.rounded3  () {.rounded(3 )}  .rnd3  () {.rounded(3 )}
+.rounded4  () {.rounded(4 )}  .rnd4  () {.rounded(4 )}
+.rounded5  () {.rounded(5 )}  .rnd5  () {.rounded(5 )}
+.rounded6  () {.rounded(6 )}  .rnd6  () {.rounded(6 )}
+.rounded7  () {.rounded(7 )}  .rnd7  () {.rounded(7 )}
+.rounded8  () {.rounded(8 )}  .rnd8  () {.rounded(8 )}
+.rounded9  () {.rounded(9 )}  .rnd9  () {.rounded(9 )}
+.rounded10 () {.rounded(10)}  .rnd10 () {.rounded(10)}
+.rounded11 () {.rounded(11)}  .rnd11 () {.rounded(11)}
+.rounded12 () {.rounded(12)}  .rnd12 () {.rounded(12)}
+.rounded13 () {.rounded(13)}  .rnd13 () {.rounded(13)}
+.rounded14 () {.rounded(14)}  .rnd14 () {.rounded(14)}
+.rounded15 () {.rounded(15)}  .rnd15 () {.rounded(15)}
+
+.borderbox() {
+    //-webkit-box-sizing: border-box;
+    //-moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.boxsizing(@sizing: content-box) {
+    //-webkit-box-sizing: @sizing;
+    //-moz-box-sizing:@sizing;
+    box-sizing:@sizing;
+}
+
+.lh(@lineheight) when (@lineheight < 3), (@lineheight > 0) 	{
+    line-height: @lineheight; //if lineheight: 1.3 , for example
+}
+
+.lh(@lineheight) {
+    line-height: @lineheight * 1px
+}
+
+
+.size(@size: 100%) {
+    width : @size * 1px;
+    height: @size * 1px;
+}
+.pad2square(@w, @h) {
+    & when (@w > @h) {
+        margin-top   : (@w - @h) / 2px;
+        margin-bottom: (@w - @h) / 2px;
+    }
+    &  when (@w <= @h) {
+        margin-left:  (@h - @w) / 2px;
+        margin-right: (@h - @w) / 2px;
+    }
+}
+.size_squared(@w, @h) {
+    width : @w * 1px;
+    height: @h * 1px;
+    .pad2square(@w, @h);
+}
+
+.size(@width, @height) {
+    width: @width * 1px;
+    height: @height * 1px;
+}
+.safewidth(@target_width, @safe_width : 90% ) {
+    width: @target_width * 1px;
+    max-width: @safe_width * 1px;
+}
+
+.remwh(@w, @h){
+    //width : 1rem * @w * 1px;
+    width : 1rem * @w * .1rem;
+    //height: 1rem * @h * 1px;
+    height: 1rem * @h * .1rem;
+}
+.remwh(@s : 10){
+    //width : 1rem * @w * 1px;
+    width : 1rem * @s * .1rem;
+    //height: 1rem * @h * 1px;
+    height: 1rem * @s * .1rem;
+}
+.remh(@h : 10){ height: 1rem * @h * .1rem; }
+.remw(@w : 10){ width:  1rem * @w * .1rem; }
+
+
+.remsize(@w : 10, @h : 10){
+    width: @w * 1rem;
+    height: @h * 1rem;
+}
+.remsize(@w : 10){
+    width: @w * 1rem;
+    height: @w * 1rem;
+}
+.remheight(@h : 10){ height: @h * 1rem; }
+.remwidth(@w : 10){ width:  @w * 1rem; }
+
+
+.fill() {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.fixfill() {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+.paddingsize(@width, @height) {
+    @ratio: (@height / @width);
+    width: (@width * 1px);
+    padding-top: (100% * @ratio);
+}
+.ratio(@rat) { padding-top: 100% / @rat; }
+
+
+.paddingsize(@width : 100%) {
+    width: @width;
+    padding-top: @width;
+}
+
+.pushpull(@shift: 0; @s: 400px;){
+    padding-bottom: @s + @shift;
+    margin-bottom: -@s;
+}
+
+
+
+.noselect() {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.allowselect(@s : auto;) {
+    -webkit-touch-callout:  @val;
+    -webkit-user-select:    @val;
+    -khtml-user-select:     @val;
+    -moz-user-select:       @val;
+    -ms-user-select:        @val;
+    user-select:            @val;
+}
+
+
+
+
+.vmid-centrator () {
+    &:before {
+        .cont;
+        .inbl;
+        .vmiddle;
+        height: 100%;
+        width: 0;
+        margin-right: -.25em;
+        font-size: 0;
+    }
+    & > * {
+        .inbl;
+        .vmiddle;
+        .rel;
+        top: -1px;
+    }
+}
+
+
+.vcentrator () {
+    &:before {
+        .cont;
+        .inbl;
+        .vmiddle;
+        height: 100%;
+        width: 0;
+        font-size: 0;
+    }
+}
+
+
+
+
+
+
+
+.grab-cursor() {
+    cursor: -moz-grab;
+    &.dragged { cursor: -moz-grabbing;}
+}
+
+.grab(){
+    cursor: move;
+
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    //    cursor: url(data:application/cur;base64,AAACAAEAICAAAAAAAACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAgBAAABMLAAATCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwEYAkABHAc7ABwOOgIdEDwAGws8ARsGOgAcAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADsBGgE6AhkKPAEdDzoCGQk8ARoCAAAAAAAAAAAAAAAAAAAAADoBHAU6AhwVOwEcIDsBGyM7ARskOwEbIzsAGyA6ARwVPgAbCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3AB0DOwEcFToBGyM7ARslOgIcITwBGhY9AR0HAAAAAAAAAAA8AhsIOwIbHDsBGyU7ARslOgEbJDwBGyQ8ARwkPAAcIjsAGyE7ABobPgAfCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgBHBE8ARsmOwEbJjsBGyU8ARwlPQEcJTsAHBk9ABsIPQIcCTwCGx46ABsmOwEcJTsBGyQ8ARwkOwAaIDUAFhgwABUcLwEVJTEAFSQ1ABYRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9ABYEOgIbHTsBGyY7ARwkPAIcJDsAGyEzABUZLwAVITIAFhs4ABcQPQAcITwBHCY7ARwkPAEcJDcAGR4qABIjJg0XXigaH5UpICStKR8jpiwWIIkfGhtBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADoBHAk7ARshOwEcJTwBHCQ5ARoiKwATJSUPGGYpHyOsKx8kqSsPG18yABUaOwAaGT0BHSU0ABYfJgQSNiYdIKAkJSXqHSAg/xwfIP8bICD/HSEg/yQkJOMgHx+aFBQUJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOQEdDjsBGyQ8ARwkPAAbIiwAEyQmGB6PKSsr7h8jIv8gIyP/Jyko7CsgJKQuBhc1MQAUEyUFEzsnISS+IiYl/zk7Of9nZWH/f3x2/3p5cv9jYl7/OTk5/yYmJ/8oKCjHEhISJQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADsAHQE7AB0TOwEbJjwBHCQ2ABYZJQsWVigpKus0NTT/jImA/5aSiP89Pjz/ISUl/ywnKtEkERlpJyAjtyUoKP9zcWz/2NPG//Dq3P/17uD/9O3g/+3l1P/MxLH/amVe/ykpKf8hISGaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANwAcATsCHRc7ARsmPAEbIjAAExkmGB6UJSgo/pyWjf/68t7/+PHf/87Iuf9WVFD/HyEi/yosK/snKCj/fXly//Pt3//27+H/8evd//Dq3v/r4c7/6d/I//Tr2f/u5tX/dHJr/yAhIdogICAiAAAAAAAAAAAAAAAAAAAAAAAAAAA3AB0DOwEbGzwBHCY8ABsgLAEUJh8YHL5JS0b/493L/+/o1f/q49H/9+/d/+PczP9raWP/GRsd/zs6N//c0bj/8+zd/+/p3f/v6d7/7OPT/+ngzP/59e///v7////////b2tj/NTU16RcXF0QAAAAAAAAAAAAAAAAAAAAAAAAAADkBIAQ7ARsdPAEcJjkAGRoqBxY7GRga2Hl3cP/x6tf/7OTT/+rj0f/p4dD/9e7c/+/n1f90cmv/LC0r/8K4nv/v5Mr/7ObY/+7o2//o38z/9fDo///////9/fz///////Ly8v9WVlbsDQ0NTQAAAAAAAAAAAAAAAAAAAAAAAAAAOwEbBTsBGx88ARwlNgAYFigLF1YdHh/nmJWL//Pr2f/r49L/6uPR/+vj0v/o4c//9Oza//Ts2f94dm//W1dQ/93Qs//r38P/4da+/+jgzP/8+/j///7+//38+///////8fHx/1BQUOYTExM5AAAAAAAAAAAAAAAAAAAAAAAAAAA7ABoHOwEbIDwBHSU0ABYWJg8ZbyIkJPStqZ7/8+vY/+rk0f/q49H/6uPR/+vj0v/o4c//8+vZ//Pr2P99e3T/cm5i/+LVtf/m2Lf/7+jb///////9/Pz//fz7///////Y2Nb/LCwszREREQ4AAAAAAAAAAAAAAAAAAAAAAAAAADoAHAg7ARsgPAEcJTMAFRgiEBiBKy0t/L+5rP/y6tj/6uPR/+rj0f/q49H/6+PS/+rj0f/p4tD/8+vZ/+zkz/+BfG3/cm1e/+PYwP////3//v7+//38+//+/fz//////4aGhvwQEBB5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgAcCTsBGyM8ABsiMQAWGx8RGJM4Ojn/zce4//Lq2P/r49L/6+PS/+vj0v/r49L/6uPR/+rj0f/q49L/6+HK/9/TtP+PiXv/dXNy/9XU1f/////////+///////R0dH/Ly8vyBEREQ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8ABgJOwEbIzsAGyAxABUfGxAWoERHQ//b1MT/8enX/+vj0v/r49L/6+PS/+rj0f/r49H/6uPS/+rj0f/e1Lf/5tvA//j39P/IyMr/dHRz/5KSkf/t7ez/7Ovr/1pZWeAODQ01AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAFwo7AR0jPAAbIC8AFSEZDhSqU1RQ/+Layv/w6Nf/6uPR/+vj0f/q49H/6+PR/+rj0v/r5NX/5NzE/+DUuP/28uv////////////v7+//mJeX/1pZWv87Ozv/HhwdvAkHCA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOQIgCzwBGiM8ABwfLgAVJRcOE7RiYlz/5+HP//Do1v/q49H/6uPR/+vj0v/q49H/6+TT/+nhz//h1rz/9O/l///////9/Pv//fz7///+/f//////19fW/21sbf8uLi7/GxsbuQoKCicAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4Ax8LPAEaIzsAGx4uAhUoFg4TumtsZf/r5NP/7+fW/+rj0f/q49H/6uPR/+rj0v/q49H/5NnA//Hr4P///////fz7//38+//9/Pv//fz7//79+////////////7Gxsf9PT0//HB0czwwNDDAAAAAAAAAAAAAAAAAAAAAAAAAAADYBHQw9ARsjOwAbHi4DFSoVDxS9dXNs/+7m1f/v59b/6+PS/+vj0v/r5NP/6uTS/+bcxv/v59j///7///79/f/9/Pv//fz7//38+//9/Pv//fz7//38+////////////+Hh4f99fn3/JSYlwwoKChoAAAAAAAAAAAAAAAAAAAAAOwEeDDsBGyM7ABodLQQWLBUQFcB9fHP/8ejW/+/m1P/q49H/6uPR/+vk0//o38r/7OXU//38+//+/v7//fz7//38+//9/Pv//fz7//38+//9/Pv//fz7//37+v/9/Pv//////+zr6v85ODj5EhITVQAAAAAAAAAAAAAAAAAAAAA+Ah0MPAAbIzsAGR0sBBUuFxIXw4KBeP/x6df/7eXU/+rj0f/q49L/6ODN/+riz//7+fb///////38+//9/Pv//fz7//38+//9/Pv//fz7//38+//9/Pv////+///////y8vL/gYCA/x8fH7kUFBMcAAAAAAAAAAAAAAAAAAAAADwBHA08ARskOwAaHCwEFjAYFBjFiId9//Hp2P/t5tT/6+PS/+ni0P/n4Mv/9/Ts///////9/Pz//fz7//38+//9/Pv//fz7//38+//9/Pv//v79//////////7/v76+/15eXv4ZGRmWDg4OGQAAAAAAAAAAAAAAAAAAAAAAAAAAOgIbDTwBGyQ7ABocLAMVMRkVGcaOjYP/8urZ/+3m1P/q49L/597J//Lu4v///////fz8//38+//9/Pv//fz7//38+//+/fz////+///////+/f3/x8fH/2lpaf4rKyu+ERERTRUVFQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7ARsNPAEbJDsAGhwrAxUxGhcax5STif/z69r/7ebV/+XdyP/t5tb///7+//39/P/9/Pv//fz7//38+////v3////////////19fX/xsbG/2lpafUlJSXHDg4OXBoaGggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADoBHA08ARslOwAaHSwDFTQcFxvInZuQ//Tt2v/n3sb/5t7J//z7+f///f3//fz7//79/P////////////7+/f/m5+b/rq6t/11cXOoiIiK0DxAPUwwLDAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgEcDjsBHCQ5ABoXJAMSLBwaHMeinpD/7ODH/+LXvf/59fD//////////v////////////T09P/R0dD/kpKR/0hISNoWFhefDQ0PQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AR0IPgEdDzkAGQMWAgoZGB0dwaObhv/m2Lf/9fHo/////////////////9/f3/+urq7/bGxr+zAwMMMPDw97ERESLwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoIChcaHB3BrqWO///87f//////6+vr/7u8vP+Dg4T/SEhI7hwcHKkMDAxZDg4OGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwoKGiEgH8OxrJ7/zs/O/42MjP9TU1P+LCssxhISEn0LCws7ExMTDQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAaJiYmyEhJSfoxMTG7FxcXfA8PD0AUFRUZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEREQwaGhpCHBwdLRMTEw4UFBQDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//gP/+DwB//AYAP/wAAD/4AAAf+AAAB/gAAAPwAAAD8AAAAfAAAAHwAAAB8AAAAfAAAAHwAAAD8AAAA/AAAAfwAAAH8AAAA/AAAAHwAAAA8AAAAPAAAADwAAAB8AAAA/AAAA/wAAA/8AAB//AAB//+AB///gB///4D///+D///8=), pointer;
+    //    cursor: url(data:image/bmp;base64,AAACAAEAICACAAcABQAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8AAAA/AAAAfwAAAP+AAAH/gAAB/8AAA//AAAd/wAAGf+AAAH9gAADbYAAA2yAAAZsAAAGbAAAAGAAAAAAAAA//////////////////////////////////////////////////////////////////////////////////////gH///4B///8Af//+AD///AA///wAH//4AB//8AAf//AAD//5AA///gAP//4AD//8AF///AB///5A////5///8=), pointer;
+    cursor: url(data:image/bmp;base64,AAACAAEAICACAAcABQAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8AAAA/AAAAfwAAAP+AAAH/gAAB/8AAA//AAAd/wAAGf+AAAH9gAADbYAAA2yAAAZsAAAGbAAAAGAAAAAAAAA//////////////////////////////////////////////////////////////////////////////////////gH///4B///8Af//+AD///AA///wAH//4AB//8AAf//AAD//5AA///gAP//4AD//8AF///AB///5A////5///8=), pointer;
+    cursor: url(data:image/bmp;base64,AAACAAEAICACAAcABQAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8AAAA/AAAAfwAAAP+AAAH/gAAB/8AAA//AAAd/wAAGf+AAAH9gAADbYAAA2yAAAZsAAAGbAAAAGAAAAAAAAA//////////////////////////////////////////////////////////////////////////////////////gH///4B///8Af//+AD///AA///wAH//4AB//8AAf//AAD//5AA///gAP//4AD//8AF///AB///5A////5///8=) 8 8, pointer;
+    //    cursor: url(http://www.google.com/intl/en_ALL/mapfiles/openhand.cur), move;
+    //    cursor: url(http://www.google.com/intl/en_ALL/mapfiles/openhand.cur) 8 8, move;
+
+}
+
+.grabbing(){
+    cursor: move;
+    //    cursor: url(http://www.google.com/intl/en_ALL/mapfiles/closedhand.cur), move;
+    //    cursor: url(http://www.google.com/intl/en_ALL/mapfiles/closedhand.cur) 8 8, move;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+    cursor: url(data:image/bmp;base64,AAACAAEAICACAAcABQAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8AAAA/AAAAfwAAAP+AAAH/gAAB/8AAAH/AAAB/wAAA/0AAANsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//////////////////////////////////////////////////////////////////////////////////////gH///4B///8Af//+AD///AA///wAH//+AB///wAf//4AH//+AD///yT/////////////////////////////8=), move;
+    cursor: url(data:image/bmp;base64,AAACAAEAICACAAcABQAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8AAAA/AAAAfwAAAP+AAAH/gAAB/8AAAH/AAAB/wAAA/0AAANsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//////////////////////////////////////////////////////////////////////////////////////gH///4B///8Af//+AD///AA///wAH//+AB///wAf//4AH//+AD///yT/////////////////////////////8=) 8 8, move;
+}
+
+
+//.text-shadow(@style, @c) when (iscolor(@c)) {
+//    text-shadow:         @style @c;
+//    -webkit-text-shadow: @style @c;
+//    -moz-text-shadow:    @style @c;
+//}
+//
+//.text-shadow (@alpha: 50%) when (isnumber(@alpha)) {
+//    .text-shadow (0px 1px 2px, rgba(0, 0, 0, @alpha));
+//}
+//
+//
+//
+//.botCol (@color, @fade:100%) {
+//    border-bottom-color: @color;
+//    border-bottom-color: fadeout(@color, @fade);
+//}
+
+
+
+.xy(@x, @y){
+    top: @y * 1px;
+    left: @x * 1px;
+}
+
+.xy(@x:0){
+    top: @x * 1px;
+    left: @x * 1px;
+}
+.xy1(@x, @y){
+    top: @y * 1px;
+    left: @x * 1px;
+}
+
+
+
+.xyar(@x : 0){
+    position: absolute;
+    top: @x * 1px;
+    right: @x * 1px;
+}
+.xyar(@x, @y){
+    position: absolute;
+    top: @y * 1px;
+    right: @x * 1px;
+}
+
+
+.xyrel(@x, @y){
+    .rel;
+    top: @y * 1px;
+    left: @x * 1px;
+}
+
+.t_r(@xy : 0){ top    : @xy * 1px; right: @xy * 1px; }
+.t_r(@x, @y) { top    : @y  * 1px; right: @x  * 1px; }
+.b_r(@xy : 0){ bottom : @xy * 1px; right: @xy * 1px; }
+.b_r(@x, @y) { bottom : @y  * 1px; right: @x  * 1px; }
+.b_l(@xy : 0){ bottom : @xy * 1px; left : @xy * 1px; }
+.b_l(@x, @y) { bottom : @y  * 1px; left : @x  * 1px; }
+
+
+.__t(@_r:0, @_b:0, @_l:0) {
+    right  : @_r * 1px;
+    bottom : @_b * 1px;
+    left   : @_l * 1px;
+}
+
+.__r(@_t:0, @_b:0, @_l:0) {
+    top    : @_t * 1px;
+    bottom : @_b * 1px;
+    left   : @_l * 1px;
+}
+
+
+
+.__b(@_t:0, @_r:0, @_l:0) {
+    top    : @_t * 1px;
+    right  : @_r * 1px;
+    left   : @_l * 1px;
+}
+
+.__l(@_t:0, @_r:0, @_b:0) {
+    top    : @_t * 1px;
+    right  : @_r * 1px;
+    bottom : @_b * 1px;
+}
+
+.__t(@_x) {
+    right  : @_x * 1px;
+    bottom : @_x * 1px;
+    left   : @_x * 1px;
+}
+
+.__r(@_x) {
+    top    : @_x * 1px;
+    bottom : @_x * 1px;
+    left   : @_x * 1px;
+}
+
+
+.__b(@_x) {
+    top    : @_x * 1px;
+    right  : @_x * 1px;
+    left   : @_x * 1px;
+}
+
+.__l(@_x) {
+    top    : @_x * 1px;
+    right  : @_x * 1px;
+    bottom : @_x * 1px;
+}
+
+
+.xyal(@x : 0) {
+    position: absolute;
+    top: @x * 1px;
+    left: @x * 1px;
+}
+
+.xyal(@x, @y) {
+    position: absolute;
+    top: @y * 1px;
+    left: @x * 1px;
+}
+
+
+
+.xyrtl(@x, @y) {
+    position: relative;
+    left: @x * 1px;
+    top: @y * 1px;
+}
+
+.xyrbl(@x, @y) {
+    position: relative;
+    left: @x * 1px;
+    bottom: @y * 1px;
+}
+
+
+
+.bef() {
+    content: "";
+    position: absolute;
+    display: block;
+}
+
+.bef(rel) {
+    content: "";
+    position: relative;
+    display: block;
+}
+
+.bef(@position: absolute) {
+    content: "";
+    position: @position;
+    display: block;
+}
+
+.befrel() {
+    position: relative;
+    &:before {
+        content: "";
+        position: absolute;
+        display: block;
+    }
+}
+
+.aft() {
+    content: "";
+    position: absolute;
+    display: block;
+}
+
+
+.aftrel() {
+    position: relative;
+    &:after {
+        content: "";
+        position: absolute;
+        display: block;
+    }
+}
+
+.befratio(@ratio: 100%){
+    &:before {
+        content: "";
+        display: block;
+        padding-top: @ratio;
+    }
+}
+
+.befratio(@w, @h){
+    @ratio : percentage(@h / @w);
+    &:before {
+        content: "";
+        display: block;
+        padding-top: @ratio;
+    }
+}
+
+
+//——————————————————————————————————————————————————————————————————————
+// TEXT
+//——————————————————————————————————————————————————————————————————————
+
+
+
+//@font-face LESS Mixin
+// use:
+// .font-face(
+//    @font-family, // name
+//    @file-path, // absolute/relative URL to font files
+//    @font-weight, // light/normal/bold/inherit | 300/400/700
+//    @font-style // italic/normal/inherit
+// )
+.font-face(@font-family, @file-path, @font-weight : 400, @font-style : normal) {
+    @font-face {
+        font-family: @font-family;
+        src: url('@{file-path}.eot');
+        src: url("@{file-path}.eot?#iefix")  format('embedded-opentype'),
+        url('@{file-path}.woff')             format('woff'),
+        url('@{file-path}.ttf')              format('truetype'),
+        url('@{file-path}.svg#@{file-path}') format('svg');
+        font-weight: @font-weight;
+        font-style: @font-style;
+    }
+}
+
+
+.__font(@font: Arial, @serif: sans)      {
+    & when (@serif = sans)     {font-family: @font, Helvetica, Arial, sans-serif; }
+    & when not (@serif = sans) {font-family: @font, "Times New Roman", "Georgia", sans-serif; }
+}
+
+.ffamily(@font: Arial, @serif: sans)      {
+    & when (@serif = sans)     {font-family: @font, Helvetica, Arial, sans-serif; }
+    & when not (@serif = sans) {font-family: @font, "Times New Roman", "Georgia", sans-serif; }
+}
+
+
+//// Placeholder text
+//.placeholder(@color: @input-color-placeholder) {
+//    &::-moz-placeholder           { color: @color;   // Firefox
+//        opacity: 1; } // See https://github.com/twbs/bootstrap/pull/11526
+//    &:-ms-input-placeholder       { color: @color; } // Internet Explorer 10+
+//    &::-webkit-input-placeholder  { color: @color; } // Safari and Chrome
+//}
+
+.mozilla(@rules){
+    @-moz-document url-prefix() {
+        @rules();
+    }
+}
+
+
+.placehold(@rules) {
+    &::-webkit-input-placeholder { @rules(); }
+    &::-moz-placeholder {
+        @rules();
+        opacity: 1;
+    }
+    &:-moz-placeholder { @rules(); }
+    &:-ms-input-placeholder { @rules(); }
+}
+
+.placeholder(@color, @font: 1em inherit) {
+    //font: [font-style||font-variant||font-weight] font-size [/line-height] font-family | inherit
+    &::-webkit-input-placeholder {
+        color: @color;
+        font: @font;
+    }
+
+    &::-moz-placeholder {
+        color: @color;
+        font: @font;
+        opacity: 1;
+    }
+    &:-moz-placeholder {
+        color: @color;
+        font: @font;
+    }
+    &:-ms-input-placeholder {
+        color: @color;
+        font: @font;
+    }
+}
+
+//autofill
+.autofill(@props) {
+    &:-webkit-autofill {@props();}
+    &:-moz-autofill    {@props();}
+    &:-o-autofill      {@props();}
+    &:-khtml-autofill  {@props();}
+}
+.autofill(@props, @focus) {
+    .autofill(@props);
+    &:focus:-webkit-autofill {@focus();}
+    &:focus:-moz-autofill    {@focus();}
+    &:focus:-o-autofill      {@focus();}
+    &:focus:-khtml-autofill  {@focus();}
+}
+
+
+
+.kickText() {text-indent: -9999px}
+.kick() {text-indent: -9999px; .clip; font-size: 0;}
+.legibility() {text-rendering: optimizelegibility;}
+
+//——————————————————————————————————————————————————————————————————————
+
+
+//.paddedLines (@offs, @bgcolor) {
+//  @lh : 1.34;
+//  strong {
+//    background: @bgColor;
+//    font-weight: normal;
+//    left: -1 *  @offs;
+//    line-height: 1.34;
+//    padding: 1px 0;
+//    position: relative;
+//
+//    span {
+//      background: @bgColor;
+//      left: 2 *  @offs;
+//      padding: 1px 0;
+//      position: relative;
+//
+//      em {
+//        background: @bgColor;
+//        font-style: normal;
+//        left: -1 *  @offs;
+//        position: relative;
+//      }
+//
+//    }
+//  }
+//
+//}
+
+
+// Drop shadows
+.box-shadow(@_shadow) when (isstring(@_shadow)){
+    @shadow : ~"@{_shadow}";
+    //-webkit-box-shadow: @shadow;
+    //-moz-box-shadow: @shadow;
+    box-shadow: @shadow;
+}
+
+.box-shadow(@shadow:none) {
+    //-webkit-box-shadow: @shadow;
+    //-moz-box-shadow: @shadow;
+    box-shadow:@shadow;
+}
+
+.box-shadow(@shadow, @shadow2) {
+    //-webkit-box-shadow: @shadow, @shadow2;
+    //-moz-box-shadow: @shadow, @shadow2;
+    box-shadow:@shadow, @shadow2;
+}
+
+.__opacity(@opacity) {
+    opacity: @opacity;
+    // IE8 filter
+    @opacity-ie: (@opacity * 100);
+    //filter: ~"alpha(opacity=@{opacity-ie})";
+}
+.opacity(@o) {
+    & when (@o < 1.1)     { .__opacity(@o); }
+    & when not (@o < 1.1) { .__opacity( @o / 100); }
+}
+.transparent() { background-color: transparent }
+.opaque()   { .__opacity(0); }
+.opacity0() { .__opacity(0); }
+.opacity1() { .__opacity(1); }
+.op(@ar) {.opacity(@ar)}
+.op0() { .__opacity(0); }
+.op1() { .__opacity(1); }
+.op10() {.__opacity(0.1) }
+.op15() {.__opacity(0.15) }
+.op20() {.__opacity(0.2) }
+.op25() {.__opacity(0.25) }
+.op30() {.__opacity(0.3) }
+.op40() {.__opacity(0.4) }
+.op50() {.__opacity(0.5) }
+.op60() {.__opacity(0.6) }
+.op70() {.__opacity(0.7) }
+.op80() {.__opacity(0.8) }
+.op90() {.__opacity(0.9) }
+
+
+.nowrap() { white-space: nowrap; }
+.wrap()   { white-space: normal; }
+
+
+
+
+
+
+
+//Transitions
+
+
+.transition(@_string) when (isstring(@_string)){
+    @transition: e(@_string);
+    transition: @transition;
+}
+
+.transition(@_num) when (isnumber(@_num)){
+    @transition: all (1s * @_num);
+    transition: @transition;
+}
+
+.transition(@transition: all .03s;){
+    transition: @transition;
+}
+
+.trans(...) { .transition(@arguments); }
+.trn(@args : .1s)   { .transition(@args); }
+
+.trn0() { .transition(none);  }
+.trn05(@param: all) { .transition(@param .05s);  }
+.trn1 (@param: all) { .transition(@param .1s);  }
+.trn15(@param: all) { .transition(@param .15s); }
+.trn2 (@param: all) { .transition(@param .2s);  }
+.trn25(@param: all) { .transition(@param .25s); }
+.trn3 (@param: all) { .transition(@param .3s);  }
+.trn35(@param: all) { .transition(@param .35s); }
+.trn4 (@param: all) { .transition(@param .4s);  }
+.trn45(@param: all) { .transition(@param .45s); }
+.trn5 (@param: all) { .transition(@param .5s);  }
+.trn55(@param: all) { .transition(@param .55s); }
+
+
+.transition-delay(@transition-delay) {
+    transition-delay: @transition-delay;
+}
+.transition-duration(@transition-duration) {
+    transition-duration: @transition-duration;
+}
+
+.trans-all (@s) {
+    .transition("all @{s}s");
+}
+
+
+
+
+
+
+
+
+
+// transforms
+
+.transform(@_transform) when (isstring(@_transform)) {
+    @transform: e(@_transform);
+    transform: @transform;
+}
+.transform(@transform) when not (isstring(@transform)) {
+    transform: @transform;
+}
+.transform() {
+    transform: none;
+}
+
+
+.transform-style(@transform : preserve-3d) {
+    transform-style: @transform;
+}
+
+.transform-origin(@transform: 100% 0) {
+    transform-origin: @transform;
+}
+
+
+.perspective(@p:1000) {
+    //-webkit-perspective: @p * 1px;
+    //-moz-perspective: @p * 1px;
+    perspective: @p * 1px;
+}
+
+
+.transform-scale(@x) {
+    //-webkit-transform: scale(@x);
+    //-ms-transform: scale(@x); // IE9 only
+    //-o-transform: scale(@x);
+    transform: scale(@x);
+}
+.scale(...) {.transform-scale(@arguments);}
+.scale100(){.transform-scale(1);}
+.scale90() {.transform-scale(0.9);}
+.scale80() {.transform-scale(0.8);}
+.scale70() {.transform-scale(0.7);}
+.scale60() {.transform-scale(0.6);}
+.scale50() {.transform-scale(0.5);}
+.scale40() {.transform-scale(0.4);}
+.scale30() {.transform-scale(0.3);}
+.scale20() {.transform-scale(0.2);}
+
+.skew(@_angleX, @_angleY){
+    @angleX : @_angleX * 1deg;
+    @angleY : @_angleY * 1deg;
+    .transform(~"skew(@{angleX}, @{angleY})");
+}
+
+.skewX(@_angleX){
+    @angleX : @_angleX * 1deg;
+    .transform(~"skewX(@{angleX})");
+}
+
+
+.move(@x : 0, @y : 0) {
+    //-webkit-transform: translate(@x * 1px, @y * 1px);
+    //-ms-transform: translate(@x * 1px, @y * 1px); // IE9 only
+    //-o-transform: translate(@x * 1px, @y * 1px);
+    transform: translate(@x * 1px, @y * 1px);
+}
+
+.moveX(@x : 0) {
+    //-webkit-transform: translateX(@x * 1px);
+    //-ms-transform: translateX(@x * 1px); // IE9 only
+    //-o-transform: translateX(@x * 1px);
+    transform: translateX(@x * 1px);
+}
+
+.moveY(@y : 0) {
+    //-webkit-transform: translateY(@y * 1px);
+    //-ms-transform: translateY(@y * 1px); // IE9 only
+    //-o-transform: translateY(@y * 1px);
+    transform: translateY(@y * 1px);
+}
+
+.rotate(@_deg : 0) {
+    @deg : 1deg * @_deg;
+    //-webkit-transform:  rotate(@deg);
+    //-moz-transform:     rotate(@deg);
+    //-ms-transform:      rotate(@deg);
+    //-o-transform:       rotate(@deg);
+    transform:          rotate(@deg);
+}
+
+.rotatey(@_deg : 0) {
+    @deg : 1deg * @_deg;
+    //-webkit-transform:  rotateY(@deg);
+    //-moz-transform:     rotateY(@deg);
+    //-ms-transform:      rotateY(@deg);
+    //-o-transform:       rotateY(@deg);
+    transform:          rotateY(@deg);
+}
+
+//.scale(@factor) {
+//    -webkit-transform:  scale(@factor);
+//    -moz-transform:     scale(@factor);
+//    -ms-transform:      scale(@factor);
+//    -o-transform:       scale(@factor);
+//    transform:          scale(@factor);
+//}
+//
+
+//
+
+
+
+
+.filter_grayscale(@g){
+    @f: grayscale(@g);
+    filter        : @f;
+    //-webkit-filter: @f;
+    //-moz-filter   : @f;
+    //-ms-filter    : @f;
+    //-o-filter     : @f;
+}
+.blur(@_b:0){
+    @b: @_b * 1px;
+    filter        : blur(@b);
+    //-webkit-filter: blur(@b);
+    //-moz-filter   : blur(@b);
+}
+
+
+
+
+
+.rounded100() {
+    @radius: 100% ;
+    //-webkit-border-radius: @radius;
+    //-khtml-border-radius: @radius;
+    //-moz-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.circle(@rad : 50)  when (isem(@rad)) {
+    width: @rad;
+    height: @rad;
+    .rounded100;
+}
+
+.circle(@rad : 50) when not (isem(@rad)) {
+    width: (@rad * 1px);
+    height: (@rad * 1px);
+    .rounded100;
+}
+
+.centrate(){
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.centratexy(@s: 16px) {
+    width:  @s * 1px;
+    height: @s * 1px;
+    left: -@s / 2px;
+    top:  -@s / 2px;
+    margin-left: 50%;
+    margin-top : 50%;
+}
+.centratexy(@w: 16, @h: 16) {
+    width : @w * 1px;
+    height: @h * 1px;
+    left: -@w / 2px;
+    margin-top:  -@h / 2px;
+    margin-left: 50%;
+    top : 50%;
+}
+
+
+.stretch(@s : 0) {
+    @_s :  @s * 1px;
+    position: absolute;
+    top   : @_s;
+    right : @_s;
+    bottom: @_s;
+    left  : @_s;
+}
+
+.stretch(@_t, @_r, @_b, @_l) {
+    position: absolute;
+    @l : @_l * 1px;
+    @t : @_t * 1px;
+    @r : @_r * 1px;
+    @b : @_b * 1px;
+    top    : @t;
+    right  : @r;
+    bottom : @b;
+    left   : @l;
+}
+
+
+
+.stretch(@x, @y) {
+    @_x :  @x * 1px;
+    @_y :  @y * 1px;
+    position: absolute;
+    top   : @_y;
+    right : @_x;
+    bottom: @_y;
+    left  : @_x;
+}
+
+
+.stretch-rectangle(@_t, @_r, @_b, @_l) {
+    @l : @_l * 1px;
+    @t : @_t * 1px;
+    @r : @_r * 1px;
+    @b : @_b * 1px;
+    top    : @t;
+    right  : @r;
+    bottom : @b;
+    left   : @l;
+}
+
+.stretch-rectangle(@s : 0) {
+    top:    @s * 1px;
+    right:  @s * 1px;
+    bottom: @s * 1px;
+    left:   @s * 1px;
+}
+
+
+
+.vcentrate-container() {
+    .inbl;
+    vertical-align: middle;
+}
+
+.vcentrate-wrapper() {
+    &:before {
+        .inbl;
+        vertical-align: middle;
+
+        .cont;
+        width: 0;
+        height: 100%;
+        margin-left: -0.25em;
+    }
+
+}
+
+
+
+
+
+.columns(@colcount: 0, @colgap: 50px, @colwidth: auto,  @columnRuleColor: transparent, @columnRuleStyle: none, @columnRuleWidth: 0) {
+    //-moz-column-width: @colwidth;
+    //-moz-column-count: @colcount;
+    //-moz-column-gap: @colgap;
+    //-moz-column-rule-color: @columnRuleColor;
+    //-moz-column-rule-style: @columnRuleStyle;
+    //-moz-column-rule-width: @columnRuleWidth;
+    //-webkit-column-width: @colwidth;
+    //-webkit-column-count: @colcount;
+    //-webkit-column-gap: @colgap;
+    //-webkit-column-rule-color: @columnRuleColor;
+    //-webkit-column-rule-style: @columnRuleStyle;
+    //-webkit-column-rule-width: @columnRuleWidth;
+    column-width: @colwidth;
+    column-count: @colcount;
+    column-gap: @colgap;
+    column-rule-color: @columnRuleColor;
+    column-rule-style: @columnRuleStyle;
+    column-rule-width: @columnRuleWidth;
+}
+
+
+
+
+
+
+
+
+
+//——————————————————————————————————————————————————————————————————————
+// RANDOMS
+//——————————————————————————————————————————————————————————————————————
+
+
+
+/* Mixin to generate random number;
+   int should be 0 or 1, 1 being to make it an integer
+*/
+.random_num(@min: 0, @max: @min+1, @int: 1) {
+    .checkInt() {
+        @getNum: `Math.random() * (@{max} - @{min} + @{int})`;
+        @base: unit(`@{int} == 1 ? Math.floor(@{getNum}) : @{getNum}`);
+    }
+    .checkInt();
+    @rand: @base + @min;
+}
+
+.random_str(@base: 'randstr'){
+    .random_num(@max:87654321);
+    @rand_str: 'p@{base}@{rand}';
+}
+.random_name(@base: 'randname'){
+    .random_str(@base);
+    @rand_name: ~'@{rand_str}';
+}
+
+
+.random_color() {
+    @random: `(Math.random()*0xFFFFFF<<0).toString(16)`;
+    @colorHex: e(@random);
+    @random_color: ~"#@{colorHex}";
+}
+
+// random color mixed with base color
+.random_color(@base_color; @mix : 80%) {
+    @r : `Math.round(Math.random() * 255)`;
+    @g : `Math.round(Math.random() * 255)`;
+    @b : `Math.round(Math.random() * 255)`;
+    @rand_col: rgb(@r, @g, @b);
+
+    @random_color: mix(@rand_col, @base_color, 100% - @mix);
+}
+
+
+
+.random_value(...) {
+    @length: length(@arguments);
+    @random: `Math.ceil(Math.random() * (@{length}))`;
+    @random_value: extract(@arguments, @random);
+}
+
+
+.set_random_value(@prop, @list...) {
+    .random_num(1, length(@list),  1);
+    @value: extract(@list, @rand);
+        @{prop} : @value;
+}
+
+
+
+
+
+
+//——————————————————————————————————————————————————————————————————————
+// GRADIENTS
+//——————————————————————————————————————————————————————————————————————
+
+
+
+// Gradients
+#gradient {
+    .horizontal(@startColor: #555, @endColor: #333) {
+        //        background-color: @endColor;
+        background-image: -moz-linear-gradient(left, @startColor, @endColor); // FF 3.6+
+        background-image: -webkit-gradient(linear, 0 0, 100% 0, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
+        background-image: -webkit-linear-gradient(left, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+        background-image: -o-linear-gradient(left, @startColor, @endColor); // Opera 11.10
+        background-image: linear-gradient(to right, @startColor, @endColor); // Standard, IE10
+        background-repeat: repeat-x;
+        //        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=1)",argb(@startColor),argb(@endColor))); // IE9 and down
+    }
+    .horizontal-double(@startColor: #555, @endColor: #333) {
+        background: @startColor; /* Old browsers */
+        /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+        //      background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjA2MyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2ZmNjA2MyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+        background: -moz-linear-gradient(left,  @startColor 0%, @startColor 50%, @endColor 50%, @endColor 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, right top, color-stop(0%,@startColor), color-stop(50%,@startColor), color-stop(50%,@endColor), color-stop(100%,@endColor)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(left,  @startColor 0%,@startColor 50%,@endColor 50%,@endColor 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(left,  @startColor 0%,@startColor 50%,@endColor 50%,@endColor 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(left,  @startColor 0%,@startColor 50%,@endColor 50%,@endColor 100%); /* IE10+ */
+        background: linear-gradient(to right,  @startColor 0%,@startColor 50%,@endColor 50%,@endColor 100%); /* W3C */
+        //      filter: e(%("progid:DXImageTransform.Microsoft.gradient( startColorstr='@startColor', endColorstr='@endColor',GradientType=1 )",argb(@startColor),argb(@endColor))); // IE9 and down
+        background-repeat: repeat-x;
+        //        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=1)",argb(@startColor),argb(@endColor))); // IE9 and down
+    }
+    .vertical(@startColor: #555, @endColor: #333) {
+        background-color: mix(@startColor, @endColor, 60%);
+        background-image: -moz-linear-gradient(top, @startColor, @endColor); // FF 3.6+
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
+        background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+        background-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10
+        background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
+        background-repeat: repeat-x;
+        //        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down
+    }
+    .directional(@startColor: #555, @endColor: #333, @_deg: 45deg) {
+        @deg : @_deg * 1deg;
+        background-color: @endColor;
+        background-repeat: repeat-x;
+        background-image: -moz-linear-gradient(@deg, @startColor, @endColor); // FF 3.6+
+        background-image: -webkit-linear-gradient(@deg, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+        background-image: -o-linear-gradient(@deg, @startColor, @endColor); // Opera 11.10
+        background-image: linear-gradient(@deg, @startColor, @endColor); // Standard, IE10
+    }
+    .horizontal-three-colors(@startColor: #00b3ee, @midColor: #7a43b6, @colorStop: 50%, @endColor: #c3325f) {
+        background-color: mix(@midColor, @endColor, 80%);
+        background-image: -webkit-gradient(left, linear, 0 0, 0 100%, from(@startColor), color-stop(@colorStop, @midColor), to(@endColor));
+        background-image: -webkit-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+        background-image: -moz-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+        background-image: -o-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+        background-image: linear-gradient(to right, @startColor, @midColor @colorStop, @endColor);
+        background-repeat: no-repeat;
+        //        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down, gets no color-stop at all for proper fallback
+    }
+
+    .vertical-three-colors(@startColor: #00b3ee, @midColor: #7a43b6, @colorStop: 50%, @endColor: #c3325f) {
+        background-color: mix(@midColor, @endColor, 80%);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), color-stop(@colorStop, @midColor), to(@endColor));
+        background-image: -webkit-linear-gradient(@startColor, @midColor @colorStop, @endColor);
+        background-image: -moz-linear-gradient(top, @startColor, @midColor @colorStop, @endColor);
+        background-image: -o-linear-gradient(@startColor, @midColor @colorStop, @endColor);
+        background-image: linear-gradient(@startColor, @midColor @colorStop, @endColor);
+        background-repeat: no-repeat;
+        //        filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down, gets no color-stop at all for proper fallback
+    }
+    .radial(@innerColor: #555, @outerColor: #333, @shape: circle) {
+        background-color: @outerColor;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(@innerColor), to(@outerColor));
+        background-image: -webkit-radial-gradient(@shape, @innerColor, @outerColor);
+        background-image: -moz-radial-gradient(@shape, @innerColor, @outerColor);
+        background-image: -o-radial-gradient(@shape, @innerColor, @outerColor);
+        background-repeat: no-repeat;
+    }
+
+    .radial_custom(@gradient: ~"50% 50%, ellipse cover, rgba(255,255,255,0) 0%, white 100%" ) {
+        background-image:    -moz-radial-gradient(@gradient); // FF3.6+
+        background-image: -webkit-radial-gradient(@gradient); // Chrome10+,Safari5.1+
+        background-image:      -o-radial-gradient(@gradient); // Opera 11.10+
+        background-image:     -ms-radial-gradient(@gradient); // IE10+
+        background-image:         radial-gradient(@gradient); // W3C
+        background-repeat: no-repeat;
+    }
+
+    .vignette(@outer_color: white; @inner_pos : 20%; @outer_pos : 100%;) {
+        @_inner_pos : @inner_pos * 1%;
+        @_outer_pos : @outer_pos * 1%;
+        @inner_color: fadeout(@outer_color, 100%);
+        @gradient: 50% 50%, ellipse cover, @inner_color @_inner_pos, @outer_color @_outer_pos;
+
+
+        background:    -moz-radial-gradient(@gradient); // FF3.6+
+        background: -webkit-radial-gradient(@gradient); // Chrome10+,Safari5.1+
+        background:      -o-radial-gradient(@gradient); // Opera 11.10+
+        background:     -ms-radial-gradient(@gradient); // IE10+
+        background:         radial-gradient(@gradient); // W3C
+        background-repeat: no-repeat;
+    }
+
+
+
+
+    .striped(@color: #555, @color2: rgba(255,255,255,.15), @angle: -45deg) when (iscolor(@color2)){
+        //        @color2: rgba(255,255,255,.15);
+        background-color: @color;
+        background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, @color2), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, @color2), color-stop(.75, @color2), color-stop(.75, transparent), to(transparent));
+        background-image: -webkit-linear-gradient(@angle, @color2 25%, transparent 25%, transparent 50%, @color2 50%, @color2 75%, transparent 75%, transparent);
+        background-image: -moz-linear-gradient(@angle, @color2 25%, transparent 25%, transparent 50%, @color2 50%, @color2 75%, transparent 75%, transparent);
+        background-image: -o-linear-gradient(@angle, @color2 25%, transparent 25%, transparent 50%, @color2 50%, @color2 75%, transparent 75%, transparent);
+        background-image: linear-gradient(@angle, @color2 25%, transparent 25%, transparent 50%, @color2 50%, @color2 75%, transparent 75%, transparent);
+    }
+    .striped(@color: #555, @angle: -45deg) when not (iscolor(@angle)) {
+        @color2: rgba(255,255,255,.15);
+        background-color: @color;
+        background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, @color2), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, @color2), color-stop(.75, @color2), color-stop(.75, transparent), to(transparent));
+        background-image: -webkit-linear-gradient(@angle, @color2 25%, transparent 25%, transparent 50%, @color2 50%, @color2 75%, transparent 75%, transparent);
+        background-image: -moz-linear-gradient(@angle, @color2 25%, transparent 25%, transparent 50%, @color2 50%, @color2 75%, transparent 75%, transparent);
+        background-image: -o-linear-gradient(@angle, @color2 25%, transparent 25%, transparent 50%, @color2 50%, @color2 75%, transparent 75%, transparent);
+        background-image: linear-gradient(@angle, @color2 25%, transparent 25%, transparent 50%, @color2 50%, @color2 75%, transparent 75%, transparent);
+    }
+
+    .custom (@w3c_deg, @str) {
+
+        @old_deg: (90 - @w3c_deg);
+
+        // Chrome,Safari4+
+        //        background:        -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(249,0,249,1)), color-stop(1%, rgba(249,0,249,1)), color-stop(49%, rgba(249,0,172,1)), color-stop(50%, rgba(249,0,170,0)), color-stop(100%, rgba(255,124,216,0)));
+
+        background: ~"-webkit-linear-gradient(@{old_deg}deg, @{str})";  //Chrome10+,Safari5.1+
+        background:    ~"-moz-linear-gradient(@{old_deg}deg, @{str})";  //FF3.6+
+        background:     ~"-ms-linear-gradient(@{old_deg}deg, @{str})";  //IE10+
+        background:      ~"-o-linear-gradient(@{old_deg}deg, @{str})";  //Opera 11.10+
+        background:         ~"linear-gradient(@{w3c_deg}deg, @{str})";  //W3C
+        //    .ie6 .gradient, .ie7 .gradient (@startColor: rgba(0,0,0,0.75), @endColor: rgba(0,0,0,0.25) {
+        //        @ieStartColor: rgbahex(@{startColor});
+        //        @ieEndColor: rgbahex(@{endColor});
+        //        background: transparent;
+        //        filter: ~"progid:DXImageTransform.Microsoft.gradient("gradient(start=@ieStartColor,end=@ieEndColor)")";
+        //    }
+        //
+        //        .ie8 .gradient (@startColor: rgba(0,0,0,0.75), @endColor: rgba(0,0,0,0.25) {
+        //       @ieStartColor: rgbahex(@{startColor});
+        //        @ieEndColor: rgbahex(@{endColor});
+        //    background: transparent;
+        //        -ms-filter: ~"progid:DXImageTransform.Microsoft.gradient("gradient(start=@ieStartColor,end=@ieEndColor)")";
+        //    }
+
+        //IE6-8 fallback on horizontal gradient
+        //        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f900f9', endColorstr='#00ff7cd8',GradientType=1 );
+        // IE9 SVG, needs conditional override of 'filter' to 'none'
+        //        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZjkwMGY5IiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMSUiIHN0b3AtY29sb3I9IiNmOTAwZjkiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSI0OSUiIHN0b3AtY29sb3I9IiNmOTAwYWMiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiNmOTAwYWEiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmY3Y2Q4IiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+    }
+
+    .lazy_linear (@color: #000, @coef: 5%){
+        background: lighten(@color, @coef); /* Old browsers */
+        background: -moz-linear-gradient(top, lighten(@color, @coef) 0%, darken(@color, @coef) 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,lighten(@color, @coef)), color-stop(100%,darken(@color, @coef))); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top, lighten(@color, @coef) 0%,darken(@color, @coef) 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top, lighten(@color, @coef) 0%,darken(@color, @coef) 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top, lighten(@color, @coef) 0%,darken(@color, @coef) 100%); /* IE10+ */
+        background: linear-gradient(to bottom, lighten(@color, @coef) 0%,darken(@color, @coef) 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='lighten(@color, @coef)', endColorstr='darken(@color, @coef)',GradientType=0 ); /* IE6-9 */
+    }
+
+    .custom (@w3c_deg1, @str1, @w3c_deg2, @str2 ) {
+        @old_deg1: (90 - @w3c_deg1);
+        @old_deg2: (90 - @w3c_deg2);
+        background: ~"-webkit-linear-gradient(@{old_deg1}deg, @{str1}), -webkit-linear-gradient(@{old_deg2}deg, @{str1})";
+        background:    ~"-moz-linear-gradient(@{old_deg1}deg, @{str1}), -moz-linear-gradient(@{old_deg2}deg, @{str1})";
+        background:     ~"-ms-linear-gradient(@{old_deg1}deg, @{str1}), -ms-linear-gradient(@{old_deg2}deg, @{str1})";
+        background:      ~"-o-linear-gradient(@{old_deg1}deg, @{str1}), -o-linear-gradient(@{old_deg2}deg, @{str1})";
+        background:         ~"linear-gradient(@{w3c_deg1}deg, @{str1}), linear-gradient(@{w3c_deg2}deg, @{str1})";
+    }
+
+
+
+
+
+
+    .mesh(
+        @C1: rgba(198, 255, 74, 0.21);
+        @C3: rgba(128, 127, 12, 0.34);
+        @C4_1 : rgba(135, 255, 122, 0.62);
+        @C5_1 : rgba(255, 155, 62, 0.68);
+        @C2: transparent;
+    ){
+        /* Note: This gradient may render differently in browsers that don't support the unprefixed gradient syntax */
+
+
+        @stop1 : 0.4;
+
+        @colors1 : @C1 0%, @C2 (100% * @stop1), @C3 100%;
+        @combi1 : bottom right, @colors1;
+
+        @bg1_1: linear-gradient(to top left, @colors1); /* W3C Markup, IE10 Release Preview */
+        @bg1_2:      -o-linear-gradient(@combi1);        /* Opera */
+        @bg1_3:     -ms-linear-gradient(@combi1);/* IE10 Consumer Preview */
+        @bg1_4:    -moz-linear-gradient(@combi1); /* Mozilla Firefox */
+        @bg1_5: -webkit-linear-gradient(@combi1); /* Webkit (Chrome 11+) */
+        @bg1_6: -webkit-gradient(linear, right bottom, left top, color-stop(0, @C1), color-stop(@stop1, @C2), color-stop(1, @C3));        /* Webkit (Safari/Chrome 10) */
+
+
+        @dir2 : left bottom;
+        @C4_2 : fadeout(@C4_1, 90%);
+        @C4_3 : transparent;
+        @stop2 : 0.7;
+        @colors2 : @C4_1 0%, @C4_2 (100% * @stop2), @C4_3 100%;
+        @combi2  : @dir2, ellipse farthest-side, @colors2;
+
+        @bg2_1: radial-gradient(ellipse farthest-side at @dir2, @colors2);        /* W3C Markup, IE10 Release Preview */
+        @bg2_2: -o-radial-gradient(@combi2);        /* Opera */
+        @bg2_3: -ms-radial-gradient(@combi2);        /* IE10 Consumer Preview */
+        @bg2_4: -moz-radial-gradient(@combi2);        /* Mozilla Firefox */
+        @bg2_5: -webkit-radial-gradient(@combi2);        /* Webkit (Chrome 11+) */
+        @bg2_6: -webkit-gradient(radial, @dir2, 0, @dir2, 973, color-stop(0, @C4_1), color-stop(@stop2, @C4_2), color-stop(1, @C4_3));        /* Webkit (Safari/Chrome 10) */
+
+
+        @dir3 : right top;
+        @C5_2 : fadeout(@C5_1, 80%);
+        @C5_3 : transparent;
+        @stop3 : 0.9;
+        @colors3 : @C5_1 0%, @C5_2 (100% * @stop3), @C5_3 100%;
+        @combi3  : @dir3, ellipse farthest-side, @colors3;
+        @bg3_1:         radial-gradient(ellipse farthest-side at @dir3, @colors3);        /* W3C Markup, IE10 Release Preview */
+        @bg3_2:      -o-radial-gradient(@combi3);        /* Opera */
+        @bg3_3:     -ms-radial-gradient(@combi3);        /* IE10 Consumer Preview */
+        @bg3_4:    -moz-radial-gradient(@combi3);        /* Mozilla Firefox */
+        @bg3_5: -webkit-radial-gradient(@combi3);        /* Webkit (Chrome 11+) */
+        @bg3_6: -webkit-gradient(radial, @dir3, 0, @dir3, 973, color-stop(0, @C5_1), color-stop(@stop3, @C5_2), color-stop(1, @C5_3));        /* Webkit (Safari/Chrome 10) */
+
+        background-image:  @bg2_1, @bg3_1, @bg1_1;
+        background-image:  @bg2_2, @bg3_2, @bg1_2;
+        background-image:  @bg2_3, @bg3_3, @bg1_3;
+        background-image:  @bg2_4, @bg3_4, @bg1_4;
+        background-image:  @bg2_5, @bg3_5, @bg1_5;
+        background-image:  @bg2_6, @bg3_6, @bg1_6;
+
+    }
+
+    .mesh1(@c1: #cca134; @c2: #30cc1b; @c3: #b4cc36; @c4: #cc0d0b;){
+        @fade_c1: 100% - 25;
+        @fade_c2: 100% - 30;
+        @fade_c3: 100% - 29;
+        @fade_c4: 100% - 35;
+        .mesh(
+                fadeout(@c1, @fade_c1);
+                fadeout(@c2, @fade_c2);
+                fadeout(@c3, @fade_c3);
+                fadeout(@c4, @fade_c4);
+        );
+    }
+
+}
+
+#saw {
+    .up(@c, @_w : 20){
+        @w: (@_w * 1px);
+        @h : @w;
+
+        //        background: linear-gradient(315deg, @c 25%, transparent 25%), linear-gradient(45deg, @c 25%, transparent 25%);
+        #gradient > .custom(315, "@{c} 25%, transparent 25%", 45, "@{c} 25%, transparent 25%");
+        background-size: (@w * 1px) @h;
+        height: @h;
+
+
+    }
+}
+
+
+
+// Reset filters for IE
+.reset-filter() {
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
+}
+
+.vgradient(@c1, @c2) {
+    #gradient > .vertical (@c1, @c2)
+}
+.hgradient(@c1, @c2) {
+    #gradient > .horizontal (@c1, @c2)
+}
+
+
+.red-stripes(@size: 10px){
+    #gradient > .striped(#fff2e4, 135deg);
+    .bgsize(@size @size);
+    background-repeat: repeat;
+}
+
+.stripes(@col, @size: 10px){
+    #gradient > .striped(@col, 135deg);
+    .bgsize(@size @size);
+    background-repeat: repeat;
+}
+
+
+
+.loading() {
+    #gradient > .striped(#7acd00);
+    .bgsize(40px 40px);
+    background-repeat: repeat;
+    .applyAnimation(progress-bar-stripes 2s linear infinite;);
+}
+
+.loading(@c, @c2: rgba(255,255,255,.15)) {
+    #gradient > .striped(@c, @c2);
+    .bgsize(40px 40px);
+    background-repeat: repeat;
+    .applyAnimation(progress-bar-stripes 2s linear infinite;);
+}
+
+
+.set_bg_stripe(@c, @g){
+    @c1 : fadeout(white, 80%);
+    @c2 : fadeout(white, 20%);
+
+    background-size: (@c + @g) (@c + @g);
+
+    background-image: linear-gradient(
+            135deg,
+            @c1 25%,
+            @c2 25%, @c2 50%,
+            @c1 50%, @c1 75%,
+            @c2 75%
+    );
+
+    background-image: -webkit-linear-gradient(
+            135deg,
+            @c1 25%,
+            @c2 25%, @c2 50%,
+            @c1 50%, @c1 75%,
+            @c2 75%
+    );
+
+    background-image: -moz-linear-gradient(
+            135deg,
+            @c1 25%,
+            @c2 25%, @c2 50%,
+            @c1 50%, @c1 75%,
+            @c2 75%
+    );
+}
+
+
+
+
+//——————————————————————————————————————————————————————————————————————
+/// Drawing shapes
+//——————————————————————————————————————————————————————————————————————
+
+
+
+#triangle {
+    .up(@color: #ccc, @w: 16px, @h: 10px) {
+        width: 0;
+        height: 0;
+        @w3: floor(((@w * 1px) / 2));
+
+        border-style: none solid solid solid;
+        border-color: transparent transparent @color transparent;
+        border-width: 0 @w3 @h @w3 ;
+    }
+
+    .right(@color: #ccc, @w: 16px, @h: 10px) {
+        width: 0;
+        height: 0;
+        @w3: floor(((@w * 1px) / 2));
+
+        border-style: solid none solid solid;
+        border-color: transparent transparent transparent @color;
+        border-width: @w3 0 @w3 @h ;
+    }
+
+    .down(@color: #ccc, @w: 16px, @h: 10px) {
+        width: 0;
+        height: 0;
+        @w3: floor(((@w * 1px) / 2));
+
+        border-style: solid solid none solid;
+        border-color: @color transparent transparent transparent;
+        border-width: @h @w3 0 @w3;
+    }
+
+    .left(@color: #ccc, @w: 16px, @h: 10px) {
+        width: 0;
+        height: 0;
+        @w3: floor(((@w * 1px) / 2));
+
+        border-style: solid solid solid none;
+        border-color: transparent @color transparent transparent;
+        border-width: @w3 @h @w3 0;
+    }
+
+}
+
+//——————————————————————————————————————————————————————————————————————
+// triangles
+//——————————————————————————————————————————————————————————————————————
+
+#arrow {
+    .up(@color: #ccc, @w: 16px, @h: 10px, @shift: 50%){
+        &:after {
+            @w2: floor(((@w * 1px) / -2));
+            @w3: floor(((@w * 1px) / 2));
+            position: absolute;
+            content: "";
+            display: block;
+            top : (@h * (-1));
+            left: @shift;
+            margin-left: @w2;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-top-style: none;
+            border-color: transparent;
+            border-bottom-color: @color;
+            border-width: 0 @w3 @h;
+        }
+    }
+    .up-color(@color) {
+        &:after {
+            border-bottom-color: @color;
+        }
+    }
+
+    .down(@color: #ccc, @w: 16px, @h: 10px, @shift: 50%){
+        &:after {
+            @w2: floor((@w / -2));
+            @w3: floor((@w / 2));
+            position: absolute;
+            content: "";
+            display: block;
+            top : 100%;
+            left: @shift;
+            margin-left: @w2;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-bottom-style: none;
+            border-color: transparent;
+            border-top-color: @color;
+            border-width: @h @w3 0 @w3;
+        }
+    }
+    .down-color(@color) {
+        &:after {
+            border-top-color: @color;
+        }
+    }
+
+    .right(@color: #ccc, @w: 16px, @h: 10px, @shift: 0, @top: 50%) when not (ispercentage(@shift)){
+        &:after {
+            content: "";
+            @w2: floor((@w / -2));
+            @w3: floor((@w / 2));
+            width: 0;
+            height: 0;
+            position: absolute;
+            display: block;
+            border-style: solid;
+
+            left : 100%;
+            top: @top;
+            margin-top: (@w2 + (@shift * 1px));
+            border-right-style: none;   //in the right direction
+            border-color: transparent transparent transparent @color;//in the opposite direction
+            border-width: @w3 0 @w3 @h ;  //right direction - 0, opposite = h, others - w3
+        }
+    }
+
+    .right(@color: #ccc, @w: 16px, @h: 10px, @shift: 0, @top: 50%) when (ispercentage(@shift)){
+        &:after {
+            content: "";
+            @w2: floor((@w / -2));
+            @w3: floor((@w / 2));
+            width: 0;
+            height: 0;
+            position: absolute;
+            display: block;
+            border-style: solid;
+
+            left : 100%;
+            top: (@top + @shift);
+            margin-top: @w2;
+            border-right-style: none;
+            border-color: transparent transparent transparent @color;
+            border-width: @w3 0 @w3 @h ;
+        }
+    }
+    .right-color(@color) {
+        &:after {
+            border-color: transparent transparent transparent @color;
+        }
+    }
+
+
+    .left(@color: #ccc, @w: 16px, @h: 10px, @shift: 0, @top: 50%) when not (ispercentage(@shift)){
+        &:after {
+            content: "";
+            @w2: floor((@w / -2));
+            @w3: floor((@w / 2));
+            width: 0;
+            height: 0;
+            position: absolute;
+            display: block;
+            border-style: solid;
+
+            top: @top;
+            margin-top: (@w2 + (@shift * 1px));
+            right : 100%;
+
+            border-left-style: none;
+            border-color: transparent @color transparent transparent;
+            border-width: @w3 @h @w3 0 ;
+        }
+    }
+
+
+    .left(@color: #ccc, @w: 16px, @h: 10px, @shift: 0, @top: 50%) when (ispercentage(@shift)) {
+        &:after {
+            content: "";
+            @w2: floor((@w / -2));
+            @w3: floor((@w / 2));
+            width: 0;
+            height: 0;
+            position: absolute;
+            display: block;
+            border-style: solid;
+
+            top: (@top + @shift);
+            margin-top: @w2;
+            right : 100%;
+
+            border-left-style: none;
+            border-color: transparent @color transparent transparent;
+            border-width: @w3 @h @w3 0 ;
+        }
+    }
+    .left-color(@color) {
+        &:after {
+            border-color: transparent @color transparent transparent;
+        }
+    }
+}
+
+
+
+.icon_close(@c : white, @s : 16, @w : 1, @rotate: 0) {
+    .size(@s);
+    .rel;
+    .transform(translate(8px, 4px));
+
+    & when not (@rotate = 0) {
+        &:before { .rotate(@rotate); }
+        &:after  { .rotate(180 - @rotate); }
+    }
+
+    &:after ,
+    &:before {
+        .bef;
+        .size(@w, floor(@s / 2));
+        .xy(0,0);
+        .bgc(@c);
+    }
+}
+
+
+
+
+.closecross(@c1:#888, @c2:#333){
+    .cursor_pointer();
+    &:before, &:after {
+        .bef;
+        width: 100%;
+        top: 50%;
+        height: 1px;
+        background: @c1;
+    }
+    &:hover:before, &:hover:after {
+
+        background: @c2;
+    }
+    &:after  { .transform(rotate(-45deg)); }
+    &:before { .transform(rotate(45deg)); }
+}
+
+
+
+.pseudocross(@_w: 4px, @c1: white){
+    @w : @_w * 1px;
+    &:before, &:after {
+        .bef;
+        background-color: @c1;
+    }
+    &:after  {width : 100%; height: @w; top: 50%; left: 0; margin-top: @w/-2; }
+    &:before {height: 100%; width: @w; left: 50%; top: 0; margin-left: @w/-2; }
+}
+
+.pseudocross(@_w, @c1, @c2 ){
+    .pseudocross(@_w, @c1);
+    &:hover:before, &:hover:after {
+        background-color: @c2;
+    }
+}
+
+
+
+
+
+
+//——————————————————————————————————————————————————————————————————————
+// ANIMATIONS
+//——————————————————————————————————————————————————————————————————————
+
+
+//.med_less(@to, @rules) {
+//    @media (max-width : (@to * 1px)) { @rules(); }
+//}
+//
+//.med_more(@_from, @rules) {
+//    @from : @_from + 1;
+//    @media (min-width : (@from * 1px)) { @rules(); }
+//}
+.med(@_from, @rules) {
+    @from : @_from + 1;
+    @media (min-width : (@from * 1px)) { @rules(); }
+}
+
+.med(@_from, @to, @rules){
+    & when (@_from = 0) {
+        @media (max-width : (@to * 1px)) { @rules(); }
+    }
+    & when not (@_from = 0) {
+        @from : @_from * 1px + 1;
+        @media (min-width: (@from)) and (max-width : (@to * 1px)) {
+            @rules();
+        }
+    }
+}
+
+
+
+.medh(0, @to, @rules) {
+    @media (max-height : (@to * 1px)) { @rules(); }
+}
+.medh(@_from, @rules) {
+    @from : @_from + 1;
+    @media (max-height : (@from * 1px)) { @rules(); }
+}
+.medh(@_from, @to, @rules) when not (@_from = 0) {
+    @from : @_from + 1;
+    @media (min-height: (@from * 1px)) and (max-height : (@to * 1px)) {
+        @rules();
+    }
+}
+
+
+
+
+
+//——————————————————————————————————————————————————————————————————————
+// ANIMATIONS
+//——————————————————————————————————————————————————————————————————————
+
+.applyAnimation (@ani) {
+    -webkit-animation: @ani;
+    -moz-animation: @ani;
+    -ms-animation: @ani;
+    -o-animation: @ani;
+    animation: @ani;
+}
+
+
+.keyframes(@name, @rules) {
+    @-webkit-keyframes @name { @rules(); }
+    @-moz-keyframes    @name { @rules(); }
+    @-ms-keyframes     @name { @rules(); }
+    @-o-keyframes      @name { @rules(); }
+    @keyframes         @name { @rules(); }
+}
+
+.keyframes0100(@name, @props0, @props100) {
+    @rules : {
+        0%  {@props0();}
+        100% {@props100();}
+    };
+    .keyframes(@name, @rules);
+}
+
+.play_animation(@keyframes_name; @length: 1s; @type : normal; @easing: linear; ) {
+    .applyAnimation(@keyframes_name @length @easing @type)
+}
+
+.loop(@keyframes_name; @length: 1s; @type : normal; @easing: linear; ) {
+    .applyAnimation(@keyframes_name @length @easing infinite @type)
+}
+.loop_alternate(@keyframes_name; @length: 1s; @type : alternate; @easing: linear; ) { // normal|reverse|alternate|alternate-reverse|initial|inherit;
+    .applyAnimation(@keyframes_name @length @easing infinite @type)
+}
+
+.loop_props(@prop0; @prop1; @length: 1s; @type : normal; @easing: linear; ) {
+    .random_name('df');
+    @name: @rand_name;
+    .keyframes0100(@name; @prop0; @prop1;);
+    .loop_alternate(@name, @length);
+}
+
+.loop_props_normal(@prop0; @prop1; @length: 1s; @type : normal; @easing: linear; ) {
+    .random_name('df');
+    @name: @rand_name;
+    .keyframes0100(@name; @prop0; @prop1;);
+    .loop(@name, @length);
+}
+
+
+
+.keyframes_transform(@name, @t1, @t2) {
+    @-moz-keyframes @name {
+        0% { -moz-transform: @t1; transform: @t1; }
+        100% { -moz-transform: @t2; transform: @t2; }
+    }
+    @-webkit-keyframes @name {
+        0% { -webkit-transform: @t1; transform: @t1; }
+        100% { -webkit-transform: @t2; transform: @t2; }
+    }
+    @-o-keyframes @name {
+        0% { -o-transform: @t1; transform: @t1; }
+        100% { -o-transform: @t2; transform: @t2; }
+    }
+    @-ms-keyframes @name {
+        0% { -ms-transform: @t1; transform: @t1; }
+        100% { -ms-transform: @t2; transform: @t2; }
+    }
+    @keyframes @name {
+        0% { transform: @t1; }
+        100% { transform: @t2; }
+    }
+}
+
+
+
+
+
+//——————————————————————————————————————————————————————————————————————
+// EASING
+
+// Cubic
+@ease-in-cubic      : cubic-bezier(0.550, 0.055, 0.675, 0.190);
+@ease-out-cubic     : cubic-bezier(0.215, 0.610, 0.355, 1.000);
+@ease-in-out-cubic  : cubic-bezier(0.645, 0.045, 0.355, 1.000);
+
+// Circ
+@ease-in-circ       : cubic-bezier(0.600, 0.040, 0.980, 0.335);
+@ease-out-circ      : cubic-bezier(0.075, 0.820, 0.165, 1.000);
+@ease-in-out-circ   : cubic-bezier(0.785, 0.135, 0.150, 0.860);
+
+// Expo
+@ease-in-expo       : cubic-bezier(0.950, 0.050, 0.795, 0.035);
+@ease-out-expo      : cubic-bezier(0.190, 1.000, 0.220, 1.000);
+@ease-in-out-expo   : cubic-bezier(1.000, 0.000, 0.000, 1.000);
+
+// Quad
+@ease-in-quad       : cubic-bezier(0.550, 0.085, 0.680, 0.530);
+@ease-out-quad      : cubic-bezier(0.250, 0.460, 0.450, 0.940);
+@ease-in-out-quad   : cubic-bezier(0.455, 0.030, 0.515, 0.955);
+
+// Quart
+@ease-in-quart      : cubic-bezier(0.895, 0.030, 0.685, 0.220);
+@ease-out-quart     : cubic-bezier(0.165, 0.840, 0.440, 1.000);
+@ease-in-out-quart  : cubic-bezier(0.770, 0.000, 0.175, 1.000);
+
+// Quint
+@ease-in-quint      : cubic-bezier(0.755, 0.050, 0.855, 0.060);
+@ease-out-quint     : cubic-bezier(0.230, 1.000, 0.320, 1.000);
+@ease-in-out-quint  : cubic-bezier(0.860, 0.000, 0.070, 1.000);
+
+// Sine
+@ease-in-sine       : cubic-bezier(0.470, 0.000, 0.745, 0.715);
+@ease-out-sine      : cubic-bezier(0.390, 0.575, 0.565, 1.000);
+@ease-in-out-sine   : cubic-bezier(0.445, 0.050, 0.550, 0.950);
+
+// Back
+@ease-in-back       : cubic-bezier(0.600, -0.280, 0.735, 0.045);
+@ease-out-back      : cubic-bezier(0.175,  0.885, 0.320, 1.275);
+@ease-in-out-back   : cubic-bezier(0.680, -0.550, 0.265, 1.550);
+
+
+
+// Webkit
+@-webkit-keyframes progress-bar-stripes {
+    from  { background-position: 40px 0; }
+    to    { background-position: 0 0; }
+}
+
+// Firefox
+@-moz-keyframes progress-bar-stripes {
+    from  { background-position: 40px 0; }
+    to    { background-position: 0 0; }
+}
+
+// IE9
+@-ms-keyframes progress-bar-stripes {
+    from  { background-position: 40px 0; }
+    to    { background-position: 0 0; }
+}
+
+// Opera
+@-o-keyframes progress-bar-stripes {
+    from  { background-position: 0 0; }
+    to    { background-position: 40px 0; }
+}
+
+// Spec
+@keyframes progress-bar-stripes {
+    from  { background-position: 40px 0; }
+    to    { background-position: 0 0; }
+}
+
+
+.retina(@props, @ratio : 2) {
+    @media
+    only screen and (-webkit-min-device-pixel-ratio: @ratio),
+    only screen and (   min--moz-device-pixel-ratio: @ratio),
+    only screen and (     -o-min-device-pixel-ratio: @ratio/1),
+    only screen and (        min-device-pixel-ratio: @ratio),
+    only screen and (                min-resolution: @ratio * 96dpi),
+    only screen and (                min-resolution: @ratio * 1dppx) {
+        @props();
+    }
+}
+
+
+
+
+//——————————————————————————————————————————————————————————————————————
+.vw(@prop_name, @p1, @p2 ) {
+        @{prop_name} : 100vw * @p1 / @p2;
+}
+
+//——————————————————————————————————————————————————————————————————————
+.browserhack(@props, @browser: firefox){
+    @-moz-document url-prefix() {
+        &{
+            & when (@browser = firefox) {
+                @props();
+            }
+        }
+    }
+}

@@ -1,0 +1,198 @@
+&{
+    @padd: @line_air;
+
+    @tabs_width : 70px;
+
+    @view_settings_width : 350px;
+    //@view_settings_height: 458px;
+
+
+    .view-settings__content{
+        .rel;
+        min-height: 500px;
+        .bgc3();
+    }
+
+    .view-settings__tabs {
+        //height: 100%;
+        //.xyal(0);
+        width: @tabs_width;
+
+        .flex(column);
+        margin-right: @view_settings_width;
+    }
+    .view-settings__tab {
+        width: @tabs_width;
+        .cursor_pointer();
+        .tcenter;
+        .bbox;
+
+        padding: @padd;
+
+        &:hover {
+            .bgfade(2);
+
+        }
+
+        &.active {
+            //.bgfade(5);
+        }
+
+        border-bottom: 1px solid;
+        border-bottom-color: @divider_color;
+
+        i { .bbox; }
+
+        span {
+            .bl;
+            .tcenter;
+        }
+    }
+    .view-settings__tab.active,
+    .view-settings__pages   {
+        .bgfade(5);
+
+    }
+
+    .view-settings__pages{
+        //margin-left: @tabs_width;
+        width     : @view_settings_width;
+        //min-height: @view_settings_height;
+        .xyar();
+        bottom: 0;
+    }
+
+    @switcher_width: 40px;
+
+
+    .view-settings__page {
+        display: flex;
+        flex-direction: column;
+
+        .form__group {
+            border-top: 1px solid @divider_color;
+        }
+
+        &-heading{
+            flex-grow: 0;
+            flex-shrink: 0;
+            padding: @line_air;
+            h3 {.inbl_middle;}
+            .rel;
+            .middler();
+        }
+
+        &-switcher{
+            .h100;
+            .xyar();
+            padding: 0 @line_air;
+            .middler();
+
+            &>* {
+              .vmiddle;
+            }
+
+            .gui-switch {
+
+            }
+        }
+
+        &-body{
+            flex: auto;
+            display: flex;
+            flex-direction: column;
+            .rel;
+        }
+
+    }
+
+    #guide_list{
+        display: flex;
+        flex-direction: column;
+
+        .editable-list{
+            flex: auto;
+            display: flex;
+
+            //TODO: misha, inserting anything that works
+            .editable-list__item i{
+                .rel;
+                &:after{
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    font-size: 12px;
+                    line-height: 32px;
+                    text-align: center;
+                    opacity: .7;
+                }
+            }
+            .ico-x:after{
+                content: 'x';
+            }
+            .ico-y:after{
+                content: 'y';
+            }
+        }
+        .editable-list__scroll-container{
+            flex: auto;
+        }
+    }
+
+
+    .view-settings__overlay {
+        .stretch;
+        z-index: 100;
+        opacity: .8;
+        .bgc3();
+    }
+}
+
+
+
+//——————————————————————————————————————————————————————————————————————
+.guides-list {
+    &__guide-text {
+        .nowrap;
+    }
+    &__guide-dir {
+        vertical-align: baseline;
+        .size(.85em);
+        .rounded(3);
+        .bgc(@font_color, 10);
+        .aftrel;
+        @shift: 15%;
+        &:after {
+            .abs;
+            border-color: @font_color;
+            border-style: solid;
+            .bl;
+            width: 100% - @shift*2;
+            padding-top:100% - @shift*2;
+        }
+        &_y:after {
+            top: @shift;
+            left: 50%;
+            border-width: 0 0 0 1px;
+        }
+        &_x:after {
+            top: 50%;
+            left: @shift;
+            border-width: 1px 0 0 0;
+        }
+
+    }
+
+    &__guide-pos {
+        .inbl;
+        min-width: 4.4em;
+        .tright;
+        &:after {
+            content: "px";
+            margin-left: .2em;
+            .op40;
+        }
+    }
+}

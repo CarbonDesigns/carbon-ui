@@ -1,0 +1,42 @@
+{
+    "version": "0.1.0",
+    "command": "node",
+    "isShellCommand": true,
+    "showOutput": "always",
+    "suppressTaskName": true,
+    "tasks": [
+        {
+            "taskName": "build ui",
+            "args": [
+                "./scripts/watch.js"
+            ],
+            "isBackground": true,
+            "isBuildCommand": true,
+            "problemMatcher": {
+                "owner": "webpack",
+                "watching": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Checking started in a separate process",
+                    "endsPattern": "webpack: Failed to compile\\.|webpack: bundle is|webpack: Compiled"
+                },
+                "severity": "error",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceRoot}"
+                ],
+                "pattern": [
+                    {
+                        "regexp": "(.*?):(\\d+):(\\d+)",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3
+                    },
+                    {
+                        "regexp": "\\s+(.*)",
+                        "message": 1
+                    }
+                ]
+            }
+        }
+    ]
+}

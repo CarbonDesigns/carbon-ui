@@ -1,0 +1,19 @@
+//TODO: extract-text-webpack-plugin does not support extracting css from asynchronously
+//loaded chunks, so creating global style file.
+//This is fixed in version 2 which requires webpack 2 which is in raw beta...
+
+@import "styles/_common";
+
+@import "./dashboard/__dashboard";
+
+@import "./library/__library";
+@import "./account/__account";
+@import "./library/data/__data";
+@import "./library/stencils/__stencils";
+@import "./stories/_stories";
+@import "./properties/__edit";
+@import "./workspace/__workspace";
+@import "./workspace/bottomBar/_breadcrumbs";
+@import "./layout/layout";
+@import "./animation/animation";
+

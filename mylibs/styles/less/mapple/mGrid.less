@@ -1,0 +1,1195 @@
+/**
+ *    0.9.8  2014.02.02  mSet (!!!)
+ *    0.9.7   .mixin(@var) when (@var = inh) → .mixin(inh)
+ *    0.9.6  ess 1.5 - strct math brackets
+ *    0.9.5  o do idea
+ *    0.9.4  ------
+ *    0.9.3   fixed ._set_pushRight
+ *    0.9.2   added .mEdge
+ *    0.9.1   added .mWidthsFirst (with negative widths and medias)
+ *    0.9    added negative width and medias
+ *    0.8.4   added .mStretch to override width rule in all medias
+ *    0.8.3   added bg-stripes
+ *    0.8    added inh and -2 to pull
+ *    0.7    reformat
+ *    0.6    start using
+ *   TODO :
+ *  custom_property {
+ *      @e: 'margin';
+ *      zoom: e("1; @{e}: 10px");
+ *
+ *  }
+ *   font resizers
+ *   scale resizers
+ *   float right + offset
+ *   float right + margin
+ *
+ *
+ *
+ *
+ *
+ */
+
+
+
+
+
+
+
+
+@medias-amount : 6;
+
+
+@break0: 5000;
+
+//   1371 < w
+@column-width1 : 68px;
+@gutter-width1 : 44px;
+@columns-in-row1 : 12;
+
+@break1: 1371;
+
+//  1201 < w < 1370
+@column-width2 : 54px;
+@gutter-width2 : 32px;
+@columns-in-row2 : 12;
+
+@break2: 1260;
+
+//  951 < w < 1200
+@column-width3 : 44px;
+@gutter-width3 : 40px;
+@columns-in-row3 : 12;
+
+@break3: 951;
+
+
+//  700 < w < 950
+@column-width4 : 44px;
+@gutter-width4 : 40px;
+@columns-in-row4 : 12;
+
+@break4: 930;
+
+@column-width5 : 44px;
+@gutter-width5 : 40px;
+@columns-in-row5 : 12;
+
+
+@break5: 850;
+
+@column-width6 : 34px;
+@gutter-width6 : 30px;
+@columns-in-row6 : 12;
+
+
+
+
+
+//
+////  700 < w < 950
+//@column-width4 : 44px;
+//@gutter-width4 : 24px;
+//@columns-in-row4 : 12;
+//
+//@break4: 700;
+//
+//@column-width5 : 44px;
+//@gutter-width5 : 20px;
+//@columns-in-row5 : 6;
+//
+//
+//@break5: 380;
+//
+//@column-width6 : 34px;
+//@gutter-width6 : 20px;
+//@columns-in-row6 : 4;
+@break6: 0;
+
+@column-width7 : 0;
+@gutter-width7 : 0;
+@columns-in-row7 : 0;
+
+@break7: 0;
+
+@column-width8 : 0;
+@gutter-width8 : 0;
+@columns-in-row8 : 0;
+
+// > 0
+
+
+@W1 : ((@columns-in-row1 * @column-width1) + ((@columns-in-row1 - 1) * @gutter-width1));
+@W2 : ((@columns-in-row2 * @column-width2) + ((@columns-in-row2 - 1) * @gutter-width2));
+@W3 : ((@columns-in-row3 * @column-width3) + ((@columns-in-row3 - 1) * @gutter-width3));
+@W4 : ((@columns-in-row4 * @column-width4) + ((@columns-in-row4 - 1) * @gutter-width4));
+@W5 : ((@columns-in-row5 * @column-width5) + ((@columns-in-row5 - 1) * @gutter-width5));
+@W6 : ((@columns-in-row6 * @column-width6) + ((@columns-in-row6 - 1) * @gutter-width6));
+@W7 : ((@columns-in-row7 * @column-width7) + ((@columns-in-row7 - 1) * @gutter-width7));
+@W8 : ((@columns-in-row8 * @column-width8) + ((@columns-in-row8 - 1) * @gutter-width8));
+
+
+@break1-1: (@break1 - 1);
+@break2-1: (@break2 - 1);
+@break3-1: (@break3 - 1);
+@break4-1: (@break4 - 1);
+@break5-1: (@break5 - 1);
+@break6-1: (@break6 - 1);
+@break7-1: (@break7 - 1);
+
+@media1 : e('(min-width: @{break1}px)');
+@media2 : e('(min-width: @{break2}px) and (max-width: @{break1-1}px)');
+@media3 : e('(min-width: @{break3}px) and (max-width: @{break2-1}px)');
+@media4 : e('(min-width: @{break4}px) and (max-width: @{break3-1}px)');
+@media5 : e('(min-width: @{break5}px) and (max-width: @{break4-1}px)');
+//@media6 : e('(min-width: @{break6}px) and (max-width: @{break5-1}px)');
+@media6 : e('(max-width: @{break5-1}px)'); //custom
+
+@media7 : e('(min-width: @{break7}px) and (max-width: @{break6-1}px)');
+@media8 : e('(max-width: @{break7-1}px)');
+
+@mediaFirst1 : e('(min-width: @{break1}px)');
+@mediaFirst2 : e('(min-width: @{break2}px)');
+@mediaFirst3 : e('(min-width: @{break3}px)');
+@mediaFirst4 : e('(min-width: @{break4}px)');
+@mediaFirst5 : e('(min-width: @{break5}px)');
+@mediaFirst6 : e('(min-width: @{break6}px)');
+@mediaFirst7 : e('(min-width: @{break7}px)');
+
+
+
+@_mediaLast-name: 'media@{medias-amount}';
+@mediaLast: @@_mediaLast-name;
+
+@_mediaPreLast-number : ((@medias-amount - 1));
+@_mediaPreLast-name: 'media@{_mediaPreLast-number}';
+@mediaPreLast: @@_mediaPreLast-name;
+
+@mediaLastFive : e('(max-width: @{break1-1}px)');
+@mediaLastFour : e('(max-width: @{break2-1}px)');
+@mediaLastThree : e('(max-width: @{break3-1}px)');
+
+@mediaFirstTwo : e('(min-width: @{break2}px)');
+
+
+
+
+
+
+//====================================================================================================
+// **  **
+//====================================================================================================
+
+
+
+
+@WIDE: @media1;
+@SCRN: @media2;
+@IPAD: @media3;
+@TBLT: @media4;
+@IPHN: @media5;
+@MOBL: @media6;
+
+
+//@Wide: @media1;
+//@Desktop: @media2;
+//@Laptop: @media3;
+//@Tablet: @media4;
+//@Mobile: @media5;
+//@MobilePortrait: @media6;
+
+
+//.mixin (@b) when not (@b > 0) { ... }
+//.mixin (@a) when (@a > 10), (@a < -10) { ... }
+//.mixin (@a) when (isnumber(@a)) and (@a > 0) { ... }
+
+
+//TODO if @med == @defMediaNumber, then don't draw media @@...
+
+//TODO shift left (left: ___)
+//TODO mGridCore > .(...)
+
+
+
+
+
+//====================================================================================================
+// **  **
+//====================================================================================================
+
+
+
+//negative columns => @col = full - @col
+._set_width (@med, @cols)  when (@cols < 0) and not (@cols = full) and not (@cols = half) and not (@cols = third) and not (@cols = quarter) and not (@cols = inh) and not (@cols = 100){
+	@_gutter-width: 'gutter-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@_column-width: 'column-width@{med}';
+	@column-width: @@_column-width;
+	@_total : 'columns-in-row@{med}';
+	@total : @@_total;
+	@positive_cols : (@total + @cols);
+	width:  ((@positive_cols * @column-width) + ((@positive_cols - 1) * @gutter-width));
+}
+
+._set_width (@med, @cols)  when (@cols > 0) and not (@cols = full) and not (@cols = half) and not (@cols = third) and not (@cols = quarter) and not (@cols = inh) and not (@cols = 100){
+	@_gutter-width: 'gutter-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@_column-width: 'column-width@{med}';
+	@column-width: @@_column-width;
+	width:  ((@cols * @column-width) + ((@cols - 1) * @gutter-width));
+}
+
+
+._set_width (@med, full) {
+	@_W: 'W@{med}';
+	width: @@_W;
+}
+
+._set_width (@med){ @_W: 'W@{med}'; width: @@_W; }
+
+._set_width (@med, inh) {}
+
+
+._set_width (@med, half) {
+	@_columns-in-row: 'columns-in-row@{med}';
+	@columns-in-row: @@_columns-in-row;
+	@_gutter-width: 'gutter-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@_column-width: 'column-width@{med}';
+	@column-width: @@_column-width;
+	@cols : floor((@columns-in-row / 2));
+	width:  (@cols * @column-width) + ((@cols - 1) * @gutter-width);
+}
+
+._set_width (@med, third) {
+	@_columns-in-row: 'columns-in-row@{med}';
+	@columns-in-row: @@_columns-in-row;
+	@_gutter-width: 'gutter-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@_column-width: 'column-width@{med}';
+	@column-width: @@_column-width;
+	@cols : floor((@columns-in-row / 3));
+	width:  ((@cols * @column-width) + ((@cols - 1) * @gutter-width));
+}
+
+._set_width (@med, quarter) {
+	@_columns-in-row: 'columns-in-row@{med}';
+	@columns-in-row: @@_columns-in-row;
+	@_gutter-width: 'gutter-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@_column-width: 'column-width@{med}';
+	@column-width: @@_column-width;
+	@cols : floor((@columns-in-row / 4));
+	width:  ((@cols * @column-width) + ((@cols - 1) * @gutter-width));
+}
+
+._set_width (@med, quarter) {
+	width:  100%;
+}
+
+
+
+
+
+._set_pushLeft (@med, @cols: 0) when (@cols > -1){
+	@_gutter-width: 'gutter-width@{med}';
+	@_column-width: 'column-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@column-width: @@_column-width;
+	margin-left: (@cols * (@column-width + @gutter-width) + @gutter-width);
+}
+
+
+
+._set_pushLeft (@med, -1) {
+	margin-left: 0;
+}
+
+._set_pushLeft (@med, -2) {
+}
+
+
+
+._set_offsetLeft (@med, @cols: 0) when (@cols > -1){
+  @_gutter-width: 'gutter-width@{med}';
+  @_column-width: 'column-width@{med}';
+  @gutter-width: @@_gutter-width;
+  @column-width: @@_column-width;
+  margin-left: (@cols * (@column-width + @gutter-width));
+}
+
+
+
+._set_pushRight (@med, @cols: 0) {
+	@_gutter-width: 'gutter-width@{med}';
+	@_column-width: 'column-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@column-width: @@_column-width;
+	margin-right: (@cols * (@column-width + @gutter-width) + @gutter-width);
+}
+
+
+._set_pushRight (@med, -1) {
+  margin-left: 0;
+}
+
+._set_pushRight (@med, -2) {
+}
+
+
+
+
+._set_pullLeft (@med) {
+	@_gutter-width: 'gutter-width@{med}';
+	@gutter-width: @@_gutter-width;
+	margin-left: ((@gutter-width) * -1);
+}
+
+._set_pullRight (@med) {
+	@_gutter-width: 'gutter-width@{med}';
+	@gutter-width: @@_gutter-width;
+	margin-right: ((@gutter-width) * -1);
+}
+
+._set_shiftLeft (@med, @cols: 0) {
+	@_gutter-width: 'gutter-width@{med}';
+	@_column-width: 'column-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@column-width: @@_column-width;
+	left: (@gutter-width + (@cols * (@column-width + @gutter-width)));
+}
+
+._set_shiftRight (@med, @cols: 0) {
+	@_gutter-width: 'gutter-width@{med}';
+	@_column-width: 'column-width@{med}';
+	@gutter-width: @@_gutter-width;
+	@column-width: @@_column-width;
+	right: (@gutter-width + (@cols * (@column-width + @gutter-width)));
+}
+
+
+
+._set_clear (left)  {clear: left}
+._set_clear (right) {clear: right}
+._set_clear (none)  {clear: left}
+._set_clear (both)  {clear: both}
+._set_clear (inh)   {}
+._set_clear (@_wrong_defined)    {}
+
+
+
+
+
+
+
+
+
+
+//The typical example of using a recursive loop to generate CSS grid classes:
+//
+//.generate-columns(4);
+//
+//.generate-columns(@n, @i: 1) when (@i <= @n) {
+//
+//.column-@{i} {
+//    width: (@i * 100% / @n);
+//}
+//
+//    .generate-columns(@n, (@i + 1));
+//}
+
+
+
+
+
+
+
+
+////// WIDTH  //////////////////////
+
+._iterate_width () {//FULL
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med); //FULL
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+._iterate_width (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @p1);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+._iterate_width (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@p: 'p@{med}';
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @@p);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+
+._iterate_width_fromto (@start, @end, @w) {
+	@start-1 : (@start - 1);
+	.recursive-iteration(@start-1){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @w);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@end);
+}
+
+
+._iterate_width_fromto (@start, @end, @p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+	@start-1 : (@start - 1);
+	.recursive-iteration(@start-1){}
+	.recursive-iteration(@med) when (@med > @start-1) {
+		@p: 'p@{med}';
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @@p);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@end);
+}
+
+
+
+
+////// WIDTH AND PUSH  //////////////////////
+
+._iterate_width-and-pushLeft () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med);
+			._set_pushLeft (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+._iterate_width-and-pushLeft (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @p1);
+			._set_pushLeft (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+._iterate_width-and-pushLeft (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			@p: 'p@{med}';
+			._set_width (@med, @@p);
+			._set_pushLeft (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+
+////// WIDTH AND PUSH RIGHT //////////////////////
+
+._iterate_width-and-pushRight () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med);
+			._set_pushRight (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+._iterate_width-and-pushRight (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @p1);
+			._set_pushRight (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+._iterate_width-and-pushRight (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			@p: 'p@{med}';
+			._set_width (@med, @@p);
+			._set_pushRight (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+
+
+////// WIDTH AND PULL  //////////////////////
+
+._iterate_width-and-pullLeft () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med);
+			._set_pullLeft (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount)
+}
+
+
+._iterate_width-and-pullLeft (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @p1);
+			._set_pullLeft (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount)
+}
+
+._iterate_width-and-pullLeft (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@p: 'p@{med}';
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @@p);
+			._set_pullLeft (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+////// WIDTH AND PULL RIGHT  //////////////////////
+
+._iterate_width-and-pullRight () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med);
+			._set_pullRight (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+._iterate_width-and-pullRight (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @p1);
+			._set_pullRight (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+._iterate_width-and-pullRight (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@p: 'p@{med}';
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_width (@med, @@p);
+			._set_pullRight (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+
+	.recursive-iteration(@medias-amount);
+}
+
+
+
+////// PUSH  //////////////////////
+
+._iterate_pushLeft () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_pushLeft (@med)
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+._iterate_pushLeft (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_pushLeft (@med, @p1)
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+._iterate_pushLeft (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+		.recursive-iteration(0){}
+		.recursive-iteration(@med) when (@med > 0) {
+		@p: 'p@{med}';
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_pushLeft (@med, @@p)
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+////// OFFSET  //////////////////////
+
+._iterate_offsetLeft () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_offsetLeft (@med)
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+._iterate_offsetLeft (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_offsetLeft (@med, @p1)
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+._iterate_offsetLeft (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+		.recursive-iteration(0){}
+		.recursive-iteration(@med) when (@med > 0) {
+		@p: 'p@{med}';
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_offsetLeft (@med, @@p)
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+////// WIDTH AND PUSH RIGHT //////////////////////
+
+._iterate_pushRight () {
+		.recursive-iteration(0){}
+		.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_pushRight (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+._iterate_pushRight (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_pushRight (@med, @p1);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+._iterate_pushRight (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@p: 'p@{med}';
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_pushRight (@med, @@p)
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+
+////// PULL  //////////////////////
+
+._iterate_pullLeft () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_pullLeft (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+._iterate_pullRight () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_pullRight (@med);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+
+////// CLEAR //////////////////////
+
+._iterate_clear (@p1) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+	@media-name: 'media@{med}';
+		@media @@media-name {
+			._set_clear (@p1);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+._iterate_clear (@p1,  @p2,  @p3: -987,  @p4: -987,  @p5: -987,  @p6: -987,  @p7: -987,  @p8: -987) {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+				@p: 'p@{med}';
+				//background-image:url('@{p}');
+				._set_clear (@@p);
+			}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+
+// EDGE
+
+._iterate_edge () {
+	.recursive-iteration(0){}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+				@w: 'W@{med}';
+				left: (@@w / (-2));
+			}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+
+
+
+
+
+
+// SHELLS
+
+
+.mFull()   { ._iterate_width();} //all medias = width: 12 cols
+
+.mFullRow()   { // all medias - width: all cols, centrated
+	._iterate_width();
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.mPull()   { ._iterate_pullLeft(); }//all medias - margin-left: -gutter
+
+.mRow()    { ._iterate_width-and-pullLeft();} //all medias - width: 12cols and margin-left: -gutter
+
+
+
+.mStretch()   { ._iterate_width(100);} //all medias = width: 100% (to override inherited)
+
+
+.mColumn(@cols) { //ALL:
+	float: left;
+	._iterate_width-and-pushLeft(@cols);
+}
+
+.mCols(@a) {
+	._iterate_width-and-pushLeft(@a)
+}
+
+.mCols(@a, @b, @c:-987, @d:-987, @e:-987, @f:-987, @g:-987) {
+  ._iterate_width-and-pushLeft(@a, @b, @c, @d, @e, @f, @g);
+}
+
+//.mixin (@b) when not (@b > 0) { ... }
+//.mixin (@a) when (@a > 10), (@a < -10) { ... }
+//.mixin (@a) when (isnumber(@a)) and (@a > 0) { ... }
+
+
+.mWidth(@med, @cols) when (isnumber(@med)) and (@med > 0) { // ONE: media {WIDTH}
+	@media-name: 'media@{med}';
+	@media @@media-name{
+		._set_width(@med, @cols)
+	}
+}
+
+.mWidth(@med, @cols) when (isnumber(@med)) and (@med < 0) { // ONE: prelast media {WIDTH}
+	@media-num: (@medias-amount + @med + 1) ;
+	@media-name: 'media@{media-num}';
+	@media @@media-name{
+		._set_width(@media-num, @cols)
+	}
+}
+
+.mWidth(@med, @cols) when not (isnumber(@med)) { // ONE: media {WIDTH}
+	@media @@med{
+		._set_width(@med, @cols)
+	}
+}
+
+
+
+.mWidths(@cols) {// ALL: same width
+	._iterate_width(@cols);
+}
+
+.mWidths(@a, @b, @c:-987, @d:-987, @e:-987, @f:-987, @g:-987) { //ALL: different width
+	._iterate_width(@a, @b, @c, @d, @e, @f, @g);
+}
+
+
+
+.mWidthsFirst(@end, @cols) when (@end > 0) {// setting width, starting from 1 to @end medias
+	._iterate_width_fromto(1, (@end - 1), @cols);
+}
+
+.mWidthsFirst(@negative_end, @cols) when (@negative_end < 0) {// setting width, starting from 1 to (@medias-amount - @end) medias
+	@end: (@medias-amount + 1 + @negative_end);
+	._iterate_width_fromto(1, (@end - 1), @cols);
+}
+//
+//.mWidthsFirst(@end, @a, @b, @c:-987, @d:-987, @e:-987, @f:-987, @g:-987) when (@end > 0) {// setting width, starting from 1 to @end medias
+//	._iterate_width_fromto(1, @end, @a, @b, @c, @d, @e, @f, @g)
+//}
+//
+//.mWidthsFirst(@negative_end, @a, @b, @c:-987, @d:-987, @e:-987, @f:-987, @g:-987) when (@negative_end < 0) {// setting width, starting from 1 to (@medias-amount - @end) medias
+//	@end: @medias-amount + 1 + @negative_end;
+//	._iterate_width_fromto(1, @end, @a, @b, @c, @d, @e, @f, @g)
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+.setWidth(@med, @cols) { // ONE:  just calculating WIDTH with NO MEDIA
+	._set_width(@med, @cols)
+}
+
+
+.mCol(@med, @cols, @push : 0) {// ONE: media {WIDTH + MARGIN-LEFT}
+	@media-name: 'media@{med}';
+	@media @@media-name {
+		._set_width(@med, @cols);
+		._set_pushLeft(@med, @push);
+	}
+}
+
+
+.mClears(@a) { // ALL: same clear
+	._iterate_clear(@a);
+}
+
+.mClears(@a, @b, @c:-987, @d: -987, @e: -987, @f:-987, @g:-987) { //ALL: different clear
+	._iterate_clear(@a, @b, @c, @d, @e, @f, @g);
+}
+
+
+.mPush() {
+	._iterate_pushLeft();
+}
+
+.mPush(@a, @b, @c:-987, @d: -987, @e: -987, @f:-987, @g:-987) {
+	._iterate_pushLeft(@a, @b, @c, @d, @e, @f, @g);
+}
+
+.mPush(@a) {
+	._iterate_pushLeft(@a);
+}
+
+.mOffset(@a) {
+	._iterate_offsetLeft(@a);
+}
+
+
+.mPushRight() {
+  ._iterate_pushRight();
+}
+
+.mEdge () {
+  margin-left: 50%;
+  ._iterate_edge();
+}
+
+
+//TODO
+
+//@media @media3 {
+//    .transform('scale(.9)');
+//    margin: -15px auto;
+//    font-size: 110%;
+//}
+//@media @mediaLastThree {
+//    .transform('scale(.75)');
+//    margin: -50px auto;
+//    font-size: 133%;
+//}
+//
+//
+
+
+
+
+
+.show_columns(@color) { //
+	.recursive-iteration(0){}
+	//@old: #f90; //getting sat and lightness from #f90, and hue - from new color
+	@old: #ffd8c0; //getting sat and lightness from #f90, and hue - from new color
+	@s: saturation(@old);
+	@l: lightness(@old);
+	@column_color: fadeout(hsl(hue(@color), @s, @l),40%);
+	@gutter_color: lighten(@column_color, ((100% - @l) / 2) );
+	.set_bg_stripe(@c, @g){
+		background-size: (@c + @g) 50px;
+		background-image: -webkit-linear-gradient(0deg,  @column_color @c, @gutter_color @g,  @gutter_color);
+		background-image:    -moz-linear-gradient(0deg,  @column_color @c, @gutter_color @g,  @gutter_color);
+		background-image:         linear-gradient(90deg, @column_color @c, @gutter_color @g,  @gutter_color);
+	}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			@cname : 'column-width@{med}';
+			@gname : 'gutter-width@{med}';
+			.set_bg_stripe(@@cname, @@gname);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+.show_columns(@column_color, @gutter_color) {
+	.recursive-iteration(0){}
+	.set_bg_stripe(@c, @g){
+		background-size: (@c + @g) 50px;
+		background-image: -webkit-linear-gradient(0deg,  @column_color @c, @gutter_color @g,  @gutter_color);
+		background-image:    -moz-linear-gradient(0deg,  @column_color @c, @gutter_color @g,  @gutter_color);
+		background-image:         linear-gradient(90deg, @column_color @c, @gutter_color @g,  @gutter_color);
+	}
+	.recursive-iteration(@med) when (@med > 0) {
+		@media-name: 'media@{med}';
+		@media @@media-name {
+			@cname : 'column-width@{med}';
+			@gname : 'gutter-width@{med}';
+			.set_bg_stripe(@@cname, @@gname);
+		}
+		.recursive-iteration((@med - 1));
+	}
+	.recursive-iteration(@medias-amount);
+}
+
+
+//====================================================================================================
+// ** mSet  **
+//====================================================================================================
+
+
+.m_from(@med)  when (@med > 0)  {
+    @_break_number : @med;
+    @_break_name: "break@{_break_number}";
+    @_break_pixels: @@_break_name;
+    @m_from : e('(min-width: @{_break_pixels}px)');
+}
+
+
+.m_from(@med) when (@med < 0) {
+    @_break_number : (@medias-amount + @med + 1);
+    @_break_name: "break@{_break_number}";
+    @_break_pixels: @@_break_name;
+    @m_from : e('(min-width: @{_break_pixels}px)');
+}
+
+
+.m_to(@med) when (@med > 0)  {
+    @_break_number : @med;
+    @_break_name: "break@{_break_number}-1";
+    @_break_pixels: @@_break_name;
+    @m_to : e('(max-width: @{_break_pixels}px)');
+}
+
+.m_to(@med) when (@med < 0) {
+    @_break_number : (@medias-amount + @med + 1);
+    @_break_name: "break@{_break_number}-1";
+    @_break_pixels: @@_break_name;
+    @m_to : e('(max-width: @{_break_pixels}px)');
+}
+
+
+
+.mSetFrom(@from; @prop; @val) { .m_from(@from); @media @m_from {
+    @{prop} : @val; }}
+.mSetFrom(@from; @prop1; @val1; @prop2; @val2) { .m_from(@from); @media @m_from {
+    @{prop1} : @val1; @{prop2} : @val2; }}
+.mSetFrom(@from; @prop1; @val1; @prop2; @val2; @prop3; @val3 ) {.m_from(@from); @media @m_from {
+    @{prop1} : @val1; @{prop2} : @val2; @{prop3} : @val3; }}
+
+
+
+.mSetFromTo(@from, @to, @prop, @val) { .m_from(@from); .m_to(@to);  @media @m_from and @m_to  {
+    @{prop} : @val; }}
+
+.mSetFromTo(@from, @to, @prop1, @val1, @prop2, @val2) { .m_from(@from); .m_to(@to);  @media @m_from and @m_to  {
+    @{prop1} : @val1; @{prop2} : @val2; }}
+
+.mSetFromTo(@from, @to, @prop1, @val1, @prop2, @val2, @prop3, @val3) { .m_from(@from); .m_to(@to);  @media @m_from and @m_to  {
+    @{prop1} : @val1; @{prop2} : @val2;  @{prop3} : @val3; }}
+
+
+
+.mSetTo(@to, @prop, @val) { .m_to(@to); @media @m_to {
+    @{prop} : @val; }}
+
+
+.mSetTo(@to, @prop1, @val1, @prop2, @val2) { .m_to(@to); @media @m_to {
+    @{prop1} : @val1; @{prop2} : @val2; }}
+
+
+.mSetTo(@to, @prop1, @val1, @prop2, @val2, @prop3, @val3) { .m_to(@to); @media @m_to {
+    @{prop1} : @val1; @{prop2} : @val2; @{prop3} : @val3; }}
+
+
+
+// Sugar
+.mSet(@from, @prop, @value) { .mSetFrom(@from, @prop, @value); }
+.mSet(@from, @prop1, @val1, @prop2, @val2) { .mSetFrom(@from, @prop1, @val1, @prop2, @val2); }
+.mSet(@from, @prop1, @val1, @prop2, @val2, @prop3, @val3) { .mSetFrom(@from, @prop1, @val1, @prop2, @val2, @prop3, @val3); }
+
+
+.mColumnHalf(@from: -3) {
+    .mSetFrom(@from, width, 50%, float, left);
+}
+
+.mColumnHalfRight(@from: -3) {
+    .mSetFrom(@from, width, 50%, float, right);
+}
+
+
+
+.mSetHide(@to: -3) {
+    .mSetTo(@to, display, none);
+}
+
+.mSetWidthTo(@to: -3, @w) {
+    .mSetTo(@to, width, @w);
+}
+
+
+
+.mSetFontTo(@to, @f2) {
+    .mSetTo(@to, font-size, @f2);
+}
+
+.mSetFont(@f1, @f2) {
+    .mSetFrom  (1,    font-size, @f1);
+    .mSetTo    (2,    font-size, @f2);
+}
+
+.mSetFont(@f1, @f2, @f3) {
+    .mSetFrom  (1,    font-size, @f1);
+    .mSetFromTo(2, 1, font-size, @f2);
+    .mSetTo    (3,    font-size, @f3);
+}
+
+

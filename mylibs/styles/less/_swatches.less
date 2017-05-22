@@ -1,0 +1,189 @@
+//——————————————————————————————————————————————————————————————————————
+// Swatches panel
+//——————————————————————————————————————————————————————————————————————
+
+.swatches-panel {
+
+    @h : 2.4*@line_air;
+    @fullh : @h;
+
+    @cur_h: @fullh + 2 * @line_air;
+    .panel__body {
+    }
+
+    &__current {
+        .flex();
+        flex-wrap: nowrap;
+    }
+        &__slot-group {
+            .flex();
+            flex-wrap: nowrap;
+            margin-right: @line_air;
+            .rel;
+        }
+
+        &__slot,
+        &__swatch {
+            .point;
+            .rel;
+        }
+
+        &__slot {
+            .size(@cur_h);
+
+            .rel;
+
+            .transit(){
+                .trn05;
+            }
+
+            @stroke_shift : 8px;
+            @inactive_shift : 4px;
+
+            &_stroke {
+                &:after {
+                    .transit();
+                    .bef;
+                    .stretch();
+                    margin: @stroke_shift + @inactive_shift;
+                    .bgc4();
+
+                    box-shadow: 0 0 1px 0 black inset, 0 0 1px 0 rgba(255, 255, 255, 0.58);
+                    z-index: 2;
+                }
+            }
+
+            &_fill { }
+
+            &_active&_stroke:after {
+                margin: @stroke_shift;
+            }
+            &_active &-body {
+                margin: 0;
+            }
+
+            &-body {
+                .transit();
+                .stretch;
+                z-index: 1;
+                margin: @inactive_shift*1.2;
+            }
+
+            &-color ,
+            &-bg {
+                .stretch();
+            }
+
+            &-bg {
+                .bgi("transparency1.png");
+                background-position: 50% 50%;
+            }
+
+            &-color {
+                box-shadow: 0 0 1px 0 black, 0 0 1px 0 white inset;
+                .transit();
+            }
+        }
+
+
+    &__slot-caption {
+        z-index: 2;
+        @swap_w: 1.6rem;
+        @swap_h: 1.6rem;
+        line-height: 1;
+        .bold();
+        font-style: normal;
+        .point;
+        .xyal(-7%, 50%);
+        margin-top   : @swap_h / -2;
+        margin-right : @swap_w / -2;
+        .size(@swap_w, @swap_h);
+        .flexcenter();
+        color: fadeout(@font_color, 50%);
+        background-color: #57525b;
+        border: 1px solid #454148;
+        box-shadow: 0 1px 3px rgba(44, 31, 58, 0.23);
+    }
+
+    //&__slot-swap {
+    //    z-index: 2;
+    //    @swap_w: 2.4rem;
+    //    @swap_h: 1.4rem;
+    //    .point;
+    //    .xyal(@cur_h, 50%);
+    //
+    //    margin-top  : @swap_h / -2;
+    //    margin-left : @swap_w / -2;
+    //    .size(@swap_w, @swap_h);
+    //    //background-color: white;
+    //    //border: 1px solid black;
+    //
+    //    box-shadow: 0 1px 3px rgba(44, 31, 58, 0.23);
+    //
+    //
+    //    background-color: #57525b;
+    //    border: 1px solid #454148;
+    //    box-shadow: 0 1px 3px rgba(44, 31, 58, 0.23);
+    //}
+
+
+    @swatch_height: @h;
+
+    &__palette-wrap {
+        .stretch();
+        top: @cur_h;
+    }
+    &__palette-scroll-container {
+        height:100%;
+    }
+    &__palette {
+        padding: 2px 0 4px;
+
+        &-line {
+            .flex(row);
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+    }
+
+        &__swatch {
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.36);
+            width: @h;
+            .bgi("transparency1.png");
+
+            &_transparent {
+                background-image: "url(@{i}transparency1.png)";
+                background-image:
+                    ~"url(@{i}red-diagonal2.png)",
+                    ~"url(@{i}transparency1.png)";
+                background-position: 50% 50%;
+            }
+            background-repeat: repeat;
+            &:before {
+                .bl;
+                .cont;
+                //padding-top: 100%;
+                height: @swatch_height;
+            }
+            &:hover {
+                z-index: 3;
+            }
+            &:hover &-color{
+                .stretch(-2);
+                box-shadow: 0 1px 2px rgba(24, 11, 97, 0.27);
+            }
+            &-color {
+                .pevents;
+                .stretch;
+            }
+
+        }
+
+}
+
+.swatches-panel__slot-icon_font {
+    &:before {
+        content: "T";
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "target": "es6",
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "jsx": "react",
+        "allowJs": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "mylibs/**/*",
+       // "../carbon-core/mylibs/definitions/carbon-*.d.ts"
+        "./node_modules/@carbonium/carbon-core/types/*.d.ts"
+    ],
+    "files": [
+        //TODO: remove when immutable > 3.8.1 is released
+        "./typings/immutable.d.ts",
+        "./typings/custom.d.ts"
+    ],
+    "awesomeTypescriptLoaderOptions": {
+        "useBabel": true,
+        "useCache": true,
+        "transpileOnly": false,
+        "instance": "ui"
+    }
+}

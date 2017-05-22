@@ -1,0 +1,149 @@
+@import "../less/mapple/mMixins";
+
+
+
+body {
+    //background-attachment: fixed;
+    background-color: @bg0_body;
+}
+
+.layout  {
+    .bgc2();
+    //&:before  {
+    //    .bgc(#244070);
+    //    //.bgi('1.jpg');
+    //    .bgcenter;
+    //    .bgcover;
+    //    background-attachment: fixed;
+    //}
+}
+
+
+.layout,
+.flyout,
+.flyout__content{
+    color : @font_color;
+}
+
+.layout__header{
+    .bgc1();
+    background: linear-gradient(90deg, @c_brand1, @c_brand2);
+    color : @topbar_font_color;
+    .box-shadow(0 3px 8px @shadow_color1);
+}
+
+
+//#workspace-well {
+//    background: @workspace_color;
+//}
+
+//.sidebar {
+////    .bgc2;
+//}
+
+
+.panel {
+    .bgc3();
+
+}
+.panel__header {
+    .bgc3();
+    //box-shadow: 0 -1px 0 0 rgba(44, 31, 58, 0.42) inset;
+}
+
+
+.panel__icon,
+.panel__body {
+    .bgc4();
+}
+
+.panel__icon:after {
+    .box-shadow(-6px 6px 0 5px @bg4_panel_body);
+}
+
+
+.panel__body {
+}
+
+.pills-bar__pill {
+    .bgfade(7);
+}
+
+
+
+
+
+
+.stencils-navigator {
+    //.bgci1()
+}
+.stencils-container {
+//.stencils-group {
+    .bgci2();
+}
+.stencils-group__name{
+    //.bgfade(14, black);
+}
+
+
+
+
+#page {
+//    .ipng('some_design');
+}
+
+
+
+
+
+
+
+
+//.projectbar-pill {
+//    background-color : @projectbar_color;
+//}
+
+#workspace-top-edge {
+    //background-color: @bg5_workspace;
+    background-color: @bg9_topedge;
+    //border-bottom: 1px solid #919291;
+}
+
+#statusbar {
+    background-color: @bg5_workspace_faded;
+}
+
+
+
+.pagesbar__pill{
+    .bgc(rgba(58, 49, 70, 0.32));
+}
+
+.pagesbar_open .pagesbar__pill,
+.pagesbar__panel {
+    .bgc(rgba(58, 49, 70, 0.95));
+}
+.pagesbar__pill {
+    &:hover {
+        .wbg(10);
+
+        .pagesbar_open & {
+            .bgc(rgba(87, 73, 105, 0.95));
+        }
+    }
+
+}
+.pagesbar__panel {
+}
+
+.editable-list__item-body {
+    .bgfade(5, white);
+    &:hover {
+        .bgfade(10, white);
+    }
+}
+
+#viewport.viewport_artboard-mode {
+    //background-color: darken(@bg5_workspace, 10%);
+    background-color: #4D4B50;
+}

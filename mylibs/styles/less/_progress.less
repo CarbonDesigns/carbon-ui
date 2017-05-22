@@ -1,0 +1,84 @@
+.progress-bar{
+  .w100;
+  height: 5px;
+  .abs;
+}
+
+.pin {
+  width:4px;
+  height:4px;
+  border-radius:2px;
+  background:#4d4d4d;
+  margin: 2px 10px;
+  position:absolute;
+  border: 1px black;
+}
+
+@-webkit-keyframes progressBuilder {
+  0%   {left:1%; -webkit-animation-timing-function: ease-in-out;}
+  20%  {left:33.1%;-webkit-animation-timing-function: linear;}
+  80%  {left:66.1%; -webkit-animation-timing-function: linear;}
+  100% {left:100.1%; }
+}
+
+@-moz-keyframes progressBuilder {
+  0%   {left:1%; -moz-animation-timing-function: ease-in-out;}
+  20%  {left:33.1%;-moz-animation-timing-function: linear;}
+  80%  {left:66.1%; -moz-animation-timing-function: linear;}
+  100% {left:100.1%; }
+}
+
+@-ms-keyframes progressBuilder {
+  0%   {left:1%; -ms-animation-timing-function: ease-in-out;}
+  20%  {left:33.1%;-ms-animation-timing-function: linear;}
+  80%  {left:66.1%; -ms-animation-timing-function: linear;}
+  100% {left:100.1%; }
+}
+
+@-o-keyframes progressBuilder {
+  0%   {left:1%; -ms-animation-timing-function: ease-in-out;}
+  20%  {left:33.1%;-ms-animation-timing-function: linear;}
+  80%  {left:66.1%; -ms-animation-timing-function: linear;}
+  100% {left:100.1%; }
+}
+
+@keyframes progressBuilder {
+  0%   {left:1%; animation-timing-function: ease-in-out;}
+  20%  {left:33.1%;animation-timing-function: linear;}
+  80%  {left:66.1%; animation-timing-function: linear;}
+  100% {left:100.1%; }
+}
+
+.p1, .p2, .p3, .p4, .p5 {
+  animation: progressBuilder 3.0s infinite;
+  -webkit-animation: progressBuilder 3.0s infinite;
+  -moz-animation: progressBuilder 3.0s infinite;
+  -ms-animation: progressBuilder 3.0s infinite;
+}
+
+.p2 {
+  -webkit-animation-delay:0.2s;
+  -moz-animation-delay:0.2s;
+  -ms-animation-delay:0.2s;
+  animation-delay:0.2s;
+}
+
+.p3 {
+  -webkit-animation-delay:0.4s;
+  -moz-animation-delay:0.4s;
+  -ms-animation-delay:0.4s;
+  animation-delay:0.4s;
+}
+.p4 {
+  -webkit-animation-delay:0.6s;
+  -moz-animation-delay:0.6s;
+  -ms-animation-delay:0.6s;
+  animation-delay:0.6s;
+}
+
+.p5 {
+  -webkit-animation-delay:0.8s;
+  -moz-animation-delay:0.8s;
+  -ms-animation-delay:0.8s;
+  animation-delay:0.8s;
+}

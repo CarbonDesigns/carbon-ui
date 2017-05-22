@@ -1,0 +1,13 @@
+.idea/
+.awcache/
+*.orig
+*.rej
+*.log
+*.trx
+target/*
+node_modules/*
+.mylocal/
+*_LOCAL_*
+*_BASE_*
+*_REMOTE_*
+*_BACKUP_*

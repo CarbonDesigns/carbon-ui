@@ -1,8 +1,6 @@
 import React                  from 'react';
 import cx                     from 'classnames';
 import Dots                   from "../../shared/dots";
-
-// import {Pane, PaneList, PaneListItem, PaneRow, PaneButton} from "../../shared/Pane";
 import {Pane      }           from "../../shared/Pane";
 import {PaneRow   }           from "../../shared/Pane";
 import {PaneLabel }           from "../../shared/Pane";
@@ -127,7 +125,7 @@ export default class ContextBar extends Component<any, any> {
         this.setState({items:menu.items});
     }
 
-    _renderItem(item){
+    _renderItem=(item)=>{
         if(!item.items) {
             return <ContextButton key={item.name} onClick={item.callback} icon={item.icon}><CarbonLabel id={item.name}/></ContextButton>;
         }
@@ -135,6 +133,10 @@ export default class ContextBar extends Component<any, any> {
         var childItems = item.items.filter(a=>!a.disabled);
         if(childItems.length === 0) {
             return null;
+        }
+
+        if(childItems.length === 1) {
+            return this._renderItem(childItems[0]);
         }
 
         if(!item.rows || item.rows.length === 1) {

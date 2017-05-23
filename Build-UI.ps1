@@ -47,6 +47,8 @@ try
     if ($BuildNumber)
     {
         $BuildNumber > .\target\version
+        Copy-Item .\node_modules\@carbonium\carbon-core\lib\* .\target\
+        Copy-Item .\node_modules\@carbonium\carbon-api\lib\* .\target\
     }
 }
 finally

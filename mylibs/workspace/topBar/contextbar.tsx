@@ -1,6 +1,8 @@
 import React                  from 'react';
 import cx                     from 'classnames';
 import Dots                   from "../../shared/dots";
+
+// import {Pane, PaneList, PaneListItem, PaneRow, PaneButton} from "../../shared/Pane";
 import {Pane      }           from "../../shared/Pane";
 import {PaneRow   }           from "../../shared/Pane";
 import {PaneLabel }           from "../../shared/Pane";

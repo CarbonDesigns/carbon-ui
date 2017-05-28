@@ -127,7 +127,7 @@ export default class ContextBar extends Component<any, any> {
         this.setState({items:menu.items});
     }
 
-    _renderItem=(item)=>{
+    _renderItem(item){
         if(!item.items) {
             return <ContextButton key={item.name} onClick={item.callback} icon={item.icon}><CarbonLabel id={item.name}/></ContextButton>;
         }
@@ -135,10 +135,6 @@ export default class ContextBar extends Component<any, any> {
         var childItems = item.items.filter(a=>!a.disabled);
         if(childItems.length === 0) {
             return null;
-        }
-
-        if(childItems.length === 1) {
-            return this._renderItem(childItems[0]);
         }
 
         if(!item.rows || item.rows.length === 1) {

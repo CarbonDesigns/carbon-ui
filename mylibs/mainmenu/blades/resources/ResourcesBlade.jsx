@@ -17,6 +17,10 @@ import {default as TabContainer, TabTabs, TabHeader, TabPage, TabArea} from "../
 import {default as EditableList, ListItem} from "../../../shared/EditableList";
 import SimpleList from "../../../shared/SimpleList";
 import bem from '../../../utils/commonUtils';
+import { dispatch, dispatchAction } from "../../../CarbonFlux";
+
+import ImportResourceDialog from "../../../workspace/ImportResourceDialog";
+
 
 
 class PagesForExportList extends Component {
@@ -63,7 +67,6 @@ class ResourceTile extends Component {
 
         return (
             <div className="resource-tile" onClick={this.selectPage} key={this.props.key}>
-
                 <div className="resource-tile__image" style={imgStyle}></div>
 
                 <div className="resource-tile__meta">
@@ -214,6 +217,11 @@ export default class ResourcesBlade extends Component {
             <MarkupLine>
                 <p>Select a page to share</p>
                 <PagesForExportList/>
+
+            </MarkupLine>
+
+            <MarkupLine>
+                <GuiButton onClick={ ()=>{dispatchAction({type: "Dialog_Show", dialogType: "ImportResourceDialog"}) }} caption="btn.publishpage" defaultMessage="TTTT" />
             </MarkupLine>
 
 
@@ -225,9 +233,6 @@ export default class ResourcesBlade extends Component {
                             <FormattedMessage  tagName="h5" id="translateme!" defaultMessage="Public"/>,
                             <FormattedMessage  tagName="h5" id="translateme!" defaultMessage="My"/>,
                             <i className="ico--search"/>,
-                            //<FormattedMessage tagName="h3" id="resources.static"/>,
-                            //<FormattedMessage tagName="h3" id="resources.my"/>,
-                            //<FormattedMessage tagName="h3" id="resources.public"/>,
                         ]}
                     />
                     <TabArea className="gui-pages">

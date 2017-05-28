@@ -120,7 +120,7 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
     }
 
     _showResourcesBlade = ()=> {
-        Dispatcher.dispatch(AppActions.showResourcesBlade({importOnly: true}));
+        Dispatcher.dispatch({type: "Dialog_Show", dialogType: "ImportResourceDialog"});
     }
 
     render() {

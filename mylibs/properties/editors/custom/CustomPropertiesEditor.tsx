@@ -4,7 +4,7 @@ import {richApp} from "../../../RichApp";
 import {FormattedMessage} from "react-intl";
 import StringEditor from "../StringEditor";
 import DropdownEditor from "../DropdownEditor";
-import {PropertyMetadata, ArtboardTemplateControl} from "carbon-core";
+import {PropertyMetadata, Symbol} from "carbon-core";
 import Immutable from "immutable";
 import EditorComponent from "../EditorComponent";
 import propertyStore from "../../PropertyStore";

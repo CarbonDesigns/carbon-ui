@@ -238,7 +238,9 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
                     for (var j = 0; j < definition.properties.length; j++) {
                         var propertyName = definition.properties[j];
                         var property = this._createPropertyMetadata(state, propertyName, i, j);
-                        props.push(property);
+                        if(property) {
+                            props.push(property);
+                        }
                     }
                 });
 

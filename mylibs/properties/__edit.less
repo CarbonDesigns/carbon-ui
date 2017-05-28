@@ -700,7 +700,7 @@
 
 
         &__header {
-
+            padding-bottom: @line_air/2;
             &-line {
                 &_filters {
                     //height: @first_line;
@@ -756,11 +756,18 @@
 
 
 
+        .prop__optgroup-title {
+            .hide;
+        }
 
         .prop__optgroup-title,
         &__typeface {
-            padding-left:  @line_air;
-            padding-right: @line_air;
+
+            padding: @line_air/5 @line_air;
+
+            .font-options__body_narrow & {
+                padding: @line_air/2 @line_air;
+            }
         }
 
         &__typeface {
@@ -776,6 +783,10 @@
                     .op20;
                     .scale(.8);
                     .trn1();
+
+                }
+                &_faved > i {
+                    .op1;
                 }
                 &:hover > i {
                     transition: transform 0.2s cubic-bezier(0.24, 0.02, 0.55, 1.66);
@@ -785,7 +796,9 @@
 
             &-meta {
                 .flexstretch();
-                flex-direction: column;
+                .font-options__body_narrow & {
+                    flex-direction: column;
+                }
                 flex-grow: 1;
 
             }

@@ -6,12 +6,51 @@ import {FormattedMessage}                             from "react-intl";
 import PublishBlade                                   from "./PublishPageBlade";
 import ImportPageBlade                                from "./ImportPageBlade";
 import {GuiButton}                                    from "../../../shared/ui/GuiComponents";
+import ScrollContainer        from "../../../shared/ScrollContainer";
+
 import {Markup, MarkupLine}  from "../../../shared/ui/Markup";
 import Search from "../../../shared/Search";
 
 import {BladeBody}  from "../BladePage";
 import {default as TabContainer, TabTabs, TabHeader, TabPage, TabArea} from "../../../shared/TabContainer";
 
+import {default as EditableList, ListItem} from "../../../shared/EditableList";
+import SimpleList from "../../../shared/SimpleList";
+import bem from '../../../utils/commonUtils';
+
+
+class PagesForExportList extends Component {
+
+    render() {
+
+        const items = app.pages.map((page, ind)=>{ return {
+                id      : page.id(),
+                content : <p className={bem("publish", "pages-list-item", {selected: ind===0})}>{page.name()}</p>
+            }
+        });
+
+        const simpleListProps = {
+            // className      : bem_stories_panel('list-container'),
+            // boxClassName   : bem_stories_panel('list'),
+            padding        : false,
+            insideFlyout   : false,
+            emptyMessage   : <FormattedMessage defaultMessage="No pages in project" id="translate me!"/>,
+            items          : items,
+            onClick        : console.log //fixme выбирает страницу, открывает новый блейд
+        };
+
+
+        return (
+            <ScrollContainer
+                className={"wrap thin"}
+                boxClassName={bem("publish", "pages-list")}
+                insideFlyout={false}
+            >
+                <SimpleList {...simpleListProps}/>
+            </ScrollContainer>
+        )
+    }
+}
 
 class ResourceTile extends Component {
     selectPage=()=>{
@@ -72,14 +111,14 @@ export default class ResourcesBlade extends Component {
     constructor() {
         super();
         this.state = {
-            name: "",
-            description: "",
-            public: false,
-            myResources: [],
-            publicResources: [],
-            staticResources:[],
-            searchString: '',
-            loading:true
+            name            : "",
+            description     : "",
+            public          : false,
+            myResources     : [],
+            publicResources : [],
+            staticResources : [],
+            searchString    : '',
+            loading         : true
         };
 
         this._debounceSearch = util.debounce((search)=>{
@@ -136,7 +175,7 @@ export default class ResourcesBlade extends Component {
     }
 
     _renderTiles(data){
-        if(this.state.loading && data.length == 0){
+        if(this.state.loading && data.length == 0){ //fixme data.length == 0 - could be incorrect
             return <FormattedMessage tagName="p" id="data.loading" defaultMessage="Loading..."/>
         }
         if(!data.length){
@@ -144,7 +183,14 @@ export default class ResourcesBlade extends Component {
         }
 
         return <div className="tile-container">
-            {data.map(r=><ResourceTile name={r.name} currentBladeId={this.context.currentBladeId} bladeContainer={this.context.bladeContainer} img={r.imageUrl} key={r.id} data={r}/>)}
+            {data.map((r,ind)=><ResourceTile
+                key={r.id + 'ind'} //fixme - remove later
+                name={r.name}
+                currentBladeId={this.context.currentBladeId}
+                bladeContainer={this.context.bladeContainer}
+                img={r.imageUrl}
+                data={r}
+            />)}
         </div>
     }
 
@@ -164,6 +210,13 @@ export default class ResourcesBlade extends Component {
         const placeHolderMessage = "Search..."; //this.context.intl.formatMessage({id:"Search...", defaultMessage:"Search..."})
 
         return <BladeBody>
+
+            <MarkupLine>
+                <p>Select a page to share</p>
+                <PagesForExportList/>
+            </MarkupLine>
+
+
             <MarkupLine>
                 <TabContainer type="normal" className="resources-list">
                     <TabTabs

@@ -72,10 +72,14 @@ function getResolve(settings) {
 }
 
 function getDebugOrCdnPath(settings, file) {
+    var filePath;
     if (settings.minimize) {
-        return settings.fullPublicPath + path.basename(file);
+        filePath = settings.fullPublicPath + path.basename(file);
     }
-    return "/" + file;
+    else{
+        filePath = "/" + file;
+    }
+    return filePath.replace(/\\/g, '/');
 }
 
 function getAppCdnPath(settings) {

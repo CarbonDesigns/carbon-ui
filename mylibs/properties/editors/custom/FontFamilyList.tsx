@@ -9,6 +9,8 @@ import FontFamilyActions from "./FontFamilyActions";
 import { GuiCheckbox, GuiSpinner }           from "../../../shared/ui/GuiComponents";
 import SelectBox from "../../../shared/SelectBox";
 import {backend, FontsProxy} from "carbon-core";
+import bem from '../../../utils/commonUtils';
+
 
 export default class FontFamilyList extends Component<any, any>{
     refs: {
@@ -176,7 +178,7 @@ export default class FontFamilyList extends Component<any, any>{
                     <div className="font-options__category-selector">
                         <SelectBox
                             mods="line"
-                            selectedItem={2}
+                            selectedItem={0}
                             onSelect={this._onCategorySelect}
                         >
                             <p>All</p>
@@ -188,12 +190,12 @@ export default class FontFamilyList extends Component<any, any>{
                 </div>
 
                 {/* 2nd header line */}
-                <div className="font-options__header-line  font-options__header-line_heading">
-                    <p>230 typefaces</p>
-                    <div className="font-options__collapse-styles">
-                        <GuiCheckbox label="translate me!" defaultMessage="collapse styles" mods="small"/>
-                    </div>
-                </div>
+                {/*<div className="font-options__header-line  font-options__header-line_heading">*/}
+                    {/*<p>230 typefaces</p>*/}
+                    {/*<div className="font-options__collapse-styles">*/}
+                        {/*<GuiCheckbox label="translate me!" defaultMessage="collapse styles" mods="small"/>*/}
+                    {/*</div>*/}
+                {/*</div>*/}
             </div>
 
             <div className="font-options__body  antiscroll-wrap" ref="scrollContainer">
@@ -227,7 +229,7 @@ export default class FontFamilyList extends Component<any, any>{
                             onClick={console.log}
                         >
 
-                            <div className="font-options__typeface-star font-options__typeface-star_faved">
+                            <div className={bem("font-options", "typeface-star", {faved: true})}>
                                 <i className="ico--star"/>
                             </div>
 

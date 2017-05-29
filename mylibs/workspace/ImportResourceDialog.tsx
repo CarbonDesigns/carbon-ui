@@ -4,24 +4,15 @@ import { GuiButton, GuiButtonBlock } from "../shared/ui/GuiComponents";
 import DialogRegistry from "../dialogs/DialogRegistry";
 import Dialog from "../dialogs/Dialog";
 import { FormattedMessage } from "react-intl";
-import { backend, IDisposable } from "carbon-core";
+import { app, backend, IDisposable } from "carbon-core";
 import { ConnectionState } from "carbon-api";
 import {default as TabContainer, TabTabs, TabHeader, TabPage, TabArea} from "../shared/TabContainer";
 import {Markup, MarkupLine, MarkupSubmit}  from "../shared/ui/Markup";
 import Search from "../shared/Search";
 import bem from '../utils/commonUtils';
-
 import {richApp} from "../RichApp.js";
 
-const __EF__ = function(){}; //fixme delete me later
-let __EV__;//fixme delete me later
-
-
-
-
-
-
-class ResourceTile extends Component {
+class ResourceTile extends Component<any, any> {
     // selectResource=()=>{
     // };
 
@@ -81,7 +72,7 @@ class ResourceTile extends Component {
 
 
 
-export default class ImportResourceDialog extends Dialog<void, void>{
+export default class ImportResourceDialog extends Dialog<any, any>{
     _connectionToken: IDisposable;
 
     constructor(props) {
@@ -110,8 +101,9 @@ export default class ImportResourceDialog extends Dialog<void, void>{
 
     _importPage = ()=> {
         fetch(this.props.dataUrl).then(response=>response.json()).then(data=>{
-            var page = app.importPage(data);
-            richApp.dispatch(StencilsActions.changePage(page));
+            //TODO: fix
+            //var page = app.importPage(data);
+            //richApp.dispatch(StencilsActions.changePage(page));
             this.context.bladeContainer.close(0);
         });
     }
@@ -238,7 +230,7 @@ export default class ImportResourceDialog extends Dialog<void, void>{
         </div>
     }
 
-    onClose = () =>{
+    onClose(){
         console.log('closed')
     }
 

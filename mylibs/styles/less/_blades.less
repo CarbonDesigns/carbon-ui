@@ -202,6 +202,30 @@
     background-repeat: no-repeat;
 }
 
+.publish__pages-list {
+    margin-top: @line_air / 2;
+
+    &-item {
+        width: 100%;
+        .point;
+        padding: .5em .5em;
+        margin-bottom: 1px;
+
+        .wbg(3);
+
+        &:hover {
+            .wbg(6);
+        }
+
+        &_selected {
+            &, &:hover {
+                .wbg(10);
+            }
+        }
+
+    }
+}
+
 &{
     @ratio: 61.8%;
 

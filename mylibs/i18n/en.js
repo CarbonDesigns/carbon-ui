@@ -393,7 +393,7 @@ export default
         "type.i": "Shadow",
         "type.af": "Frame",
         "@frame": "Frame",
-        "@resource": "Artboard type",
+        "@artboardType": "Artboard type",
         "Show more...": "Show more...",
         "Sign up": "Sign up",
         "@cornerRadius": "Corner radius",
@@ -474,6 +474,8 @@ export default
         "@symbols": "Symbols",
         "@symbols.create": "Create symbol",
         "@symbols.editMaster": "Edit symbol master",
+        "@symbols.markAsText": "Mark as text",
+        "@symbols.markAsBackground": "Mark as background",
         "@symbols.detach": "Detach instance",
 
 

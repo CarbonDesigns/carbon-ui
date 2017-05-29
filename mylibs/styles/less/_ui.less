@@ -2090,13 +2090,13 @@
         .heading-font-thin;
         .wbg(25);
         color: @font_color;
-
+        .placeholder(fadeout(@font_color, 50%));
         .w100;
 
         padding:  @line_air/2 @line_air  @line_air/2 @line_air*2.5;
 
         .f14;
-        .upp(50);
+        //.upp(50);
         border: none;
         line-height: 1;
 
@@ -2483,34 +2483,6 @@
     }
 }
 
-.dialogOverlay{
-    .abs;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(100, 100, 100, 0.8);
-    z-index: 100000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.dialog{
-    min-width: 300px;
-    color : @font_color;
-
-    &__header{
-        background:  @bg3_panel_header;
-        padding: 5px 20px;
-        height: 20px;
-    }
-
-    &__body{
-        background:  @bg4_panel_body;
-        padding: 20px;
-    }
-}
 // Loading spinner
 
 

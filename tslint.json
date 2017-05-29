@@ -5,7 +5,14 @@
 		"no-unused-variable": true,
 		"curly": true,
 		"class-name": true,
-		"semicolon": ["always"],
-		"triple-equals": true
+		"semicolon": [
+			"always"
+		],
+		"triple-equals": true,
+		"array-type": ["array-simple"],
+		"align": [true, "statements"],
+		"no-trailing-whitespace": true,
+		"no-use-before-declare": true,
+		"newline-before-return": true
 	}
 }

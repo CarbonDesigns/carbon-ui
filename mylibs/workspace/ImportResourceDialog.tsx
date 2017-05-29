@@ -146,6 +146,7 @@ export default class ImportResourceDialog extends Dialog<void, void>{
         else {
             return <div className="tile-container">
                 {data.map( (resource,ind)=><ResourceTile
+                    key={resource.id}
                     resource={resource}
                     onClick={this._toggleDetails}
                 /> )}
@@ -235,6 +236,10 @@ export default class ImportResourceDialog extends Dialog<void, void>{
                 </GuiButtonBlock>
             </MarkupSubmit>
         </div>
+    }
+
+    onClose = () =>{
+        console.log('closed')
     }
 
     renderHeader(){

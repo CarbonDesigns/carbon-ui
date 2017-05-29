@@ -1,5 +1,5 @@
 
-.dialogOverlay{
+.dialog-overlay{
     .abs;
     top: 0;
     bottom: 0;
@@ -17,11 +17,30 @@
     color : @font_color;
 
     &__header{
+        .rel;
+        .ellipsis;
         background:  @bg3_panel_header;
-        padding: @line_air*1.5 @line_air*2 @line_air;
+        padding: @line_air*1.5  @line  @line_air @line_air*2 ;
         line-height: 1;
-        //height: 20px;
     }
+
+        &__buttons{
+            .xyar();
+            bottom: 0;
+
+            .flexline();
+            padding-right: @line_air/2;
+        }
+        &__button{
+            .point;
+            .size(@line);
+            .flexcenter;
+            .op30;
+            &:hover {
+                .wbg(5);
+                .op80;
+            }
+        }
 
     &__body{
         background:  @bg4_panel_body;

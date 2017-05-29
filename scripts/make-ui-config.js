@@ -56,13 +56,12 @@ function getOutput(settings) {
 }
 function getResolve(settings) {
     var root = [];
-    root.push(fullPath("../mylibs"));
+    root.push(fullPath("../src"));
 
     var resolves = {
         root: root,
         alias: {
-            "antiscroll": fullPath("../libs/antiscroll"),
-            "bem": fullPath("../mylibs/utils/commonUtils"),
+            "bem": fullPath("../src/utils/commonUtils"),
             'react/lib/ReactMount': 'react-dom/lib/ReactMount'
         },
         extensions: ["", ".ts", ".tsx", ".js", ".jsx", ".less", ".html"]
@@ -176,7 +175,7 @@ function getPlugins(settings) {
     plugins.push(
         new webpack.DllReferencePlugin({
             manifest: require(fullPath("../target/vendors-manifest.json")),
-            context: fullPath("../mylibs")
+            context: fullPath("../src")
         }));
 
     return plugins;
@@ -281,7 +280,7 @@ module.exports = function (settings) {
     settings.verbose && console.log(settings);
 
     var config = {
-        context: fullPath("../mylibs"),
+        context: fullPath("../src"),
         entry: getEntry(settings),
         output: getOutput(settings),
         resolve: getResolve(settings),

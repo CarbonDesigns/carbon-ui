@@ -41,9 +41,9 @@ module.exports = function(settings){
     settings = Object.assign({}, defaults, settings);
 
     var config = {
-        context : fullPath("../mylibs"),
+        context : fullPath("../src"),
         entry: {
-            vendors: [fullPath("../mylibs/vendors")]
+            vendors: [fullPath("../src/vendors")]
         },
         output: {
             path: fullPath("../target"),
@@ -52,7 +52,7 @@ module.exports = function(settings){
         },
         plugins: getPlugins(settings),
         resolve: {
-            root: [fullPath("../mylibs")],
+            root: [fullPath("../src")],
             extensions: ["", ".js", ".jsx", ".less"]
         }
     };

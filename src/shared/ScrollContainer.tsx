@@ -4,7 +4,7 @@ import FlyoutActions from '../FlyoutActions';
 import {dispatch} from '../CarbonFlux';
 import cx from 'classnames';
 
-require("../../libs/antiscroll");
+require("../external/antiscroll");
 
 export default class ScrollContainer extends React.Component<any, any>{
     private _endTimer: number;

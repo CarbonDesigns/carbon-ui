@@ -35,7 +35,7 @@ export default class DialogContainer extends Component<{}, IDialogState>{
         if (!this.state.visible){
             return null;
         }
-        return <div className="dialogOverlay">
+        return <div className="dialog-overlay">
             <this.state.dialogComponent/>
         </div>;
     }

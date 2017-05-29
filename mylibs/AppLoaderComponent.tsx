@@ -66,6 +66,8 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
                             this.goToError("appNotFound");
                             return;
                         }
+
+                        logger.fatal("App failed to run", e);
                         this.goToError("appRunError");
                     });
                 }

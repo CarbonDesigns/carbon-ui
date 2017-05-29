@@ -1,6 +1,6 @@
 import React from 'react';
 import {CompositeElement, PrimitiveType} from "carbon-core";
-import {app, NullContainer, Artboard, Selection, Environment} from "carbon-core";
+import {app, Artboard, Selection, Environment} from "carbon-core";
 import cx from 'classnames';
 import {listenTo, Component} from "../../CarbonFlux";
 import {iconType} from "../../utils/appUtils";
@@ -26,7 +26,7 @@ export default class Breadcrumbs extends Component<any, any> {
         var e = element;
         var res = [];
         var view = Environment.view;
-        while (e !== null && !(e === NullContainer) && e !== view) {
+        while (e) {
             if (e.canSelect()  || e instanceof Artboard) {
                 res.splice(0, 0, {
                     name     : e.displayName(),

@@ -1,7 +1,7 @@
 import { handles, CarbonStore, dispatch } from "../CarbonFlux";
 import Immutable from "immutable";
 import CarbonActions from "../CarbonActions";
-import { PropertyTracker, Selection, Brush, app, PropertyMetadata, ChangeMode, ArtboardResource, ActionManager } from "carbon-core";
+import { PropertyTracker, Selection, Brush, app, PropertyMetadata, ChangeMode, ArtboardType, ActionManager } from "carbon-core";
 import SwatchesActions from './SwatchesActions';
 
 interface IPalette {
@@ -88,7 +88,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
 
     @handles(CarbonActions.resourceChanged)
     onPaletteChanged({ resourceType, element }) {
-        if (resourceType !== ArtboardResource.Palette) {
+        if (resourceType !== ArtboardType.Palette) {
             return;
         }
 

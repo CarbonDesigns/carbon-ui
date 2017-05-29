@@ -4,7 +4,7 @@ import {handles, CarbonStore, dispatch} from "../CarbonFlux";
 import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import StencilsActions from "./stencils/StencilsActions";
-import { app, ArtboardTemplateControl, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
+import { app, Symbol, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer } from "carbon-core";
 
 interface IInteraction {
@@ -80,8 +80,8 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         var element = this.elementFromTemplate(templateType, templateId, sourceId);
         var scale = Environment.view.scale();
         var location = Environment.controller.choosePasteLocation([element], e.ctrlKey || e.metaKey);
-        var w = element.br().width;
-        var h = element.br().height;
+        var w = element.boundaryRect().width;
+        var h = element.boundaryRect().height;
         var x, y;
 
         if (location.parent.autoPositionChildren()){
@@ -153,7 +153,7 @@ export class Toolbox extends CarbonStore<IToolboxState>{
             element = store.createElement(templateId);
         }
         else{
-            element = new ArtboardTemplateControl();
+            element = new Symbol();
             element.source({pageId: sourceId, artboardId: templateId});
         }
 
@@ -194,11 +194,11 @@ export class Toolbox extends CarbonStore<IToolboxState>{
 
         var artboard = Environment.view.page.getActiveArtboard();
         if (artboard){
-            fit = fit.fit(artboard.getBoundaryRect(), true);
+            fit = fit.fit(artboard.boundaryRect(), true);
         }
 
         if (fit.width !== current.width || fit.height !== current.height){
-            element.prepareAndSetProps({br: element.br().withSize(Math.round(fit.width), Math.round(fit.height))});
+            element.prepareAndSetProps({br: element.boundaryRect().withSize(Math.round(fit.width), Math.round(fit.height))});
         }
     }
 

@@ -5,7 +5,7 @@ import {richApp} from "../../../RichApp";
 import {FormattedMessage} from "react-intl";
 import StringEditor from "../StringEditor";
 import DropdownEditor from "../DropdownEditor";
-import {PropertyMetadata, ArtboardTemplateControl, Artboard, StateBoard} from "carbon-core";
+import {PropertyMetadata, Symbol, Artboard, StateBoard} from "carbon-core";
 import Immutable from "immutable";
 import EditorComponent from "../EditorComponent";
 import propertyStore from "../../PropertyStore";
@@ -79,7 +79,7 @@ export default class CustomPropertiesEditor extends EditorComponent<any, any> {
                 this.setValueByCommand(newValue);
                 this.setState({newProperty: false});
                 //this.buildMetadata is undefined
-                //PropertyMetadata.replaceForNamedType(this.props.e.first().name(), ArtboardTemplateControl, this.buildMetadata(newValue));
+                //PropertyMetadata.replaceForNamedType(this.props.e.first().name(), Symbol, this.buildMetadata(newValue));
                 return;
             }
         }

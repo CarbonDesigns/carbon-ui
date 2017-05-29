@@ -11,6 +11,7 @@ interface IPropertyStoreState {
     nameProperty?:any;
     lockedProperty?:any;
     valueMap?:object;
+    visibilityMap: {[name: string]: boolean};
     descriptorMap?:object;
     pathMap?:object;
     selection?:any;
@@ -26,6 +27,7 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
             nameProperty: null,
             lockedProperty: null,
             valueMap: {},
+            visibilityMap: {},
             descriptorMap: {},
             pathMap: {},
             selection: null
@@ -37,7 +39,11 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     private _timerId:any;
 
     hasProperty(propertyName){
-        return this.state.valueMap.hasOwnProperty(propertyName);
+        var exists = this.state.valueMap.hasOwnProperty(propertyName);
+        if (exists && this.state.visibilityMap[propertyName] === false){
+            exists = false;
+        }
+        return exists;
     }
 
     getPropertyValue(propertyName){
@@ -82,7 +88,7 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
 
         var groups = selection.createPropertyGroups();
 
-        var newState:IPropertyStoreState = {selection: selection, initialized:true, descriptorMap: {}, valueMap: {}, pathMap: {}};
+        var newState:IPropertyStoreState = {selection: selection, initialized:true, descriptorMap: {}, valueMap: {}, pathMap: {}, visibilityMap: {}};
         newState.nameProperty = this._createPropertyMetadata(newState, "name");
         newState.lockedProperty = this._createPropertyMetadata(newState, "locked");
         this._setGroups(newState, groups);
@@ -163,7 +169,7 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         this.state.groups = groups;
         groups = this._updateVisibility(this.state);
 
-        var newState:IPropertyStoreState = {groups: groups};
+        var newState: Partial<IPropertyStoreState> = {groups: groups};
         if (newProps.hasOwnProperty("name")){
             newState.nameProperty = this.state.nameProperty.set("value", newProps.name);
         }
@@ -206,13 +212,13 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     _updateVisibility(state){
         var mutators = null;
         var groups = state.groups;
-        var result = state.selection && state.selection.prepareDisplayPropsVisibility();
-        if (result){
-            for (let propertyName in result){
+        state.visibilityMap = state.selection && state.selection.prepareDisplayPropsVisibility();
+        if (state.visibilityMap){
+            for (let propertyName in state.visibilityMap){
                 var path = state.pathMap[propertyName];
                 if (path){
                     mutators = mutators || [];
-                    mutators.push(path, result[propertyName]);
+                    mutators.push(path, state.visibilityMap[propertyName]);
                 }
             }
         }

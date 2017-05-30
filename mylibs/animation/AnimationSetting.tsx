@@ -147,7 +147,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
 
             <div className="transition-dialog__row ">
 
-                {/* Transition type */}
+                {/* Transition effect */}
                 <div className="transition-dialog__column transition-dialog__line">
                     <Dropdown
                         className="drop_down_no-padding"

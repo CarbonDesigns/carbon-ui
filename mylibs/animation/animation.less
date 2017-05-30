@@ -31,6 +31,10 @@
         padding-bottom: 72px;
         //.wbg(10);
         margin-bottom: @line_air/2;
+
+        .transition-dialog__animation-set {
+            .stretch();
+        }
     }
     .transition-dialog__row {
         margin-left: -@line_air;
@@ -43,6 +47,7 @@
         margin-left: @line_air;
         //padding-bottom: 10px;
     }
+
 
 
     .transition-dialog__duration-input {
@@ -118,4 +123,10 @@
     -moz-transition-timing-function:linear;
     -webkit-transition-timing-function:linear;
     transition-timing-function:linear;
+}
+
+
+.transition-dialog__animation-actor {
+    .abs;
+
 }

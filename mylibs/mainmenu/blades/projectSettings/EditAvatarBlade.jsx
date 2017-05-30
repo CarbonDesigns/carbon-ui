@@ -486,7 +486,7 @@ class EditAvatar extends Component {
             <MarkupLine>{ separatorOr("or") }</MarkupLine>
 
             <MarkupLine className="edit-avatar__paste-url" onClick={this._hideAllErrors}>
-                <p className="edit-avatar__paste-url-message">
+                <p className="edit-avatar__message">
                     {say("paste url with image")}
                 </p>
 
@@ -505,6 +505,22 @@ class EditAvatar extends Component {
                     />
                 </GuiButtonedInput>
             </MarkupLine>
+
+            <MarkupLine>{ separatorOr("or") }</MarkupLine>
+
+            <MarkupLine className="edit-avatar__make-snapshot" onClick={this._hideAllErrors}>
+                <p className="edit-avatar__message">
+                    {say("use page snapshot")}
+                </p>
+
+                <GuiButton
+                    defaultMessage="Make snapshot"
+                    mods={["hover-white", "full"]}
+                    onClick={console.log}
+                    caption="translateme!"
+                />
+            </MarkupLine>
+
 
             { !!image &&
                 <MarkupSubmit>

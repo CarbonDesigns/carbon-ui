@@ -2,13 +2,13 @@
 
 # Carbonium - Addictive Design Solution
 
-[Carbonium](http://carbonium.io) is solution for building software interfaces and prototyping application scearios.
+[Carbonium](http://carbonium.io) is a solution for building software interfaces and prototyping application scenarios.
 
 <p align="center">
 <img width="1278" alt="Carbonium in action" src="https://cloud.githubusercontent.com/assets/27830024/26562361/fa98c41e-44c5-11e7-968f-6835ccade858.png">
 </p>
 
-Made entirely in JavaScript and HTML5, Carbonium runs in the browser. The most recent version is always available at the official website [http://carbonium.io](http://carbonium.io) and is updated directly from the master branch of this repository.
+Made entirely in JavaScript and HTML5, Carbonium runs in the browser. The most recent version is always available at the official website [http://carbonium.io](http://carbonium.io) and is updated directly from the **master** branch of this repository.
 
 ## Carbon-UI - home page, workspace and docs
 

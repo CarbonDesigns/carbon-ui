@@ -1,0 +1,166 @@
+//——————————————————————————————————————————————————————————————————————
+// CONSTANTS
+//——————————————————————————————————————————————————————————————————————
+
+@z_panel : 3;
+@z_top_panel    : 3;
+@z_bottom_panel : 4;
+@z_resizer : 9;
+
+@z_prop2 : 2;
+@z_prop3 : 3;
+@z_directedit : @z_prop3;
+@z_dropcontent :  100;
+
+
+//@line          : 36px;
+@line          : 32px;
+@line_air      : 10px;
+@air_half      : @line_air / 2;
+//@filter_height : 30px;
+@filter_height : 32px;
+
+@module1 : 20px;
+@module2 : 16px;
+@module3 : 24px; // height of topedge
+
+@top_side_padding : @line_air;
+
+@toolbar_width : @line + 8px;
+@toolbar_margin: 12px;
+
+@ruler_width: 20px;
+
+//@top_side   :  4.0rem;
+@top_side   :   @line * 1.2;
+@left_side  : 25.0rem;
+@right_side : 28.0rem;
+@bottom_side: 10.0rem;
+
+@splitter1: 400px;
+@splitter2: 100%;
+
+@tabbar_height  : @line;
+@header_height  : @line;
+
+//@splitter_width  : 2px;
+@splitter_width  : 4px;
+
+@rounding1       : 1px;
+@stencils_container_margin: 2px;
+
+@pillsbar_compact : 6px;
+@pillsbar_wide    : @line;
+
+
+@cubic_bezier1 : cubic-bezier(.39, .38, .59,  1.32);
+
+//——————————————————————————————————————————————————————————————————————
+// Colors
+//——————————————————————————————————————————————————————————————————————
+
+//@bg1_topbar             : #212930                 ; //top_line
+@bg1_topbar             : #4A3A72                   ; //top_line
+//@bg2_darkest            : #101920                   ; //darkest
+@bg2_darkest            : #2c1f3a; //darkest
+//@bg3_panel_header       : #283037                   ; //panel header
+//@bg3_panel_header       : #2F1E3B                  ; //panel header
+
+
+@bg3_panel_header       : #3A3140                  ; //panel header
+//@bg4_panel_body         : #56495E ;
+//@bg4_panel_body         : #57525B ;
+//@bg4_panel_body         : #393140 ;
+@bg4_panel_body         : #473e50;
+@bg4_panel_body_lighten : lighten(@bg4_panel_body, 15%) ;
+//@bg4_panel_body         : #343b41                   ; //panel body
+//@bg4_panel_body         : rgba(217, 242, 255, 0.07) ;
+
+@bg5_workspace          : #b7babd; //whitespace
+//@tool_button-color      : rgba(199, 201, 204, 0.91) ;
+@bg5_workspace_faded    : fadeout(@bg5_workspace, 9%)      ;
+@tool_bg                : fadeout(darken( @bg5_workspace, 0%), 9%);
+@tool_hover             : fadeout(lighten(@bg5_workspace, 2%), 3%);
+
+
+//@bg9_topedge            : rgba(54, 48, 62, 0.67)    ;
+@bg9_topedge            : rgba(57, 49, 68, 0.52)    ;
+@bg0_body               : @bg2_darkest;
+
+@bg6_current_tab        : @bg5_workspace            ; //active tab
+@bg7_inactive_tab       : rgba(255, 255, 255, 0.5)  ; //topbar
+@bg8_new_page           : @bg7_inactive_tab         ;
+
+@c_brand1 : #680947;
+@c_brand2 : #4A3A72;
+
+
+//@bg_panel_inner1        : #40474c;
+@bg_panel_inner1        : #453f4c;
+//    @bg_panel_inner2        : #a6a6a7;
+//    @bg_panel_inner2        : #d5d5d6;
+@bg_panel_inner2        : #AEAEAE;
+
+//@selection-color        : #22c1ff;
+//@selection-color        : #b6cd4a;
+@selection-color        : #E2C70B;
+@color_panel_divider    :  rgba(0, 0, 0, 0.10);
+
+//    @layer_selected        : rgba(4, 75, 120, 0.64);
+//@layer_selected        : rgba(26, 105, 132, 0.64);
+@layer_selected        : rgba(159, 100, 23, 0.64);
+
+@font_color        : white;
+@font_color_faded  : fadeout(@font_color, 50%);
+@topbar_font_color : @font_color;
+@shadow_color1 : rgba(1, 2, 3, 0.28);
+@shadow_color2 : rgba(1, 2, 3, 0.12);
+@shadow_color3 : rgba(1, 2, 3, 0.52);
+
+@projectbar_color : transparent;
+//    @bg_stencil : #eeeeee;
+
+
+@workspace_color     :  @bg5_workspace;
+@current_tab_color   : @bg6_current_tab;
+@inactive_tab_color  : @bg7_inactive_tab;
+@bg_new_page  : @bg8_new_page;
+
+
+@stencil_container_bg : @bg_inner2;
+
+
+
+//@projectbar_color : var(--projectbar_color);
+//@shadow_color1 : var(--shadow_color1);
+//@shadow_color2 : var(--shadow_color2);
+//@shadow_color3 : var(--shadow_color3);
+//@font_color        : var(--font_color);
+//@topbar_font_color : var(--topbar_font_color);
+//@bg1_topbar : var(--bg1_topbar)          ;
+//@bg2_darkest   : var(--bg2_darkest)         ;
+//@bg3_panel_header   : var(--bg3_panel_header)    ;
+//@brandcolor4   : @bg4_panel_body ;
+
+//@bg_stencil   : var(--bg_stencil)    ;
+//@bg_stencil   : #eeeeee    ;
+@bg_stencil   : #EEEDEB    ;
+
+
+//topbar
+//@color_inactive_text  : #9b9fa2;
+@color_inactive_text  : rgba(255, 255, 255, 0.57);
+
+
+//@sel_color     : @selection-color     ;
+@sel_color     : @selection-color     ;
+@bg_inner1     : @bg_panel_inner1     ;
+//@bg_inner2     : @bg_panel_inner2     ;
+//@bg_inner2     : rgba(251, 251, 251, 0.21)     ;
+@bg_inner2     : rgba(251, 251, 251, 0.09)     ;
+@divider_color : @color_panel_divider ;
+
+
+
+@gui_corner_radius : 2px;
+

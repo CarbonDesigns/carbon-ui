@@ -38,7 +38,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
             items = items();
         }
 
-        if (items !== null && items) {
+        if (items) {
             for (var i = 0, l = items.length; i < l; i++) {
                 var item = items[i];
 
@@ -53,7 +53,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
 
     _onOptionSelected(item) {
         var matchingItem = this._getItemBy('name', item.name);
-        if (matchingItem !== null) {
+        if (matchingItem) {
             if (this.props.onValueChanged) {
                 this.props.onValueChanged(matchingItem);
             }
@@ -103,7 +103,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
             return validItem.selectedContent;
         }
         else {
-            var validValue = validItem !== null
+            var validValue = !!validItem
                 ? this.state.value
                 : null;
 
@@ -120,10 +120,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
                 this._renderIcon(selectedItem)
             ];
         }
-
-
     };
-
 
     _renderContent() {
         if (this.props.children) {
@@ -146,7 +143,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
                             onClick={((item) => ((ev) => this._onOptionSelected(item)))(item)}
                             data-name={item.name}
                         >
-                            {item.content !== null ? item.content : <b key="name">{item.name}</b>}
+                            {item.content ? item.content : <b key="name">{item.name}</b>}
                             {this._renderIcon(item)}
                         </section>
                     })}

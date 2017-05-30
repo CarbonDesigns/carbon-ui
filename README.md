@@ -19,6 +19,7 @@ In the carbon-ui repository we develop the entire frontend of [carbonium.io](htt
 We accept all types of contribution - from providing feedback, to fixing typos, to adding new content.
 
 If you don't feel like coding today:
+* Join our public [Slack group](https://carboniumteam.slack.com/signup)
 * Request a new feature right here on our [GitHub](https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc).
 * Vote for [popular feature requests](https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc).
 * File a bug in [GitHub Issues](https://github.com/CarbonDesigns/carbon-ui/issues).

@@ -32,14 +32,14 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, any> {
     }
 
     onDblClick = (e)=> {
-        if (this.props.showAction == "dblclick") {
+        if (this.props.showAction === "dblclick") {
             this.open();
             e.stopPropagation();
         }
     }
 
     onClick = (e)=> {
-        if (!this.props.showAction || this.props.showAction == "click") {
+        if (!this.props.showAction || this.props.showAction === "click") {
             this.toggle();
             e.stopPropagation();
         }

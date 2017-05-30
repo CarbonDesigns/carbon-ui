@@ -26,7 +26,7 @@ for (var i = 0; i < webpackConfig.plugins.length; i++){
 module.exports = function(config){
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '../mylibs/',
+        basePath: '../src/',
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['mocha', /*'chai-as-promised',*/ 'chai'],
@@ -34,7 +34,7 @@ module.exports = function(config){
         files: [
             '../target/carbon-vendors-*.js',
             '../node_modules/babel-polyfill/dist/polyfill.js',
-            '../mylibs/test/ut/TestBootloader.js',
+            '../src/test/ut/TestBootloader.js',
             // {pattern: 'fonts/**/*', included: false}
         ],
         // proxies: {
@@ -45,7 +45,7 @@ module.exports = function(config){
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            '../mylibs/test/ut/TestBootloader.js': ['webpack']
+            '../src/test/ut/TestBootloader.js': ['webpack']
         },
         // test results reporter to use
         // possible values: 'dots', 'progress'

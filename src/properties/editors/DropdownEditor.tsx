@@ -3,12 +3,12 @@ import ReactDom from "react-dom";
 import cx from 'classnames';
 import bem from '../../utils/commonUtils';
 
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent, { IEditorProps, IEditorState } from "./EditorComponent";
 import FlyoutButton from '../../shared/FlyoutButton';
 import ScrollContainer from '../../shared/ScrollContainer';
-import {FormattedHTMLMessage} from "react-intl";
+import { FormattedHTMLMessage } from "react-intl";
 
-export interface IDropdownEditorProps extends IEditorProps{
+export interface IDropdownEditorProps extends IEditorProps {
     onValueChanged?: (item: any) => void;
     onOpened?: () => void;
     onClosed?: () => void;
@@ -18,13 +18,13 @@ export interface IDropdownEditorProps extends IEditorProps{
 
 export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends EditorComponent<TProps, IEditorState<any>> {
     static propTypes = {
-        p                   : React.PropTypes.any,
-        className           : React.PropTypes.string,
-        disableAutoClose    : React.PropTypes.bool,
-        formatSelectedValue : React.PropTypes.func,
-        onClosed            : React.PropTypes.func,
-        onOpened            : React.PropTypes.func,
-        onValueChanged      : React.PropTypes.func,
+        p: React.PropTypes.any,
+        className: React.PropTypes.string,
+        disableAutoClose: React.PropTypes.bool,
+        formatSelectedValue: React.PropTypes.func,
+        onClosed: React.PropTypes.func,
+        onOpened: React.PropTypes.func,
+        onValueChanged: React.PropTypes.func,
     };
 
     refs: {
@@ -38,7 +38,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
             items = items();
         }
 
-        if (items != null && items) {
+        if (items) {
             for (var i = 0, l = items.length; i < l; i++) {
                 var item = items[i];
 
@@ -51,9 +51,9 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
         return null;
     };
 
-    _onOptionSelected(item)  {
+    _onOptionSelected(item) {
         var matchingItem = this._getItemBy('name', item.name);
-        if (matchingItem != null) {
+        if (matchingItem) {
             if (this.props.onValueChanged) {
                 this.props.onValueChanged(matchingItem);
             }
@@ -84,16 +84,18 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
     };
 
     _renderIcon(item) {
-        return item && item.icon ? <i key='icon' className={item.icon}/> : null
+        return item && item.icon ? <i key='icon' className={item.icon} /> : null
     }
 
     _renderValue = (item) => {
-        return ;
+        return;
     };
 
     _renderSelectedValue = () => {
-        if (!this.state.value)
-            return null;
+        // if (!this.state.value) {
+        //     return null;
+        // }
+
 
         var validItem = this._getItemBy('value', this.state.value);
 
@@ -101,27 +103,24 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
             return validItem.selectedContent;
         }
         else {
-            var validValue = validItem != null
+            var validValue = !!validItem
                 ? this.state.value
                 : null;
 
             var selectedItem = (typeof this.props.formatSelectedValue === 'function')
                 ? this.props.formatSelectedValue(validValue)
-                : validItem ;
+                : validItem;
 
             var caption = (!!selectedItem)
                 ? selectedItem.name
                 : validValue;
 
             return [
-                <b className="prop__v">{ caption }</b>,
+                <b className="prop__v">{caption}</b>,
                 this._renderIcon(selectedItem)
             ];
         }
-
-
     };
-
 
     _renderContent() {
         if (this.props.children) {
@@ -140,13 +139,13 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
                         var is_selected = this.state.value === item.value;
                         return <section
                             key={item.name}
-                            className={ this.b("option", {selected: is_selected}) }
-                            onClick={((item)=>((ev)=>this._onOptionSelected(item)))(item)}
+                            className={this.b("option", { selected: is_selected })}
+                            onClick={((item) => ((ev) => this._onOptionSelected(item)))(item)}
                             data-name={item.name}
-                            >
-                                { item.content != null  ? item.content : <b key="name">{item.name}</b>}
-                                {this._renderIcon(item)}
-                            </section>
+                        >
+                            {item.content ? item.content : <b key="name">{item.name}</b>}
+                            {this._renderIcon(item)}
+                        </section>
                     })}
                 </div>
             </ScrollContainer>;
@@ -157,17 +156,17 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
     render() {
         var p = this.props.p;
 
-        var classes = this.b(null,"selectbox", this.widthClass(this.props.className || "prop_width-1-1"));
+        var classes = this.b(null, "selectbox", this.widthClass(this.props.className || "prop_width-1-1"));
 
         return <div className={classes} ref="prop">
-            <div className="prop__name"><FormattedHTMLMessage id={this.displayName()}/></div>
+            <div className="prop__name"><FormattedHTMLMessage id={this.displayName()} /></div>
             <FlyoutButton
                 className="prop__value"
                 renderContent={this._renderSelectedValue}
                 position={{
-                    targetVertical   : "bottom",
-                    syncWidth        : true,
-                    disableAutoClose : this.props.disableAutoClose
+                    targetVertical: "bottom",
+                    syncWidth: true,
+                    disableAutoClose: this.props.disableAutoClose
                 }}
                 onOpened={this._onOpened}
                 onClosed={this._onClosed}

@@ -1,6 +1,6 @@
 import React from "react";
-import {Component, listenTo, dispatch} from "./CarbonFlux";
-import {nodeOffset} from "./utils/domUtil";
+import { Component, listenTo, dispatch } from "./CarbonFlux";
+import { nodeOffset } from "./utils/domUtil";
 import FlyoutActions from './FlyoutActions';
 import flyoutStore from "./FlyoutStore";
 
@@ -19,12 +19,21 @@ class FlyoutHost extends Component<any, any> {
         </div>;
     }
 
+
     componentDidMount() {
         super.componentDidMount();
         if (!this.props.offset) {
             return;
         }
 
+        this.ensurePosition();
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+    }
+
+    ensurePosition() {
         var flyout = this.refs["flyout"] as HTMLElement;
 
         var documentWidth = document.documentElement.clientWidth;
@@ -36,6 +45,12 @@ class FlyoutHost extends Component<any, any> {
 
         var documentHeight = document.documentElement.clientHeight;
         var actualHeight = flyout.offsetHeight;
+        if (actualHeight === 0) {
+            for (var i = 0; i < flyout.children.length; ++i) {
+                var c = flyout.children[i] as any;
+                actualHeight += c.offsetHeight;
+            }
+        }
         var heightDiff = documentHeight - flyout.offsetTop - actualHeight;
         if (heightDiff < 0) {
             flyout.style.top = (flyout.offsetTop + heightDiff) + "px";
@@ -48,19 +63,19 @@ interface IFlyoutContainerProps {
 }
 
 interface IFlyoutContainerState {
-    target?:any;
-    position?:any;
-    children?:any;
-    targetNode?:any;
+    target?: any;
+    position?: any;
+    children?: any;
+    targetNode?: any;
 }
 
-interface IOffset{
-    x?:any;
-     y?:any;
-     left?:any;
-      bottom?:any;
-       top?:any;
-        right?:any;
+interface IOffset {
+    x?: any;
+    y?: any;
+    left?: any;
+    bottom?: any;
+    top?: any;
+    right?: any;
 }
 
 export default class FlyoutContainer extends Component<IFlyoutContainerProps, IFlyoutContainerState> {
@@ -72,7 +87,7 @@ export default class FlyoutContainer extends Component<IFlyoutContainerProps, IF
     @listenTo(flyoutStore)
     onChange() {
         var state = flyoutStore.state;
-        state = Object.assign({}, state, {targetNode: state.target});
+        state = Object.assign({}, state, { targetNode: state.target });
         this.setState(state);
     }
 
@@ -93,13 +108,16 @@ export default class FlyoutContainer extends Component<IFlyoutContainerProps, IF
     };
 
     render() {
-        if (!this.state.children)
+        if (!this.state.children) {
             return null;
+        }
 
         var _offset: IOffset = {};
-        var style  = {position: 'absolute', zIndex: 100000,
-        left:undefined, bottom:undefined, top:undefined, right:undefined,
-            width:undefined, height:undefined};
+        var style = {
+            position: 'absolute', zIndex: 100000,
+            left: undefined, bottom: undefined, top: undefined, right: undefined,
+            width: undefined, height: undefined
+        };
         var targetWidth, targetHeight;
         var position = this.state.position || {};
 
@@ -111,13 +129,13 @@ export default class FlyoutContainer extends Component<IFlyoutContainerProps, IF
                 _offset = {
                     x: position.x,
                     y: position.y,
-                    left:undefined, bottom:undefined, top:undefined, right:undefined
+                    left: undefined, bottom: undefined, top: undefined, right: undefined
                 };
                 targetHeight = 0;
                 targetWidth = 0;
                 break;
 
-            case !(this.state.targetNode) :
+            case !(this.state.targetNode):
                 var documentHeight = document.documentElement.clientHeight;
                 var documentWidth = document.documentElement.clientWidth;
 
@@ -126,7 +144,7 @@ export default class FlyoutContainer extends Component<IFlyoutContainerProps, IF
                 targetHeight = this.state.targetNode.offsetHeight;
                 targetWidth = this.state.targetNode.offsetWidth;
 
-                if (position.targetVertical == 'top') {
+                if (position.targetVertical === 'top') {
                     style.bottom = documentHeight - _offset.top;
                 }
                 else {
@@ -146,16 +164,14 @@ export default class FlyoutContainer extends Component<IFlyoutContainerProps, IF
 
                 break;
 
-            default :
+            default:
         }
-
-        // this._offset = _offset;
 
         return <FlyoutHost
             style={style}
             offset={_offset}
             key={flyoutNumber++}
-            targetSize={{width:targetWidth, height:targetHeight}}
+            targetSize={{ width: targetWidth, height: targetHeight }}
             onMouseDown={this.onFlyoutMouseDown}
             onClick={this.onFlyoutClick}
         >

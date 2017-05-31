@@ -53,7 +53,7 @@ export default class SelectBox extends Component<any, any>{
 
             if (typeof this.props.renderSelected === 'function') {
                 selectedChild = this.props.renderSelected(selectedItemIndex);
-            } else if (selectedItemIndex != null) {
+            } else if (selectedItemIndex !== null) {
                 var children: any = React.Children.toArray(this.props.children);
                 selectedChild = React.cloneElement(children[selectedItemIndex], { key: selectedItemIndex + "_selected" });
             } else if (typeof this.props.renderEmpty === 'function') {

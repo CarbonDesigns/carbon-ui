@@ -57,12 +57,6 @@ var CarbonActions = {
             element
         }
     },
-    logEvent:(events)=>{
-        return {
-            type:"CARBON_LOG_EVENT",
-            events
-        }
-    },
     modeChanged:(mode)=>{
         return {
             type:"CARBON_MODE_CHANGED",

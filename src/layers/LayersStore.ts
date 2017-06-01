@@ -123,21 +123,21 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
     _updateProps(elementId, props) {
         let result = false;
 
-        if (props.name !== null
-            || props.locked !== null
-            || props.visible !== null
-            || props.stroke !== null
-            || props.fill !== null
+        if (props.hasOwnProperty("name")
+            || props.hasOwnProperty("locked")
+            || props.hasOwnProperty("visible")
+            || props.hasOwnProperty("stroke")
+            || props.hasOwnProperty("fill")
         ) {
             let layers = this.state.layers;
 
             this._visitLayers(layers, (layer) => {
                 if (layer.id === elementId) {
-                    if (props.name !== null) { layer.name = props.name; }
-                    if (props.stroke !== null) { layer.borderColor = this._displayColor(props.stroke, 'black'); }
-                    if (props.fill !== null) { layer.backgroundColor = this._displayColor(props.fill, 'white'); }
-                    if (props.visible !== null) { layer.visible = props.visible; }
-                    if (props.locked !== null) { layer.locked = props.locked; }
+                    if (props.hasOwnProperty("name")) { layer.name = props.name; }
+                    if (props.hasOwnProperty("stroke")) { layer.borderColor = this._displayColor(props.stroke, 'black'); }
+                    if (props.hasOwnProperty("fill")) { layer.backgroundColor = this._displayColor(props.fill, 'white'); }
+                    if (props.hasOwnProperty("visible")) { layer.visible = props.visible; }
+                    if (props.hasOwnProperty("locked")) { layer.locked = props.locked; }
                     result = true;
 
                     return false;

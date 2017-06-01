@@ -11,10 +11,6 @@ export function registerEvents() {
         dispatch(CarbonActions.loaded(app))
     });
 
-    app.logEvent.bindAsync(events => {
-        dispatch((CarbonActions.logEvent(events)));
-    });
-
     app.modeChanged.bindAsync(mode => {
         dispatch((CarbonActions.modeChanged(mode)));
     });

@@ -10,7 +10,8 @@ export default class ScrollContainer extends React.Component<any, any>{
     private _endTimer: number;
     refs: {
         scrollContainer: HTMLElement,
-        scrollPane: HTMLElement
+        scrollPane: HTMLElement,
+        scrollBox: HTMLElement
     }
 
     initScroller(){
@@ -48,6 +49,10 @@ export default class ScrollContainer extends React.Component<any, any>{
 
     getScrollPaneNode() {
         return this.refs.scrollPane;
+    }
+
+    getScrollBoxNode(){
+        return this.refs.scrollBox;
     }
 
     componentDidMount(){

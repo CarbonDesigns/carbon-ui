@@ -236,7 +236,7 @@ export default class PagesStore extends CarbonStore {
     requestPagePreview(page){
         setTimeout(()=>{
             imageCache.getOrPutPage(this.app.id(), page.id(), page.version(), ()=>{
-                return page.renderContentToDataURL();
+                return page.toDataURL();
             }).then((image)=>{
                 this.getDispatcher().dispatch(PagesActions.previewChanged(page.id(), image));
             })

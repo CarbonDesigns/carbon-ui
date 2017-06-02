@@ -1,13 +1,11 @@
 import React from "react";
 import ReactDom from "react-dom";
-import { Component } from "../CarbonFlux";
+import { Component } from "../../CarbonFlux";
 import cx from 'classnames';
-import { default as bem, join_bem_mods } from '../utils/commonUtils';
-
-import FlyoutButton from './FlyoutButton';
-import ScrollContainer from './ScrollContainer';
+import { default as bem, join_bem_mods, IHasMods } from '../../utils/commonUtils';
+import FlyoutButton from '../FlyoutButton';
+import ScrollContainer from '../ScrollContainer';
 import { FormattedHTMLMessage } from "react-intl";
-
 
 function b(a, b, c) { return bem('drop', a, b, c) }
 
@@ -17,27 +15,32 @@ function stopPropagation(e) {
     }
 }
 
+export interface IGuiSelectProps extends ISimpleReactElementProps, IHasMods<"line"> {
+    /**
+     * An index of the selected item, or -1 if no item should be selected.
+     */
+    selectedItem?: number;
 
-export default class SelectBox extends Component<any, any>{
-    static propTypes = {
-        selectedItem: React.PropTypes.any,
-        className: React.PropTypes.any,
-        mods: React.PropTypes.any,
-        id: React.PropTypes.any,
-        onSelect: React.PropTypes.func,
-        onClick: React.PropTypes.func,
-        renderSelected: React.PropTypes.func,
-        renderEmpty: React.PropTypes.func,
-    };
+    onSelect: (index: number) => void;
 
-    refs: any;
+    /**
+     * A function to render the default node, if nothing is selected (selectedItem === -1).
+     */
+    renderDefault?: () => React.ReactInstance | string;
+    renderSelected?: (index: number) => React.ReactInstance;
+}
+
+export default class GuiSelect extends Component<IGuiSelectProps>{
+    refs: {
+        scrollContainer: ScrollContainer
+    }
 
     constructor(props) {
         super(props);
     }
 
     selectItem = (e) => {
-        var dropContainer = ReactDom.findDOMNode(this.refs['scroll_container'].refs['scrollBox']);
+        var dropContainer = ReactDom.findDOMNode(this.refs.scrollContainer.getScrollBoxNode());
         // item is the number of dropContainer DOM child
         var item = Array.prototype.indexOf.call(dropContainer.children, e.currentTarget);
         if (item !== this.props.selectedItem) {
@@ -48,19 +51,22 @@ export default class SelectBox extends Component<any, any>{
     _renderPill = () => {
         var selectedChild = null;
 
-        if (React.Children.count(this.props.children) > 0) {
-            var selectedItemIndex = this.props.selectedItem;
+        var selectedItemIndex = this.props.selectedItem;
 
+        if (selectedItemIndex >= 0) {
             if (typeof this.props.renderSelected === 'function') {
                 selectedChild = this.props.renderSelected(selectedItemIndex);
-            } else if (selectedItemIndex != null) {
+            }
+            else {
                 var children: any = React.Children.toArray(this.props.children);
                 selectedChild = React.cloneElement(children[selectedItemIndex], { key: selectedItemIndex + "_selected" });
-            } else if (typeof this.props.renderEmpty === 'function') {
-                selectedChild = this.props.renderEmpty();
-            } else {
-                selectedChild = '---'
             }
+        }
+        else if (this.props.renderDefault) {
+            selectedChild = this.props.renderDefault();
+        }
+        else {
+            selectedChild = '---';
         }
 
         return <div className="drop__pill">
@@ -95,7 +101,7 @@ export default class SelectBox extends Component<any, any>{
             <ScrollContainer
                 boxClassName="drop__list"
                 insideFlyout={true}
-                ref="scroll_container"
+                ref="scrollContainer"
             >{options}</ScrollContainer>
         </div>
     }
@@ -104,19 +110,14 @@ export default class SelectBox extends Component<any, any>{
     render() {
         var dropClasses = bem('drop', null, this.props.mods, this.props.className);
 
-        return (
-            <FlyoutButton
-                className={dropClasses}
-                renderContent={this._renderPill}
-                position={{
-                    targetVertical: "bottom",
-                    syncWidth: true,
-                    disableAutoClose: this.props.disableAutoClose
-                }}
-            >
-                {this._renderFlyoutContent()}
-            </FlyoutButton>
-        )
-        // }
+        return <FlyoutButton
+            className={dropClasses}
+            renderContent={this._renderPill}
+            position={{
+                targetVertical: "bottom",
+                syncWidth: true
+            }}>
+            {this._renderFlyoutContent()}
+        </FlyoutButton>
     }
 }

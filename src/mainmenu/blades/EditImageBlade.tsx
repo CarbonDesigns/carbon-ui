@@ -1,24 +1,30 @@
 import React from "react";
 import ReactDom from "react-dom";
-
-import {Component} from "../../../CarbonFlux";
-import {app, backend, ShareProxy, PageExporter} from "carbon-core";
 import {FormattedMessage} from "react-intl"
-import {GuiButton, GuiSlider, GuiInput, GuiButtonedInput, GuiButtonBlock} from "../../../shared/ui/GuiComponents";
-import {MarkupSubmit, MarkupLine}  from "../../../shared/ui/Markup";
-import {BladeBody}  from "../BladePage";
-import {default as TabContainer, TabArea, TabPage} from "../../../shared/TabContainer";
+
+import {Component} from "../../CarbonFlux";
+import {app, backend} from "carbon-core";
+import {GuiButton, GuiSlider, GuiInput, GuiButtonedInput, GuiButtonBlock} from "../../shared/ui/GuiComponents";
+import {MarkupSubmit, MarkupLine}  from "../../shared/ui/Markup";
+import {BladeBody}  from "./BladePage";
+import {default as TabContainer, TabArea, TabPage} from "../../shared/TabContainer";
 import bem from 'bem';
-import separatorOr from "../../../shared/SeparatorOr";
-import {say, ico} from "../../../shared/Utils";
+import separatorOr from "../../shared/SeparatorOr";
+import {say, ico} from "../../shared/Utils";
 import Dropzone from "dropzone";
 
-function b(a,b,c) {return bem("edit-avatar", a,b,c)}
+function b(a,b?,c?) {return bem("edit-image", a,b,c)}
 
 var AVATAR_URL = '/target/res/avas/project-ava.jpg';
 
 
-class AvatarDropzone extends Component {
+class ImageDropzone extends Component<any, any> {
+    private dropzone: Dropzone;
+    refs: {
+        dropzone: HTMLElement;
+        dropzone_output: HTMLElement;
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -146,13 +152,12 @@ class AvatarDropzone extends Component {
             addRemoveLinks        : false,
             // clickable             : ".library-page__upload .zone",
             previewTemplate       : '<div></div>',
-            previewsContainer     : ReactDom.findDOMNode(this.refs.dropzone_output),
+            previewsContainer     : this.refs.dropzone_output,
             // previewsContainer     : ".user-images .dropzone .zone",
         };
 
         Dropzone.autoDiscover = false;
-        var dropzone_el = ReactDom.findDOMNode(this.refs.dropzone);
-        this.dropzone = new Dropzone(dropzone_el, config);
+        this.dropzone = new Dropzone(this.refs.dropzone, config);
     }
 
     render(){
@@ -191,7 +196,9 @@ class AvatarDropzone extends Component {
 }
 
 
-class AvatarCropEditor extends Component {
+class CropEditor extends Component<any, any> {
+    [x: string]: any;
+
     constructor(props) {
         super(props);
 
@@ -236,7 +243,7 @@ class AvatarCropEditor extends Component {
         document.body.addEventListener("mouseup", this._onMouseUp);
     };
 
-    _onMouseUp=(event)=>{
+    _onMouseUp=()=>{
         this._dragging = false;
         document.body.removeEventListener("mousemove", this._onDrag);
         document.body.removeEventListener("mouseup", this._onMouseUp);
@@ -330,7 +337,12 @@ class AvatarCropEditor extends Component {
 }
 
 
-class EditAvatar extends Component {
+class EditImage extends Component<any, any> {
+    refs: {
+        dropzone: ImageDropzone;
+        container: TabContainer;
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -380,6 +392,9 @@ class EditAvatar extends Component {
     // Upload --------------------------
     _whenUploadSuccess = () => {
         this._changeTab1();
+    };
+    _whenUploadError = () => {
+        //TODO: show error
     };
 
     // Use URI --------------------------
@@ -441,22 +456,20 @@ class EditAvatar extends Component {
     _renderEditTab(image) {
         return  <TabPage tabId="1" className="gui-page">
             <MarkupLine>
-                <AvatarCropEditor image={image}/>
+                <CropEditor image={image}/>
             </MarkupLine>
 
             <MarkupSubmit>
                 <GuiButtonBlock mods="equal">
                     <GuiButton
-                        defaultMessage="Save project avatar"
                         onClick={this._save}
                         mods="submit"
-                        caption="translate me"
+                        caption="@saveImage"
                     />
                     <GuiButton
-                        defaultMessage="Upload another image"
                         onClick={this._uploadAnotherImage}
                         mods="hover-white"
-                        caption="translate me"
+                        caption="@uploadAnother"
                     />
                 </GuiButtonBlock>
             </MarkupSubmit>
@@ -476,7 +489,7 @@ class EditAvatar extends Component {
 
         return <TabPage tabId="2" className={b('upload-page', {loading : is_loading_url}, 'gui-page')}>
             <MarkupLine>
-                <AvatarDropzone
+                <ImageDropzone
                     ref="dropzone"
                     onSuccess={this._whenUploadSuccess}
                     onError={this._whenUploadError}
@@ -485,12 +498,12 @@ class EditAvatar extends Component {
 
             <MarkupLine>{ separatorOr("or") }</MarkupLine>
 
-            <MarkupLine className="edit-avatar__paste-url" onClick={this._hideAllErrors}>
-                <p className="edit-avatar__message">
+            <MarkupLine className="edit-image__paste-url" onClick={this._hideAllErrors}>
+                <p className="edit-image__message">
                     {say("paste url with image")}
                 </p>
 
-                <GuiButtonedInput className="edit-avatar__paste-url-input">
+                <GuiButtonedInput className="edit-image__paste-url-input">
                     <GuiInput
                         placeholder="i.e. http://example.com/image.png"
                         suffix={use_url_error}
@@ -508,8 +521,8 @@ class EditAvatar extends Component {
 
             <MarkupLine>{ separatorOr("or") }</MarkupLine>
 
-            <MarkupLine className="edit-avatar__make-snapshot" onClick={this._hideAllErrors}>
-                <p className="edit-avatar__message">
+            <MarkupLine className="edit-image__make-snapshot" onClick={this._hideAllErrors}>
+                <p className="edit-image__message">
                     {say("use page snapshot")}
                 </p>
 
@@ -525,10 +538,9 @@ class EditAvatar extends Component {
             { !!image &&
                 <MarkupSubmit>
                     <GuiButton
-                        defaultMessage="Cancel"
                         mods="hover-cancel"
                         onClick={this._cancelUpload}
-                        caption="translate me"
+                        caption="@cancel"
                     />
                 </MarkupSubmit>
             }
@@ -540,7 +552,7 @@ class EditAvatar extends Component {
     render(){
         var image = this.props.image;
 
-        return <div className="edit-avatar">
+        return <div className="edit-image">
             <TabContainer defaultTabId={(!!image ? "1" : "2")} type="normal" ref="container">
                 <TabArea className="gui-pages">
                     {this._renderEditTab(image)}
@@ -549,25 +561,28 @@ class EditAvatar extends Component {
             </TabContainer>
         </div>
     }
-}
-EditAvatar.contextTypes = {
-    bladeContainer: React.PropTypes.any
-};
 
-
-
-
-export default class EditAvatarBlade extends Component {
-    render() {
-        var image = AVATAR_URL;
-        return <BladeBody>
-            <EditAvatar image={image}/>
-        </BladeBody>
+    static contextTypes = {
+        intl: React.PropTypes.object,
+        bladeContainer: React.PropTypes.any
     }
 }
 
-EditAvatarBlade.contextTypes = {
-    currentBladeId: React.PropTypes.number,
-    bladeContainer: React.PropTypes.any
-};
+
+
+
+export default class EditImageBlade extends Component {
+    render() {
+        var image = AVATAR_URL;
+        return <BladeBody>
+            <EditImage image={image}/>
+        </BladeBody>
+    }
+
+    static contextTypes = {
+        intl: React.PropTypes.object,
+        currentBladeId: React.PropTypes.number,
+        bladeContainer: React.PropTypes.any
+    }
+}
 

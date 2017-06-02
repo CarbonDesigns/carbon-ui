@@ -157,17 +157,6 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                     })
                 };
                 return <DropDownEditor e={elem} p={prop.set('options', options)} key={key}/>;
-
-
-            case "tileSize":
-                options = {
-                    items: [
-                        {name : 'Small' , value : TileSize.Small }, //fixme - translate!
-                        {name : 'Large' , value : TileSize.Large },
-                        {name : 'XLarge', value : TileSize.XLarge},
-                    ]
-                };
-                return <DropDownEditor e={elem} p={prop.set('options', options)} key={key}/>;
         }
 
         return null;

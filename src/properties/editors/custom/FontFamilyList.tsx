@@ -7,9 +7,9 @@ import LessVars from "../../../styles/LessVars";
 import FlyoutActions from "../../../FlyoutActions";
 import FontFamilyActions from "./FontFamilyActions";
 import { GuiCheckbox, GuiSpinner }           from "../../../shared/ui/GuiComponents";
-import SelectBox from "../../../shared/SelectBox";
 import {backend, FontsProxy} from "carbon-core";
 import bem from '../../../utils/commonUtils';
+import GuiSelect from "../../../shared/ui/GuiSelect";
 
 
 export default class FontFamilyList extends Component<any, any>{
@@ -176,7 +176,7 @@ export default class FontFamilyList extends Component<any, any>{
                     </div>
 
                     <div className="font-options__category-selector">
-                        <SelectBox
+                        <GuiSelect
                             mods="line"
                             selectedItem={0}
                             onSelect={this._onCategorySelect}
@@ -185,7 +185,7 @@ export default class FontFamilyList extends Component<any, any>{
                             <p>User uploaded</p>
                             <p>Adobe Typekit</p>
                             <p>Myfonts.com</p>
-                        </SelectBox>
+                        </GuiSelect>
                     </div>
                 </div>
 

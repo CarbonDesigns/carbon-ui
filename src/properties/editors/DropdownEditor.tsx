@@ -6,7 +6,7 @@ import bem from '../../utils/commonUtils';
 import EditorComponent, { IEditorProps, IEditorState } from "./EditorComponent";
 import FlyoutButton from '../../shared/FlyoutButton';
 import ScrollContainer from '../../shared/ScrollContainer';
-import { FormattedHTMLMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 export interface IDropdownEditorProps extends IEditorProps {
     onValueChanged?: (item: any) => void;
@@ -116,7 +116,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
                 : validValue;
 
             return [
-                <b className="prop__v">{caption}</b>,
+                <b className="prop__v"><FormattedMessage id={caption} defaultMessage={caption}/></b>,
                 this._renderIcon(selectedItem)
             ];
         }
@@ -143,7 +143,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
                             onClick={((item) => ((ev) => this._onOptionSelected(item)))(item)}
                             data-name={item.name}
                         >
-                            {item.content ? item.content : <b key="name">{item.name}</b>}
+                            {item.content ? item.content : <FormattedMessage tagName="b" id={item.name} defaultMessage={item.name}/>}
                             {this._renderIcon(item)}
                         </section>
                     })}
@@ -159,7 +159,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
         var classes = this.b(null, "selectbox", this.widthClass(this.props.className || "prop_width-1-1"));
 
         return <div className={classes} ref="prop">
-            <div className="prop__name"><FormattedHTMLMessage id={this.displayName()} /></div>
+            <div className="prop__name"><FormattedMessage id={this.displayName()} /></div>
             <FlyoutButton
                 className="prop__value"
                 renderContent={this._renderSelectedValue}

@@ -323,6 +323,7 @@ export default
         "@prototype.header": "Prototype: {name}", //
         "@story.description": "Description", //
         "publishpage.caption": "Publish current page", //
+        "@publish.choosePage": "Choose the page to publish",
         "sharepage.help": "Publish current page to other users ...", //
         "btn.publish": "Publish", //
         "btn.publishpage": "Publish my current page", //
@@ -332,6 +333,9 @@ export default
         "refresh.toolbox": "Refresh library", //
         "@add.more": "Add more...", //
         "@tilesize": "Tile size",
+        "@tilesize.small": "Small (1x1)",
+        "@tilesize.large": "Wide (1x2)",
+        "@tilesize.xlarge": "Large (2x2)",
         "@ascontent": "Insert as content",
         "@groupname": "Group name",
         "@selectedPoint": "Selected point",
@@ -478,6 +482,8 @@ export default
         "@symbols.markAsBackground": "Mark as background",
         "@symbols.detach": "Detach instance",
 
+        "@saveImage": "Save image",
+        "@uploadAnother": "Upload another",
 
         "": "", //
     };

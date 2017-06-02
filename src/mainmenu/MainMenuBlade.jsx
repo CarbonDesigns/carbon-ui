@@ -18,7 +18,7 @@ import ShareLinkBlade       from './blades/shareLink/ShareLinkBlade';
 import ShareEmailBlade      from './blades/shareEmail/ShareEmailBlade';
 import MirroringBlade       from './blades/mirroring/MirroringBlade';
 import ProjectSettingsBlade from './blades/projectSettings/ProjectSettingsBlade';
-import EditAvatarBlade      from './blades/projectSettings/EditAvatarBlade';
+import EditAvatarBlade      from './blades/EditImageBlade';
 import RecentProjectsBlade  from './blades/recentProjects/RecentProjectsBlade';
 // import SelectPagesBlade from './blades/selectPages/SelectPagesBlade';
 

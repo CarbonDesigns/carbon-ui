@@ -308,7 +308,7 @@ export class GuiCheckbox extends Component<IGuiCheckboxProps, void> {
 
 interface IGuiButtonProps extends IReactElementProps {
     className?: string;
-    icon?: string;
+    icon?: string|boolean;
     caption?: string;
     defaultMessage?: string;
     bold?: boolean;

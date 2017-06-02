@@ -6,8 +6,8 @@ import bem from '../../utils/commonUtils';
 import {Constraints} from "carbon-core";
 import DropDownEditor from "./DropdownEditor";
 import Dropdown from "../../shared/Dropdown";
-import SelectBox from "../../shared/SelectBox";
 import { HorizontalConstraint, VerticalConstraint } from "carbon-core";
+import GuiSelect from "../../shared/ui/GuiSelect";
 
 function horizontalFromIndex(index){
     switch(index){
@@ -235,7 +235,7 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
                             <div className="prop_constraints__dropdown-icon">
                                 <i className="ico--vertical-double-arrow"/>
                             </div>
-                            <SelectBox
+                            <GuiSelect
                                 mods="line"
                                 selectedItem={dropdownHorizontal}
                                 onSelect={this._onChangeHorizontal}>
@@ -244,14 +244,14 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
                                 <p>Left &amp; Right</p>
                                 <p>Center</p>
                                 <p>Scale</p>
-                            </SelectBox>
+                            </GuiSelect>
                         </div>
 
                         <div className="prop_constraints__dropdown">
                             <div className="prop_constraints__dropdown-icon">
                                 <i className="ico--horizontal-double-arrow"/>
                             </div>
-                            <SelectBox
+                            <GuiSelect
                                 mods="line"
                                 selectedItem={dropdownVertical}
                                 onSelect={this._onChangeVertical}>
@@ -260,7 +260,7 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
                                 <p>Top &amp; bottom</p>
                                 <p>Center</p>
                                 <p>Scale</p>
-                            </SelectBox>
+                            </GuiSelect>
                         </div>
                     </div>
                 </div>

@@ -112,7 +112,7 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, any> {
     //     }
     // }
     renderContent() {
-        if (this.props.content != null) {
+        if (this.props.content) {
             return this.props.content;
         }
         else if (this.props.renderContent) {

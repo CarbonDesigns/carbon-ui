@@ -26,7 +26,7 @@ export interface IGuiSelectProps extends ISimpleReactElementProps, IHasMods<"lin
     /**
      * A function to render the default node, if nothing is selected (selectedItem === -1).
      */
-    renderDefault?: () => React.ReactInstance | string;
+    renderDefault?: () => any;
     renderSelected?: (index: number) => React.ReactInstance;
 }
 

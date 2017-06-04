@@ -5,11 +5,12 @@ import { Component } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
 import { Markup, MarkupLine } from "../../../shared/ui/Markup";
-import { GuiButton } from "../../../shared/ui/GuiComponents";
+import { GuiButton, GuiButtonStack, GuiInput, GuiTextArea } from "../../../shared/ui/GuiComponents";
 import { BladeBody } from "../BladePage";
 import electronEndpoint from "electronEndpoint";
 import GuiSelect from "../../../shared/ui/GuiSelect";
 import bem from "../../../utils/commonUtils";
+import EditImageBlade from "../imageEdit/EditImageBlade";
 
 interface IPublishBladeState {
     page?: IPage;
@@ -36,7 +37,15 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         };
     }
 
-    private pageSelected(index: number) {
+    componentDidMount() {
+        super.componentDidMount();
+        let pages = app.pagesWithSymbols();
+        if (pages.length === 1) {
+            this.pageSelected(0);
+        }
+    }
+
+    private pageSelected = (index: number) => {
         var page = app.pagesWithSymbols()[index];
         if (page) {
             this.setState({ page: page, dataUrl: page.toDataURL({ width: 512, height: 512 }) });
@@ -75,6 +84,14 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
 
     _onChangeTags = (event) => {
         this.setState({ tags: event.target.value });
+    };
+
+    _openAvatarEditor = (ev) => {
+        this.context.bladeContainer.addChildBlade(`blade_edit-project-avatar`, EditImageBlade, this.formatLabel("@caption.editCover"), {image: this.state.dataUrl});
+    };
+
+    _clearAvatar = (ev) => {
+
     };
 
     _saveToDisk() {
@@ -128,40 +145,58 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             </MarkupLine>
 
             <MarkupLine>
-                <figure>
-                    <div style={{ backgroundImage: dataUrl }} className="publish__preview"></div>
-                </figure>
+                <p className={"gui-input__label"}>
+                    <FormattedMessage id="@publish.choosePage1" defaultMessage="Create your cover" />
+                </p>
+            </MarkupLine>
+            <MarkupLine className="project-settings__avatar">
+                <figure className="project-settings__avatar-image"
+                    style={{ backgroundImage: "url('" + this.state.dataUrl + "')" }}
+                />
+                <GuiButtonStack className="project-settings__avatar-controls">
+                    <GuiButton
+                        mods="hover-success"
+                        icon="edit"
+                        onClick={this._openAvatarEditor}
+                    />
+                    <GuiButton
+                        mods="hover-cancel"
+                        icon="trash"
+                        onClick={this._clearAvatar}
+                    />
+                </GuiButtonStack>
+            </MarkupLine>
+
+            <MarkupLine mods="space">
+                <GuiInput value={this.state.projectName} onChange={this._onChange} caption="@publish.name" placeholder="Give it some cool name"/>
             </MarkupLine>
 
             <MarkupLine>
-                <label className="gui-input">
-                    <p><FormattedMessage id="sharepage.name" defaultMessage="Name" /></p>
-                    <input type="text" value={this.state.name} onChange={this._onChangeName} placeholder="Name" />
-                </label>
+                <GuiTextArea value={this.state.projectName} onChange={this._onChange} caption="@publish.description" placeholder="What inspired you?"/>
+            </MarkupLine>
+            <MarkupLine>
+                <GuiInput value={this.state.projectName} onChange={this._onChange} caption="@tags" placeholder="buttons, ios, flat, etc"/>
             </MarkupLine>
 
             <MarkupLine>
-                <label className="gui-textarea">
-                    <p><FormattedMessage id="story.description" /></p>
-                    <textarea style={{ width: '100%', height: 141 }} value={this.state.description}
-                        onChange={this._onDescriptionChange} />
-                </label>
-            </MarkupLine>
+                <div className="gui-input">
+                    <p className={"gui-input__label"}>
+                        <FormattedMessage id="translateme!" defaultMessage={"Тип все дела"} />
+                    </p>
 
-            <MarkupLine>
-                <label className="gui-check">
-                    <input type="checkbox" value={this.state.isPublic} onChange={this._onChangePublic} />
-                    <i />
-                    <FormattedMessage tagName="span" id="sharepage.scope" defaultMessage="Is public?" />
-                </label>
-            </MarkupLine>
+                    <label className="gui-radio gui-radio_line">
+                        <input type="radio" checked={true} onChange={console.log} data-option="activeArtboard"/>
+                        <i />
+                        <span><FormattedMessage id="@publish.public"/></span>
+                    </label>
 
-            <MarkupLine>
-                <label className="gui-input">
-                    <p><FormattedMessage id="sharepage.tags" defaultMessage="Tags" /></p>
-                    <input type="text" value={this.state.tags} onChange={this._onChangeTags}
-                        placeholder="tag1;tag2;..." />
-                </label>
+                    <label className="gui-radio gui-radio_line">
+                        <input type="radio" checked={false} onChange={console.log} data-option="activePage"/>
+                        <i />
+                        <FormattedMessage id="@publish.private"/>
+                    </label>
+
+                </div>
             </MarkupLine>
 
             {this._renderPublishButton()}
@@ -174,14 +209,19 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         let caption = pages.length ? "Select page" : "No pages with symbols found";
 
         return <GuiSelect
-            className="drop_down_no-padding"
+            className="drop_down"
             selectedItem={selectedItem}
-            renderDefault={() => caption}
-            onSelect={console.log}>
+            renderDefault={() => <i>{caption}</i>}
+            onSelect={this.pageSelected}>
             {pages.map((page, ind) => <p
                 key={page.id()}
                 className={bem("publish", "pages-list-item", { selected: (ind === selectedItem) })}>{page.name()}
             </p>)}
         </GuiSelect>;
+    }
+
+    static contextTypes = {
+        intl: React.PropTypes.object,
+        bladeContainer: React.PropTypes.any
     }
 }

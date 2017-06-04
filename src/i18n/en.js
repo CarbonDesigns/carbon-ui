@@ -293,8 +293,9 @@ export default
         "caption.sharebyemail": "Share project by email",
         "caption.resourceblade": "Resources",
         "caption.mirroringblade": "Device mirroring", //
-        "caption.publishpage": "Publish page",
+        "caption.publishpage": "Publish symbols",
         "caption.importpageblade": "Import page",
+        "@caption.editCover": "Edit cover",
 
         "resources.static": "Published by carbonium.io",
         "resources.my": "Published by me",
@@ -306,7 +307,7 @@ export default
         "btn.disableMirroring": "Disable",
         "menu.mirroring": "Mirroring",
         "menu.sharing": "Sharing link", //
-        "menu.resources": "Resources", //
+        "menu.publish": "Publish symbols", //
         "mirroringblade.helptext": "Enable mirroring to view all changes immediately on the remote device.",
         "mirroringblade.scancodehelp": "Scan QR code on any mobile device using your favorite QR code scanner app to view currently active artboard on the device.",
         "mirroring.urllabel": "Or copy URL manually", //
@@ -323,7 +324,12 @@ export default
         "@prototype.header": "Prototype: {name}", //
         "@story.description": "Description", //
         "publishpage.caption": "Publish current page", //
-        "@publish.choosePage": "Choose the page to publish",
+        "@publish.choosePage": "Choose the page to publish. Only artboards of type Symbol will be included.",
+        "@publish.name": "Symbol kit name",
+        "@publish.description": "Description",
+        "@publish.private": "Share within my account",
+        "@publish.public": "Share with everyone",
+        "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //
         "btn.publish": "Publish", //
         "btn.publishpage": "Publish my current page", //

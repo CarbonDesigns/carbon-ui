@@ -6,7 +6,7 @@ import {GuiButton, GuiButtonStack, GuiInput, GuiTextArea} from "../../../shared/
 import {FormHeading, FormLine, FormGroup}                 from "../../../shared/FormComponents"
 import {MarkupLine}  from "../../../shared/ui/Markup";
 import {BladeBody}  from "../BladePage";
-import EditImageBlade  from "../EditImageBlade";
+import EditImageBlade  from "../imageEdit/EditImageBlade";
 import Dropdown from "../../../shared/Dropdown";
 import bem from '../../../utils/commonUtils';
 
@@ -71,35 +71,12 @@ export default class ProjectSettingsBlade extends Component<any, any> {
 
     render() {
         return <BladeBody>
-            <MarkupLine className="project-settings__avatar">
-                <figure className="project-settings__avatar-image"
-                    style={{ backgroundImage: "url('" + AVATAR_URL + "')" }}
-                />
-                <GuiButtonStack className="project-settings__avatar-controls">
-                    <GuiButton
-                        mods="hover-success"
-                        // className="project-settings__avatar-edit-button"
-                        // defaultMessage="edit avatar"
-                        // caption="translate me"
-                        icon="edit"
-                        onClick={this._openAvatarEditor}
-                    />
-                    <GuiButton
-                        mods="hover-cancel"
-                        // className="project-settings__avatar-edit-button"
-                        // defaultMessage="edit avatar"
-                        // caption="translate me"
-                        icon="trash"
-                        onClick={this._clearAvatar}
-                    />
-                </GuiButtonStack>
-            </MarkupLine>
+
 
             <MarkupLine mods="space">
                 <GuiInput value={this.state.projectName} onChange={this._onChange} caption="Project name" defaultMessage="Project name"/>
             </MarkupLine>
 
-            { /*  fixme вот это меняйте.   */  }
             <MarkupLine>
                 <GuiTextArea value={this.state.projectName} onChange={this._onChange} caption="Resource description" defaultMessage="Resource description"/>
             </MarkupLine>

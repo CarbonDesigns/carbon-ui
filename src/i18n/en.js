@@ -52,6 +52,9 @@ export default
         "Recent stencils": "Recent symbols",
         "My stencils": "My symbols",
         "Find stencil (F3)...": "Find symbol (F3)...",
+        "@choosePage": "Select a page",
+        "@chooseArtboard": "Select an artboard",
+        "@noPagesWithSymbols": "No pages with symbols found",
 
         "Basic": "Basic", // group in library
         "Navigation": "Navigation", // group in library
@@ -323,12 +326,20 @@ export default
         "@flow.header": "Flow: {name}", //
         "@prototype.header": "Prototype: {name}", //
         "@story.description": "Description", //
+
         "publishpage.caption": "Publish current page", //
         "@publish.choosePage": "Choose the page to publish. Only artboards of type Symbol will be included.",
         "@publish.name": "Symbol kit name",
         "@publish.description": "Description",
         "@publish.private": "Share within my account",
         "@publish.public": "Share with everyone",
+
+        "@imageEdit.artboardSnapshot": "use a snapshot of an artboard",
+        "@imageEdit.pageSnapshot": "use a snapshot of a page",
+        "@imageEdit.makeSnapshot": "Make snapshot",
+        "@imageEdit.pasteUrl": "paste an image URL",
+        "@imageEdit.uploadImage": "Upload a new image",
+
         "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //
         "btn.publish": "Publish", //
@@ -441,6 +452,14 @@ export default
         "@distribute.horizontally": "Distribute horizontally",
         "@distribute.vertically": "Distribute vertically",
         "@storyselector.empty": "Select story for preview",
+        "@constraints.left": "Left",
+        "@constraints.right": "Right",
+        "@constraints.leftAndRight": "Left & Right",
+        "@constraints.top": "Top",
+        "@constraints.bottom": "Bottom",
+        "@constraints.topAndBottom": "Top & Bottom",
+        "@constraints.center": "Center",
+        "@constraints.scale": "Scale",
 
         "@account.joinMessage": "Join Carbonium Community!",
         "@account.loginMessage": "Welcome Back!",

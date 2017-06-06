@@ -8,20 +8,31 @@ import { say } from "../../../shared/Utils";
 import separatorOr from "../../../shared/SeparatorOr";
 import CropEditor from "./CropEditor";
 import bem from "../../../utils/commonUtils";
+import { IUIElement, IPage, IArtboard, app } from "carbon-core";
+import { FormattedMessage } from "react-intl";
+import { ArtboardSelect } from "../../../shared/ui/GuiSelect";
 
-function b(a,b?,c?) {return bem("edit-image", a,b,c)}
+export type ImageEditorResult =
+    {type: "url", url: string} |
+    {type: "dataUrl", dataUrl: string} |
+    {type: "element", element: IUIElement} |
+    null;
 
 interface IImageEditorProps {
-    image: string;
-    onComplete: (image: string) => void;
+    image?: string;
+    allowCropping?: boolean;
+    page?: IPage;
+    onComplete: (result: ImageEditorResult) => void;
 }
 
-interface IEditImageBladeState {
+interface IImageEditorState {
     error : string;
     loading : boolean;
 }
 
-export default class ImageEditor extends Component<IImageEditorProps, IEditImageBladeState> {
+function b(a,b?,c?) {return bem("edit-image", a,b,c)}
+
+export default class ImageEditor extends Component<IImageEditorProps, IImageEditorState> {
     refs: {
         dropzone: ImageDropzone;
         container: TabContainer;
@@ -39,6 +50,26 @@ export default class ImageEditor extends Component<IImageEditorProps, IEditImage
         this.refs.container.changeTabById(tab+"");
     }
 
+    private getArtboards() {
+        if (this.props.page) {
+            return this.props.page.getAllArtboards();
+        }
+        return app.getAllArtboards()
+    }
+
+    private artboardChosen = (artboard: IArtboard) => {
+        this.saveImageOption({type: "element", element: artboard});
+    }
+
+    private saveImageOption(result: ImageEditorResult) {
+        //todo - also cancel current dropzone upload
+        if (this.props.allowCropping) {
+            this._changeTab1();
+        }
+        else {
+            this.props.onComplete(result);
+        }
+    }
 
     //——————————————————————————————————————————————————————————————————————
     // Tab 1 (Edit)
@@ -128,16 +159,6 @@ export default class ImageEditor extends Component<IImageEditorProps, IEditImage
         return false;
     };
 
-
-
-    // Cancel Upload
-    _cancelUpload = () => {
-        //todo - also cancel current dropzone upload
-
-        this._changeTab1();
-    };
-
-
     _renderEditTab(image) {
         return  <TabPage tabId="1" className="gui-page">
             <MarkupLine>
@@ -171,6 +192,36 @@ export default class ImageEditor extends Component<IImageEditorProps, IEditImage
         ;
 
         return <TabPage tabId="2" className={b('upload-page', {loading}, 'gui-page')}>
+            <MarkupLine className="edit-image__make-snapshot" onClick={this._hideAllErrors}>
+                <p className="edit-image__message">
+                    <FormattedMessage id="@imageEdit.artboardSnapshot"/>
+                </p>
+
+                <div className="gui-input">
+                    <ArtboardSelect
+                        className="drop_down"
+                        caption="@chooseArtboard"
+                        items={this.getArtboards()}
+                        renderItem={artboard => <p>{artboard.name()}</p>}
+                        onSelect={this.artboardChosen}>
+                    </ArtboardSelect>
+                </div>
+            </MarkupLine>
+
+            <MarkupLine>{ separatorOr("or") }</MarkupLine>
+            <MarkupLine className="edit-image__make-snapshot" onClick={this._hideAllErrors}>
+                <p className="edit-image__message">
+                    <FormattedMessage id="@imageEdit.pageSnapshot"/>
+                </p>
+
+                <GuiButton
+                    mods={["hover-white", "full"]}
+                    onClick={console.log}
+                    caption="@imageEdit.makeSnapshot"
+                />
+            </MarkupLine>
+
+            <MarkupLine>{ separatorOr("or") }</MarkupLine>
             <MarkupLine>
                 <ImageDropzone
                     ref="dropzone"
@@ -183,12 +234,12 @@ export default class ImageEditor extends Component<IImageEditorProps, IEditImage
 
             <MarkupLine className="edit-image__paste-url" onClick={this._hideAllErrors}>
                 <p className="edit-image__message">
-                    {say("paste url with image")}
+                    <FormattedMessage id="@imageEdit.pasteUrl"/>
                 </p>
 
                 <GuiButtonedInput className="edit-image__paste-url-input">
                     <GuiInput
-                        placeholder="i.e. http://example.com/image.png"
+                        placeholder="http://example.com/image.png"
                         suffix={use_url_error}
                     />
                     <GuiButton
@@ -202,27 +253,11 @@ export default class ImageEditor extends Component<IImageEditorProps, IEditImage
                 </GuiButtonedInput>
             </MarkupLine>
 
-            <MarkupLine>{ separatorOr("or") }</MarkupLine>
-
-            <MarkupLine className="edit-image__make-snapshot" onClick={this._hideAllErrors}>
-                <p className="edit-image__message">
-                    {say("use page snapshot")}
-                </p>
-
-                <GuiButton
-                    defaultMessage="Make snapshot"
-                    mods={["hover-white", "full"]}
-                    onClick={console.log}
-                    caption="translateme!"
-                />
-            </MarkupLine>
-
-
-            { !!image &&
+            { (image || !this.props.allowCropping) &&
                 <MarkupSubmit>
                     <GuiButton
                         mods="hover-cancel"
-                        onClick={this._cancelUpload}
+                        onClick={() => this.saveImageOption(null)}
                         caption="@cancel"
                     />
                 </MarkupSubmit>
@@ -231,10 +266,11 @@ export default class ImageEditor extends Component<IImageEditorProps, IEditImage
     }
 
     render(){
-        var image = this.props.image;
+        let image = this.props.image;
+        let defaultTabId = !this.props.allowCropping || !image ? "2" : "1";
 
         return <div className="edit-image">
-            <TabContainer defaultTabId={(!!image ? "1" : "2")} type="normal" ref="container">
+            <TabContainer defaultTabId={defaultTabId} type="normal" ref="container">
                 <TabArea className="gui-pages">
                     {this._renderEditTab(image)}
                     {this._renderUploadTab(image)}

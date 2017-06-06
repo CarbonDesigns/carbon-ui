@@ -1,18 +1,20 @@
 import React from "react";
 import { Component } from "../../../CarbonFlux";
 import { BladeBody } from "../BladePage";
-import ImageEditor from "./ImageEditor";
+import ImageEditor, { ImageEditorResult } from "./ImageEditor";
+import { IPage } from "carbon-core";
 
 interface IEditImageBladeProps {
-    image: string;
+    image?: string;
+    page?: IPage;
 
-    onComplete: (image: string) => void;
+    onComplete: (result: ImageEditorResult) => void;
 }
 
 export default class EditImageBlade extends Component<IEditImageBladeProps> {
     render() {
         return <BladeBody>
-            <ImageEditor image={this.props.image} onComplete={this.props.onComplete}/>
+            <ImageEditor image={this.props.image} page={this.props.page} onComplete={this.props.onComplete}/>
         </BladeBody>
     }
 

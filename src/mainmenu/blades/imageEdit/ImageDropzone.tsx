@@ -4,6 +4,7 @@ import Dropzone from "Dropzone";
 import { backend } from "carbon-core";
 import { ico, say } from "../../../shared/Utils";
 import bem from "../../../utils/commonUtils";
+import { FormattedMessage } from "react-intl";
 
 function b(a,b?,c?) {return bem("edit-image", a,b,c)}
 
@@ -167,7 +168,7 @@ export default class ImageDropzone extends Component<any, any> {
                             {ico('upload-alt')}
                         </div>
                         <p className={b('dropzone-info-message')}>
-                            {say("Upload from computer")}
+                            <FormattedMessage id="@imageEdit.uploadImage"/>
                         </p>
                     </div>
                 </div>

@@ -176,7 +176,7 @@ export default class FontFamilyList extends Component<any, any>{
                     </div>
 
                     <div className="font-options__category-selector">
-                        <GuiSelect
+                        {/*<GuiSelect
                             mods="line"
                             selectedItem={0}
                             onSelect={this._onCategorySelect}
@@ -185,7 +185,7 @@ export default class FontFamilyList extends Component<any, any>{
                             <p>User uploaded</p>
                             <p>Adobe Typekit</p>
                             <p>Myfonts.com</p>
-                        </GuiSelect>
+                        </GuiSelect>*/}
                     </div>
                 </div>
 

@@ -65,7 +65,7 @@ export default class CropEditor extends Component<any, any> {
         this._context.save();
         this._context.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
 
-        Workspace.view.renderElement(App.Current.activePage.getActiveArtboard(), this._context, this.state.shift_x, this.state.shift_y, zoom);
+        //Workspace.view.renderElement(App.Current.activePage.getActiveArtboard(), this._context, this.state.shift_x, this.state.shift_y, zoom);
 
         //this._context.translate(this.state.shift_x, this.state.shift_y);
         //this._context.scale(zoom, zoom);

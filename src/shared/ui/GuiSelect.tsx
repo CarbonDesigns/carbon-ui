@@ -5,7 +5,8 @@ import cx from 'classnames';
 import { default as bem, join_bem_mods, IHasMods } from '../../utils/commonUtils';
 import FlyoutButton from '../FlyoutButton';
 import ScrollContainer from '../ScrollContainer';
-import { FormattedHTMLMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
+import { IArtboard, IPage } from "carbon-core";
 
 function b(a, b, c) { return bem('drop', a, b, c) }
 
@@ -15,22 +16,17 @@ function stopPropagation(e) {
     }
 }
 
-export interface IGuiSelectProps extends ISimpleReactElementProps, IHasMods<"line"> {
-    /**
-     * An index of the selected item, or -1 if no item should be selected.
-     */
-    selectedItem?: number;
+export interface IGuiSelectProps<T> extends ISimpleReactElementProps, IHasMods<"line"> {
+    selectedItem?: T;
 
-    onSelect: (index: number) => void;
+    items: T[];
+    renderItem?: (item: T) => any;
 
-    /**
-     * A function to render the default node, if nothing is selected (selectedItem === -1).
-     */
-    renderDefault?: () => any;
-    renderSelected?: (index: number) => React.ReactInstance;
+    caption?: string;
+    onSelect: (item: T) => void;
 }
 
-export default class GuiSelect extends Component<IGuiSelectProps>{
+export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
     refs: {
         scrollContainer: ScrollContainer
     }
@@ -39,34 +35,25 @@ export default class GuiSelect extends Component<IGuiSelectProps>{
         super(props);
     }
 
-    selectItem = (e) => {
-        var dropContainer = ReactDom.findDOMNode(this.refs.scrollContainer.getScrollBoxNode());
-        // item is the number of dropContainer DOM child
-        var item = Array.prototype.indexOf.call(dropContainer.children, e.currentTarget);
-        if (item !== this.props.selectedItem) {
-            this.props.onSelect(item);
+    private selectItem = (e: React.MouseEvent<HTMLDivElement>) => {
+        let newIndex = parseInt(e.currentTarget.dataset.index);
+        let newItem = this.props.items[newIndex];
+        if (newItem !== this.props.selectedItem) {
+            this.props.onSelect(newItem);
         }
     };
 
-    _renderPill = () => {
-        var selectedChild = null;
+    private renderPill = () => {
+        let selectedChild = null;
 
-        var selectedItemIndex = this.props.selectedItem;
-
-        if (selectedItemIndex >= 0) {
-            if (typeof this.props.renderSelected === 'function') {
-                selectedChild = this.props.renderSelected(selectedItemIndex);
-            }
-            else {
-                var children: any = React.Children.toArray(this.props.children);
-                selectedChild = React.cloneElement(children[selectedItemIndex], { key: selectedItemIndex + "_selected" });
-            }
+        if (this.props.selectedItem) {
+            selectedChild = this.props.renderItem ? this.props.renderItem(this.props.selectedItem) : this.props.selectedItem;
         }
-        else if (this.props.renderDefault) {
-            selectedChild = this.props.renderDefault();
+        else if (this.props.caption){
+            selectedChild = <FormattedMessage id={this.props.caption} tagName="i"/>
         }
         else {
-            selectedChild = '---';
+            selectedChild = <i>---</i>;
         }
 
         return <div className="drop__pill">
@@ -75,27 +62,16 @@ export default class GuiSelect extends Component<IGuiSelectProps>{
         </div >
     };
 
-    _renderFlyoutContent() {
-        var options = null;
+    private renderFlyoutContent() {
+        let options = this.props.items.map((item, i) => {
+            let classes = bem('drop', 'item',
+                { line: true, selectable: true },
+                [{ _active: item === this.props.selectedItem }]
+            );
 
-        if (React.Children.count(this.props.children) > 0) {
-
-            var selectedItemIndex = this.props.selectedItem;
-
-            options = React.Children.map(this.props.children, (child_component: any, ind) => {
-                var classes = bem('drop', 'item',
-                    { line: true, selectable: true },
-                    [{ _active: selectedItemIndex === ind }, child_component.props.className]
-                );
-
-                return React.cloneElement(child_component, {
-                    className: classes,
-                    key: ind,
-                    onClick: child_component.props.onClick || this.selectItem,
-                    onMouseDown: stopPropagation
-                });
-            });
-        }
+            var renderedItem = this.props.renderItem ? this.props.renderItem(item) : item;
+            return <div className={classes} key={i} data-index={i} onClick={this.selectItem} onMouseDown={stopPropagation}>{renderedItem}</div>;
+        });
 
         return <div className={bem('drop', 'content', ["auto-width", "in-flyout"])}>
             <ScrollContainer
@@ -106,18 +82,24 @@ export default class GuiSelect extends Component<IGuiSelectProps>{
         </div>
     }
 
-
     render() {
         var dropClasses = bem('drop', null, this.props.mods, this.props.className);
 
         return <FlyoutButton
             className={dropClasses}
-            renderContent={this._renderPill}
+            renderContent={this.renderPill}
             position={{
                 targetVertical: "bottom",
                 syncWidth: true
             }}>
-            {this._renderFlyoutContent()}
+            {this.renderFlyoutContent()}
         </FlyoutButton>
     }
 }
+
+//common selects
+export type ArtboardSelect = new (props) => GuiSelect<IArtboard>;
+export const ArtboardSelect = GuiSelect as ArtboardSelect;
+
+export type PageSelect = new (props) => GuiSelect<IPage>;
+export const PageSelect = GuiSelect as PageSelect;

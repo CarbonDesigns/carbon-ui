@@ -1,6 +1,6 @@
 import React from "react";
 import BladePage from "../BladePage";
-import { app, backend, ShareProxy, IPage } from "carbon-core";
+import { app, backend, ShareProxy, IPage, Rect, Workspace } from "carbon-core";
 import { Component } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
@@ -8,9 +8,12 @@ import { Markup, MarkupLine } from "../../../shared/ui/Markup";
 import { GuiButton, GuiButtonStack, GuiInput, GuiTextArea } from "../../../shared/ui/GuiComponents";
 import { BladeBody } from "../BladePage";
 import electronEndpoint from "electronEndpoint";
-import GuiSelect from "../../../shared/ui/GuiSelect";
+import {PageSelect} from "../../../shared/ui/GuiSelect";
 import bem from "../../../utils/commonUtils";
 import EditImageBlade from "../imageEdit/EditImageBlade";
+import { ImageEditorResult } from "../imageEdit/ImageEditor";
+
+const PreviewSize = Rect.fromSize(512, 512);
 
 interface IPublishBladeState {
     page?: IPage;
@@ -41,15 +44,12 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         super.componentDidMount();
         let pages = app.pagesWithSymbols();
         if (pages.length === 1) {
-            this.pageSelected(0);
+            this.pageSelected(pages[0]);
         }
     }
 
-    private pageSelected = (index: number) => {
-        var page = app.pagesWithSymbols()[index];
-        if (page) {
-            this.setState({ page: page, dataUrl: page.toDataURL({ width: 512, height: 512 }) });
-        }
+    private pageSelected = (page: IPage) => {
+        this.setState({ page: page, dataUrl: page.toDataURL({ width: 512, height: 512 }) });
     }
 
     _publishPage = () => {
@@ -87,8 +87,21 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     };
 
     _openAvatarEditor = (ev) => {
-        this.context.bladeContainer.addChildBlade(`blade_edit-project-avatar`, EditImageBlade, this.formatLabel("@caption.editCover"), {image: this.state.dataUrl});
+        this.context.bladeContainer.addChildBlade(`blade_edit-project-avatar`, EditImageBlade, this.formatLabel("@caption.editCover"),
+            {
+                page: this.state.page,
+                onComplete: this.imageEditCompleted
+            });
     };
+
+    private imageEditCompleted = (res: ImageEditorResult) => {
+        this.context.bladeContainer.close(2);
+        if (res) {
+            if (res.type === "element") {
+                this.setState({dataUrl: Workspace.view.renderElementToDataUrl(res.element, PreviewSize)});
+            }
+        }
+    }
 
     _clearAvatar = (ev) => {
 
@@ -205,19 +218,16 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
 
     private renderPageSelect() {
         let pages = app.pagesWithSymbols();
-        let selectedItem = pages.indexOf(this.state.page);
-        let caption = pages.length ? "Select page" : "No pages with symbols found";
+        let caption = pages.length ? "@choosePages" : "@noPagesWithSymbols";
 
-        return <GuiSelect
+        return <PageSelect
             className="drop_down"
-            selectedItem={selectedItem}
-            renderDefault={() => <i>{caption}</i>}
+            selectedItem={this.state.page}
+            items={pages}
+            renderItem={page => <p>{page.name()}</p>}
+            caption={caption}
             onSelect={this.pageSelected}>
-            {pages.map((page, ind) => <p
-                key={page.id()}
-                className={bem("publish", "pages-list-item", { selected: (ind === selectedItem) })}>{page.name()}
-            </p>)}
-        </GuiSelect>;
+        </PageSelect>;
     }
 
     static contextTypes = {

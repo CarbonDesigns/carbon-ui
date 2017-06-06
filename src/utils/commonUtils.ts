@@ -16,53 +16,59 @@ export function resolve_block(block) {
         return bem(block, elem, mods, mix)
     }
 }
-function normalize_mod(mod){
-    if (mod == null || !mod)
+function normalize_mod(mod) {
+    if (!mod) {
         return [];
-
-    var res = [{}];
-    if (typeof mod === 'string')
-        res[0][mod] = true;
-    else if (Array.isArray(mod)) { //if array
-        mod.map(function(mod_item){ res[0][mod_item]=true; })
     }
-    else //if object
+    var res = [{}];
+    if (typeof mod === 'string') {
+        res[0][mod] = true;
+    }
+    else if (Array.isArray(mod)) { //if array
+        mod.map(function (mod_item) { res[0][mod_item] = true; })
+    }
+    else {//if object
         res = [mod];
+    }
     return res;
 }
 export function join_bem_mods(...args_here: any[]) {
     var args = Array.prototype.slice.call(arguments);
     var mods = [{}];
-    args.map(function(mod){mods = mods.concat(normalize_mod(mod)) });
+    args.map(function (mod) { mods = mods.concat(normalize_mod(mod)) });
     return Object.assign.apply(this, mods);
 }
 
 export default function bem(block, elem = null, mods = null, mix = null) {
     var block_elem;
-    if ((elem != null) && elem)
+    if (elem) {
         block_elem = block + _ELEM_SEP + elem;
-    else
+    }
+    else {
         block_elem = block;
+    }
 
     var cn = [block_elem];
     var mod;
 
-    if (mods != null) {
+    if (mods) {
         if (typeof mods === 'string') {
             mods = [mods]
         }
         if (Array.isArray(mods)) {
             for (var i = 0, l = mods.length; i < l; i++) {
                 mod = mods[i];
-                if ((typeof mod === 'string') && (mod != null) && mod) {
+                if ((typeof mod === 'string') &&  mod) {
                     cn.push(block_elem + _MOD_SEP + mod);
                 }
             }
         }
         else {
-            for (mod in mods) if (mods.hasOwnProperty(mod)) {
-                if (mods[mod]) {
-                    cn.push(block_elem + _MOD_SEP + mod);
+            for (mod in mods) {
+                if (mods.hasOwnProperty(mod)) {
+                    if (mods[mod]) {
+                        cn.push(block_elem + _MOD_SEP + mod);
+                    }
                 }
             }
         }
@@ -72,7 +78,7 @@ export default function bem(block, elem = null, mods = null, mix = null) {
         cn.push(mix.trim());
     }
     else {
-        if (mix != null) {
+        if (mix) {
             cn.push(cx(mix));
         }
     }

@@ -508,7 +508,7 @@ export default
         "@symbols.detach": "Detach instance",
 
         "@saveImage": "Save image",
-        "@uploadAnother": "Upload another",
+        "@changeImage": "Change image",
 
         "": "", //
     };

@@ -476,6 +476,8 @@
     &__crop-area {
         .rel;
         .clip;
+        .w100;
+        padding-top: 100%;
         .wbg(3);
         &-pane {
             cursor: move;
@@ -489,7 +491,14 @@
         &-zoom {
             margin-top: @line_air;
         }
-
+        canvas{
+            .abs;
+            left: 0;
+            top: 0;
+            .w100;
+            .h100;
+            cursor: move;
+        }
     }
 
     &__dropzone {

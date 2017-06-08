@@ -1,6 +1,6 @@
 import React from "react";
 import BladePage from "../BladePage";
-import { app, backend, ShareProxy, IPage, Rect, Workspace } from "carbon-core";
+import { app, backend, ShareProxy, IPage, Rect, Workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point } from "carbon-core";
 import { Component } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
@@ -8,12 +8,16 @@ import { Markup, MarkupLine } from "../../../shared/ui/Markup";
 import { GuiButton, GuiButtonStack, GuiInput, GuiTextArea } from "../../../shared/ui/GuiComponents";
 import { BladeBody } from "../BladePage";
 import electronEndpoint from "electronEndpoint";
-import {PageSelect} from "../../../shared/ui/GuiSelect";
+import { PageSelect } from "../../../shared/ui/GuiSelect";
 import bem from "../../../utils/commonUtils";
-import EditImageBlade from "../imageEdit/EditImageBlade";
-import { ImageEditorResult } from "../imageEdit/ImageEditor";
+import EditImageBlade, { EditImageResult } from "../imageEdit/EditImageBlade";
+import Tiler, { ITile } from "./Tiler";
 
-const PreviewSize = Rect.fromSize(512, 512);
+const BoardSize = 3;
+const CoverSide = 300;
+//giving some space for zooming in the crop editor
+const CoverRect = Rect.fromSize(CoverSide * 2, CoverSide * 2);
+const Dpr = 2;
 
 interface IPublishBladeState {
     page?: IPage;
@@ -24,6 +28,7 @@ interface IPublishBladeState {
     isPublic: boolean;
     done: boolean;
     progress: any;
+    tiles?: ITile[];
 }
 
 export default class PublishBlade extends Component<void, IPublishBladeState> {
@@ -49,7 +54,104 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     }
 
     private pageSelected = (page: IPage) => {
-        this.setState({ page: page, dataUrl: page.toDataURL({ width: 512, height: 512 }) });
+        var tiles = this.createTiles(page);
+        tiles.sort((a, b) => b.w * b.h - a.w * a.h);
+
+        let tiler = new Tiler(BoardSize, BoardSize);
+        tiles = tiler.run(tiles);
+
+        this.renderTiles(page, tiles);
+    }
+
+    private randomizePreview = () => {
+        for (let i = 0; i < 20; ++i){
+            let tiles = this.createTiles(this.state.page);
+            if (tiles.length <= 1) {
+                return;
+            }
+
+            tiles.sort((a, b) => a.id - b.id);
+
+            let tiler = new Tiler(BoardSize, BoardSize);
+            tiles = tiler.run(tiles);
+
+            let oldTiles = this.state.tiles;
+            for (let j = 0; i < oldTiles.length && j < tiles.length; ++j) {
+                if (oldTiles[j].item !== tiles[j].item) {
+                    this.renderTiles(this.state.page, tiles);
+                    return;
+                }
+            }
+        }
+    }
+
+    private renderTiles(page: IPage, tiles: ITile[]){
+        const margin = 2;
+        const step = CoverSide / BoardSize;
+
+        let group = new GroupContainer();
+        group.boundaryRect(Rect.fromSize(CoverSide, CoverSide));
+        for (let i = 0; i < tiles.length; ++i) {
+            let tile = tiles[i];
+            let symbol = tile.item as ISymbol;
+
+            let sr = symbol.boundaryRect();
+            let tr = sr.fit(Rect.fromSize(tile.w * step - margin, tile.h * step - margin));
+            symbol.applyScaling(Point.create(tr.width/sr.width, tr.height/sr.height), Point.Zero);
+
+            let pos = tr.topLeft();
+            pos = pos.add2(tile.pos[1] * step + margin/2, tile.pos[0] * step + margin/2);
+            symbol.applyTranslation(pos);
+
+            group.add(symbol);
+        }
+
+        this.setState({ page: page, dataUrl: this.renderPreview(group), tiles });
+    }
+
+    private createTiles(page: IPage): ITile[]{
+        let symbolMasters = page.getAllArtboards().filter(x => x.props.type === ArtboardType.Symbol);
+        return symbolMasters.map(artboard => this.createTile(page, artboard));
+    }
+
+    private createTile(page: IPage, artboard: IArtboard) {
+        let rect = artboard.boundaryRect();
+        let ratio = rect.width / rect.height;
+        let w, h;
+        //square
+        if (ratio > .5 && ratio < 1.5) {
+            if (rect.width < 200) {
+                w = 1;
+                h = 1;
+            }
+            else if (rect.width < 600) {
+                w = 2;
+                h = 2;
+            }
+            else {
+                w = 3;
+                h = 3;
+            }
+        }
+        //wide
+        else if (ratio >= 1.5) {
+            w = 2;
+            h = 1;
+        }
+        //tall
+        else {
+            w = 1;
+            h = 2;
+        }
+
+        var item = new Symbol();
+        item.setProps({ source: { pageId: page.id(), artboardId: artboard.id()}, br: rect })
+        return { w, h, item, id: Math.random() };
+    }
+
+    private renderPreview(element: IUIElement) {
+        const dpr = 2;
+        return Workspace.view.renderElementToDataUrl(element, CoverRect, dpr);
     }
 
     _publishPage = () => {
@@ -65,7 +167,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             })
                 .then((result) => {
                     this.setState({ done: true });
-                    this.props.completed(this.state.isPublic, result.data);
+                    //this.props.completed(this.state.isPublic, result.data);
                 })
         });
     };
@@ -86,29 +188,34 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         this.setState({ tags: event.target.value });
     };
 
-    _openAvatarEditor = (ev) => {
-        this.context.bladeContainer.addChildBlade(`blade_edit-project-avatar`, EditImageBlade, this.formatLabel("@caption.editCover"),
+    openImageEditor = (ev) => {
+        this.context.bladeContainer.addChildBlade(`blade_edit-publish-image`, EditImageBlade, this.formatLabel("@caption.editCover"),
             {
                 page: this.state.page,
-                onComplete: this.imageEditCompleted
+                onComplete: this.imageEditCompleted,
+                allowCropping: true,
+                image: this.state.dataUrl,
+                dpr: Dpr,
+                previewSize: CoverRect
             });
     };
 
-    private imageEditCompleted = (res: ImageEditorResult) => {
+    private imageEditCompleted = (res: EditImageResult) => {
         this.context.bladeContainer.close(2);
         if (res) {
             if (res.type === "element") {
-                this.setState({dataUrl: Workspace.view.renderElementToDataUrl(res.element, PreviewSize)});
+                this.setState({ dataUrl: this.renderPreview(res.element) });
+            }
+            else if (res.type === "dataUrl") {
+                this.setState({ dataUrl: res.dataUrl });
+            }
+            else if (res.type === "url") {
+                this.setState({ dataUrl: res.url });
             }
         }
     }
 
-    _clearAvatar = (ev) => {
-
-    };
-
     _saveToDisk() {
-
         electronEndpoint.saveResource(() => {
             return app.activePage.export().then(data => {
                 return {
@@ -162,33 +269,33 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                     <FormattedMessage id="@publish.choosePage1" defaultMessage="Create your cover" />
                 </p>
             </MarkupLine>
-            <MarkupLine className="project-settings__avatar">
-                <figure className="project-settings__avatar-image"
+            <MarkupLine className="publish__avatar">
+                <figure className="publish__avatar-image"
                     style={{ backgroundImage: "url('" + this.state.dataUrl + "')" }}
                 />
-                <GuiButtonStack className="project-settings__avatar-controls">
+                <GuiButtonStack className="publish__avatar-controls">
+                    <GuiButton
+                        mods="hover-white"
+                        icon="refresh"
+                        onClick={this.randomizePreview}
+                    />
                     <GuiButton
                         mods="hover-success"
                         icon="edit"
-                        onClick={this._openAvatarEditor}
-                    />
-                    <GuiButton
-                        mods="hover-cancel"
-                        icon="trash"
-                        onClick={this._clearAvatar}
+                        onClick={this.openImageEditor}
                     />
                 </GuiButtonStack>
             </MarkupLine>
 
             <MarkupLine mods="space">
-                <GuiInput value={this.state.projectName} onChange={this._onChange} caption="@publish.name" placeholder="Give it some cool name"/>
+                <GuiInput caption="@publish.name" placeholder="Give it some cool name" />
             </MarkupLine>
 
             <MarkupLine>
-                <GuiTextArea value={this.state.projectName} onChange={this._onChange} caption="@publish.description" placeholder="What inspired you?"/>
+                <GuiTextArea caption="@publish.description" placeholder="What inspired you?" />
             </MarkupLine>
             <MarkupLine>
-                <GuiInput value={this.state.projectName} onChange={this._onChange} caption="@tags" placeholder="buttons, ios, flat, etc"/>
+                <GuiInput caption="@tags" placeholder="buttons, ios, flat, etc" />
             </MarkupLine>
 
             <MarkupLine>
@@ -198,15 +305,15 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                     </p>
 
                     <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={true} onChange={console.log} data-option="activeArtboard"/>
+                        <input type="radio" checked={true} onChange={console.log} data-option="activeArtboard" />
                         <i />
-                        <span><FormattedMessage id="@publish.public"/></span>
+                        <span><FormattedMessage id="@publish.public" /></span>
                     </label>
 
                     <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={false} onChange={console.log} data-option="activePage"/>
+                        <input type="radio" checked={false} onChange={console.log} data-option="activePage" />
                         <i />
-                        <FormattedMessage id="@publish.private"/>
+                        <FormattedMessage id="@publish.private" />
                     </label>
 
                 </div>

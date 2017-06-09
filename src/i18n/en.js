@@ -478,6 +478,10 @@ export default
         "@symbols.markAsBackground": "Mark as background",
         "@symbols.detach": "Detach instance",
 
+        "@textAutoWidth.Fit": "Fit",
+        "@textAutoWidth.Wrap": "Wrap",
+        "@textAutoWidth.Grow": "Grow",
+
 
         "": "", //
     };

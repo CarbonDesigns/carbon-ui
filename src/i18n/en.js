@@ -328,11 +328,15 @@ export default
         "@story.description": "Description", //
 
         "publishpage.caption": "Publish current page", //
-        "@publish.choosePage": "Choose the page to publish. Only artboards of type Symbol will be included.",
+        "@publish.choosePage": "Choose the page to publish",
         "@publish.name": "Symbol kit name",
         "@publish.description": "Description",
         "@publish.private": "Share within my account",
         "@publish.public": "Share with everyone",
+        "@publish.privacy": "Privacy",
+        "@publish.confirm": "The symbols with this name already exist",
+        "@publish.done": "The symbols have been published to the gallery.",
+        "@nameTaken": "This name is already taken",
 
         "@imageEdit.artboardSnapshot": "use a snapshot of an artboard",
         "@imageEdit.pageSnapshot": "use a snapshot of a page",
@@ -437,6 +441,8 @@ export default
         "@flow": "Flow",
         "@prototype": "Prototype",
         "@cancel": "Cancel",
+        "@close": "Close",
+        "@update": "Update",
         "@story.create": "Create story",
         "@story.save": "Save story",
         "@menu.align": "Align",
@@ -509,6 +515,8 @@ export default
 
         "@saveImage": "Save image",
         "@changeImage": "Change image",
+
+        "@requiredField": "This field is required",
 
         "": "", //
     };

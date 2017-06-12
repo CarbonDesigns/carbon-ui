@@ -525,13 +525,13 @@ export const enum ValidationTrigger{
     change = 1 << 2
 }
 
-interface IGuiValidatedInputProps extends React.HTMLAttributes<HTMLInputElement>{
+interface IGuiValidatedInputProps extends IGuiInputProps {
     /**
      * Validation callback which should return a new field state.
      * The force parameter specifies that validation should be performed regardless of the trigger,
      * for example if a form is submitted without key up or blur event on the component.
      */
-    onValidate: (newValue: string, state: ImmutableRecord<IFieldState>, force?: boolean) => ImmutableRecord<IFieldState> | null;
+    onValidate?: (newValue: string, state: ImmutableRecord<IFieldState>, force?: boolean) => ImmutableRecord<IFieldState> | null;
     trigger?: ValidationTrigger;
 }
 interface IGuiValidatedInputState{
@@ -638,6 +638,22 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
             ];
         }
         return null;
+    }
+}
+
+export class GuiRequiredInput extends GuiValidatedInput {
+    private validateField = (value: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+        if (value){
+            return state.set("status", "ok");
+        }
+        if (force){
+            return state.set("status", "error").set("error", this.formatLabel("@requiredField"));
+        }
+        return state.set("status", "notReady");
+    }
+
+    render() {
+        return <GuiValidatedInput ref="input" {...this.props} onValidate={this.validateField}/>
     }
 }
 

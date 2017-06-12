@@ -1276,7 +1276,12 @@
 
 
     &__input-ico {
-        .xyar(12px, 49%);
+        //TODO: icons in labels are aligned relative to label
+        //.xyar(12px, 49%);
+        .abs;
+        right: 12px;
+        bottom: 12px;
+
         margin-top: @s / -2;
         .op0;
         transform : translateY(-14px);

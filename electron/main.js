@@ -24,7 +24,7 @@ function createWindow () {
   //   protocol: 'file:',
   //   slashes: true
   // }))
-  mainWindow.loadURL("http://localhost:8080/app?serverless&clearStorage#");
+  mainWindow.loadURL("http://localhost:8080/app?serverless&cls#");
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()

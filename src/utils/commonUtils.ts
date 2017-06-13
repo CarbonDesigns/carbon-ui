@@ -4,9 +4,16 @@ import cx from "classnames";
 const _ELEM_SEP = "__";
 const _MOD_SEP = "_";
 
+/**
+ * Desribes all mods that a component supports in css.
+ */
+export interface IHasMods<TMods>{
+    mods?: TMods;
+}
+
 export function resolve_block(block) {
     return function (elem, mods, mix) {
-        return bem_mod(block, elem, mods, mix)
+        return bem(block, elem, mods, mix)
     }
 }
 function normalize_mod(mod) {
@@ -32,7 +39,7 @@ export function join_bem_mods(...args_here: any[]) {
     return Object.assign.apply(this, mods);
 }
 
-export default function bem_mod(block, elem = null, mods = null, mix = null) {
+export default function bem(block, elem = null, mods = null, mix = null) {
     var block_elem;
     if (elem) {
         block_elem = block + _ELEM_SEP + elem;

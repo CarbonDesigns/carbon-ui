@@ -10,12 +10,13 @@ declare function EventHandler(target, method):any;
 
 declare var DEBUG: boolean;
 
-declare interface IReactElementProps extends React.DOMAttributes<HTMLElement>
-{
-    id?:string;
-    className?:string;
-    style?:any;
-    key?:any;
+declare interface ISimpleReactElementProps {
+    id?: string;
+    className?: string;
+    style?: any;
+    key?: any;
+}
+declare interface IReactElementProps extends ISimpleReactElementProps, React.DOMAttributes<HTMLElement>{
 }
 
 declare type ImmutableRecord<T> = Immutable.Record.Instance<T>;

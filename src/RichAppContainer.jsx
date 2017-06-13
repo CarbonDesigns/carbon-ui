@@ -38,7 +38,6 @@ export class RichAppContainer extends AppLoaderComponent{
                                          comments:   { contentFactory: React.createFactory(CommentsPanel)},
                                          properties: { contentFactory: React.createFactory(PropertiesPanel)},
                                          swatches:   { contentFactory: React.createFactory(SwatchesPanel)},
-                                         //pages:      { //     contentFactory:React.createFactory(PagesPanel)// },
                                          designer:   { contentFactory: React.createFactory(Workspace)},
                                          preview:    { contentFactory: React.createFactory(PreviewWorkspace)},
                                          stories:    { contentFactory: React.createFactory(StoriesPanel)},

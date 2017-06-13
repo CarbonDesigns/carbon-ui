@@ -1,7 +1,6 @@
 import {Dispatcher} from './CarbonFlux';
 import RichAppStore from './RichAppStore';
 
-import PagesStore from './pages/PagesStore';
 import LayoutStore from './layout/LayoutStore';
 
 import RichPanelConfig from "./RichPanelConfig";
@@ -33,8 +32,6 @@ export class Application {
         this.appStore = RichAppStore;//new RichAppStore(this.Dispatcher);
         this.layoutStore = LayoutStore;
 
-        this.pagesStore = new PagesStore(this.Dispatcher);
-
         this.libraryProgressStore = new LibraryProgressStore(this.Dispatcher);
 
         //this.stencilsQueries', require('./library/stencils/StencilsQueries'));
@@ -47,9 +44,6 @@ export class Application {
         //this.recentIconsStore', require('./library/icons/RecentIconsStore'));
         //this.iconFinderStore', require('./library/icons/IconFinderStore'));
         //this.searchIconsStore', require('./library/icons/SearchIconsStore'));
-
-        // this.pagesActions', require('./pages/PagesActions').ActionCreators);
-        // this.pagesStore', require('./pages/PagesStore'));
 
         this.layoutStore.setLayout("edit", RichPanelConfig.edit);
 

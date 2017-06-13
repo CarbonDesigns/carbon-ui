@@ -1,5 +1,5 @@
 import React                                          from "react";
-import {app, backend, ShareProxy, PageExporter, util} from "carbon-core";
+import {app, backend, ShareProxy, util} from "carbon-core";
 import {Component}                                    from "../../../CarbonFlux";
 import cx                                             from 'classnames';
 import {FormattedMessage}                             from "react-intl";

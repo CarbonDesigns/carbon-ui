@@ -1,7 +1,7 @@
 import React from "react";
 import {Component} from "../CarbonFlux";
 
-import { app, backend, ShareProxy } from "carbon-core";
+import { app, backend } from "carbon-core";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import { LoginRequiredError } from "../Constants";
 
@@ -15,7 +15,7 @@ interface IQuickAppProps extends IRouteComponentProps{
 export default class QuickApp extends RouteComponent<IQuickAppProps, void> {
     _openApp(code){
         backend.ensureLoggedIn()
-            .then(() => ShareProxy.use(code))
+            .then(() => backend.shareProxy.use(code))
             .then(x => this._navigate(x))
             .catch(e => {
                 if (e.message !== LoginRequiredError){

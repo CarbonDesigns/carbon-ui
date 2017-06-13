@@ -1,6 +1,6 @@
 import React from "react";
 import BladePage from "../BladePage";
-import {app, backend, ShareProxy, PageExporter} from "carbon-core";
+import {app, backend, ShareProxy} from "carbon-core";
 import {Component} from "../../../CarbonFlux";
 import cx from 'classnames';
 import {FormattedMessage} from "react-intl"

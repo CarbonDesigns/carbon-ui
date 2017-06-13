@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import { AccountAction } from "./account/AccountActions";
 import { BackendAction } from "./BackendActions";
 import { DialogAction } from "./dialogs/DialogActions";
+import { PublishAction } from "./mainmenu/blades/resources/PublishActions";
 
 // import diff from 'immutablediff';
 
@@ -198,7 +199,7 @@ export function dispatch(action) {
 }
 
 //just a strongly typed wrapper while not all actions are union types
-export function dispatchAction(action: AccountAction | BackendAction | DialogAction) {
+export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction) {
     dispatch(action);
 }
 

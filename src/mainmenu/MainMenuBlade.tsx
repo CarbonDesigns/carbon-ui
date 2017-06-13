@@ -13,12 +13,12 @@ import PngExportBlade       from './blades/export/PngExportBlade';
 import HtmlExportBlade      from './blades/export/HtmlExportBlade';
 import ZipExportBlade       from './blades/export/ZipExportBlade';
 
-import ResourcesBlade       from './blades/resources/ResourcesBlade';
+import PublishPageBlade       from './blades/resources/PublishPageBlade';
 import ShareLinkBlade       from './blades/shareLink/ShareLinkBlade';
 import ShareEmailBlade      from './blades/shareEmail/ShareEmailBlade';
 import MirroringBlade       from './blades/mirroring/MirroringBlade';
 import ProjectSettingsBlade from './blades/projectSettings/ProjectSettingsBlade';
-import EditAvatarBlade      from './blades/projectSettings/EditAvatarBlade';
+import EditAvatarBlade      from './blades/imageEdit/EditImageBlade';
 import RecentProjectsBlade  from './blades/recentProjects/RecentProjectsBlade';
 // import SelectPagesBlade from './blades/selectPages/SelectPagesBlade';
 
@@ -42,15 +42,17 @@ function _recentProject(project) {
         </section>);
 }
 
+type BladeId = "project-settings" | "export-pdf" | "export-png" | "export-html" | "export-zip"
+    | "share-link" | "mirroring" | "share-email" | "publish" | "project-avatar" | "recent-projects";
 
-export default class MainMenuBlade extends React.Component {
+export default class MainMenuBlade extends React.Component<any, any> {
 
-    setBladePage(id, type, caption) {
+    setBladePage(id, type, caption?) {
         this.context.bladeContainer.close(1);
         this.context.bladeContainer.addChildBlade(id, type, caption);
     }
 
-    _resolveSetBladePage = (page)=> {
+    _resolveSetBladePage = (page: BladeId)=> {
         switch (page) {
             case 'project-settings' : return (()=>this.setBladePage(`blade_${page}`, ProjectSettingsBlade ,"Project Settings")) ;
             case 'export-pdf'       : return (()=>this.setBladePage(`blade_${page}`, PdfExportBlade       ,"caption.export2pdf")     ) ;
@@ -60,11 +62,12 @@ export default class MainMenuBlade extends React.Component {
             case 'share-link'       : return (()=>this.setBladePage(`blade_${page}`, ShareLinkBlade       ,"caption.sharelink")      ) ;
             case 'mirroring'        : return (()=>this.setBladePage(`blade_${page}`, MirroringBlade       ,"caption.mirroringblade") ) ;
             case 'share-email'      : return (()=>this.setBladePage(`blade_${page}`, ShareEmailBlade      ,"caption.sharebyemail")   ) ;
-            case 'resources'        : return (()=>this.setBladePage(`blade_${page}`, ResourcesBlade       ,"caption.resourceblade")  ) ;
+            case 'publish'          : return (()=>this.setBladePage(`blade_${page}`, PublishPageBlade     ,"caption.publishpage")  ) ;
             case 'project-avatar'   : return (()=>this.setBladePage(`blade_${page}`, EditAvatarBlade      ,"Edit proj avatar")       ) ;
             case 'recent-projects'  : return (()=>this.setBladePage(`blade_${page}`, RecentProjectsBlade                            )) ;
         }
-        throw "Incorrect..."
+
+        assertNever(page);
     };
 
     close(){
@@ -88,7 +91,7 @@ export default class MainMenuBlade extends React.Component {
     _clickOnProjectSettings = (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
-        this._resolveSetBladePage("project-settings")(ev);
+        this._resolveSetBladePage("project-settings")();
     };
 
     _renderElectronMenu() {
@@ -163,8 +166,8 @@ export default class MainMenuBlade extends React.Component {
                     </MainMenuButton>
                 </section>
                 <section className="main-menu__line">
-                    <MainMenuButton id="main-menu__button_resources-page" onClick={this._resolveSetBladePage("resources")}>
-                        <FormattedHTMLMessage id="menu.resources"/>
+                    <MainMenuButton id="main-menu__button_resources-page" onClick={this._resolveSetBladePage("publish")}>
+                        <FormattedHTMLMessage id="menu.publish"/>
                     </MainMenuButton>
                 </section>
             </div>
@@ -174,7 +177,6 @@ export default class MainMenuBlade extends React.Component {
                 {(this.props.recentProjects || []).map(_recentProject)}
 
                 <section className="main-menu__line">
-                    {/*<MainMenuButton id="main-menu__button_resources-page" onClick={this._resolveSetBladePage("resources", ResourcesBlade, "caption.resourceblade")}>*/}
                     <MainMenuButton  blade="#blade1" onClick={this._resolveSetBladePage("recent-projects")} >
                         <FormattedHTMLMessage id="Show more..."/>
                     </MainMenuButton>
@@ -195,9 +197,10 @@ export default class MainMenuBlade extends React.Component {
 
         </div>
     }
+
+    static contextTypes = {
+        bladeContainer: React.PropTypes.any
+    };
 }
-
-
-MainMenuBlade.contextTypes = {bladeContainer: React.PropTypes.any};
 
 

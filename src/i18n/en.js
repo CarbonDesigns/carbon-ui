@@ -520,5 +520,9 @@ export default
 
         "@requiredField": "This field is required",
 
+        "@textAutoWidth.Fit": "Fit",
+        "@textAutoWidth.Wrap": "Wrap",
+        "@textAutoWidth.Grow": "Grow",
+
         "": "", //
     };

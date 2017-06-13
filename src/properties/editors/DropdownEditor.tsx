@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDom from "react-dom";
 import cx from 'classnames';
 import bem from '../../utils/commonUtils';
+import {CarbonLabel} from "CarbonFlux";
 
 import EditorComponent, { IEditorProps, IEditorState } from "./EditorComponent";
 import FlyoutButton from '../../shared/FlyoutButton';
@@ -116,7 +117,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
                 : validValue;
 
             return [
-                <b className="prop__v"><FormattedMessage id={caption} defaultMessage={caption}/></b>,
+                <b className="prop__v"><CarbonLabel id={caption}/></b>,
                 this._renderIcon(selectedItem)
             ];
         }
@@ -143,7 +144,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
                             onClick={((item) => ((ev) => this._onOptionSelected(item)))(item)}
                             data-name={item.name}
                         >
-                            {item.content ? item.content : <FormattedMessage tagName="b" id={item.name} defaultMessage={item.name}/>}
+                            {item.content ? item.content : <b key="name"><CarbonLabel id={item.name}/></b>}
                             {this._renderIcon(item)}
                         </section>
                     })}

@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl";
 import { Component } from "../../CarbonFlux";
 import DropDown, { IDropdownProps } from "../Dropdown";
 import cx from 'classnames';
-import bem from '../../utils/commonUtils';
+import bem, { IHasMods } from '../../utils/commonUtils';
 import Immutable from "immutable";
 
 interface IGuiInlineLabelProps extends IReactElementProps {
@@ -319,8 +319,14 @@ interface IGuiButtonProps extends IReactElementProps {
     onClick: (e?) => void;
 }
 export class GuiButton extends Component<IGuiButtonProps, void>{
+    private onClick = e => {
+        if (!this.props.disabled && this.props.onClick) {
+            this.props.onClick(e);
+        }
+    };
+
     render() {
-        var { className, icon, caption, defaultMessage, bold, mods, disabled, progressPercents, progressColor, ...rest } = this.props;
+        var { className, icon, caption, defaultMessage, bold, mods, disabled, progressPercents, progressColor, onClick, ...rest } = this.props;
 
         var cn = bem('gui-btn', null, mods, className);
         if (disabled)
@@ -349,7 +355,7 @@ export class GuiButton extends Component<IGuiButtonProps, void>{
             var percentString = Math.max(100, progressPercents).toFixed(2);
             progressbar = <div className="gui-btn__progressbar" style={{ backgroundColor: progressColor, width: percentString + '%' }}></div>
         }
-        return <div {...rest} className={cn}>{progressbar}{content || children}</div>
+        return <div {...rest} onClick={this.onClick} className={cn}>{progressbar}{content || children}</div>
     }
 }
 
@@ -421,6 +427,7 @@ interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputEleme
     defaultMessage?: string;
     mods?: any;
     suffix?: any;
+    selectOnFocus?: boolean;
 }
 
 export class GuiInput extends Component<IGuiInputProps, void>{
@@ -428,8 +435,14 @@ export class GuiInput extends Component<IGuiInputProps, void>{
         input: HTMLInputElement;
     }
 
+    focus() {
+        this.refs.input.focus();
+    }
+
     selectOnFocus = (e) => {
-        e.target.select();
+        if (this.props.selectOnFocus) {
+            e.target.select();
+        }
     }
 
     getValue() {
@@ -438,7 +451,7 @@ export class GuiInput extends Component<IGuiInputProps, void>{
 
     render() {
         // todo - borrow from edit input
-        var { className, label, caption, defaultMessage, mods, suffix, ...rest } = this.props;
+        var { className, label, caption, defaultMessage, mods, suffix, selectOnFocus, ...rest } = this.props;
         var cn = bem("gui-input", null, mods, className);
         var renderedLabel = null;
 
@@ -463,25 +476,28 @@ export class GuiInput extends Component<IGuiInputProps, void>{
     }
 }
 
-interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAreaElement> {
+interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAreaElement>, IHasMods<"resize-v"> {
     label?: any;
     caption?: string;
     defaultMessage?: string;
-    mods?: any;
     suffix?: any;
 }
 
-export class GuiTextArea extends Component<IGuiTextAreaProps, void>{
+export class GuiTextArea extends Component<IGuiTextAreaProps, void> {
     refs: {
         input: HTMLTextAreaElement;
     }
 
-    selectOnFocus = (e) => {
-        e.target.select();
+    focus() {
+        this.refs.input.focus();
     }
 
     getValue() {
         return this.refs.input.value;
+    }
+
+    private selectOnFocus = (e) => {
+        e.target.select();
     }
 
     render() {
@@ -554,6 +570,10 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
         this.state = {
             fieldState: new FieldState()
         }
+    }
+
+    focus() {
+        this.refs.input.focus()
     }
 
     getValue(){
@@ -652,8 +672,15 @@ export class GuiRequiredInput extends GuiValidatedInput {
         return state.set("status", "notReady");
     }
 
-    render() {
-        return <GuiValidatedInput ref="input" {...this.props} onValidate={this.validateField}/>
+    validate(force?: boolean): boolean{
+        var value = this.refs.input.getValue();
+        var newState = this.validateField(value, this.state.fieldState, force);
+        if (newState){
+            this.setState({fieldState: newState});
+            var status = newState.get("status");
+            return status === "ok" || status === "notReady";
+        }
+        return true;
     }
 }
 

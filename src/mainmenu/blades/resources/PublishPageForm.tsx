@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import { IFieldState, GuiValidatedInput, GuiTextArea, GuiButton, GuiRequiredInput, ValidationTrigger } from "../../../shared/ui/GuiComponents";
 import { Component, dispatchAction } from "../../../CarbonFlux";
-import { backend, IPage, app } from "carbon-core";
+import { backend, IPage, app, ISharedPageSetup, PublishScope } from "carbon-core";
 import { PublishAction } from "./PublishActions";
 import { MarkupLine } from "../../../shared/ui/Markup";
 import electronEndpoint from "electronEndpoint";
@@ -11,10 +11,14 @@ import TabContainer, { TabArea, TabPage } from "../../../shared/TabContainer";
 interface IPublishPageFormProps {
     page: IPage;
     coverUrl: string;
+    defaultSetup: ISharedPageSetup;
 }
 interface IPublishPageFormState {
+    name: string;
     validatedName: string;
-    isPublic: boolean;
+    description: string;
+    tags: string;
+    scope: PublishScope;
     confirm: boolean;
     publishStep: string;
 }
@@ -25,14 +29,29 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         tags: GuiRequiredInput
     }
 
-    constructor(props) {
+    constructor(props: IPublishPageFormProps) {
         super(props);
 
         this.state = {
             validatedName: "",
-            isPublic: true,
+            scope: props.defaultSetup.scope,
+            name: props.defaultSetup.name,
+            description: props.defaultSetup.description,
+            tags: props.defaultSetup.tags,
             confirm: false,
             publishStep: "1"
+        }
+    }
+
+    componentWillReceiveProps(nextProps: IPublishPageFormProps) {
+        if (nextProps.defaultSetup !== this.props.defaultSetup) {
+            this.setState({
+                scope: nextProps.defaultSetup.scope,
+                name: nextProps.defaultSetup.name,
+                description: nextProps.defaultSetup.description,
+                tags: nextProps.defaultSetup.tags,
+                confirm: !!nextProps.defaultSetup.name
+            });
         }
     }
 
@@ -58,13 +77,19 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                     this.refs.name.setErrorLabel(action.response.errors.name);
                 }
                 break;
+            case "Publish_PrivacyChanged":
+                this.refs.name.validate();
+                break;
+            case "Publish_CoverSelected":
+                this.refs.name.focus();
+                break;
         }
     }
 
     private validateName = (name: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
         if (name) {
             if (name !== this.state.validatedName && state.get("status") !== "checking") {
-                backend.shareProxy.validatePageName({ name, isPublic: this.state.isPublic })
+                backend.shareProxy.validatePageName({ name, scope: this.state.scope })
                     .then(response => {
                         dispatchAction({ type: "Publish_NameValidation", response });
                         this.setState({ validatedName: name, publishStep: "1" });
@@ -83,13 +108,24 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         return state.set("status", "notReady");
     }
 
-    private togglePrivacy = () => {
-        this.setState({ isPublic: !this.state.isPublic, publishStep: "1" });
+    private onNameChanged = (e) => {
+        this.setState({name: e.target.value, validatedName: ""});
+    }
+    private onDescriptionChanged = (e) => {
+        this.setState({description: e.target.value});
+    }
+    private onTagsChanged = (e) => {
+        this.setState({tags: e.target.value});
+    }
+    private onPrivacyChanged = () => {
+        let scope = this.state.scope === PublishScope.Company ? PublishScope.Public : PublishScope.Company;
+        this.setState({ scope, publishStep: "1", validatedName: "" });
+        dispatchAction({type: "Publish_PrivacyChanged", newValue: scope});
     }
 
     private onPublishButtonClick = () => {
         if (this.state.confirm) {
-            this.setState({publishStep: "2"});
+            this.setState({ publishStep: "2" });
         }
         else {
             this.publishPage();
@@ -97,11 +133,12 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
     }
 
     private onConfirmationCancelled = () => {
-        this.setState({publishStep: "1"});
+        this.setState({ publishStep: "1" });
     }
 
     private publishPage = () => {
         let ok = this.refs.name.validate(true);
+        ok = this.refs.tags.validate(true) || ok;
         if (!ok) {
             return;
         }
@@ -112,12 +149,16 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                 name: this.refs.name.getValue(),
                 description: this.refs.description.getValue(),
                 tags: this.refs.tags.getValue(),
-                isPublic: this.state.isPublic,
+                scope: this.state.scope,
                 pageData: JSON.stringify(data),
-                previewPicture: this.props.coverUrl
+                coverUrl: this.props.coverUrl
             }))
-            .then((result) => {
-                dispatchAction({type: "Publish_Published", response: result});
+            .then(response => {
+                if (response.ok === true) {
+                    this.props.page.setProps({ galleryId: response.result.galleryId });
+                }
+
+                dispatchAction({ type: "Publish_Published", response: response });
             });
     };
 
@@ -145,38 +186,48 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         }
 
         return <TabContainer currentTabId={this.state.publishStep} className="publish__submit">
-                <TabArea className="gui-pages">
-                    <TabPage className="gui-page" tabId="1">
-                        <MarkupLine>
-                            <GuiButton mods="submit" onClick={this.onPublishButtonClick} caption="btn.publish" icon={true} />
-                        </MarkupLine>
-                    </TabPage>
-                    <TabPage className="gui-page" tabId="2">
-                        <MarkupLine>
-                            <FormattedMessage id="@publish.confirm" tagName="p"/>
-                        </MarkupLine>
-                        <MarkupLine>
-                            <GuiButton mods="submit" onClick={this.publishPage} caption="@update" icon={true} />
-                            <GuiButton mods="hover-white" onClick={this.onConfirmationCancelled} caption="@cancel" icon={true} />
-                        </MarkupLine>
-                    </TabPage>
-                </TabArea>
-            </TabContainer>;
+            <TabArea className="gui-pages">
+                <TabPage className="gui-page" tabId="1">
+                    <MarkupLine>
+                        <GuiButton mods="submit" onClick={this.onPublishButtonClick} caption="btn.publish" icon={true} disabled={!this.props.page} />
+                    </MarkupLine>
+                </TabPage>
+                <TabPage className="gui-page" tabId="2">
+                    <MarkupLine>
+                        <FormattedMessage id="@publish.confirm" tagName="p" />
+                    </MarkupLine>
+                    <MarkupLine>
+                        <GuiButton mods="submit" onClick={this.publishPage} caption="@update" icon={true} />
+                        <GuiButton mods="hover-white" onClick={this.onConfirmationCancelled} caption="@cancel" icon={true} />
+                    </MarkupLine>
+                </TabPage>
+            </TabArea>
+        </TabContainer>;
     }
 
     render() {
         return <div>
             <MarkupLine mods="space">
-                <GuiValidatedInput ref="name" caption="@publish.name" placeholder="Give it some cool name"
+                <GuiValidatedInput ref="name" caption="@publish.name" placeholder={this.formatLabel("@publish.nameHint")}
+                    value={this.state.name} onChange={this.onNameChanged}
                     onValidate={this.validateName}
+                    disabled={!this.props.page}
+                    selectOnFocus={true}
                     trigger={ValidationTrigger.blur} />
             </MarkupLine>
 
             <MarkupLine>
-                <GuiTextArea ref="description" caption="@publish.description" placeholder="What inspired you?" />
+                <GuiTextArea ref="description" caption="@publish.description"
+                    mods="resize-v"
+                    value={this.state.description} onChange={this.onDescriptionChanged}
+                    disabled={!this.props.page}
+                    placeholder={this.formatLabel("@publish.descriptionHint")} />
             </MarkupLine>
             <MarkupLine>
-                <GuiRequiredInput ref="tags" caption="@tags" placeholder="buttons, ios, flat, etc" />
+                <GuiRequiredInput ref="tags" caption="@tags"
+                    value={this.state.tags} onChange={this.onTagsChanged}
+                    disabled={!this.props.page}
+                    placeholder="buttons, ios, flat, etc" />
             </MarkupLine>
 
             <MarkupLine>
@@ -186,13 +237,13 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                     </p>
 
                     <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={this.state.isPublic} onChange={this.togglePrivacy} data-option="activeArtboard" />
+                        <input type="radio" checked={this.state.scope === PublishScope.Public} onChange={this.onPrivacyChanged} disabled={!this.props.page} />
                         <i />
                         <span><FormattedMessage id="@publish.public" /></span>
                     </label>
 
                     <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={!this.state.isPublic} onChange={this.togglePrivacy} data-option="activePage" />
+                        <input type="radio" checked={this.state.scope === PublishScope.Company} onChange={this.onPrivacyChanged} disabled={!this.props.page}/>
                         <i />
                         <FormattedMessage id="@publish.private" />
                     </label>

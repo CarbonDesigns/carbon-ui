@@ -330,7 +330,9 @@ export default
         "publishpage.caption": "Publish current page", //
         "@publish.choosePage": "Choose the page to publish",
         "@publish.name": "Symbol kit name",
+        "@publish.nameHint": "Give it a memorable name",
         "@publish.description": "Description",
+        "@publish.descriptionHint": "What inspired you?",
         "@publish.private": "Share within my account",
         "@publish.public": "Share with everyone",
         "@publish.privacy": "Privacy",

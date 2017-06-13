@@ -1,7 +1,7 @@
 import React from "react";
 import BladePage from "../BladePage";
-import { app, backend, IPage, Rect, Workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point } from "carbon-core";
-import { Component } from "../../../CarbonFlux";
+import { app, backend, IPage, Rect, Workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, PublishScope } from "carbon-core";
+import { Component, dispatchAction } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
 import { Markup, MarkupLine } from "../../../shared/ui/Markup";
@@ -26,14 +26,18 @@ interface IPublishBladeState {
     coverUrl?: string;
     tiles?: ITile[];
     publishStep: string;
+    defaultSetup: ISharedPageSetup;
 }
+
+const EmptySetup: ISharedPageSetup = { name: "", description: "", tags: "", scope: PublishScope.Public, coverUrl: "" };
 
 export default class PublishBlade extends Component<void, IPublishBladeState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            publishStep: "1"
+            publishStep: "1",
+            defaultSetup: EmptySetup
         };
     }
 
@@ -44,7 +48,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         switch (action.type) {
             case "Publish_Published":
                 if (action.response.ok === true) {
-                    this.setState({publishStep: "2"});
+                    this.setState({ publishStep: "2" });
                 }
                 break;
         }
@@ -59,13 +63,31 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     }
 
     private pageSelected = (page: IPage) => {
-        var tiles = this.createTiles(page);
-        tiles.sort((a, b) => b.w * b.h - a.w * a.h);
+        let promise: Promise<ISharedPageSetup | null>;
+        if (page.props.galleryId) {
+            promise = backend.shareProxy.getPageSetup(page.props.galleryId);
+        }
+        else {
+            promise = Promise.resolve(null);
+        }
 
-        let tiler = new Tiler(BoardSize, BoardSize);
-        tiles = tiler.run(tiles);
+        promise.then(setup => {
+            this.setState({ page });
 
-        this.renderTiles(page, tiles);
+            if (!setup) {
+                var tiles = this.createTiles(page);
+                tiles.sort((a, b) => b.w * b.h - a.w * a.h);
+
+                let tiler = new Tiler(BoardSize, BoardSize);
+                tiles = tiler.run(tiles);
+
+                this.renderTiles(page, tiles);
+                this.setState({ defaultSetup: EmptySetup });
+            }
+            else {
+                this.setState({ defaultSetup: setup, coverUrl: setup.coverUrl });
+            }
+        });
     }
 
     private randomizePreview = () => {
@@ -111,7 +133,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             group.add(symbol);
         }
 
-        this.setState({ page: page, coverUrl: this.renderPreview(group), tiles });
+        this.setState({ coverUrl: this.renderPreview(group), tiles });
     }
 
     private createTiles(page: IPage): ITile[] {
@@ -174,14 +196,27 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     private imageEditCompleted = (res: EditImageResult) => {
         this.context.bladeContainer.close(2);
         if (res) {
-            if (res.type === "element") {
-                this.setState({ coverUrl: this.renderPreview(res.element) });
+            let coverUrl;
+            switch (res.type) {
+                case "dataUrl":
+                    coverUrl = res.dataUrl;
+                    break;
+                case "element":
+                    coverUrl = this.renderPreview(res.element);
+                    break;
+                case "url":
+                    coverUrl = res.url;
+                    break;
+                case "none":
+                    coverUrl = null;
+                    break;
+                default:
+                    assertNever(res);
+                    break;
             }
-            else if (res.type === "dataUrl") {
-                this.setState({ coverUrl: res.dataUrl });
-            }
-            else if (res.type === "url") {
-                this.setState({ coverUrl: res.url });
+            if (coverUrl) {
+                this.setState({coverUrl});
+                dispatchAction({type: "Publish_CoverSelected", coverUrl});
             }
         }
     }
@@ -217,25 +252,27 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                                 <GuiButton
                                     mods="hover-white"
                                     icon="refresh"
+                                    disabled={!this.state.page}
                                     onClick={this.randomizePreview}
                                 />
                                 <GuiButton
                                     mods="hover-success"
                                     icon="edit"
+                                    disabled={!this.state.page}
                                     onClick={this.openImageEditor}
                                 />
                             </GuiButtonStack>
                         </MarkupLine>
 
-                        <PublishPageForm page={this.state.page} coverUrl={this.state.coverUrl} />
+                        <PublishPageForm page={this.state.page} coverUrl={this.state.coverUrl} defaultSetup={this.state.defaultSetup} />
                     </TabPage>
                     <TabPage className="gui-page" tabId="2">
-                        <MarkupLine><FormattedMessage id="@publish.done" tagName="p"/></MarkupLine>
+                        <MarkupLine><FormattedMessage id="@publish.done" tagName="p" /></MarkupLine>
                         <MarkupLine className="publish__avatar">
-                            <figure className="publish__avatar-image" style={{ backgroundImage: "url('" + this.state.coverUrl + "')" }}/>
+                            <figure className="publish__avatar-image" style={{ backgroundImage: "url('" + this.state.coverUrl + "')" }} />
                         </MarkupLine>
                         <MarkupLine>
-                            <GuiButton caption="@close" mods="hover-white" onClick={this.close}/>
+                            <GuiButton caption="@close" mods="hover-white" onClick={this.close} />
                         </MarkupLine>
                     </TabPage>
                 </TabArea>

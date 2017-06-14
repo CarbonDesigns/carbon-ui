@@ -345,6 +345,7 @@ export default
         "@imageEdit.makeSnapshot": "Make snapshot",
         "@imageEdit.pasteUrl": "paste an image URL",
         "@imageEdit.uploadImage": "Upload a new image",
+        "@imageEdit.urlError": "Could not download the image",
 
         "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //

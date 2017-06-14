@@ -48,17 +48,13 @@ export default class CropEditor extends Component<ICropEditorProps, ICropEditorS
         };
     }
 
-    _easing(pos: number) {
-        return pos * (this._maxZoom - this._minZoom) + this._minZoom
-    }
-
     componentDidMount() {
         super.componentDidMount();
 
         this._context = this.initCanvas(this.refs.canvas);
-        //this._context = new Context(this.refs.canvas);
 
         var image = new Image();
+        image.crossOrigin = "Anonymous";
         image.onload = () => {
             this._sourceRect = new Rect(0, 0, image.width, image.height);
             this._targetRect = this._sourceRect.fit(new Rect(0, 0, this.refs.canvas.width/this.props.dpr, this.refs.canvas.height/this.props.dpr));
@@ -73,8 +69,12 @@ export default class CropEditor extends Component<ICropEditorProps, ICropEditorS
         return this.refs.canvas.toDataURL();
     }
 
+    private easing(pos: number) {
+        return pos * (this._maxZoom - this._minZoom) + this._minZoom
+    }
+
     private draw = () => {
-        var zoom = this._easing(this.state.sliderPos);
+        var zoom = this.easing(this.state.sliderPos);
 
         this._context.save();
         this._context.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
@@ -103,7 +103,7 @@ export default class CropEditor extends Component<ICropEditorProps, ICropEditorS
         return context;
     }
 
-    _onMouseDown = (ev) => {
+    private onMouseDown = (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
 
@@ -111,17 +111,17 @@ export default class CropEditor extends Component<ICropEditorProps, ICropEditorS
         this._lastY = ev.clientY;
 
         this._dragging = true;
-        document.body.addEventListener("mousemove", this._onDrag);
-        document.body.addEventListener("mouseup", this._onMouseUp);
+        document.body.addEventListener("mousemove", this.onDrag);
+        document.body.addEventListener("mouseup", this.onMouseUp);
     };
 
-    _onMouseUp = () => {
+    private onMouseUp = () => {
         this._dragging = false;
-        document.body.removeEventListener("mousemove", this._onDrag);
-        document.body.removeEventListener("mouseup", this._onMouseUp);
+        document.body.removeEventListener("mousemove", this.onDrag);
+        document.body.removeEventListener("mouseup", this.onMouseUp);
     };
 
-    _onDrag = (ev) => {
+    private onDrag = (ev) => {
         if (this._dragging) {
             this._tx += ev.clientX - this._lastX;
             this._ty += ev.clientY - this._lastY;
@@ -133,12 +133,12 @@ export default class CropEditor extends Component<ICropEditorProps, ICropEditorS
         }
     };
 
-    updateSliderPosition = (pos: number) => {
-        this.setState({ sliderPos: pos, zoom: this._easing(pos) });
+    private updateSliderPosition = (pos: number) => {
+        this.setState({ sliderPos: pos, zoom: this.easing(pos) });
         requestAnimationFrame(this.draw);
     }
 
-    _onWheel = (ev) => {
+    private onWheel = (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
         //from http://stackoverflow.com/questions/34790949/react-js-onwheel-bubbling-stoppropagation-not-working
@@ -164,11 +164,11 @@ export default class CropEditor extends Component<ICropEditorProps, ICropEditorS
 
     render() {
         var image = this.props.image;
-        var zoom = this._easing(this.state.sliderPos);
+        var zoom = this.easing(this.state.sliderPos);
 
         return <div className={b('crop-editor')} ref="box"
-            onWheel={this._onWheel}
-            onMouseDown={this._onMouseDown}>
+            onWheel={this.onWheel}
+            onMouseDown={this.onMouseDown}>
             <div className={b('crop-area')}>
                 <canvas ref="canvas"></canvas>
             </div>

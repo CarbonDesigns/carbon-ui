@@ -49,6 +49,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             case "Publish_Published":
                 if (action.response.ok === true) {
                     this.setState({ publishStep: "2" });
+                    this.state.page.setProps({ name: action.response.result.name });
                 }
                 break;
         }
@@ -182,7 +183,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     }
 
     private openImageEditor = (ev) => {
-        this.context.bladeContainer.addChildBlade(`blade_edit-publish-image`, EditImageBlade, this.formatLabel("@caption.editCover"),
+        this.context.bladeContainer.addChildBlade(`blade_edit-publish-image`, EditImageBlade, "@caption.editCover",
             {
                 page: this.state.page,
                 onComplete: this.imageEditCompleted,
@@ -215,8 +216,8 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                     break;
             }
             if (coverUrl) {
-                this.setState({coverUrl});
-                dispatchAction({type: "Publish_CoverSelected", coverUrl});
+                this.setState({ coverUrl });
+                dispatchAction({ type: "Publish_CoverSelected", coverUrl });
             }
         }
     }

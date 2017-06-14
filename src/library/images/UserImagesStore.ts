@@ -1,4 +1,4 @@
-import {app, FileProxy, Image} from "carbon-core";
+import { app, Image, backend } from "carbon-core";
 import {handles, CarbonStore, dispatch} from "../../CarbonFlux";
 import ImagesActions from "./ImagesActions";
 import Toolbox from "../Toolbox";
@@ -9,7 +9,7 @@ class UserImagesStore extends CarbonStore<any>{
     }
 
     getImages(){
-        FileProxy.images(app.companyId())
+        backend.fileProxy.images(app.companyId())
             .then(data => dispatch(ImagesActions.userImagesLoaded(data.images)));
     }
 

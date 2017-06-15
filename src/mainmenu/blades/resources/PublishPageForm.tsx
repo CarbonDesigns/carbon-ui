@@ -144,7 +144,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         }
 
         // TODO: show progress bar here
-        this.props.page.export()
+        app.exportPage(this.props.page)
             .then(data => backend.shareProxy.publishPage({
                 name: this.refs.name.getValue(),
                 description: this.refs.description.getValue(),
@@ -164,7 +164,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
 
     private saveToDisk() {
         electronEndpoint.saveResource(() => {
-            return app.activePage.export().then(data => {
+            return app.exportPage(app.activePage).then(data => {
                 return {
                     name: this.refs.name.getValue(),
                     data: data,

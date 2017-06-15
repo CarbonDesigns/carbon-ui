@@ -6,7 +6,7 @@ import bem from '../utils/commonUtils';
 
 interface ITabContainerProps extends IReactElementProps{
     currentTabId?: string;
-    onTabChanged?: (e: {tabId: string, oldTabId: string}) => void;
+    onTabChanged?: (tabId: string, oldTabId?: string) => void;
     type?: string;
     defaultTabId?: string;
 }
@@ -36,7 +36,7 @@ export default class TabContainer extends Component<ITabContainerProps, ITabCont
         }
         if (this.props.currentTabId) {
             //controlled
-            this.props.onTabChanged && this.props.onTabChanged({ tabId: newIndex, oldTabId: this.state.tabId });
+            this.props.onTabChanged && this.props.onTabChanged(newIndex, this.state.tabId);
         }
         else {
             //uncontrolled

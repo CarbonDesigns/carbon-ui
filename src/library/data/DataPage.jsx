@@ -30,7 +30,7 @@ export default class DataPanel extends Component {
         var builtInConfig = app.dataManager.getBuiltInProvider().getConfig();
 
         return <div {...this.props} id="data_page" className="data">
-            <TabContainer className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={s => dispatch(LibraryActions.changeTab("data", s.tabId))}>
+            <TabContainer className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("data", tabId))}>
                 <TabTabs
                     items={[
                         <i className="ico--library"/>,

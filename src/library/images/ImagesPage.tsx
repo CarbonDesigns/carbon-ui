@@ -26,7 +26,7 @@ export default class ImagesPage extends Component<any, any> {
     }
 
     render(){
-        return <TabContainer id="images-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={s => dispatch(LibraryActions.changeTab("images", s.tabId))}>
+        return <TabContainer id="images-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("images", tabId))}>
             <TabTabs
                 items={[
                     <i className="ico--users"/>,

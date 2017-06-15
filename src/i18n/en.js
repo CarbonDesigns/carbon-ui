@@ -338,6 +338,9 @@ export default
         "@publish.privacy": "Privacy",
         "@publish.confirm": "The symbols with this name already exist",
         "@publish.done": "The symbols have been published to the gallery.",
+
+        "@import.header": "Import symbols",
+
         "@nameTaken": "This name is already taken",
 
         "@imageEdit.artboardSnapshot": "use a snapshot of an artboard",
@@ -351,8 +354,9 @@ export default
         "btn.publish": "Publish", //
         "btn.publishpage": "Publish my current page", //
         "sharepage.scope": "Is Public?", //
-        "data.loading": "Loading...", //
-        "list.empty": "No items found", //
+        "@sarch": "Search...",
+        "@loading": "Loading...", //
+        "@empty": "Nothing found", //
         "refresh.toolbox": "Refresh library", //
         "@add.more": "Add more...", //
         "@tilesize": "Tile size",

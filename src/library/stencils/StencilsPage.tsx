@@ -27,7 +27,7 @@ export default class StencilsPage extends Component<any, any> {
     }
 
     render(){
-        return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={s => dispatch(LibraryActions.changeTab("stencils", s.tabId))}>
+        return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("stencils", tabId))}>
             <TabTabs
                 items={[
                     <i className="ico--library"/>,

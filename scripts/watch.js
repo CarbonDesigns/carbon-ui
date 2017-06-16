@@ -15,7 +15,7 @@ function watch(options) {
     new WebpackDevServer(compiler, devServer).listen(devServer.port, devServer.host,
         function (err) {
             if (err) return cb(err);
-            open(`http://${devServer.host}:${devServer.port}/app?serverless&clearStorage`);
+            open(`http://${devServer.host}:${devServer.port}/app?serverless&cls`);
         });
 }
 

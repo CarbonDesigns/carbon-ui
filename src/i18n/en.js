@@ -482,6 +482,11 @@ export default
         "@textAutoWidth.Wrap": "Wrap",
         "@textAutoWidth.Grow": "Grow",
 
+        "@arrange.behavior": "Behavior",
+
+        "@verticalStack": "Vertical stack",
+        "@horizontalStack": "Horizontal stack",
+        "@group": "Group",
 
         "": "", //
     };

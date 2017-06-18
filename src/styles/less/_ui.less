@@ -89,6 +89,7 @@
 
             .rel;
             .h100;
+            .w100;
             display: inline-flex;
             align-items: center;
             flex-wrap: nowrap;
@@ -102,9 +103,24 @@
             //.middler();
             //& > * { .inbl_middle; }
             //.inbl;
-            width: 100%;
             .nowrap;
             .tleft;
+
+            .point;
+            padding: .5em .5em;
+            margin-bottom: 1px;
+
+            .wbg(3);
+
+            &:hover {
+                .wbg(6);
+            }
+
+            &_selected {
+                &, &:hover {
+                    .wbg(10);
+                }
+            }
 
 
             & > .ico-triangle {
@@ -129,7 +145,9 @@
         .drop__item {
             .tcenter;
             padding: 0 @line_air;
-            .middler();
+            display: flex;
+            align-items: center;
+            flex-direction: row;
             .vtop;
             .rel;
             height: @size2;
@@ -269,12 +287,13 @@
         max-height: 0;
 
 
-        &_in-flyout {
+        &&_in-flyout {
             .box-shadow(0 1px 5px @shadow_color1);
         }
 
-        &_in-flyout,
-        &_open,
+        //making more specific since max-height depends on the order of selectors
+        &&_in-flyout,
+        &&_open,
         .drop_open &  {
             .transition(~"max-height 0.4s @{cubic_bezier1} 0s");
             max-height: 1000px;
@@ -1258,7 +1277,12 @@
 
 
     &__input-ico {
-        .xyar(12px, 49%);
+        //TODO: icons in labels are aligned relative to label
+        //.xyar(12px, 49%);
+        .abs;
+        right: 12px;
+        bottom: 12px;
+
         margin-top: @s / -2;
         .op0;
         transform : translateY(-14px);
@@ -1306,6 +1330,9 @@
         }
     }
 
+    &_resize-v textarea{
+        resize: vertical;
+    }
 }
 
 

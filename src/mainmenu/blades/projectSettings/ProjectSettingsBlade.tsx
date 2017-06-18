@@ -1,20 +1,20 @@
 import React from "react";
-import {app, backend, ShareProxy, PageExporter} from "carbon-core";
+import {app, backend} from "carbon-core";
 import {Component} from "../../../CarbonFlux";
 import {FormattedMessage} from "react-intl"
 import {GuiButton, GuiButtonStack, GuiInput, GuiTextArea} from "../../../shared/ui/GuiComponents";
 import {FormHeading, FormLine, FormGroup}                 from "../../../shared/FormComponents"
 import {MarkupLine}  from "../../../shared/ui/Markup";
 import {BladeBody}  from "../BladePage";
-import EditAvatarBlade  from "./EditAvatarBlade";
+import EditImageBlade  from "../imageEdit/EditImageBlade";
 import Dropdown from "../../../shared/Dropdown";
 import bem from '../../../utils/commonUtils';
 
 var AVATAR_URL = '/target/res/avas/project-ava.jpg';
 
-export default class ProjectSettingsBlade extends Component {
-    constructor() {
-        super();
+export default class ProjectSettingsBlade extends Component<any, any> {
+    constructor(props) {
+        super(props);
         this.state = {
             projectName : "Test Carbo Project"
         }
@@ -54,88 +54,29 @@ export default class ProjectSettingsBlade extends Component {
     _openAvatarEditor = (ev) => {
         console.log('_openAvatarEditor', this.context.bladeContainer);
         // this.context.bladeContainer.close(1);
-        this.context.bladeContainer.addChildBlade(`blade_edit-project-avatar`, EditAvatarBlade, "Edit project avatar", {foo: 'bar'});
+        this.context.bladeContainer.addChildBlade(`blade_edit-project-avatar`, EditImageBlade, "Edit project avatar", {foo: 'bar'});
     };
 
     _clearAvatar = (ev) => {
         console.log('_clearAvatar', this.context.bladeContainer);
     };
 
-
-
     _renderSelected(ind) {
         return <p className={bem("publish", "pages-list-item", {selected: false})}>{ app.pages[ind].name() }</p>
     };
 
-
-
     _renderList() {
-
         return
-
     };
 
-
-
     render() {
-
-
         return <BladeBody>
 
-            <MarkupLine>
-                <div className="gui-input">
-                    <p className={"gui-input__label"}>
-                        <FormattedMessage id="translateme!" defaultMessage={"Выберите страницу для паблишинга:"} />
-                    </p>
-
-                    <Dropdown
-                        className="drop_down_no-padding"
-                        selectedItem={0}
-                        onSelect={console.log} //fixme !
-                        // renderSelected={this._renderSelected}
-                    >
-                        {app.pages.map((page, ind)=><p
-                                key={"page_id" + page.id()}
-                                className={bem("publish", "pages-list-item", { selected: (ind===0) })}>{page.name()}
-                            </p>
-
-                        )}
-                    </Dropdown>
-
-                </div>
-            </MarkupLine>
-
-            <MarkupLine className="project-settings__avatar">
-                <figure className="project-settings__avatar-image"
-                    style={{ backgroundImage: "url('" + AVATAR_URL + "')" }}
-                />
-                <GuiButtonStack className="project-settings__avatar-controls">
-                    <GuiButton
-                        mods="hover-success"
-                        // className="project-settings__avatar-edit-button"
-                        // defaultMessage="edit avatar"
-                        // caption="translate me"
-                        icon="edit"
-                        onClick={this._openAvatarEditor}
-                    />
-                    <GuiButton
-                        mods="hover-cancel"
-                        // className="project-settings__avatar-edit-button"
-                        // defaultMessage="edit avatar"
-                        // caption="translate me"
-                        icon="trash"
-                        onClick={this._clearAvatar}
-                    />
-                </GuiButtonStack>
-            </MarkupLine>
 
             <MarkupLine mods="space">
                 <GuiInput value={this.state.projectName} onChange={this._onChange} caption="Project name" defaultMessage="Project name"/>
             </MarkupLine>
 
-
-
-            { /*  fixme вот это меняйте.   */  }
             <MarkupLine>
                 <GuiTextArea value={this.state.projectName} onChange={this._onChange} caption="Resource description" defaultMessage="Resource description"/>
             </MarkupLine>
@@ -164,20 +105,15 @@ export default class ProjectSettingsBlade extends Component {
                 </div>
             </MarkupLine>
 
-
-
             <MarkupLine mods="space">
-                <GuiButton mods="submit" onClick={this._save} caption="btn.saveprojectsettings" defaultMessage="Save" icon={true} />
+                <GuiButton mods="submit" onClick={this._save} caption="@save" icon={true} />
             </MarkupLine>
         </BladeBody>
     }
+
+    static contextTypes = {
+        intl: React.PropTypes.object,
+        currentBladeId: React.PropTypes.number,
+        bladeContainer: React.PropTypes.any
+    }
 }
-
-// MainMenuBlade.contextTypes = {bladeContainer: React.PropTypes.any};
-
-
-
-ProjectSettingsBlade.contextTypes = {
-    currentBladeId: React.PropTypes.number,
-    bladeContainer: React.PropTypes.any
-};

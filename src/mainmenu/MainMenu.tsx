@@ -17,7 +17,11 @@ var State = Record({
     recentProjects: []
 });
 
-export default class MainMenu extends ComponentWithImmutableState {
+export default class MainMenu extends ComponentWithImmutableState<any, any> {
+    refs: {
+        bladeContainer: BladeContainer
+    }
+
     constructor(props) {
         super(props);
         this.state = {

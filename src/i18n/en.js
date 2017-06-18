@@ -52,6 +52,9 @@ export default
         "Recent stencils": "Recent symbols",
         "My stencils": "My symbols",
         "Find stencil (F3)...": "Find symbol (F3)...",
+        "@choosePage": "Select a page",
+        "@chooseArtboard": "Select an artboard",
+        "@noPagesWithSymbols": "No pages with symbols found",
 
         "Basic": "Basic", // group in library
         "Navigation": "Navigation", // group in library
@@ -293,8 +296,9 @@ export default
         "caption.sharebyemail": "Share project by email",
         "caption.resourceblade": "Resources",
         "caption.mirroringblade": "Device mirroring", //
-        "caption.publishpage": "Publish page",
+        "caption.publishpage": "Publish symbols",
         "caption.importpageblade": "Import page",
+        "@caption.editCover": "Edit cover",
 
         "resources.static": "Published by carbonium.io",
         "resources.my": "Published by me",
@@ -306,7 +310,7 @@ export default
         "btn.disableMirroring": "Disable",
         "menu.mirroring": "Mirroring",
         "menu.sharing": "Sharing link", //
-        "menu.resources": "Resources", //
+        "menu.publish": "Publish symbols", //
         "mirroringblade.helptext": "Enable mirroring to view all changes immediately on the remote device.",
         "mirroringblade.scancodehelp": "Scan QR code on any mobile device using your favorite QR code scanner app to view currently active artboard on the device.",
         "mirroring.urllabel": "Or copy URL manually", //
@@ -322,7 +326,28 @@ export default
         "@flow.header": "Flow: {name}", //
         "@prototype.header": "Prototype: {name}", //
         "@story.description": "Description", //
+
         "publishpage.caption": "Publish current page", //
+        "@publish.choosePage": "Choose the page to publish",
+        "@publish.name": "Symbol kit name",
+        "@publish.nameHint": "Give it a memorable name",
+        "@publish.description": "Description",
+        "@publish.descriptionHint": "What inspired you?",
+        "@publish.private": "Share within my account",
+        "@publish.public": "Share with everyone",
+        "@publish.privacy": "Privacy",
+        "@publish.confirm": "The symbols with this name already exist",
+        "@publish.done": "The symbols have been published to the gallery.",
+        "@nameTaken": "This name is already taken",
+
+        "@imageEdit.artboardSnapshot": "use a snapshot of an artboard",
+        "@imageEdit.pageSnapshot": "use a snapshot of a page",
+        "@imageEdit.makeSnapshot": "Make snapshot",
+        "@imageEdit.pasteUrl": "paste an image URL",
+        "@imageEdit.uploadImage": "Upload a new image",
+        "@imageEdit.urlError": "Could not download the image",
+
+        "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //
         "btn.publish": "Publish", //
         "btn.publishpage": "Publish my current page", //
@@ -332,6 +357,9 @@ export default
         "refresh.toolbox": "Refresh library", //
         "@add.more": "Add more...", //
         "@tilesize": "Tile size",
+        "@tilesize.small": "Small (1x1)",
+        "@tilesize.large": "Wide (1x2)",
+        "@tilesize.xlarge": "Large (2x2)",
         "@ascontent": "Insert as content",
         "@groupname": "Group name",
         "@selectedPoint": "Selected point",
@@ -417,6 +445,8 @@ export default
         "@flow": "Flow",
         "@prototype": "Prototype",
         "@cancel": "Cancel",
+        "@close": "Close",
+        "@update": "Update",
         "@story.create": "Create story",
         "@story.save": "Save story",
         "@menu.align": "Align",
@@ -432,6 +462,14 @@ export default
         "@distribute.horizontally": "Distribute horizontally",
         "@distribute.vertically": "Distribute vertically",
         "@storyselector.empty": "Select story for preview",
+        "@constraints.left": "Left",
+        "@constraints.right": "Right",
+        "@constraints.leftAndRight": "Left & Right",
+        "@constraints.top": "Top",
+        "@constraints.bottom": "Bottom",
+        "@constraints.topAndBottom": "Top & Bottom",
+        "@constraints.center": "Center",
+        "@constraints.scale": "Scale",
 
         "@account.joinMessage": "Join Carbonium Community!",
         "@account.loginMessage": "Welcome Back!",
@@ -482,6 +520,8 @@ export default
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",
         "@textAutoWidth.Grow": "Grow",
+        "@saveImage": "Save image",
+        "@changeImage": "Change image",
 
         "@arrange.behavior": "Behavior",
 
@@ -506,6 +546,12 @@ export default
         "@bring.forward": "Bring Forward",
         "@send.backward": "Send Backward",
         "@flatten": "Flatten",
+
+        "@requiredField": "This field is required",
+
+        "@textAutoWidth.Fit": "Fit",
+        "@textAutoWidth.Wrap": "Wrap",
+        "@textAutoWidth.Grow": "Grow",
 
         "": "", //
     };

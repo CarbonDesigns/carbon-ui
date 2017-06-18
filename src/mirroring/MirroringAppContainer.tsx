@@ -2,7 +2,7 @@ import React from "react";
 
 import MirroringWorkspace from './MirroringWorkspace';
 import AppLoaderComponent from '../AppLoaderComponent';
-import { app, backend, ShareProxy, params } from "carbon-core";
+import { app, backend, params } from "carbon-core";
 import { LoginRequiredError } from "../Constants";
 
 //import "./_preview.less";
@@ -16,7 +16,7 @@ export default class MirroringAppContainer extends AppLoaderComponent {
     componentDidMount(){
         if (this.props.params.code) {
             backend.ensureLoggedIn()
-                .then(() => ShareProxy.use(this.props.params.code))
+                .then(() => backend.shareProxy.use(this.props.params.code))
                 .then(x => this._navigate(x))
                 .catch((e) => {
                     if (e.message !== LoginRequiredError){

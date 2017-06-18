@@ -7,7 +7,7 @@ import {CarbonLabel} from "CarbonFlux";
 import EditorComponent, { IEditorProps, IEditorState } from "./EditorComponent";
 import FlyoutButton from '../../shared/FlyoutButton';
 import ScrollContainer from '../../shared/ScrollContainer';
-import { FormattedHTMLMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 export interface IDropdownEditorProps extends IEditorProps {
     onValueChanged?: (item: any) => void;
@@ -160,7 +160,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
         var classes = this.b(null, "selectbox", this.widthClass(this.props.className || "prop_width-1-1"));
 
         return <div className={classes} ref="prop">
-            <div className="prop__name"><FormattedHTMLMessage id={this.displayName()} /></div>
+            <div className="prop__name"><FormattedMessage id={this.displayName()} /></div>
             <FlyoutButton
                 className="prop__value"
                 renderContent={this._renderSelectedValue}

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDom from "react-dom";
 import Dropzone from "dropzone";
 
-import { app, backend, createUUID, FileProxy, IDisposable } from "carbon-core";
+import { app, backend, createUUID, IDisposable } from "carbon-core";
 import ImageList from "./ImageList";
 import {Component, listenTo, dispatch, handles} from "../../CarbonFlux";
 import ImagesActions from "./ImagesActions";

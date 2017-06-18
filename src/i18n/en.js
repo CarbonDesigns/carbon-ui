@@ -488,6 +488,7 @@ export default
         "@verticalStack": "Vertical stack",
         "@horizontalStack": "Horizontal stack",
         "@group": "Group",
+        "@ungroup": "Ungroup",
         "@grouping": "Grouping",
         "@group.vstack": "Vertical stack",
         "@group.hstack": "Horizontal stack",

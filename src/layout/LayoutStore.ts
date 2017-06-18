@@ -27,7 +27,8 @@ const PanelRecord = Record({
     fill: false,
     collapseDirection: undefined,
     fixed: undefined,
-    index: 0
+    index: 0,
+    version:undefined
 });
 
 const SplitterRecord = Record({
@@ -249,7 +250,7 @@ class AttachPanelMutator extends LayoutMutator {
     }
 
     mutatePanel(e) {
-        if (e.index == this._index) {
+        if (e.index === this._index) {
             var parent = this.parents[this.parents.length - 1];
 
             // detect children direction inside parent
@@ -561,6 +562,7 @@ export class LayoutStore extends CarbonStore<any> {
                     direction: layoutMetadata.direction,
                     panelName: layoutMetadata.panelName,
                     collapsed: layoutMetadata.collapsed,
+                    version: layoutMetadata.version,
                     collapseDirection: layoutMetadata.collapseDirection,
                     fixed: layoutMetadata.fixed,
                     fill: layoutMetadata.fill,

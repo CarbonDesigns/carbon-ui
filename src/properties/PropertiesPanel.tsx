@@ -67,16 +67,16 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
         }
 
         var content = null;
-        var prop_groups = this.state.groups;
-        if (prop_groups != null
-            && !Array.isArray(prop_groups)
-            && typeof prop_groups.map === 'function'
-            && typeof prop_groups.unshift === 'function'
+        var propGroups = this.state.groups;
+        if (propGroups
+            && !Array.isArray(propGroups)
+            && typeof propGroups.map === 'function'
+            && typeof propGroups.unshift === 'function'
         ) {
             //prop_groups = prop_groups.unshift(test);
             //fixme sometimes it's an object, other times an immutable
 
-            content = prop_groups.map(prop_group =>{
+            content = propGroups.map(prop_group =>{
                 if (prop_group.get("hidden")){
                     return null;
                 }

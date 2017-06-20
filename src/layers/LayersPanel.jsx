@@ -658,7 +658,7 @@ class LayersPanel extends Component {
 
         var ref = layer.refs.item;
         var el = ReactDOM.findDOMNode(ref);
-        this.refs['popup'].openForTarget(el, { layer: layer.props, layer_name: layer.props.name });
+        this.refs['popup'].openForTarget(el, { layer: layer.props, layer_name: layer.props.element.name() });
     };
 
     _cancelRenamingLayer = () => {

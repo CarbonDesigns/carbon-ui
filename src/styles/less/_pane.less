@@ -7,11 +7,19 @@
     &-list__item {
         .cursor_pointer;
         .bbox;
-        &:hover {
+        &:hover:not(.disabled) {
             .bgfade(10);
         }
 
         .rnd2;
+
+        &.disabled{
+            color: @color_inactive_text;
+
+            .pane-icon {
+                opacity: @inactive_icon_opacity;
+            }
+        }
     }
 
     &-label{

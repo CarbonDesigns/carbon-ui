@@ -121,7 +121,8 @@ export default
         "Label": "Label", //
         "Content": "Content", //
         "Text type": "Text type", //
-        "Font": "Font", //
+        "@font": "Font", //
+        "@symbol": "Symbol",
         "Default font": "Default font", //
         "Content font": "Content font", //
         "Typeface": "Typeface", //

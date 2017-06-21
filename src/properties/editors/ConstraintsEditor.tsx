@@ -1,22 +1,22 @@
 import React from 'react';
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent, { IEditorProps, IEditorState } from "./EditorComponent";
 import cx from 'classnames';
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
 import bem from '../../utils/commonUtils';
-import {Constraints} from "carbon-core";
+import { Constraints } from "carbon-core";
 import DropDownEditor from "./DropdownEditor";
 import Dropdown from "../../shared/Dropdown";
 import { HorizontalConstraint, VerticalConstraint, IConstraints } from "carbon-core";
 import GuiSelect from "../../shared/ui/GuiSelect";
 
-type HorizontalConstraintSelect  = new (props) => GuiSelect<HorizontalConstraint>;
+type HorizontalConstraintSelect = new (props) => GuiSelect<HorizontalConstraint>;
 type VerticalConstraintSelect = new (props) => GuiSelect<VerticalConstraint>;
 
 const HorizontalConstraintSelect = GuiSelect as HorizontalConstraintSelect;
 const VerticalConstraintSelect = GuiSelect as VerticalConstraintSelect;
 
-function horizontalLabel(c: HorizontalConstraint){
-    switch(c){
+function horizontalLabel(c: HorizontalConstraint) {
+    switch (c) {
         case HorizontalConstraint.Left:
             return "@constraints.left";
         case HorizontalConstraint.Right:
@@ -28,11 +28,12 @@ function horizontalLabel(c: HorizontalConstraint){
         case HorizontalConstraint.Scale:
             return "@constraints.scale";
     }
+
     assertNever(c);
 }
 
-function verticalLabel(c: VerticalConstraint){
-    switch(c){
+function verticalLabel(c: VerticalConstraint) {
+    switch (c) {
         case VerticalConstraint.Top:
             return "@constraints.top";
         case VerticalConstraint.Bottom:
@@ -51,7 +52,7 @@ function formatValue(val) {
     return val
 }
 
-interface IConstrainsEditorState extends IEditorState<any>{
+interface IConstrainsEditorState extends IEditorState<any> {
     dropdownHorizontal: number;
     dropdownVertical: number;
 }
@@ -61,7 +62,7 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
     constructor(props) {
         super(props);
 
-        this.state = {dropdownHorizontal:1, dropdownVertical:1};
+        this.state = { dropdownHorizontal: 1, dropdownVertical: 1 };
     }
 
     verticalToggle(v) {
@@ -73,9 +74,12 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
             var oldV = p.v;
             var newV;
 
-            if (v === VerticalConstraint.Center) {
+            if(oldV === VerticalConstraint.Scale) {
+                newV = v;
+            }
+            else if (v === VerticalConstraint.Center) {
                 if (oldV & VerticalConstraint.Center) {
-                    newV = 0;
+                    newV = VerticalConstraint.Scale;
                 } else {
                     newV = v;
                 }
@@ -102,9 +106,12 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
             var oldH = p.h;
             var newH;
 
-            if (h === HorizontalConstraint.Center) {
+            if (oldH === HorizontalConstraint.Scale) {
+                newH = h;
+            }
+            else if (h === HorizontalConstraint.Center) {
                 if (oldH & HorizontalConstraint.Center) {
-                    newH = 0;
+                    newH = HorizontalConstraint.Scale;
                 } else {
                     newH = h;
                 }
@@ -123,14 +130,14 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
         }
     }
 
-    _onChangeHorizontal = (c: HorizontalConstraint) =>{
+    _onChangeHorizontal = (c: HorizontalConstraint) => {
         //this.setState({dropdownHorizontal: optionIndex});
         var p = this.props.p.get("value");
         var newConstraint = Constraints.create(c, p.v)
         this.setValueByCommand(newConstraint);
     }
 
-    _onChangeVertical = (c: VerticalConstraint) =>{
+    _onChangeVertical = (c: VerticalConstraint) => {
         //this.setState({dropdownVertical: optionIndex});
         var p = this.props.p.get("value");
         var newConstraint = Constraints.create(p.h, c)
@@ -145,7 +152,7 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
 
         var c: IConstraints = this.props.p.get('value');
         var dropdownHorizontal = 4;
-        if(c.h === HorizontalConstraint.LeftRight) {
+        if (c.h === HorizontalConstraint.LeftRight) {
             dropdownHorizontal = 2;
         } else if (c.h === HorizontalConstraint.Left) {
             dropdownHorizontal = 0;
@@ -156,7 +163,7 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
         }
 
         var dropdownVertical = 4;
-        if(c.v === VerticalConstraint.TopBottom) {
+        if (c.v === VerticalConstraint.TopBottom) {
             dropdownVertical = 2;
         } else if (c.v === VerticalConstraint.Top) {
             dropdownVertical = 0;
@@ -168,7 +175,7 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
 
 
         return <div className={classes}>
-            <div className={this.b('name') }><FormattedMessage id={this.displayName()}/></div>
+            <div className={this.b('name')}><FormattedMessage id={this.displayName()} /></div>
             <div className={this.b('editor')}>
                 <div className="prop_constraints__wrapper">
                     <div className="prop_constraints__parent">
@@ -241,27 +248,27 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
                     <div className="prop_constraints__dropdowns">
                         <div className="prop_constraints__dropdown">
                             <div className="prop_constraints__dropdown-icon">
-                                <i className="ico--vertical-double-arrow"/>
+                                <i className="ico--vertical-double-arrow" />
                             </div>
                             <VerticalConstraintSelect
                                 mods="line"
                                 selectedItem={c.v}
                                 items={[VerticalConstraint.Top, VerticalConstraint.Bottom, VerticalConstraint.TopBottom, VerticalConstraint.Center, VerticalConstraint.Scale]}
-                                renderItem={item => <FormattedMessage id={verticalLabel(item)} tagName="p"/>}
+                                renderItem={item => <FormattedMessage id={verticalLabel(item)} tagName="p" />}
                                 onSelect={this._onChangeVertical}>
                             </VerticalConstraintSelect>
                         </div>
 
                         <div className="prop_constraints__dropdown">
                             <div className="prop_constraints__dropdown-icon">
-                                <i className="ico--horizontal-double-arrow"/>
+                                <i className="ico--horizontal-double-arrow" />
                             </div>
                             <HorizontalConstraintSelect
                                 mods="line"
                                 selectedItem={c.h}
                                 onSelect={this._onChangeHorizontal}
                                 items={[HorizontalConstraint.Left, HorizontalConstraint.Right, HorizontalConstraint.LeftRight, HorizontalConstraint.Center, HorizontalConstraint.Scale]}
-                                renderItem={item => <FormattedMessage id={horizontalLabel(item)} tagName="p"/>}>
+                                renderItem={item => <FormattedMessage id={horizontalLabel(item)} tagName="p" />}>
                             </HorizontalConstraintSelect>
                         </div>
                     </div>

@@ -73,7 +73,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
     onPageRemoved({ page }) {
         var palettes = this.state.palettes.slice();
         for (var i = palettes.length - 1; i >= 0; --i) {
-            if (palettes[i].pageId == page.id()) {
+            if (palettes[i].pageId === page.id()) {
                 palettes.splice(i, 1);
             }
         }
@@ -109,6 +109,20 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
         }
 
         this.setState({ palettes: palettes });
+    }
+
+    @handles(CarbonActions.resourceDeleted)
+    onPaletteDeleted({ resourceType, element }) {
+        if (resourceType !== ArtboardType.Palette) {
+            return;
+        }
+
+        var index = this.state.palettes.findIndex(p=>p.id === element.id());
+        if(index !== -1) {
+            let palettes = this.state.palettes.slice();
+            palettes.splice(index, 1);
+            this.setState({ palettes: palettes });
+        }
     }
 
     _buildPaletteForElement(element): IPalette {

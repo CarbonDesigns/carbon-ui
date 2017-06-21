@@ -18,10 +18,15 @@ var _render_mods = function (base, mods, glue='_') {
 
 var _render_full_classname = function (base, props) {
     var cn = base;
-    if (props.classMods != null)
+    if (props.classMods != null) {
         cn += ' ' + _render_mods(base, props.classMods);
-    if (props.className != null)
+    }
+    if (props.disabled) {
+        cn += ' disabled';
+    }
+    if (props.className != null) {
         cn += ' ' + props.className;
+    }
 
     return cn;
 };
@@ -39,7 +44,7 @@ var _get_icon = function (props) {
                 icon = <i className={base_icon_cn + " " + props.icon}/>;
         }
     }
-    return icon
+    return icon;
 };
 
 var _get_caption = function (props) {
@@ -55,18 +60,24 @@ var _get_caption = function (props) {
     return caption
 };
 
-interface IPanelButtonProps extends IReactElementProps{
+interface IPanelButtonProps extends IReactElementProps<HTMLButtonElement>{
     icon?: string;
     label?: string;
+    disabled?: boolean;
 }
 
-export class PaneButton extends React.Component<any, void>  {
+export class PaneButton extends React.Component<IPanelButtonProps, void>  {
+    private onClick = e => {
+        if (!this.props.disabled) {
+            this.props.onClick(e);
+        }
+    }
     render() {
         var cn = _render_full_classname("pane-button", this.props);
         var caption = _get_caption(this.props);
         var icon = _get_icon(this.props);
         return (
-            <div className={cn} onClick={this.props.onClick}>
+            <div className={cn} onClick={this.onClick}>
                 {icon}
                 {caption}
             </div>
@@ -75,13 +86,22 @@ export class PaneButton extends React.Component<any, void>  {
 }
 
 export class PaneListItem extends React.Component<any, void>  {
+    private onClick = e => {
+        if (!this.props.disabled) {
+            this.props.onClick(e);
+        }
+        else {
+            e.stopPropagation();
+        }
+    }
+
     render() {
         var cn = _render_full_classname("pane-list__item", this.props);
         var icon    = _get_icon(this.props);
         var caption = _get_caption(this.props);
 
         return (
-            <p className={cn} onClick={this.props.onClick}>
+            <p className={cn} onClick={this.onClick}>
                 {icon}
                 {caption}
             </p>

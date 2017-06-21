@@ -9,7 +9,7 @@ var idCounter = 0;
 interface IFlyoutButtonProps extends IReactElementProps{
     renderContent?:()=>ReactHTMLElement<any> | Element | React.ReactElement<any> | undefined | any;
     content?:any;
-    position?:any;
+    position?:{targetVertical?: "top" | "bottom", targetHorizontal?: "left" | "right"};
     showAction?:any;
     onOpened?:any;
     onClosed?:any;

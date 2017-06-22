@@ -512,11 +512,15 @@ export default
         "@idle.resume": "Resume",
 
         "@symbols": "Symbols",
+        "@palette": "Palette",
         "@symbols.create": "Create symbol",
         "@symbols.editMaster": "Edit symbol master",
         "@symbols.markAsText": "Mark as text",
         "@symbols.markAsBackground": "Mark as background",
         "@symbols.detach": "Detach instance",
+        "@resources.markAsPaletteItem": "Use background in swatches",
+        "@resources.removeFromPalette": "Remove from swatches",
+        "@resources.markAsIcon": "Mark as icon",
 
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",

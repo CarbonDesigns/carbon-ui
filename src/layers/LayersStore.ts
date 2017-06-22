@@ -128,12 +128,13 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
             || props.hasOwnProperty("visible")
             || props.hasOwnProperty("stroke")
             || props.hasOwnProperty("fill")
+            || props.hasOwnProperty("flags")
         ) {
             let layers = this.state.layers;
 
             this._visitLayers(layers, (layer) => {
                 if (layer.id === elementId) {
-                    if (props.hasOwnProperty("name")) { layer.name = props.name; }
+                    if (props.hasOwnProperty("name") || props.hasOwnProperty("flags")) { layer.name = layer.element.displayName(); }
                     if (props.hasOwnProperty("stroke")) { layer.borderColor = this._displayColor(props.stroke, 'black'); }
                     if (props.hasOwnProperty("fill")) { layer.backgroundColor = this._displayColor(props.fill, 'white'); }
                     if (props.hasOwnProperty("visible")) { layer.visible = props.visible; }

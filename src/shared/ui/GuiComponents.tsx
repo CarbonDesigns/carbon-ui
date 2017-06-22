@@ -582,11 +582,13 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
 
     validate(force?: boolean): boolean{
         var value = this.refs.input.getValue();
-        var newState = this.props.onValidate(value, this.state.fieldState, force);
-        if (newState){
-            this.setState({fieldState: newState});
-            var status = newState.get("status");
-            return status === "ok" || status === "notReady";
+        if (this.props.onValidate) {
+            var newState = this.props.onValidate(value, this.state.fieldState, force);
+            if (newState){
+                this.setState({fieldState: newState});
+                var status = newState.get("status");
+                return status === "ok" || status === "notReady";
+            }
         }
         return true;
     }

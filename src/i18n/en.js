@@ -348,6 +348,7 @@ export default
         "@imageEdit.makeSnapshot": "Make snapshot",
         "@imageEdit.pasteUrl": "paste an image URL",
         "@imageEdit.uploadImage": "Upload a new image",
+        "@imageEdit.urlError": "Could not download the image",
 
         "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //
@@ -422,6 +423,7 @@ export default
         "type.Y": "Clickspot",
         "type.B": "Box",
         "type.i": "Shadow",
+        "type.ig": "Container",
         "type.af": "Frame",
         "@frame": "Frame",
         "@artboardType": "Artboard type",
@@ -519,8 +521,35 @@ export default
         "@symbols.markAsBackground": "Mark as background",
         "@symbols.detach": "Detach instance",
 
+        "@textAutoWidth.Fit": "Fit",
+        "@textAutoWidth.Wrap": "Wrap",
+        "@textAutoWidth.Grow": "Grow",
         "@saveImage": "Save image",
         "@changeImage": "Change image",
+
+        "@arrange.behavior": "Behavior",
+
+        "@verticalStack": "Vertical stack",
+        "@horizontalStack": "Horizontal stack",
+        "@group": "Group",
+        "@ungroup": "Ungroup",
+        "@grouping": "Grouping",
+        "@group.vstack": "Vertical stack",
+        "@group.hstack": "Horizontal stack",
+        "@group.canvas": "Canvas",
+        "@group.mask": "Mask",
+        "@path": "Path",
+        "@union": "Union",
+        "@intersect": "Intersect",
+        "@difference": "Difference",
+        "@subtract": "Subtract",
+        "@convert.to.path": "Convert to path",
+        "@arrange": "Arrange",
+        "@bring.to.front": "Bring to Front",
+        "@send.to.back": "Send to Back",
+        "@bring.forward": "Bring Forward",
+        "@send.backward": "Send Backward",
+        "@flatten": "Flatten",
 
         "@requiredField": "This field is required",
 

@@ -12,6 +12,7 @@ import {PaneListItem }        from "../../shared/Pane";
 import CarbonActions from "../../CarbonActions";
 import {app, Selection, Environment, ContextBarPosition} from "carbon-core";
 import {handles, Component, CarbonLabel} from "../../CarbonFlux";
+import FlyoutButton from "../../shared/FlyoutButton";
 
 
 export class ContextButton extends React.Component<any, any> {
@@ -46,39 +47,9 @@ ContextButton['props'] = {
 };
 
 export class ContextDropdown extends React.Component<any, any> {
-
-    constructor(props) {
-        super(props);
-        this.state = { isOpen : false};
-    }
-
-    _toggleDropdown = () => {
-        this.setState({ isOpen : !this.state.isOpen});
-    };
-
-    close() {
-        if(this.state.isOpen) {
-            this.setState({isOpen: false});
-        }
-    }
-
-    _onDocumentClick = () => {
-        this.close();
-    }
-
-    componentDidUpdate(prevProps, prevState){
-        if(this.state.isOpen) {
-            document.addEventListener("click", this._onDocumentClick)
-        } else {
-            document.removeEventListener("click", this._onDocumentClick)
-        }
-    }
-
-    render() {
+    private renderPill = () => {
         var label = this.props.label;
         var icon;
-
-        var cn = cx("contextbar__dropdown", { "contextbar__dropdown_open" : this.state.isOpen});
 
         switch (this.props.icon) {
             case 'dots' :
@@ -87,18 +58,21 @@ export class ContextDropdown extends React.Component<any, any> {
             default :
                 icon = (<i key="icon" className={cx("contextbar__icon", this.props.icon)}></i>);
         }
+        return <div className="contextbar__dropdown-pill">
+            { icon }
+            <CarbonLabel id={label}/>
+            <div className="contextbar__dropdown-arrow"></div>
+        </div>;
+    }
 
+    render() {
         return (
-            <div className={cn}>
-                <div className="contextbar__dropdown-pill" onClick={this._toggleDropdown}>
-                    { icon }
-                    <CarbonLabel id={label}/>
-                    <div className="contextbar__dropdown-arrow"></div>
-                </div>
-
-                <div className="contextbar__dropdown-panel">
-                    {this.props.children != null ? this.props.children : ''}
-                </div>
+            <div className="contextbar__dropdown">
+                <FlyoutButton position={{targetHorizontal: "right"}} renderContent={this.renderPill}>
+                    <div className="contextbar__dropdown-panel">
+                        {this.props.children}
+                    </div>
+                </FlyoutButton>
             </div>
         )
     }
@@ -132,8 +106,7 @@ export default class ContextBar extends Component<any, any> {
             return <ContextButton key={item.name} onClick={item.callback} icon={item.icon}><CarbonLabel id={item.name}/></ContextButton>;
         }
 
-        var childItems = item.items.filter(a=>!a.disabled);
-        if(childItems.length === 0) {
+        if (item.items.every(a => a.disabled)) {
             return null;
         }
 
@@ -141,7 +114,7 @@ export default class ContextBar extends Component<any, any> {
             return <ContextDropdown key={item.name} icon={item.icon} label={item.name}>
                 <Pane>
                     <PaneList>
-                        {childItems.map(a=><PaneListItem key={item.name + a.name} onClick={a.callback} icon={a.icon}><CarbonLabel id={a.name}/></PaneListItem>)}
+                        {item.items.map(a=><PaneListItem key={item.name + a.name} onClick={a.callback} icon={a.icon} disabled={a.disabled}><CarbonLabel id={a.name}/></PaneListItem>)}
                     </PaneList>
                 </Pane>
             </ContextDropdown>
@@ -151,7 +124,7 @@ export default class ContextBar extends Component<any, any> {
         return <ContextDropdown icon={item.icon} label={item.name} key={item.name}>
             <Pane>
                 {item.rows.map((r, i)=> {
-                    var rowItems = childItems.filter(a=>a.row === i).map(a=><PaneButton key={a.name} onClick={a.callback} icon={a.icon} label={a.name}/>);
+                    var rowItems = item.items.filter(a=>a.row === i).map(a => <PaneButton key={a.name} onClick={a.callback} icon={a.icon} label={a.name} disabled={a.disabled}/>);
                     if (!rowItems.length){
                         return null;
                     }
@@ -172,12 +145,12 @@ export default class ContextBar extends Component<any, any> {
 
                 {/* Left part */}
                 <div className="contextbar__part contextbar__part_left">
-                    {this.state.items.filter(a=>a.contextBar & ContextBarPosition.Left && !a.disabled).map(this._renderItem)}
+                    {this.state.items.filter(a=>a.contextBar & ContextBarPosition.Left).map(this._renderItem)}
                 </div>
 
                 {/* Right part */}
                 <div className="contextbar__part contextbar__part_right">
-                    {this.state.items.filter(a=>a.contextBar & ContextBarPosition.Right && !a.disabled).map(this._renderItem)}
+                    {this.state.items.filter(a=>a.contextBar & ContextBarPosition.Right).map(this._renderItem)}
                     {/*<ContextDropdown icon="ico-small-align-tops">
                         <Pane>
                             <PaneLabel>Align</PaneLabel>

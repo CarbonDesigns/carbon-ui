@@ -287,12 +287,13 @@
         max-height: 0;
 
 
-        &_in-flyout {
+        &&_in-flyout {
             .box-shadow(0 1px 5px @shadow_color1);
         }
 
-        &_in-flyout,
-        &_open,
+        //making more specific since max-height depends on the order of selectors
+        &&_in-flyout,
+        &&_open,
         .drop_open &  {
             .transition(~"max-height 0.4s @{cubic_bezier1} 0s");
             max-height: 1000px;

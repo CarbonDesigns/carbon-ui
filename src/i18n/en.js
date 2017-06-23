@@ -297,7 +297,6 @@ export default
         "caption.resourceblade": "Resources",
         "caption.mirroringblade": "Device mirroring", //
         "caption.publishpage": "Publish symbols",
-        "caption.importpageblade": "Import page",
         "@caption.editCover": "Edit cover",
 
         "resources.static": "Published by carbonium.io",
@@ -339,6 +338,7 @@ export default
         "@publish.confirm": "The symbols with this name already exist",
         "@publish.done": "The symbols have been published to the gallery.",
 
+        "@import": "Import",
         "@import.header": "Import symbols",
 
         "@nameTaken": "This name is already taken",

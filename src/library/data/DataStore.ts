@@ -16,7 +16,7 @@ export default class DataStore extends LibraryStore {
         }
 
         var provider = providerId ? app.dataManager.getProvider(providerId) : app.dataManager.getBuiltInProvider();
-        return provider.createElement(app, field);
+        return provider.createElement(field);
     }
 
     elementAdded(){

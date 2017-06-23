@@ -1,34 +1,8 @@
-var StencilsActions =  {
-    changePage:(page) =>{
-        return {
-            type:'STENCILS_CHANGE_PROJECT',
-            page
-        }
-    },
-    changeCategory:(category) =>{
-        return {
-            type:'STENCILS_CHANGE_CATEGORY',
-            category
-        }
-    },
-    scrollCategory:(category) =>{
-        return {
-            type:'STENCILS_SCROLL_CATEGORY',
-            category
-        }
-    },
-    search:(q) =>{
-        return {
-            type:'STENCILS_SEARCH',
-            q
-        }
-    },
-    clicked:(e, templateType, templateId, sourceId?) =>{
-        return {
-            type:'STENCILS_CLICKED',
-            e, templateType, templateId, sourceId
-        }
-    }
-}
+import { IPage } from "carbon-core";
 
-export default StencilsActions;
+export type StencilsAction =
+    { type: "Stencils_ChangePage", page: IPage } |
+    { type: "Stencils_ChangeCategory", category: string } |
+    { type: "Stencils_ScrollCategory", category: string } |
+    { type: "Stencils_Search", q: string } |
+    { type: "Stencils_Clicked", e: React.KeyboardEvent<HTMLElement>, templateType: string, templateId: string, sourceId?: string };

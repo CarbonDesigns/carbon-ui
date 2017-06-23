@@ -1,30 +1,31 @@
 import React from "react";
-import { Component } from "../CarbonFlux";
+import { Component, dispatchAction } from "../CarbonFlux";
 
 export default class Dialog<P, S> extends Component<P, S>{
 
-    renderHeader(){
+    renderHeader() {
         return <p>Dialog header</p>
     }
 
-    renderBody(){
+    renderBody() {
         return <div>Dialog body</div>
     }
 
-    canClose(): boolean{
+    canClose(): boolean {
         return true;
     }
 
-    onClose(){
+    close() {
+        dispatchAction({ type: "Dialog_Hide" });
     }
 
     private closeDialog = () => {
         if (this.canClose()) {
-            this.onClose()
+            this.close()
         }
     }
 
-    render(){
+    render() {
         return <div className="dialog">
             <div className="dialog__header">
                 {this.renderHeader()}
@@ -46,11 +47,11 @@ export default class Dialog<P, S> extends Component<P, S>{
         </div>
     }
 
-    renderCloseButton(){
-        if (this.canClose()){
+    renderCloseButton() {
+        if (this.canClose()) {
             return <div className="dialog__buttons">
                 <div className="dialog__button" onClick={this.closeDialog}>
-                    <i className="ico--close"/>
+                    <i className="ico--close" />
                 </div>
             </div>
         }

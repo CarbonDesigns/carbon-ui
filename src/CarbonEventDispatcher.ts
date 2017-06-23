@@ -1,8 +1,7 @@
 import CarbonActions from './CarbonActions';
-import StencilsActions from './library/stencils/StencilsActions';
 import IdleDialog from "./workspace/IdleDialog";
 import { dispatch, dispatchAction } from "./CarbonFlux";
-import { app, backend, PropertyTracker, Selection, Environment, IDisposable } from "carbon-core";
+import { app, backend, PropertyTracker, Selection, Environment, IDisposable, IPage } from "carbon-core";
 
 let disposables: IDisposable[] = [];
 
@@ -21,8 +20,8 @@ export function registerEvents() {
 
     app.restoredLocally.bindAsync(() => dispatch(CarbonActions.restoredLocally()));
 
-    app.changeToolboxPage.bindAsync((page) => {
-        dispatch(StencilsActions.changePage(page));
+    app.changeToolboxPage.bindAsync((page: IPage) => {
+        dispatchAction({type: "Stencils_ChangePage", page});
     });
 
     app.currentToolChanged.bindAsync((tool) => {

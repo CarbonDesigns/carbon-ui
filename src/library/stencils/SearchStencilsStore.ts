@@ -1,5 +1,5 @@
 
-import StencilsActions from "./StencilsActions";
+import { StencilsAction } from "./StencilsActions";
 import {handles, CarbonStore} from "../../CarbonFlux";
 
 export default class SearchStencilsStore extends CarbonStore<any>{
@@ -13,8 +13,15 @@ export default class SearchStencilsStore extends CarbonStore<any>{
         this._configs = [];
     }
 
-    @handles(StencilsActions.search)
-    search({q}){
+    onAction(action: StencilsAction) {
+        switch (action.type) {
+            case "Stencils_Search":
+                this.search(action.q);
+                return;
+        }
+    }
+
+    search(q) {
         var result = {groups: []};
         var r = new RegExp(q, "gi");
         for (var i = 0; i < this._configs.length; i++){

@@ -10,8 +10,6 @@ import BladeContainer from "./blades/BladeContainer";
 
 import MainMenuBlade        from './MainMenuBlade';
 
-import ResourcesBlade       from './blades/resources/ResourcesBlade';
-
 var State = Record({
     mainMenuVisible: false,
     recentProjects: []
@@ -33,12 +31,6 @@ export default class MainMenu extends ComponentWithImmutableState<any, any> {
                 ]
             })
         };
-    }
-
-    @handles(AppActions.showResourcesBlade)
-    onShowResourcesBlade({props}) {
-        this.refs.bladeContainer.close(0);
-        this.refs.bladeContainer.addChildBlade("blade_resources", ResourcesBlade, "caption.resourceblade", props);
     }
 
     @handles(AppActions.showMainMenu)

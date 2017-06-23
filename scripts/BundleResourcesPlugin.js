@@ -3,10 +3,10 @@ var glob = require('glob');
 var path = require('path');
 var lib  = process.cwd();
 
-var author = {
-    userId: "carbonium",
-    name: "Carbonium",
-    avatar: "/ava/carbonium.png"
+var authorInfo = {
+    authorId: "carbonium",
+    authorName: "Carbonium",
+    authorAvatar: "/ava/carbonium.png"
 };
 
 function BundleResourcesPlugin(options) {
@@ -42,7 +42,7 @@ BundleResourcesPlugin.prototype.apply = function (compiler) {
                 var resource = JSON.parse(text);
                 resource.dataUrl = that.cdn + "/target/"+i+"/data.json";
                 resource.coverUrl = that.cdn + "/target/"+i+"/image.png";
-                resource.author = author;
+                Object.assign(resource, authorInfo);
                 data.push(resource);
             }
 

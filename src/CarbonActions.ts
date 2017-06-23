@@ -1,11 +1,12 @@
-import { ILayer } from "carbon-core";
+import { ILayer, IApp } from "carbon-core";
 
+export type CarbonAction =
+    {type: "Carbon_AppLoaded", app: IApp};
+
+//TODO: migrate to union types
 var CarbonActions = {
     loaded:(app)=>{
-        return {
-            type:"CARBON_LOADED",
-            app
-        }
+        return {type: "Carbon_AppLoaded", app}
     },
     pageChanged:(oldPage, newPage)=>{
         return {

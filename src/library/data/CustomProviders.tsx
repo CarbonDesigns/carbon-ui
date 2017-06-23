@@ -9,7 +9,12 @@ import CatalogView from "./CatalogView";
 import Toolbox from "../Toolbox";
 import customCatalogStore from "./CustomCatalogStore";
 
-export default class CustomProviders extends Component{
+export default class CustomProviders extends Component<any, any> {
+    refs: {
+        text: HTMLInputElement;
+        value: HTMLInputElement;
+    }
+
     constructor(props){
         super(props);
         this.state = {editing: false, config: []};
@@ -29,7 +34,7 @@ export default class CustomProviders extends Component{
     _saveCatalog = () => {
         var text = this.refs["text"].value;
         var name = this.refs["name"].value;
-        app.dataManager.createCustomProvider(app, name, text);
+        app.dataManager.createCustomProvider(name, text);
         this.setState({editing: false});
     };
 

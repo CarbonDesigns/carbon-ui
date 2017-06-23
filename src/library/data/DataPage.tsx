@@ -13,7 +13,15 @@ import LibraryActions from "../LibraryActions";
 
 require("./DataStore");
 
-export default class DataPanel extends Component {
+type DataPanelState = {
+    tabId: string;
+}
+
+export default class DataPanel extends Component<{}, DataPanelState> {
+    refs: {
+        catalog: Navigateable;
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -42,7 +50,7 @@ export default class DataPanel extends Component {
                 />
                 <TabArea className="gui-pages">
                     <TabPage tabId="1" className="gui-page">
-                        <Navigateable className="navigateable" getCategoryNode={c => this.refs["catalog"].refs[c]} config={builtInConfig}>
+                        <Navigateable className="navigateable" getCategoryNode={c => this.refs.catalog.refs[c]} config={builtInConfig}>
                             <CatalogView ref="catalog" config={builtInConfig} templateType="data"/>
                         </Navigateable>
                     </TabPage>

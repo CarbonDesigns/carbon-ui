@@ -1,14 +1,13 @@
 import React from "react";
 import {FormattedHTMLMessage} from 'react-intl';
-import StencilsActions from "../stencils/StencilsActions";
-import {Component, dispatch} from "../../CarbonFlux";
+import { Component, dispatch, dispatchAction } from "../../CarbonFlux";
 
-export default class CatalogView extends Component{
+export default class CatalogView extends Component<any> {
     onClicked = (e) =>{
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
-        dispatch(StencilsActions.clicked(e, templateType, templateId));
-    };
+        dispatchAction({type: "Stencils_Clicked", e, templateId, templateType});
+    }
 
     render(){
         if (!this.props.config){

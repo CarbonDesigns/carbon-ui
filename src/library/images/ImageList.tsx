@@ -1,8 +1,7 @@
 import React from "react";
 import cx from "classnames";
-import {Component, dispatch} from "../../CarbonFlux";
+import { Component, dispatch, dispatchAction } from "../../CarbonFlux";
 import {IconsInfo} from "carbon-core";
-import StencilsActions from "../stencils/StencilsActions";
 import LessVars from "../../styles/LessVars";
 import InfiniteScrollContainer from "../../shared/InfiniteScrollContainer";
 
@@ -26,7 +25,7 @@ export default class ImageList extends Component<any, any> {
     onClicked = (e) =>{
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
-        dispatch(StencilsActions.clicked(e, templateType, templateId));
+        dispatchAction({type: "Stencils_Clicked", e, templateType, templateId});
     };
     onLoadMore = page => {
         return this.props.onLoadMore(page)

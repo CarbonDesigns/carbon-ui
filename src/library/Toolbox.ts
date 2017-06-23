@@ -3,7 +3,7 @@ import dragAndDrop from "./DragAndDrop";
 import {handles, CarbonStore, dispatch} from "../CarbonFlux";
 import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
-import StencilsActions from "./stencils/StencilsActions";
+import { StencilsAction } from "./stencils/StencilsActions";
 import { app, Symbol, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer } from "carbon-core";
 
@@ -69,14 +69,20 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         this.setState({pages: app.pages, currentPage:index===-1?app.pages[0]:this.state.currentPage});
     }
 
-    @handles(StencilsActions.changePage)
-    pageChanged({page}){
-        //var config = this.findProjectConfig(projectType);
-        this.setState({currentPage: page});
+    onAction(action: StencilsAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Stencils_ChangePage":
+                this.setState({currentPage: action.page});
+                return;
+            case "Stencils_Clicked":
+                this.clicked(action.e, action.templateType, action.templateId, action.sourceId);
+                return;
+        }
     }
 
-    @handles(StencilsActions.clicked)
-    clicked({e, templateType, templateId, sourceId}){
+    clicked(e: React.KeyboardEvent<HTMLElement>, templateType: string, templateId: string, sourceId: string){
         var element = this.elementFromTemplate(templateType, templateId, sourceId);
         var scale = Environment.view.scale();
         var location = Environment.controller.choosePasteLocation([element], e.ctrlKey || e.metaKey);

@@ -12,6 +12,7 @@
 }
 
 .dialog {
+    .allowselect(text);
     min-width: 300px;
     color : @font_color;
 
@@ -30,7 +31,6 @@
             bottom: 0;
 
             .flexline();
-            padding-right: @line_air/2;
         }
         &__button{
             .point;
@@ -73,46 +73,5 @@
         left:0;
         right:0;
         position: absolute;
-    }
-}
-
-
-
-
-
-.import-resource-dialog {
-    .rel;
-
-    .clip;
-    height: 70vh;
-    width: 60rem;
-    .med(0, 750, {width: 40rem});
-    max-width: 90vw;
-
-    &_details-open &__panel_details {
-        .trn(left .2s linear);
-        left: 0;
-        //.box-shadow(0 0 10px rgba(66, 59, 79, 0.26));
-        .box-shadow(0 0 30px rgba(66, 59, 79, 0.74));
-    }
-
-    &__panel {
-        //@w: 30rem;
-
-        &_list {
-            //margin-right: @w;
-            .stretch();
-
-        }
-
-        &_details {
-            background: @bg4_panel_body;
-            .trn(left .1s linear);
-            .abs;
-            left: 100%;
-            width: 100%;
-            top: 0;
-            bottom:0;
-        }
     }
 }

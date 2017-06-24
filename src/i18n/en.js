@@ -359,7 +359,6 @@ export default
         "@loading": "Loading...", //
         "@empty": "Nothing found", //
         "refresh.toolbox": "Refresh library", //
-        "@add.more": "Add more...", //
         "@tilesize": "Tile size",
         "@tilesize.small": "Small (1x1)",
         "@tilesize.large": "Wide (1x2)",
@@ -520,6 +519,9 @@ export default
         "@symbols.markAsText": "Mark as text",
         "@symbols.markAsBackground": "Mark as background",
         "@symbols.detach": "Detach instance",
+        "@symbols.add": "Add more symbols...",
+        "@symbols.noneFound": "We did not find any symbols in this project",
+        "@symbols.import": "Import from gallery",
 
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",

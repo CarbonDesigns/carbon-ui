@@ -3,20 +3,19 @@ import SpriteView from "./SpriteView";
 import Dropdown from "../../shared/Dropdown";
 import Navigateable from "../../shared/Navigateable";
 import { Component, listenTo, Dispatcher, dispatchAction } from "../../CarbonFlux";
-import {richApp} from "../../RichApp";
-import AppActions from '../../RichAppActions';
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { ToolboxConfiguration, app, NullPage, IPage, IDisposable } from "carbon-core";
 import Toolbox from "../Toolbox";
-import {GuiButton} from "../../shared/ui/GuiComponents";
+import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
 import { PageSelect } from "../../shared/ui/GuiSelect";
 import { StencilsAction } from "./StencilsActions";
 import { CarbonAction } from "../../CarbonActions";
+import { MarkupLine, Markup } from "../../shared/ui/Markup";
 
 require("../../import/ImportResourceDialog");
 
-interface IStandardStencilsState{
+interface IStandardStencilsState {
     dirtyConfig: boolean;
     changedId: string;
     config: any;
@@ -46,7 +45,14 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
                 this.loadConfig(action.page);
                 return;
             case "Carbon_AppLoaded":
-                let page = this.currentSymbolsPage();
+                let page = this.getCurrentSymbolsPage();
+                if (!page) {
+                    let pages = action.app.pagesWithSymbols();
+                    if (pages.length) {
+                        page = pages[0];
+                        this.saveCurrentSymbolsPage(page);
+                    }
+                }
                 if (page) {
                     this.loadConfig(page);
                 }
@@ -55,24 +61,24 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
     }
 
     private onPageSelected = (page) => {
-        dispatchAction({type: "Stencils_ChangePage", page});
+        dispatchAction({ type: "Stencils_ChangePage", page });
     };
 
     private onConfigDirty(forceUpdate, changedId) {
         if (forceUpdate) {
             this.refreshLibrary();
         } else {
-            this.setState({dirtyConfig: true, changedId:changedId});
+            this.setState({ dirtyConfig: true, changedId: changedId });
         }
     }
 
-    private onAddMore = ()=> {
-        dispatchAction({type: "Dialog_Show", dialogType: "ImportResourceDialog"});
+    private onAddMore = () => {
+        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog" });
     }
 
-    private refreshLibrary = ()=> {
-        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage).then(config=> {
-            this.setState({dirtyConfig: false, config: config, changedId:null});
+    private refreshLibrary = () => {
+        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage).then(config => {
+            this.setState({ dirtyConfig: false, config: config, changedId: null });
         });
     }
 
@@ -83,23 +89,18 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
         this.dirtyConfigToken = page.toolboxConfigIsDirty.bind(this, this.onConfigDirty);
 
         if (!page.props.toolboxConfigId) {
-            ToolboxConfiguration.buildToolboxConfig(page).then(config=> {
-                this.setState({dirtyConfig: false, config: config, changedId:null});
+            ToolboxConfiguration.buildToolboxConfig(page).then(config => {
+                this.setState({ dirtyConfig: false, config: config, changedId: null, currentPage: page });
             });
         } else {
             ToolboxConfiguration.getConfigForPage(page)
-                .then(config=> {
-                    this.setState({config});
+                .then(config => {
+                    this.setState({ config, currentPage: page });
                 })
         }
     }
 
-    private currentSymbolsPage(page?: IPage) {
-        if (arguments.length === 1) {
-            app.setUserSetting("symbolsPageId", page.id());
-            return page;
-        }
-
+    private getCurrentSymbolsPage() {
         let pageId = app.getUserSetting("symbolsPageId", null);
         if (!pageId) {
             return null;
@@ -108,8 +109,12 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
         let pages = app.pagesWithSymbols();
         return pages.find(x => x.id() === pageId);
     }
+    private saveCurrentSymbolsPage(page?: IPage) {
+        app.setUserSetting("symbolsPageId", page.id());
+    }
 
-    private renderPageItem = (page: IPage) => {        ;
+    private renderPageItem = (page: IPage) => {
+        ;
         //TODO: add possibility to add page icons?
         return <p key={page.id()}>
             <i className="ico inline-ico ico-stencil-set" />
@@ -119,19 +124,26 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
 
     private renderRefresher() {
         var visible = this.state.dirtyConfig;
-        var cn = bem("stencils-refresher", null, {hidden: !visible});
+        var cn = bem("stencils-refresher", null, { hidden: !visible });
         return <div className={cn} onClick={visible ? this.refreshLibrary : null}>
             <GuiButton onClick={visible ? this.refreshLibrary : null}
-                       mods={['small', 'hover-white']}
-                       icon="refresh"
-                       caption="refresh.toolbox"
-                       defaultMessage="Refresh"/>
+                mods={['small', 'hover-white']}
+                icon="refresh"
+                caption="refresh.toolbox"
+                defaultMessage="Refresh" />
         </div>
     }
 
     render() {
         if (!this.state.config) {
-            return <div></div>
+            return <Markup>
+                <MarkupLine mods="center">
+                    <FormattedMessage tagName="p" id="@symbols.noneFound"/>
+                </MarkupLine>
+                <MarkupLine mods="center">
+                    <GuiButton caption="@symbols.import" mods="hover-white" onClick={this.onAddMore} />
+                </MarkupLine>
+            </Markup>;
         }
 
         var page = this.state.currentPage;
@@ -139,22 +151,26 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
 
         return <div>
             <div className={bem("library-page", "header", "with-dropdown")}>
-                <PageSelect className={bem("stencils-page", "select")} selectedItem={page} onSelect={this.onPageSelected}
-                    items={app.pagesWithSymbols()}
-                    renderItem={this.renderPageItem}
-                    renderCustomItems={() => [
-                        <p key="add_more" onClick={this.onAddMore}>
-                            <i className="ico inline-ico ico-stencil-set"/>
-                            <FormattedMessage id="@add.more"/>
-                        </p>
-                    ]}/>
+                {this.renderPageSelect(page)}
             </div>
             <Navigateable className={bem("library-page", "content")}
-                          config={config.groups}
-                          getCategoryNode={c => this.refs.spriteView.getCategoryNode(c)}>
+                config={config.groups}
+                getCategoryNode={c => this.refs.spriteView.getCategoryNode(c)}>
                 {this.renderRefresher()}
-                <SpriteView config={config} changedId={this.state.changedId} sourceId={this.state.currentPage.id()} ref="spriteView"/>
+                <SpriteView config={config} changedId={this.state.changedId} sourceId={page.id()} ref="spriteView" />
             </Navigateable>
         </div>
+    }
+
+    private renderPageSelect(page: IPage) {
+        return <PageSelect className={bem("stencils-page", "select")} selectedItem={page} onSelect={this.onPageSelected}
+            items={app.pagesWithSymbols()}
+            renderItem={this.renderPageItem}
+            renderCustomItems={() => [
+                <p key="add_more" onClick={this.onAddMore}>
+                    <i className="ico inline-ico ico-stencil-set" />
+                    <FormattedMessage id="@symbols.add" />
+                </p>
+            ]} />;
     }
 }

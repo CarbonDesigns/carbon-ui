@@ -23,7 +23,7 @@ export class IconFinderStore extends CarbonStore<any>{
         };
     }
 
-    createElement(templateId){
+    createElement({templateId}){
         var icon = this.findById(templateId);
         var element = new Image();
         element.setProps({

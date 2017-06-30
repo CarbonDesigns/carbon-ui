@@ -49,7 +49,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
 
     @handles(CarbonActions.pageAdded)
     onPageAdded({ page }) {
-        var paletteArtboards = page.getAllPalettes();
+        var paletteArtboards = page.getAllResourceArtboards(ArtboardType.Palette);
         var palettes = this.state.palettes.slice();
         for (var i = 0; i < paletteArtboards.length; ++i) {
             palettes.push(this._buildPaletteForElement(paletteArtboards[i]));
@@ -60,7 +60,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
 
     @handles(CarbonActions.loaded)
     onAppLoaded({ app }) {
-        var paletteArtboards = app.getAllPalettes();
+        var paletteArtboards = app.getAllResourceArtboards(ArtboardType.Palette);
         var palettes = [];
         for (var i = 0; i < paletteArtboards.length; ++i) {
             palettes.push(this._buildPaletteForElement(paletteArtboards[i]));

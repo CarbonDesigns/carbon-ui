@@ -31,8 +31,8 @@ export class UnsplashStore extends CarbonStore<any> {
         return this.state.results.find(x => x.id === id);
     }
 
-    createElement(id){
-        var image = this.findById(id);
+    createElement({templateId}){
+        var image = this.findById(templateId);
         var element = new Image();
         element.setProps({
             width: image.realWidth, height: image.realHeight,

@@ -1,6 +1,7 @@
 import React from "react";
 
 import StandardIcons from "./StandardIcons";
+import InternalIcons from "./InternalIcons";
 import RecentIcons from "./RecentIcons";
 import IconFinder from "./IconFinder";
 import SearchIcons from "./SearchIcons";
@@ -9,6 +10,7 @@ import {default as TabContainer, TabArea, TabTabs, TabPage} from "../../shared/T
 import bem from '../../utils/commonUtils';
 import libraryTabStore from "../LibraryTabStore";
 import LibraryActions from "../LibraryActions";
+import InternalIconsStore from "./InternalIconsStore";
 
 export default class IconsPage extends Component {
     constructor(props) {
@@ -36,7 +38,7 @@ export default class IconsPage extends Component {
             />
             <TabArea className="gui-pages" id="icons-page__pages">
                 <TabPage tabId="1" className="gui-page">
-                    <StandardIcons ref="tab1"/>
+                    <InternalIcons ref="tab1"/>
                 </TabPage>
                 <TabPage tabId="2" className="gui-page">
                     <RecentIcons ref="tab2"/>

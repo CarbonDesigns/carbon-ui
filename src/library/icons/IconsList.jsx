@@ -35,8 +35,9 @@ export default class IconsList extends Component{
     onClicked = (e) => {
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
-        dispatch(StencilsActions.clicked(e, templateType, templateId));
+        dispatch(StencilsActions.clicked({e, templateType, templateId}));
     };
+
     onLoadMore = page => {
         return this.props.onLoadMore(page)
             .then(data => Object.assign({}, data, {elements: data.items.map(this._renderItem)}))

@@ -1,120 +1,39 @@
 import React from "react";
 import SpriteView from "./SpriteView";
-import Dropdown from "../../shared/Dropdown";
 import Navigateable from "../../shared/Navigateable";
-import { Component, listenTo, Dispatcher, dispatchAction } from "../../CarbonFlux";
+import { dispatchAction, StoreComponent } from "../../CarbonFlux";
 import { FormattedMessage } from "react-intl";
-import { ToolboxConfiguration, app, NullPage, IPage, IDisposable } from "carbon-core";
-import Toolbox from "../Toolbox";
 import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
 import { PageSelect } from "../../shared/ui/GuiSelect";
-import { StencilsAction } from "./StencilsActions";
-import { CarbonAction } from "../../CarbonActions";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
+import SymbolsStore, { SymbolsStoreState } from "./SymbolsStore";
+import { IPage, app } from "carbon-core";
 
 require("../../import/ImportResourceDialog");
 
-interface IStandardStencilsState {
-    dirtyConfig: boolean;
-    changedId: string;
-    config: any;
-    currentPage: IPage;
-}
-
-export default class StandardStencils extends Component<any, IStandardStencilsState> {
-    private dirtyConfigToken: IDisposable;
-    refs: any;
+export default class StandardStencils extends StoreComponent<{}, SymbolsStoreState> {
+    refs: {
+        spriteView: SpriteView;
+    };
 
     constructor(props) {
-        super(props);
-        this.state = {
-            currentPage: null,
-            dirtyConfig: false,
-            changedId: null,
-            config: null
-        };
-    }
-
-    canHandleActions() {
-        return true;
-    }
-    onAction(action: StencilsAction | CarbonAction) {
-        switch (action.type) {
-            case "Stencils_ChangePage":
-                this.loadConfig(action.page);
-                return;
-            case "Carbon_AppLoaded":
-                let page = this.getCurrentSymbolsPage();
-                if (!page) {
-                    let pages = action.app.pagesWithSymbols();
-                    if (pages.length) {
-                        page = pages[0];
-                        this.saveCurrentSymbolsPage(page);
-                    }
-                }
-                if (page) {
-                    this.loadConfig(page);
-                }
-                return;
-        }
+        super(props, SymbolsStore);
     }
 
     private onPageSelected = (page) => {
         dispatchAction({ type: "Stencils_ChangePage", page });
     };
 
-    private onConfigDirty(forceUpdate, changedId) {
-        if (forceUpdate) {
-            this.refreshLibrary();
-        } else {
-            this.setState({ dirtyConfig: true, changedId: changedId });
-        }
-    }
-
     private onAddMore = () => {
         dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog" });
     }
 
-    private refreshLibrary = () => {
-        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage).then(config => {
-            this.setState({ dirtyConfig: false, config: config, changedId: null });
-        });
-    }
-
-    private loadConfig(page) {
-        if (this.dirtyConfigToken) {
-            this.dirtyConfigToken.dispose();
-        }
-        this.dirtyConfigToken = page.toolboxConfigIsDirty.bind(this, this.onConfigDirty);
-
-        if (!page.props.toolboxConfigId) {
-            ToolboxConfiguration.buildToolboxConfig(page).then(config => {
-                this.setState({ dirtyConfig: false, config: config, changedId: null, currentPage: page });
-            });
-        } else {
-            ToolboxConfiguration.getConfigForPage(page)
-                .then(config => {
-                    this.setState({ config, currentPage: page });
-                })
-        }
-    }
-
-    private getCurrentSymbolsPage() {
-        let pageId = app.getUserSetting("symbolsPageId", null);
-        if (!pageId) {
-            return null;
-        }
-
-        let pages = app.pagesWithSymbols();
-        return pages.find(x => x.id() === pageId);
-    }
-    private saveCurrentSymbolsPage(page?: IPage) {
-        app.setUserSetting("symbolsPageId", page.id());
+    private onRefreshLibrary = () => {
+        dispatchAction({ type: "Stencils_Refresh" });
     }
 
     private renderPageItem = (page: IPage) => {
-        ;
         //TODO: add possibility to add page icons?
         return <p key={page.id()}>
             <i className="ico inline-ico ico-stencil-set" />
@@ -125,12 +44,11 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
     private renderRefresher() {
         var visible = this.state.dirtyConfig;
         var cn = bem("stencils-refresher", null, { hidden: !visible });
-        return <div className={cn} onClick={visible ? this.refreshLibrary : null}>
-            <GuiButton onClick={visible ? this.refreshLibrary : null}
+        return <div className={cn}>
+            <GuiButton onClick={this.onRefreshLibrary}
                 mods={['small', 'hover-white']}
                 icon="refresh"
-                caption="refresh.toolbox"
-                defaultMessage="Refresh" />
+                caption="refresh.toolbox"/>
         </div>
     }
 

@@ -3,7 +3,7 @@ import LibraryStore from "../LibraryStore";
 import { handles, dispatch } from "../../CarbonFlux";
 import { app } from "carbon-core";
 
-export default class DataStore extends LibraryStore {
+export default class DataStore<T> extends LibraryStore<T> {
     createElement(id){
         var colon = id.indexOf(":");
         var providerId = null, field = null;
@@ -16,7 +16,7 @@ export default class DataStore extends LibraryStore {
         }
 
         var provider = providerId ? app.dataManager.getProvider(providerId) : app.dataManager.getBuiltInProvider();
-        return provider.createElement(field);
+        return provider.createElement(app, field);
     }
 
     elementAdded(){

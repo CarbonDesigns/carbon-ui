@@ -109,7 +109,31 @@ export class Component<P = {}, S = {}> extends React.Component<P,S> {
     //   // if (propsDiff.length) console.log('props', propsDiff)
     //   // if (stateDiff.length) console.log('state', stateDiff)
     // }
+}
 
+export class StoreComponent<TProps, TStoreState> extends Component<TProps, TStoreState> {
+    private subscription = null;
+
+    constructor(props: TProps, protected store: CarbonStore<TStoreState>) {
+        super(props);
+        this.state = store.state;
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        this.subscription = this.store.addListener(this.onStoreChanged);
+    }
+
+    componentWillUnmount() {
+        if (this.subscription) {
+            this.subscription.remove();
+            this.subscription = null;
+        }
+    }
+
+    private onStoreChanged = () => {
+        this.setState(this.store.state);
+    }
 }
 
 export interface IRecord {
@@ -220,12 +244,13 @@ export class CarbonLabel extends Component<CarbonLabelProps, undefined> {
 }
 
 
-export class CarbonStore<TState> extends Store<TState> {
+export class CarbonStore<TState = {}> extends Store<TState> {
     state: TState;
 
     constructor(dispatcher?:FluxDispatcher<TState>) {
         super(dispatcher || Dispatcher);
         this.state = this.getInitialState();
+        this.__handlersMap = this.__handlersMap || {};
     }
 
     getInitialState(): any {
@@ -259,10 +284,6 @@ export class CarbonStore<TState> extends Store<TState> {
     __changeEvent: any;
 
     __invokeOnDispatch(action:any): void {
-        if (!this.__handlersMap) {
-            return;
-        }
-
         this.__changed = false;
 
         // reduce the stream of incoming actions to state, update when necessary

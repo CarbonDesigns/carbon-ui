@@ -4,7 +4,7 @@ import { handles, CarbonStore } from "../../CarbonFlux";
 import Toolbox from "../Toolbox";
 import DataStore from "./DataStore";
 
-class CustomCatalogStore extends DataStore {
+class CustomCatalogStore extends DataStore<any> {
     _app: IApp;
 
     @handles(CarbonActions.loaded)

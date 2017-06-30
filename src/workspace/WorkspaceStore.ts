@@ -2,19 +2,14 @@ import { handles, CarbonStore, dispatchAction } from "../CarbonFlux";
 import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import HotKeyListener from "../HotkeyListener";
-import { IApp } from "carbon-core";
+import { app } from "carbon-core";
 
-interface IWorkspaceStoreState {
-    app: IApp;
-}
-
-export default class WorkspaceStore extends CarbonStore<IWorkspaceStoreState> {
+export default class WorkspaceStore extends CarbonStore {
     @handles(CarbonActions.loaded)
-    onLoaded({app}){
-        this.setState({app:app});
-        setTimeout(function() {
-            dispatchAction({type: "Dialog_Show", dialogType: "ImportResourceDialog"})
-        }, 10);
+    onLoaded(){
+        if (!app.pagesWithSymbols().length) {
+            dispatchAction({type: "Dialog_Show", dialogType: "ImportResourceDialog", async: true});
+        }
     }
 
     @handles(CarbonActions.inlineEditModeChanged)

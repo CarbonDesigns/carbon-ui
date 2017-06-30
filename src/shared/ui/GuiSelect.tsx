@@ -75,10 +75,10 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
         });
 
         if (this.props.renderCustomItems) {
-            options = options.concat(this.props.renderCustomItems()).map((element, i) => {
+            options = options.concat(this.props.renderCustomItems().map((element, i) => {
                 let classes = bem('drop', 'item', { line: true, selectable: true });
                 return <div className={classes} key={this.props.items.length + i} onMouseDown={stopPropagation}>{element}</div>;
-            });
+            }));
         }
 
         return <div className={bem('drop', 'content', ["auto-width", "in-flyout"], this.props.className)}>

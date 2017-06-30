@@ -74,12 +74,11 @@ class Workspace extends ComponentWithImmutableState<any, any> {
         super.componentDidMount();
 
         this._renderLoop.mount(this.refs.viewport);
+        this.attachToView();
 
         if (app.isLoaded && !this._imageDrop.active()){
             this._imageDrop.setup(this._renderLoop.viewContainer);
         }
-
-        this.attachToView();
 
         this.refs.contextMenu.bind(this._renderLoop.viewContainer);
         this.refs.animationSettings.attach();

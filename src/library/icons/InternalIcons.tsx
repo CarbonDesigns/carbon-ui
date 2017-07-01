@@ -37,7 +37,7 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
     onChange() {
         // var page = InternalIconsStore.state.currentPage;
         // if (page && (!this.state.config || page !== this.state.currentPage) && page.id()) {
-        this.loadConfig();
+        this.setState({ dirtyConfig: true });
         // }
 
         // this.setState({currentPage: page, pages: InternalIconsStore.state.pages});
@@ -52,9 +52,9 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
     }
 
     loadConfig() {
-        if (this._dirtyConfigToken) {
-            this._dirtyConfigToken.dispose();
-        }
+        // if (this._dirtyConfigToken) {
+        //     this._dirtyConfigToken.dispose();
+        // }
         // TODO: bind to resourceChanged event to make config dirty
         //this._dirtyConfigToken = page.toolboxConfigIsDirty.bind(this, this._onConfigDirty);
 
@@ -74,6 +74,7 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
 
     componentDidMount() {
         super.componentDidMount();
+        this._refreshLibrary();
     }
 
     _renderPageItem(page) {
@@ -109,7 +110,6 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
     }
 
     render() {
-
         var config = this.state.config || { groups: [] };
 
         return <div>

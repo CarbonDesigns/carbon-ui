@@ -2,7 +2,7 @@ import IconFinderApi from "./IconFinderApi";
 import IconsActions from "./IconsActions";
 import CarbonActions from "../../CarbonActions";
 import { handles, CarbonStore, dispatch } from '../../CarbonFlux';
-import { Image, Brush, ContentSizing, ArtboardType, UIElementFlags, IconSetSpriteManager } from "carbon-core";
+import { Image, Brush, ContentSizing, ArtboardType, UIElementFlags, IconSetSpriteManager, PatchType } from "carbon-core";
 import Toolbox from "../Toolbox";
 
 var key = 0;
@@ -20,16 +20,17 @@ export class InternalIconsStore extends CarbonStore<any>{
         super();
 
         this.state = {
-            icons: []
+            iconSets: [],
+            version: -1
         };
     }
 
-    createElement({templatePid, templateAid, templateId, templateWidth, templateHeight}) {
+    createElement({ templatePid, templateAid, templateId, templateWidth, templateHeight }) {
         var element = new Image();
 
         element.setProps({
-            width: templateWidth ? templateWidth : 46,
-            height: templateHeight ? templateHeight : 46,
+            width: templateWidth ? parseFloat(templateWidth) : 46,
+            height: templateHeight ? parseFloat(templateHeight) : 46,
             source: Image.createElementSource(templatePid, templateAid, templateId)
         });
 
@@ -44,14 +45,17 @@ export class InternalIconsStore extends CarbonStore<any>{
             iconSets.push(this._buildIconSet(iconSetArtboards[i]));
         }
 
-        this.setState({ iconSets: iconSets });
+        if (this.state.iconSets.length !== iconSets.length) {
+            this.setState({ iconSets: iconSets });
+        }
     }
 
     _buildiconSet(artboard) {
         var iconSet = {
             pageId: artboard.parent().id(),
             artboard: artboard,
-            elements: []
+            elements: [],
+            version: artboard.version
         }
         var elements = iconSet.elements;
         artboard.applyVisitor(e => {
@@ -66,31 +70,67 @@ export class InternalIconsStore extends CarbonStore<any>{
 
     buildIconGroup(groups, set) {
         let elements = set.elements;
+        let artboard = set.artboard;
+
         var group = {
-            name: set.artboard.name(),
-            templates:[],
-            spriteUrl:null,
-            spriteUrl2x:null,
-            size:null
+            name: artboard.name(),
+            templates: [],
+            spriteUrl: null,
+            spriteUrl2x: null,
+            size: null
         }
+        var parent = artboard.parent();
+        if (!parent) {
+            return;
+        }
+
+        var data = parent.getArrayPropValue("iconSpriteCache", artboard.id());
 
         groups.push(group);
 
-        return IconSetSpriteManager.getSpriteForIconSet(set.artboard, 32).then(data => {
+        var props = set.artboard.props;
+
+        var promise;
+        if (data) {
+            promise = Promise.resolve({
+                spriteUrl: data.u,
+                spriteUrl2x: data.u2,
+                size: { width: data.w, height: data.h }
+            })
+        } else {
+            promise = IconSetSpriteManager.getSpriteForIconSet(set.artboard, 32).then(data => {
+                parent.patchProps(PatchType.Remove, "iconSpriteCache", {
+                    id: artboard.id()
+                });
+
+                parent.patchProps(PatchType.Insert, "iconSpriteCache", {
+                    u: data.spriteUrl,
+                    u2: data.spriteUrl2x,
+                    w: data.size.width,
+                    h: data.size.height,
+                    id: artboard.id()
+                });
+
+                return data;
+            })
+        }
+
+        return promise.then(data => {
             var x = 0;
-            group.spriteUrl = data.spriteUrl,
-            group.spriteUrl2x = data.spriteUrl2x,
-            group.size = data.size
+            group.spriteUrl = data.spriteUrl;
+            group.spriteUrl2x = data.spriteUrl2x;
+            group.size = data.size;
+
             for (let e of elements) {
                 group.templates.push({
                     "autoPosition": "center",
                     "id": e.id(),
-                    "type":InternalIconsStore.StoreType,
+                    "type": InternalIconsStore.StoreType,
                     "pageId": set.pageId,
                     "artboardId": set.artboard.id(),
                     "realHeight": e.height(),
                     "realWidth": e.width(),
-                    "style": {padding:4},
+                    "style": { padding: 4 },
                     "spriteMap": [
                         x,
                         0,
@@ -99,27 +139,28 @@ export class InternalIconsStore extends CarbonStore<any>{
                     ],
                     title: e.name()
                 });
-                x+=32;
+                x += 32;
             }
         });
     }
 
     getIconsConfig() {
         var iconSets = this.state.iconSets;
+        var config = {
+            groups: [],
+            id: ''
+        };
+
         if (!iconSets) {
-            return [];
+            return Promise.resolve(config);
         }
 
-        var config = {
-            groups:[],
-            id:''
-        };
         var promises = [];
         for (var set of iconSets) {
             promises.push(this.buildIconGroup(config.groups, set));
         }
 
-        return Promise.all(promises).then(()=>config);
+        return Promise.all(promises).then(() => config);
     }
 
     @handles(CarbonActions.loaded)
@@ -130,29 +171,45 @@ export class InternalIconsStore extends CarbonStore<any>{
             iconSets.push(this._buildiconSet(iconSetArtboards[i]));
         }
 
-        this.setState({ iconSets: iconSets });
+        if (iconSets.length) {
+            this.setState({ iconSets: iconSets });
+        }
     }
 
     @handles(CarbonActions.pageRemoved)
     onPageRemoved({ page }) {
         var iconSets = this.state.iconSets.slice();
+        var changed = false;
         for (var i = iconSets.length - 1; i >= 0; --i) {
             if (iconSets[i].pageId === page.id()) {
                 iconSets.splice(i, 1);
+                changed = true;
             }
         }
 
-        this.setState({ iconSets: iconSets });
+        if (changed) {
+            this.setState({ iconSets: iconSets });
+        }
     }
 
     @handles(CarbonActions.resourceChanged)
     onResourceChanged({ resourceType, element }) {
+        if (this.updating) {
+            return;
+        }
+
         if (resourceType !== ArtboardType.IconSet) {
             return;
         }
 
+        this.updating = true;
+
         var iconSets = this.state.iconSets.slice();
         let iconSet = this._buildiconSet(element);
+
+        element.parent().patchProps(PatchType.Remove, "iconSpriteCache", {
+            id: element.id()
+        });
 
         let inserted = false;
         for (var i = 0; i < iconSets.length; ++i) {
@@ -168,6 +225,7 @@ export class InternalIconsStore extends CarbonStore<any>{
         }
 
         this.setState({ iconSets: iconSets });
+        this.updating = false;
     }
 
     @handles(CarbonActions.resourceDeleted)

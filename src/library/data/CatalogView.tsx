@@ -21,7 +21,7 @@ export default class CatalogView extends Component<any> {
                         <strong><FormattedHTMLMessage id={g.name} defaultMessage={g.name}/></strong>
                     </div>
                     <div className="data__fields">
-                        {g.children.map(x => <div key={x.name} className="stencil"
+                        {g.children.map(x => <div key={x.name} className="stencil stencil-data"
                             data-template-type={this.props.templateType || x.templateType}
                             data-template-id={x.templateId}
                             onClick={this.onClicked}>

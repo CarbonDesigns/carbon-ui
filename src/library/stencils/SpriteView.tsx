@@ -34,7 +34,7 @@ export default class SpriteView extends Component<any, any>{
     isRetina(){
         if (window.matchMedia) {
             var mq = window.matchMedia("only screen and (-moz-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 2.6/2), only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen  and (min-device-pixel-ratio: 1.3), only screen and (min-resolution: 1.3dppx)");
-            if(mq && mq.matches) {
+            if (mq && mq.matches) {
                 return true;
             }
         }
@@ -50,7 +50,7 @@ export default class SpriteView extends Component<any, any>{
             var spriteMap = x.spriteMap;
             var spriteUrl;
 
-            if(this.isRetina()){
+            if (this.isRetina()){
                 spriteUrl = (x.spriteUrl2x || g.spriteUrl2x || x.spriteUrl || g.spriteUrl);
             } else {
                 spriteUrl = (x.spriteUrl || g.spriteUrl);
@@ -61,9 +61,8 @@ export default class SpriteView extends Component<any, any>{
 
             var imageStyle: any = {
                 backgroundImage: 'url(' + spriteUrl + ')',
-                overflow: 'hidden'
-                // width : width
-                //height: spriteMap[3]
+                width: width,
+                height: height
             };
 
             if(g.size){
@@ -90,7 +89,6 @@ export default class SpriteView extends Component<any, any>{
                           style={containerStyle}
                           onClick={this.onClicked}>
                 <div className={bem("stencil", "image", null, x.imageClass)} style={imageStyle}>
-                    <div className={bem("stencil", "image-volume")} style={ {width : width, paddingBottom: (100 * height / width) + '%'} }></div>
                 </div>
                 {modification_badge}
             </div>);

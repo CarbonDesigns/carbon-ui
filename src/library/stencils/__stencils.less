@@ -104,13 +104,9 @@
 
 //——————————————————————————————————————————————————————————————————————
 
-.stencils-container{
+.stencils-container {
     border-width: @stencil_margin;
     border-color: @stencil_container_bg;
-}
-
-
-.stencils-container {
     .bbox;
     //for static containers with moving panel inside
 //    padding: @line_air 0;
@@ -129,27 +125,27 @@
 
 
 .stencils-group{
-    .rel;
+    display: flex;
+    flex-wrap: wrap;
     margin-bottom: 1rem; //should not have whitespace above for scroll positioning
 
     &__name {
         padding: @line_air;
+        flex-basis: 100%;
     }
 }
 
-
-
-
-
 .stencil {
-    .cursor_pointer;
     .rel;
-    .fl;
+    .cursor_pointer;
     border-color: @bg_panel_inner2;
     .bgc(@bg_stencil);
     margin: 0 1px 1px 0;
 
-    .norepeat;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 
     &__image{
         .norepeat;

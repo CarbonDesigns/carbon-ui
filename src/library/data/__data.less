@@ -1,23 +1,16 @@
 @import '../../styles/less/mapple/mMixins';
 @import '../../styles/less/_projectMixins';
 
+.stencil-data{
+  width: 100px;
+  height: 80px;
+}
 
 .data{
   &__fields{
     display: flex;
     flex-wrap: wrap;
     color: black;
-
-    .stencil{
-      width: 100px;
-      height: 80px;
-      margin-right: 1px;
-      margin-bottom: 1px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
   }
   &__field{
     .cursor_pointer;

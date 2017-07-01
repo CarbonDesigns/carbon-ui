@@ -24,6 +24,9 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
             case "Stencils_Loaded":
                 this.setState({ dirtyConfig: action.dirtyConfig, config: action.config, changedId: action.changedId, currentPage: action.page });
                 return;
+            case "Stencils_Dirty":
+                this.setState({ dirtyConfig: true, changedId: action.changedId });
+                return;
             case "Carbon_AppLoaded":
                 this.loadInitialConfig();
                 return;
@@ -83,15 +86,17 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
     private onConfigDirty(forceUpdate, changedId) {
         if (forceUpdate) {
             this.refreshLibrary();
-        } else {
-            this.setState({ dirtyConfig: true, changedId: changedId });
+        }
+        else {
+            dispatchAction({ type: "Stencils_Dirty", changedId, async: true });
         }
     }
 
     private refreshLibrary() {
-        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage).then(config => {
-            this.setState({ dirtyConfig: false, config: config, changedId: null });
-        });
+        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage)
+            .then(config => {
+                dispatchAction({ type: "Stencils_Loaded", dirtyConfig: false, config: config, changedId: null, page: this.state.currentPage, async: true });
+            });
     }
 }
 

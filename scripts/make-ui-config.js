@@ -75,7 +75,7 @@ function getDebugOrCdnPath(settings, file) {
     if (settings.minimize) {
         filePath = settings.fullPublicPath + path.basename(file);
     }
-    else{
+    else {
         filePath = "/" + file;
     }
     return filePath.replace(/\\/g, '/');
@@ -308,7 +308,7 @@ module.exports = function (settings) {
                 rewrites: [
                     {
                         from: /.*?(woff|ttf|eot)$/g,
-                        to: function(context) {
+                        to: function (context) {
                             return '/target' + context.parsedUrl.pathname;
                         }
                     },
@@ -335,6 +335,11 @@ module.exports = function (settings) {
                 errors: settings.errors,
                 errorDetails: settings.errors
             }
+        },
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
         },
         cache: true
     };

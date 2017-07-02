@@ -66,7 +66,7 @@ export default class StandardStencils extends Component<any, IStandardStencilsSt
         }
         this._dirtyConfigToken = page.toolboxConfigIsDirty.bind(this, this._onConfigDirty);
 
-        if (page.props.toolboxConfigId == null) {
+        if (!page.props.toolboxConfigId) {
             ToolboxConfiguration.buildToolboxConfig(page).then(config=> {
                 this.setState({dirtyConfig: false, config: config, changedId:null});
             });

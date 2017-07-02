@@ -23,10 +23,10 @@ var StencilsActions =  {
             q
         }
     },
-    clicked:(e, templateType, templateId, sourceId?) =>{
+    clicked:(data) =>{
         return {
             type:'STENCILS_CLICKED',
-            e, templateType, templateId, sourceId
+            ...data
         }
     }
 }

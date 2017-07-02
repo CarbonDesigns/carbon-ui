@@ -7,7 +7,7 @@ export default class CatalogView extends Component{
     onClicked = (e) =>{
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
-        dispatch(StencilsActions.clicked(e, templateType, templateId));
+        dispatch(StencilsActions.clicked({e, templateType, templateId}));
     };
 
     render(){

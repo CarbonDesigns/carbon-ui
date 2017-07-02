@@ -11,7 +11,7 @@
     },
     "include": [
         "src/**/*",
-       // "../carbon-core/mylibs/definitions/carbon-*.d.ts"
+        //"../carbon-core/mylibs/definitions/carbon-*.d.ts"
         "./node_modules/@carbonium/carbon-core/types/*.d.ts"
     ],
     "files": [

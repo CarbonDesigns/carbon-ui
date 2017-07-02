@@ -11,26 +11,48 @@ import {
 
 var hiddenInput = document.createElement("div");
 
+const SvgMimeType = "image/svg+xml";
+
 //an image which is dragged, but never actually dropped
 let dragImage = new Image();
+let dragPosition;
 dragImage.size({ width: Image.NewImageSize, height: Image.NewImageSize });
 dragImage.source(Image.EmptySource);
 
-function insertSvg(data: DataTransfer, e: MouseEvent) {
-    var f = data.items[0].getAsFile();
+function readFromSvgFile(f: File) {
     var reader = new FileReader();
-    reader.onload = (e) => {
+    var name = f.name;
+    var extPos = name.lastIndexOf('.');
+    if (extPos !== -1) {
+        name = name.substr(0, extPos);
+    }
+
+    reader.onload = (d: any) => {
         var text = reader.result;
 
         SvgParser.loadSVGFromString(text).then((result) => {
-            // var artboard = app.activePage.getArtboardAtPoint(e);
-            // var m = Matrix.createTranslationMatrix(e.x, e.y);
-            // m = artboard.globalMatrixToLocal(m);
-            // result.setTransform(m);
-            // artboard.add(result);
+            var pos = (dragImage as any).position();
+            var artboard = app.activePage.getArtboardAtPoint(dragPosition);
+            var m = Matrix.createTranslationMatrix(dragPosition.x, dragPosition.y);
+            m = artboard.globalMatrixToLocal(m);
+            if (result.performArrange) {
+                result.performArrange();
+            }
+            var box = result.getBoundingBox()
+            result.name(name);
+            result.applyTranslation({ x: m.tx - box.x, y: m.ty - box.y });
+            artboard.add(result);
         });
     }
     reader.readAsText(f);
+}
+function insertSvg(data: DataTransfer, e: MouseEvent) {
+    for (var i = 0; i < data.items.length; ++i) {
+        var item = data.items[i];
+        if (item.type === SvgMimeType) {
+            readFromSvgFile(item.getAsFile());
+        }
+    }
 }
 
 function insertDataUrl(image: IImage, file: File) {
@@ -56,13 +78,13 @@ function tryInsertIntoRepeater(e: MouseEvent, images: IImage[]): boolean {
     }
 
     //let only one image to resize, others will follow
-    for (var i = 1; i < images.length; ++i){
+    for (var i = 1; i < images.length; ++i) {
         images[i].resizeOnLoad(null);
     }
 
     //image is dragged by its center, think how to do this better
-    eventData.x -= Image.NewImageSize/2;
-    eventData.y -= Image.NewImageSize/2;
+    eventData.x -= Image.NewImageSize / 2;
+    eventData.y -= Image.NewImageSize / 2;
     repeater.addDroppedElements(parent, images, eventData);
     return true;
 }
@@ -91,7 +113,9 @@ export default class ImageDrop {
     setup(viewNode) {
         var handlers = {
             addedfile: function (file: Dropzone.DropzoneFile) {
-                dispatch(ImagesActions.queueAdded(file, "workspace"));
+                if (file.type !== SvgMimeType) {
+                    dispatch(ImagesActions.queueAdded(file, "workspace"));
+                }
             },
             uploadprogress: function (file: Dropzone.DropzoneFile, progress) {
                 if (progress) {
@@ -122,7 +146,9 @@ export default class ImageDrop {
                 dropHandler.imageMap = {};
             },
             error: function (file: Dropzone.DropzoneFile) {
-                dispatch(ImagesActions.queueFailed(file.name));
+                if (file.type !== SvgMimeType) {
+                    dispatch(ImagesActions.queueFailed(file.name));
+                }
             },
 
             dragenter: function (e) {
@@ -138,6 +164,9 @@ export default class ImageDrop {
 
                 var eventData = Environment.controller.createEventData(e);
                 Environment.controller.onmousemove(eventData, keyboardState);
+
+                // hack to get coordinates
+                dragPosition = (Environment.controller as any)._draggingElement.position();
             },
             dragleave: function (e) {
                 if (dropHandler.rejectDropped) {
@@ -146,9 +175,6 @@ export default class ImageDrop {
                 }
             },
             drop: function (e: DragEvent) {
-                dispatch(LibraryActions.changeTab("library", "3"));
-                dispatch(LibraryActions.changeTab("images", "1"));
-
                 app.resetCurrentTool();
                 Selection.clearSelection();
 
@@ -166,7 +192,7 @@ export default class ImageDrop {
 
                 var data: DataTransfer = e.dataTransfer;
                 var type = data.items[0].type;
-                if (type === "image/svg+xml") {
+                if (type === SvgMimeType) {
                     insertSvg(data, e);
                     dropHandler.rejectDropped(new Error("cancelled"));
                     dropHandler.resolveDropped = null;
@@ -182,6 +208,9 @@ export default class ImageDrop {
                         insertDataUrl(images[i], data.items[i].getAsFile());
                     }
                 }
+
+                dispatch(LibraryActions.changeTab("library", "3"));
+                dispatch(LibraryActions.changeTab("images", "1"));
 
                 keyboardState = Environment.controller.keyboardStateFromEvent(e, keyboardState);
                 dropHandler.resolveDropped({ e: e, keys: keyboardState, elements: images });
@@ -232,7 +261,7 @@ export default class ImageDrop {
 
             Image.uploadRequested.unbind(this.dropzone, onUploadRequested);
 
-            if (this.backendToken){
+            if (this.backendToken) {
                 this.backendToken.dispose();
                 this.backendToken = null;
             }

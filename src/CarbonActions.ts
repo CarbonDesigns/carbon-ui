@@ -90,6 +90,13 @@ var CarbonActions = {
             resourceType
         }
     },
+    resourceDeleted:(resourceType, element)=>{
+        return {
+            type:"CARBON_RESOURCE_DELETED",
+            element,
+            resourceType
+        }
+    },
     inlineEditModeChanged: mode => {
         return {
             type:"CARBON_INLINE_MODE",

@@ -76,8 +76,9 @@ export class Toolbox extends CarbonStore<IToolboxState>{
     }
 
     @handles(StencilsActions.clicked)
-    clicked({e, templateType, templateId, sourceId}){
-        var element = this.elementFromTemplate(templateType, templateId, sourceId);
+    clicked(data){
+        var {e, templateType, templateId, sourceId} = data;
+        var element = this.elementFromTemplate(data);
         var scale = Environment.view.scale();
         var location = Environment.controller.choosePasteLocation([element], e.ctrlKey || e.metaKey);
         var w = element.boundaryRect().width;
@@ -114,10 +115,12 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         var templateId = event.target.dataset.templateId;
         var templateType = event.target.dataset.templateType;
         var sourceId = event.target.dataset.sourceId;
+        var pageId = event.target.dataset.templatePid;
+        var artboardId = event.target.dataset.templateAid;
         interaction.templateType = templateType;
         interaction.templateId = templateId;
         interaction.sourceId = sourceId;
-        var element = this.elementFromTemplate(templateType, templateId, sourceId);
+        var element = this.elementFromTemplate(event.target.dataset);
         interaction.placeholder = element;
         interaction.dropPromise = new Promise<IDropElementData>((resolve, reject) => {
             interaction.resolveDrop = resolve;
@@ -146,15 +149,15 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         //analytics.event("Toolbox", "Drag-drop", interaction.templateType + "/" + interaction.templateId);
     };
 
-    elementFromTemplate(templateType, templateId, sourceId){
-        var store = this._stores[templateType];
+    elementFromTemplate(data){
+        var store = this._stores[data.templateType];
         var element;
         if (store){
-            element = store.createElement(templateId);
+            element = store.createElement(data);
         }
         else{
             element = new Symbol();
-            element.source({pageId: sourceId, artboardId: templateId});
+            element.source({pageId: data.sourceId, artboardId: data.templateId});
         }
 
         // switch (templateType){
@@ -180,6 +183,8 @@ export class Toolbox extends CarbonStore<IToolboxState>{
                 return "font " + source.icon;
             case ImageSourceType.Url:
                 return "url " + source.url;
+            case ImageSourceType.Element:
+                return "element " + source.elementId;
             case ImageSourceType.None:
                 return "none";
         }

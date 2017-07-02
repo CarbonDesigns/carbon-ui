@@ -1,7 +1,7 @@
 import { handles, CarbonStore, dispatch } from "../CarbonFlux";
 import Immutable from "immutable";
 import CarbonActions from "../CarbonActions";
-import { PropertyTracker, Selection, Brush, app, PropertyMetadata, ChangeMode, ArtboardType, ActionManager } from "carbon-core";
+import { PropertyTracker, Selection, Brush, app, PropertyMetadata, ChangeMode, ArtboardType, ActionManager, UIElementFlags } from "carbon-core";
 import SwatchesActions from './SwatchesActions';
 
 interface IPalette {
@@ -49,7 +49,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
 
     @handles(CarbonActions.pageAdded)
     onPageAdded({ page }) {
-        var paletteArtboards = page.getAllPalettes();
+        var paletteArtboards = page.getAllResourceArtboards(ArtboardType.Palette);
         var palettes = this.state.palettes.slice();
         for (var i = 0; i < paletteArtboards.length; ++i) {
             palettes.push(this._buildPaletteForElement(paletteArtboards[i]));
@@ -60,7 +60,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
 
     @handles(CarbonActions.loaded)
     onAppLoaded({ app }) {
-        var paletteArtboards = app.getAllPalettes();
+        var paletteArtboards = app.getAllResourceArtboards(ArtboardType.Palette);
         var palettes = [];
         for (var i = 0; i < paletteArtboards.length; ++i) {
             palettes.push(this._buildPaletteForElement(paletteArtboards[i]));
@@ -73,7 +73,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
     onPageRemoved({ page }) {
         var palettes = this.state.palettes.slice();
         for (var i = palettes.length - 1; i >= 0; --i) {
-            if (palettes[i].pageId == page.id()) {
+            if (palettes[i].pageId === page.id()) {
                 palettes.splice(i, 1);
             }
         }
@@ -111,13 +111,29 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
         this.setState({ palettes: palettes });
     }
 
+    @handles(CarbonActions.resourceDeleted)
+    onPaletteDeleted({ resourceType, element }) {
+        if (resourceType !== ArtboardType.Palette) {
+            return;
+        }
+
+        var index = this.state.palettes.findIndex(p => p.id === element.id());
+        if (index !== -1) {
+            let palettes = this.state.palettes.slice();
+            palettes.splice(index, 1);
+            this.setState({ palettes: palettes });
+        }
+    }
+
     _buildPaletteForElement(element): IPalette {
         var colors = [];
         var palette;
-        element.children.forEach(e => {
-            var fill = e.fill();
-            if (fill && fill.value) {
-                colors.push(fill.value);
+        element.applyVisitor(e => {
+            if (e.hasFlags(UIElementFlags.PaletteItem)) {
+                var fill = e.fill();
+                if (fill && fill.value) {
+                    colors.push(fill.value);
+                }
             }
         });
         return { id: element.id(), name: element.name(), colors: colors, pageId: element.primitiveRoot().id() };

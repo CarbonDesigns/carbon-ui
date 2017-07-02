@@ -4,15 +4,15 @@ import { handles, dispatch } from "../../CarbonFlux";
 import { app } from "carbon-core";
 
 export default class DataStore extends LibraryStore {
-    createElement(id){
-        var colon = id.indexOf(":");
+    createElement({templateId}){
+        var colon = templateId.indexOf(":");
         var providerId = null, field = null;
         if (colon !== -1){
-            providerId = id.substr(0, colon);
-            field = id.substr(colon + 1);
+            providerId = templateId.substr(0, colon);
+            field = templateId.substr(colon + 1);
         }
         else{
-            field = id;
+            field = templateId;
         }
 
         var provider = providerId ? app.dataManager.getProvider(providerId) : app.dataManager.getBuiltInProvider();

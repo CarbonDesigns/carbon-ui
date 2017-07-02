@@ -3,7 +3,11 @@ import {Component, listenTo, handles} from "../../CarbonFlux";
 import IconsList from "./IconsList";
 import iconsStore from "./IconsStore";
 
-export default class StandardIcons extends Component{
+interface StandardIconsProps extends IReactElementProps {
+
+}
+
+export default class StandardIcons extends Component<StandardIconsProps, any>{
     constructor(props){
         super(props);
         this.state = {

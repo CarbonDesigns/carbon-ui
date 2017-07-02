@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDom from "react-dom";
-import {Component, dispatch, handles} from "../../CarbonFlux";
-import {IconsInfo} from "carbon-core";
+import { Component, dispatch, handles } from "../../CarbonFlux";
+import { IconsInfo } from "carbon-core";
 import StencilsActions from '../stencils/StencilsActions';
 import LessVars from "../../styles/LessVars";
 import InfiniteScrollContainer from "../../shared/InfiniteScrollContainer";
@@ -9,8 +9,14 @@ import LayoutActions from '../../layout/LayoutActions';
 //import FlyoutActions from "../../FlyoutActions";
 //import IconFinderSet from "./IconFinderSet";
 
-export default class IconsList extends Component{
-    constructor(props){
+interface IIconsListProps extends IReactElementProps {
+    container: any;
+    onLoadMore: (a: any) => any;
+    initialItems: any[];
+}
+
+export default class IconsList extends Component<IIconsListProps, any>{
+    constructor(props) {
         super(props);
         this.state = {
             initialElements: props.initialItems.map(this._renderItem),
@@ -20,34 +26,34 @@ export default class IconsList extends Component{
         }
     }
 
-    componentWillReceiveProps(nextProps){
-        if (nextProps.initialItems !== this.props.initialItems){
-            this.setState({initialElements: nextProps.initialItems.map(this._renderItem)});
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.initialItems !== this.props.initialItems) {
+            this.setState({ initialElements: nextProps.initialItems.map(this._renderItem) });
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         super.componentDidMount();
-        var node = ReactDom.findDOMNode(this.props.container);
-        this.setState({containerHeight: node.offsetHeight, containerWidth: node.offsetWidth});
+        var node = ReactDom.findDOMNode(this.props.container) as any;
+        this.setState({ containerHeight: node.offsetHeight, containerWidth: node.offsetWidth });
     }
 
     onClicked = (e) => {
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
-        dispatch(StencilsActions.clicked({e, templateType, templateId}));
+        dispatch(StencilsActions.clicked({ e, templateType, templateId }));
     };
 
     onLoadMore = page => {
         return this.props.onLoadMore(page)
-            .then(data => Object.assign({}, data, {elements: data.items.map(this._renderItem)}))
+            .then(data => Object.assign({}, data, { elements: data.items.map(this._renderItem) }))
     };
 
     @handles(LayoutActions.resizePanel, LayoutActions.togglePanelGroup, LayoutActions.windowResized)
-    onResizePanel(){
+    onResizePanel() {
         setTimeout(() => {
-            var node = ReactDom.findDOMNode(this.props.container);
-            if (node){
+            var node = ReactDom.findDOMNode(this.props.container) as any;
+            if (node) {
                 this.setState({
                     containerHeight: node.offsetHeight,
                     containerWidth: node.offsetWidth,
@@ -59,24 +65,24 @@ export default class IconsList extends Component{
     }
 
     _renderItem = i => {
-        var iconStyle = {
+        var iconStyle: any = {
             fontFamily: IconsInfo.defaultFontFamily
         };
-        if (i.spriteUrl){
+        if (i.spriteUrl) {
             iconStyle.backgroundImage = 'url(' + i.spriteUrl + ')';
         }
         return <div className="stencil icon-holder"
-                      title={i.name}
-                      key={i.id || i.name}
-                      data-template-type={i.type || "icon"}
-                      data-template-id={i.id || i.name}
-                      onClick={this.onClicked}>
-            <i className="icon" style={iconStyle} key={"icon"+(i.id || i.name)}>{i.spriteUrl ? "" : String.fromCharCode(i.value)}</i>
+            title={i.name}
+            key={i.id || i.name}
+            data-template-type={i.type || "icon"}
+            data-template-id={i.id || i.name}
+            onClick={this.onClicked}>
+            <i className="icon" style={iconStyle} key={"icon" + (i.id || i.name)}>{i.spriteUrl ? "" : String.fromCharCode(i.value)}</i>
             {this._renderPrice(i)}
         </div>;
     };
-    _renderPrice(i){
-        if (i.premium){
+    _renderPrice(i) {
+        if (i.premium) {
             return <a className="price ext-link"><span>$</span></a>;
         }
         return null;
@@ -92,17 +98,17 @@ export default class IconsList extends Component{
     //     dispatch(FlyoutActions.show(target, <IconFinderSet/>, {targetVertical:'top', targetHorizontal: 'right'}));
     // }
 
-    render(){
-        if (!this.state.containerHeight){
-            return <div/>;
+    render() {
+        if (!this.state.containerHeight) {
+            return <div />;
         }
         var padding = LessVars.stencilsContainerPadding;
-        var cols = (this.state.containerWidth - padding.left - padding.right)/LessVars.iconStencilHeight | 0;
+        var cols = (this.state.containerWidth - padding.left - padding.right) / LessVars.iconStencilHeight | 0;
         return <InfiniteScrollContainer className={this.props.className}
-                                        key={this.state.scrollKey}
-                                        elementHeight={LessVars.iconStencilHeight/cols}
-                                        containerHeight={this.state.containerHeight}
-                                        initialElements={this.state.initialElements}
-                                        onLoadMore={this.onLoadMore}/>
+            key={this.state.scrollKey}
+            elementHeight={LessVars.iconStencilHeight / cols}
+            containerHeight={this.state.containerHeight}
+            initialElements={this.state.initialElements}
+            onLoadMore={this.onLoadMore} />
     }
 }

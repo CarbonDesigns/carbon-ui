@@ -193,7 +193,7 @@ export default
         "General": "General", //
         "Grid": "Grid", //
         "Rulers": "Rulers", //
-        "Snapping": "Snapping", //
+        "@snapping": "Snapping", //
         "Frame": "Frame", //
         "Horizontal lines": "Horizontal lines", //
         "Accent each": "Accent each", //
@@ -202,14 +202,12 @@ export default
         "show numbers on rulers": "show numbers on rulers", //
         "show rulers out of page borders": "show rulers out of page borders", //
         "show selection sizes on rulers": "show selection sizes on rulers", //
-        "Snap to": "Snap to", //
-        "columns": "columns", //
-        "guides": "guides", //
-        "gird": "gird", //
-        "object corners": "object corners", //
-        "object centers": "object centers", //
-        "edge centers": "edge centers", //
-        "snap to locked objects": "snap to locked objects", //
+        "@snap to": "Snap to", //
+        "@columns": "columns", //
+        "@guides": "guides", //
+        "@grid": "grid", //
+        "@only visible objects": "only visible objects", //
+        "@snap to locked objects": "snap to locked objects", //
         "Stretchable": "Stretchable", //
         "Fixed, below page": "Fixed, below page", //
         "Fixed, above page": "Fixed, above page", //

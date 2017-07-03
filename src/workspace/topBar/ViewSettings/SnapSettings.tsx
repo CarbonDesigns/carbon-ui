@@ -26,7 +26,7 @@ export default class SnapSettings extends Component<any, any>{
         // var artboard = artboardIndex === -1 ? artboards[0] : activeArtboard;
         //
 
-        var userSettings = app.userSettings();
+        var userSettings = UserSettings;
         this.state = {
             // settings: Object.assign({}, app.props.customGuides)
             settings: userSettings.snapTo

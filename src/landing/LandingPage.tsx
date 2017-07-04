@@ -9,7 +9,7 @@ import LoginPopup from "../account/LoginPopup";
 import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 
-export default class LandingPage extends RouteComponent<IRouteComponentProps, void>{
+export default class LandingPage extends RouteComponent<IRouteComponentProps>{
     _renderLoginButton() {
         return <div className="gui-button">
             <a href="#"><span>Log in</span></a>

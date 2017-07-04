@@ -66,7 +66,7 @@ interface IPanelButtonProps extends IReactElementProps<HTMLButtonElement>{
     disabled?: boolean;
 }
 
-export class PaneButton extends React.Component<IPanelButtonProps, void>  {
+export class PaneButton extends React.Component<IPanelButtonProps>  {
     private onClick = e => {
         if (!this.props.disabled) {
             this.props.onClick(e);
@@ -85,7 +85,7 @@ export class PaneButton extends React.Component<IPanelButtonProps, void>  {
     }
 }
 
-export class PaneListItem extends React.Component<any, void>  {
+export class PaneListItem extends React.Component<any>  {
     private onClick = e => {
         if (!this.props.disabled) {
             this.props.onClick(e);
@@ -109,21 +109,21 @@ export class PaneListItem extends React.Component<any, void>  {
     }
 }
 
-export class PaneList extends React.Component<IReactElementProps, void>  {
+export class PaneList extends React.Component<IReactElementProps>  {
     render() {
         var cn = _render_full_classname("pane-list", this.props);
         return (<div className={cn}>{this.props.children || ''}</div>)
     }
 }
 
-export class PaneRow extends React.Component<IReactElementProps, void>  {
+export class PaneRow extends React.Component<IReactElementProps>  {
     render() {
         var cn = _render_full_classname("pane-row", this.props);
         return (<div className={cn}>{this.props.children || ''}</div>)
     }
 }
 
-export class PaneLabel extends React.Component<IReactElementProps, void>  {
+export class PaneLabel extends React.Component<IReactElementProps>  {
     render() {
         var cn = _render_full_classname("pane-label", this.props);
         return (<h5 className={cn}>{this.props.children || ''}</h5>)
@@ -131,7 +131,7 @@ export class PaneLabel extends React.Component<IReactElementProps, void>  {
 }
 
 
-export class Pane extends React.Component<IReactElementProps, void> {
+export class Pane extends React.Component<IReactElementProps> {
     render() {
         var cn = _render_full_classname("pane", this.props);
         var pane_content = this.props.children || '';

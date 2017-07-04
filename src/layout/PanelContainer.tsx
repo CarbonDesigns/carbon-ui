@@ -11,7 +11,7 @@ interface IResizerProps extends IReactElementProps {
     panel: any;
 }
 
-class Resizer extends Component<IResizerProps, void> {
+class Resizer extends Component<IResizerProps> {
     public static Size: number = 3;
 
     private lastX: number;
@@ -102,7 +102,7 @@ function dockToString(dock: LayoutDockPosition): string {
     }
 }
 
-export default class PanelContainer extends Component<IPanelContainerProps, void> {
+export default class PanelContainer extends Component<IPanelContainerProps> {
 
     _renderResizers() {
         if (!this.props.container.floating) {

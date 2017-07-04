@@ -12,7 +12,8 @@ interface IFlyoutButtonProps extends IReactElementProps{
     position?:{
         targetVertical?: "top" | "bottom",
         targetHorizontal?: "left" | "right",
-        syncWidth?: boolean
+        syncWidth?: boolean,
+        disableAutoClose?: boolean
     };
     showAction?:any;
     onOpened?:any;

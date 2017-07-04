@@ -10,7 +10,7 @@ export interface IRouteComponentProps{
     }
 }
 
-export default class RouteComponent<P extends IRouteComponentProps, S> extends Component<P, S> {
+export default class RouteComponent<P extends IRouteComponentProps, S = {}> extends Component<P, S> {
     context: {
         router: Router.InjectedRouter
     }

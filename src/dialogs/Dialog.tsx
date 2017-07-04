@@ -1,7 +1,7 @@
 import React from "react";
 import { Component, dispatchAction } from "../CarbonFlux";
 
-export default class Dialog<P, S> extends Component<P, S>{
+export default class Dialog<P = {}, S = {}> extends Component<P, S>{
 
     renderHeader() {
         return <p>Dialog header</p>

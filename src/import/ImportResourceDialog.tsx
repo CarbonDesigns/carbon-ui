@@ -1,16 +1,18 @@
 import React from "react";
+import { AutoSizer, List } from "react-virtualized";
 import { Component, dispatchAction } from "../CarbonFlux";
 import { GuiButton, GuiButtonBlock } from "../shared/ui/GuiComponents";
 import DialogRegistry from "../dialogs/DialogRegistry";
 import Dialog from "../dialogs/Dialog";
 import { FormattedMessage } from "react-intl";
-import { app, backend, IDisposable, ISharedResource } from "carbon-core";
+import { app, backend, IDisposable, ISharedResource, IPaginatedResult } from "carbon-core";
 import { default as TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../shared/TabContainer";
 import { Markup, MarkupLine, MarkupSubmit } from "../shared/ui/Markup";
 import Search from "../shared/Search";
 import bem from '../utils/commonUtils';
 import ResourceDetails from "./ResourceDetails";
 import ResourceTile from "./ResourceTile";
+import InfiniteGrid from "../shared/InfiniteGrid";
 
 const TabBuiltIn = "1";
 const TabGallery = "2";
@@ -24,11 +26,18 @@ type ImportPageDialogState = {
     selectedResource?: ISharedResource;
 }
 
+type ResourceGrid = new (props) => InfiniteGrid<ISharedResource>;
+const ResourceGrid = InfiniteGrid as ResourceGrid;
+
 export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogState>{
+    refs: {
+        grid: InfiniteGrid<ISharedResource>
+    }
+
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
+            loading: false,
             tabId: TabBuiltIn
         };
         //
@@ -55,19 +64,46 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
     }
 
     private onTabChanged = (tabId) => {
-        this.setState({tabId, loading: true});
+        this.setState({ tabId });
 
         let promise: Promise<ISharedResource[]> = null;
         if (tabId === TabBuiltIn) {
-            promise = backend.staticResourcesProxy.staticResources();
+            //promise = backend.staticResourcesProxy.staticResources();
         }
         else if (tabId === TabGallery) {
-            promise = backend.shareProxy.resources();
+            //promise = backend.shareProxy.resources();
         }
         //todo
 
-        promise.then(resources => this.setState({ resources }))
-            .finally(() => this.setState({loading: false}));
+        // promise.then(resources => {
+        //     var res = [];
+        //     for (var index = 0; index < 100; index++) {
+        //         var batch = resources.map(x => Object.assign({}, x));
+        //         batch.forEach(x => x.name = x.name + " " + index);
+        //         res = res.concat(batch);
+        //     }
+        //     this.setState({ resources: res })
+        // })
+        //     .finally(() => this.setState({loading: false}));
+    };
+
+    private onLoadMore = (startIndex: number, stopIndex: number) => {
+        //this.setState({loading: true});
+
+        let promise: Promise<IPaginatedResult<ISharedResource>> = null;
+        if (this.state.tabId === TabBuiltIn) {
+            promise = backend.staticResourcesProxy.staticResources(startIndex, stopIndex);
+        }
+        else if (this.state.tabId === TabGallery) {
+            //promise = backend.shareProxy.resources();
+        }
+        //todo
+
+        // promise.then(resources => {
+        //     this.setState({ resources: res })
+        // })
+        //     .finally(() => this.setState({loading: false}));
+        return promise;
     };
 
     private openDetails = (resource: ISharedResource) => {
@@ -82,7 +118,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             .then(response => response.json())
             .then(data => app.importPage(data))
             .then(page => {
-                dispatchAction({type: "Stencils_ChangePage", page});
+                dispatchAction({ type: "Stencils_ChangePage", page });
                 super.close();
             });
     }
@@ -92,17 +128,25 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             return <FormattedMessage tagName="p" id="@loading" />
         }
 
-        if (!this.state.resources.length) {
-            return <FormattedMessage tagName="p" id="@empty" />
-        }
-        return <div className="tile-container">
-            {this.state.resources.map(resource => <ResourceTile
-                key={this.state.tabId + resource.name}
-                resource={resource}
-                showDownloads={this.state.tabId !== TabBuiltIn}
-                onClick={this.openDetails}
-            />)}
-        </div>
+        // if (!this.state.resources.length) {
+        //     return <FormattedMessage tagName="p" id="@empty" />
+        // }
+        return <ResourceGrid ref="grid" cellHeight={280} cellWidth={200} flex
+            loadMore={this.onLoadMore}
+            cellRenderer={resource =>
+                <ResourceTile
+                    resource={resource}
+                    showDownloads={this.state.tabId !== TabBuiltIn}
+                    onClick={this.openDetails}
+                />} />
+        // return <div className="tile-container">
+        //     {this.state.resources.map(resource => <ResourceTile
+        //         key={this.state.tabId + resource.name}
+        //         resource={resource}
+        //         showDownloads={this.state.tabId !== TabBuiltIn}
+        //         onClick={this.openDetails}
+        //     />)}
+        // </div>
     }
     // _onSearch=(e)=>{
     //     var searchString = e.target.value;
@@ -156,7 +200,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             <div className="import-resource-dialog__panel import-resource-dialog__panel_details">
                 <ResourceDetails resource={this.state.selectedResource}
                     onSelected={this.importResource}
-                    onCancelled={this.closeDetails}/>
+                    onCancelled={this.closeDetails} />
             </div>
         </div>
     }

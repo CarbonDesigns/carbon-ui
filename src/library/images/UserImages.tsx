@@ -56,7 +56,7 @@ function filesize (size) { //borrowed from dropzone
 interface IUploadPreviewProps{
     file: Immutable.Record.Instance<IQueueFile>
 }
-class UploadPreview extends Component<IUploadPreviewProps, void>{
+class UploadPreview extends Component<IUploadPreviewProps>{
     _onRemove = (ev) => {
         ev.preventDefault();
         ev.stopPropagation();

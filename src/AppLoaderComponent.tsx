@@ -12,7 +12,7 @@ export interface IAppLoaderComponentProps extends IRouteComponentProps{
         code?: string //for mirroring, think how to separate it
     }
 }
-export default class AppLoaderComponent extends RouteComponent<IAppLoaderComponentProps, void>{
+export default class AppLoaderComponent extends RouteComponent<IAppLoaderComponentProps>{
     componentDidMount() {
         super.componentDidMount();
         if (!app.isLoaded) {

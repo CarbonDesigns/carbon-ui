@@ -60,7 +60,7 @@ export class InternalIconsStore extends CarbonStore<any>{
         var elements = iconSet.elements;
         artboard.applyVisitor(e => {
             if (e.hasFlags(UIElementFlags.Icon)) {
-                elements.push(e);
+                elements.unshift(e);
             }
         })
 

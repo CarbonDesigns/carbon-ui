@@ -6,7 +6,16 @@ import { Component } from "../CarbonFlux";
 
 const DEBOUNCE_DELAY_MS = 500;
 
-export default class Search extends Component<any, any>{
+interface ISearchProps extends ISimpleReactElementProps {
+    onQuery: (term: string) => void;
+    placeholder?: string;
+}
+
+type SearchState = {
+    query: string;
+}
+
+export default class Search extends Component<ISearchProps, SearchState>{
     onChangeDebounced: () => any;
 
     refs: {
@@ -36,7 +45,7 @@ export default class Search extends Component<any, any>{
         input.select();
     }
     render(){
-        let { placeholder, onQuery, className, ...other } = this.props;
+        let { placeholder, onQuery, className, children, ...other } = this.props;
         placeholder = placeholder || "@search";
         const cn = cx('search-field', className);
         return <div {...other} className={cn}>

@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import { IFieldState, GuiValidatedInput, GuiTextArea, GuiButton, GuiRequiredInput, ValidationTrigger } from "../../../shared/ui/GuiComponents";
 import { Component, dispatchAction } from "../../../CarbonFlux";
-import { backend, IPage, app, ISharedPageSetup, PublishScope } from "carbon-core";
+import { backend, IPage, app, ISharedPageSetup, ResourceScope } from "carbon-core";
 import { PublishAction } from "./PublishActions";
 import { MarkupLine } from "../../../shared/ui/Markup";
 import electronEndpoint from "electronEndpoint";
@@ -18,7 +18,7 @@ interface IPublishPageFormState {
     validatedName: string;
     description: string;
     tags: string;
-    scope: PublishScope;
+    scope: ResourceScope;
     confirm: boolean;
     publishStep: string;
 }
@@ -118,7 +118,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         this.setState({tags: e.target.value});
     }
     private onPrivacyChanged = () => {
-        let scope = this.state.scope === PublishScope.Company ? PublishScope.Public : PublishScope.Company;
+        let scope = this.state.scope === ResourceScope.Company ? ResourceScope.Public : ResourceScope.Company;
         this.setState({ scope, publishStep: "1", validatedName: "" });
         dispatchAction({type: "Publish_PrivacyChanged", newValue: scope});
     }
@@ -237,13 +237,13 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                     </p>
 
                     <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={this.state.scope === PublishScope.Public} onChange={this.onPrivacyChanged} disabled={!this.props.page} />
+                        <input type="radio" checked={this.state.scope === ResourceScope.Public} onChange={this.onPrivacyChanged} disabled={!this.props.page} />
                         <i />
                         <span><FormattedMessage id="@publish.public" /></span>
                     </label>
 
                     <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={this.state.scope === PublishScope.Company} onChange={this.onPrivacyChanged} disabled={!this.props.page}/>
+                        <input type="radio" checked={this.state.scope === ResourceScope.Company} onChange={this.onPrivacyChanged} disabled={!this.props.page}/>
                         <i />
                         <FormattedMessage id="@publish.private" />
                     </label>

@@ -34,12 +34,10 @@ export default class TabContainer extends Component<ITabContainerProps, ITabCont
         if (newIndex === this.state.tabId) {
             return;
         }
-        if (this.props.currentTabId) {
-            //controlled
-            this.props.onTabChanged && this.props.onTabChanged(newIndex, this.state.tabId);
-        }
-        else {
-            //uncontrolled
+
+        this.props.onTabChanged && this.props.onTabChanged(newIndex, this.state.tabId);
+
+        if (!this.props.currentTabId) {
             this.changeTabById(newIndex);
         }
     };
@@ -150,28 +148,32 @@ export class TabArea extends React.Component<ITabAreaProps> {
     static contextTypes = { activeTabId: React.PropTypes.string, oldTabId: React.PropTypes.string, tabContainer: React.PropTypes.any }
 }
 
-interface ITabTabsProps extends IReactElementProps{
+interface ITabMods<TMods> {
+    tabMods?: TMods | TMods[];
+}
+interface ITabTabsProps extends IReactElementProps, ITabMods<"nogrow" | "level2"> {
     items: any[];
     tabsClassName?: string;
     tabClassName?: string;
     tabActiveClassName?: string;
-    tabMods?: string;
     insertBefore?: any;
+    insertAfter?: any;
 }
 export class TabTabs extends React.Component<ITabTabsProps> {
     render() {
-        var { items, tabsClassName, tabClassName, tabActiveClassName, tabMods, insertBefore, children, ...rest } = this.props;
+        var { items, tabsClassName, tabClassName, tabActiveClassName, tabMods, insertBefore, insertAfter, children, ...rest } = this.props;
         var tabs_cn       = cx("gui-tabs", tabsClassName);
         var tab_cn        = bem("gui-tabs", "tab", tabMods, tabClassName);
         var active_tab_cn = cx("gui-tabs__tab_active", tabActiveClassName);
-        var newChildren      = [insertBefore];
-        newChildren = newChildren.concat(items.map((item, ind) => {
+        var newChildren = items.map((item, ind) => {
             return <TabHeader key={"tab" + (ind + 1)} className={tab_cn} tabId={ind + 1 + ""} activeClassName={active_tab_cn}>
                 {item}
             </TabHeader>
-        }));
+        });
         return <div className={tabs_cn} {...rest}>
+            {insertBefore}
             {newChildren}
+            {insertAfter}
         </div>
     }
 

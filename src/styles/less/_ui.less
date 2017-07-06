@@ -594,7 +594,7 @@
 
 
 .gui-tabs {
-    .flex();
+    .flexcenter();
     flex-wrap: nowrap;
     flex-shrink: 0;
 }
@@ -607,13 +607,16 @@
     flex-grow: 1;
     .op60;
     .clip;
-    &_active, &:active:hover {
+    &&_active, &:active:hover {
         .op1;
     }
-    &:not(.gui-tabs__tab_active):hover{
+    &&:not(.gui-tabs__tab_active):hover{
         .op1;
         color: @sel_color;
         .transition(all .15s);
+    }
+    &&_nogrow {
+        flex-grow: 0;
     }
 }
 

@@ -5,7 +5,7 @@ import { GuiButton, GuiButtonBlock } from "../shared/ui/GuiComponents";
 import DialogRegistry from "../dialogs/DialogRegistry";
 import Dialog from "../dialogs/Dialog";
 import { FormattedMessage } from "react-intl";
-import { app, backend, IDisposable, ISharedResource, IPaginatedResult } from "carbon-core";
+import { app, backend, IDisposable, ISharedResource, IPaginatedResult, ResourceScope } from "carbon-core";
 import { default as TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../shared/TabContainer";
 import { Markup, MarkupLine, MarkupSubmit } from "../shared/ui/Markup";
 import Search from "../shared/Search";
@@ -22,8 +22,8 @@ const TabSearch = "4";
 type ImportPageDialogState = {
     loading: boolean;
     tabId: string;
-    resources?: ISharedResource[];
     selectedResource?: ISharedResource;
+    query?: string;
 }
 
 type ResourceGrid = new (props) => InfiniteGrid<ISharedResource>;
@@ -31,7 +31,7 @@ const ResourceGrid = InfiniteGrid as ResourceGrid;
 
 export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogState>{
     refs: {
-        grid: InfiniteGrid<ISharedResource>
+        grid: InfiniteGrid<ISharedResource>;
     }
 
     constructor(props) {
@@ -40,18 +40,6 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             loading: false,
             tabId: TabBuiltIn
         };
-        //
-        // this._debounceSearch = util.debounce((search)=>{
-        //     ShareProxy.resources(search).then((data)=> {
-        //         data.loading = false;
-        //         this.setState(data);
-        //     })
-        // }, 400);
-    }
-
-    componentDidMount() {
-        super.componentDidMount();
-        this.onTabChanged(TabBuiltIn);
     }
 
     close() {
@@ -63,47 +51,30 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
         }
     }
 
-    private onTabChanged = (tabId) => {
+    private onTabChanged = (tabId: string) => {
         this.setState({ tabId });
+    };
 
-        let promise: Promise<ISharedResource[]> = null;
-        if (tabId === TabBuiltIn) {
-            //promise = backend.staticResourcesProxy.staticResources();
-        }
-        else if (tabId === TabGallery) {
-            //promise = backend.shareProxy.resources();
-        }
-        //todo
-
-        // promise.then(resources => {
-        //     var res = [];
-        //     for (var index = 0; index < 100; index++) {
-        //         var batch = resources.map(x => Object.assign({}, x));
-        //         batch.forEach(x => x.name = x.name + " " + index);
-        //         res = res.concat(batch);
-        //     }
-        //     this.setState({ resources: res })
-        // })
-        //     .finally(() => this.setState({loading: false}));
+    private onSearch = (query) => {
+        this.setState({ query });
+        this.refs.grid.reset();
     };
 
     private onLoadMore = (startIndex: number, stopIndex: number) => {
-        //this.setState({loading: true});
+        //this.setState({ loading: true });
 
         let promise: Promise<IPaginatedResult<ISharedResource>> = null;
         if (this.state.tabId === TabBuiltIn) {
-            promise = backend.staticResourcesProxy.staticResources(startIndex, stopIndex);
+            promise = backend.staticResourcesProxy.staticResources(startIndex, stopIndex, this.state.query);
         }
         else if (this.state.tabId === TabGallery) {
-            //promise = backend.shareProxy.resources();
+            promise = backend.shareProxy.resources(ResourceScope.Public, startIndex, stopIndex, this.state.query);
         }
-        //todo
+        else {
+            promise = backend.shareProxy.resources(ResourceScope.Company, startIndex, stopIndex, this.state.query);
+        }
 
-        // promise.then(resources => {
-        //     this.setState({ resources: res })
-        // })
-        //     .finally(() => this.setState({loading: false}));
-        return promise;
+        return promise.finally(() => this.setState({ loading: false }));
     };
 
     private openDetails = (resource: ISharedResource) => {
@@ -128,9 +99,6 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             return <FormattedMessage tagName="p" id="@loading" />
         }
 
-        // if (!this.state.resources.length) {
-        //     return <FormattedMessage tagName="p" id="@empty" />
-        // }
         return <ResourceGrid ref="grid" cellHeight={280} cellWidth={200} flex
             loadMore={this.onLoadMore}
             cellRenderer={resource =>
@@ -139,25 +107,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
                     showDownloads={this.state.tabId !== TabBuiltIn}
                     onClick={this.openDetails}
                 />} />
-        // return <div className="tile-container">
-        //     {this.state.resources.map(resource => <ResourceTile
-        //         key={this.state.tabId + resource.name}
-        //         resource={resource}
-        //         showDownloads={this.state.tabId !== TabBuiltIn}
-        //         onClick={this.openDetails}
-        //     />)}
-        // </div>
     }
-    // _onSearch=(e)=>{
-    //     var searchString = e.target.value;
-    //     this.setState({loading:true, searchString:searchString});
-    //     this._debounceSearch(searchString);
-    // };
-    //
-
-    // _renderList() {
-    //     return
-    // }
 
     renderHeader() {
         return <FormattedMessage id="@import.header" tagName="h3" />;
@@ -166,14 +116,14 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
     renderBody() {
         return <div className={bem("import-resource-dialog", null, { "details-open": !!this.state.selectedResource })}>
             <div className="import-resource-dialog__panel  import-resource-dialog__panel_list">
-                <TabContainer type="normal" className="resources-list">
-                    <TabTabs
+                <TabContainer type="normal" className="resources-list" onTabChanged={this.onTabChanged}>
+                    <TabTabs tabClassName="resources-list__tab-header" tabMods="nogrow"
                         items={[
-                            <FormattedMessage tagName="h5" id="translateme!" defaultMessage="Built-in" />,
-                            <FormattedMessage tagName="h5" id="translateme!" defaultMessage="Public" />,
-                            <FormattedMessage tagName="h5" id="translateme!" defaultMessage="My" />,
-                            <i className="ico--search" />,
+                            <FormattedMessage tagName="h5" id="@import.builtin" />,
+                            <FormattedMessage tagName="h5" id="@import.gallery" />,
+                            <FormattedMessage tagName="h5" id="@import.team" />
                         ]}
+                        insertAfter={<Search className="resources-list__search-field" onQuery={this.onSearch} />}
                     />
                     <TabArea className="gui-pages">
                         <TabPage className="gui-page" tabId={TabBuiltIn}>
@@ -183,13 +133,6 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
                             {this.renderTiles()}
                         </TabPage>
                         <TabPage className="gui-page" tabId={TabCompany}>
-                            {this.renderTiles()}
-                        </TabPage>
-
-                        <TabPage className="gui-page" tabId={TabSearch}>
-                            <div className="resources-list__search">
-                                <Search onQuery={console.log} ref="search" />
-                            </div>
                             {this.renderTiles()}
                         </TabPage>
                     </TabArea>

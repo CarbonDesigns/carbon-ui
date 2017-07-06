@@ -17,26 +17,54 @@ type InfiniteGridProps<T> = {
 type InfiniteGridState<T> = {
     data: T[];
     totalCount: number;
+    invalidateVersion: number;
 }
 
 /**
  * Just a guess number for infinite loader to initiate fetch. Must be >= 40, otherwise, two initial requests are made for some reason.
  */
 const InitialTotalCount = 40;
+var i = 0;
 
 export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, InfiniteGridState<T>> {
     private onRowsRendered: (params: { startIndex: number, stopIndex: number }) => void = null;
     private columnCount: number = 0;
     private rowCount: number = 0;
+    private grid: Grid = null;
+    private registerChild: (child: any) => void;
+    private firstPageStart = 0;
+    private firstPageStop = 0;
+
+    refs: {
+        loader: InfiniteLoader;
+    }
 
     constructor(props) {
         super(props);
 
-        this.state = { data: [], totalCount: InitialTotalCount };
+        this.state = { data: [], totalCount: InitialTotalCount, invalidateVersion: 0 };
+    }
+
+    componentDidUpdate(prevProps: InfiniteGridProps<T>, prevState: InfiniteGridState<T>) {
+        if (this.state.invalidateVersion !== prevState.invalidateVersion) {
+            //if the grid has been reset, re-fetch the first page
+            this.onRowsRendered({ startIndex: this.firstPageStart, stopIndex: this.firstPageStop });
+            this.grid.scrollToPosition({ scrollLeft: 0, scrollTop: 0 });
+        }
     }
 
     getItem(rowIndex: number, columnIndex: number) {
         return this.state.data[rowIndex * this.columnCount + columnIndex];
+    }
+
+    reset() {
+        this.refs.loader.resetLoadMoreRowsCache();
+        this.setState({ data: [], totalCount: InitialTotalCount, invalidateVersion: this.state.invalidateVersion + 1 });
+    }
+
+    private registerGrid = (grid) => {
+        this.grid = grid;
+        this.registerChild(grid);
     }
 
     private isRowLoaded = (params: Index) => {
@@ -58,6 +86,7 @@ export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, Inf
 
     private infiniteLoaderChildFunction = (loaderProps: InfiniteLoaderChildProps) => {
         this.onRowsRendered = loaderProps.onRowsRendered;
+        this.registerChild = loaderProps.registerChild;
 
         return <AutoSizer>
             {dimensions => {
@@ -80,7 +109,7 @@ export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, Inf
                     width={dimensions.width}
                     height={dimensions.height}
                     onSectionRendered={params => this.onSectionRendered(params, this.columnCount)}
-                    ref={loaderProps.registerChild}
+                    ref={this.registerGrid}
                 />
             }}
         </AutoSizer>;
@@ -100,6 +129,12 @@ export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, Inf
         const startIndex = params.rowStartIndex * columnCount + params.columnStartIndex;
         const stopIndex = params.rowStopIndex * columnCount + params.columnStopIndex;
 
+        //memorize most recent size of the first page
+        if (!startIndex) {
+            this.firstPageStart = startIndex;
+            this.firstPageStop = stopIndex;
+        }
+
         this.onRowsRendered({
             startIndex,
             stopIndex
@@ -107,7 +142,7 @@ export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, Inf
     }
 
     render() {
-        return <InfiniteLoader isRowLoaded={this.isRowLoaded} loadMoreRows={this.loadMoreRows} rowCount={this.state.totalCount}>
+        return <InfiniteLoader ref="loader" isRowLoaded={this.isRowLoaded} loadMoreRows={this.loadMoreRows} rowCount={this.state.totalCount}>
             {this.infiniteLoaderChildFunction}
         </InfiniteLoader>;
     }

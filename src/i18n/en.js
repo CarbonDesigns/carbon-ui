@@ -56,6 +56,8 @@ export default
         "@chooseArtboard": "Select an artboard",
         "@noPagesWithSymbols": "No pages with symbols found",
 
+        "@search": "Search... (F3)",
+
         "Basic": "Basic", // group in library
         "Navigation": "Navigation", // group in library
         "Keyboards": "Keyboards", // group in library
@@ -340,6 +342,9 @@ export default
 
         "@import": "Import",
         "@import.header": "Import symbols",
+        "@import.builtin": "Built-in",
+        "@import.gallery": "Gallery",
+        "@import.team": "Team",
 
         "@nameTaken": "This name is already taken",
 

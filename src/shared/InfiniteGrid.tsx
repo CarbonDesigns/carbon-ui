@@ -1,7 +1,9 @@
 import React from "react";
+import ReactDom from "react-dom";
 import { InfiniteLoader, AutoSizer, Grid, Dimensions, InfiniteLoaderChildProps, SectionRenderedParams, Index, IndexRange, GridCellProps } from "react-virtualized";
 import { Component } from "../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
+import ScrollContainer from "./ScrollContainer";
 
 type InfiniteGridProps<T> = {
     cellWidth: number;
@@ -45,7 +47,19 @@ export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, Inf
         this.state = { data: [], totalCount: InitialTotalCount, invalidateVersion: 0 };
     }
 
+    componentDidMount() {
+        super.componentDidMount();
+        this.initScroller();
+    }
+
+    componentWillUnmount(){
+        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.grid);
+        ScrollContainer.destroyScroller(gridNode.parentElement);
+    }
+
     componentDidUpdate(prevProps: InfiniteGridProps<T>, prevState: InfiniteGridState<T>) {
+        this.initScroller();
+
         if (this.state.invalidateVersion !== prevState.invalidateVersion) {
             //if the grid has been reset, re-fetch the first page
             this.onRowsRendered({ startIndex: this.firstPageStart, stopIndex: this.firstPageStop });
@@ -60,6 +74,11 @@ export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, Inf
     reset() {
         this.refs.loader.resetLoadMoreRowsCache();
         this.setState({ data: [], totalCount: InitialTotalCount, invalidateVersion: this.state.invalidateVersion + 1 });
+    }
+
+    private initScroller(){
+        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.grid);
+        ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
     }
 
     private registerGrid = (grid) => {
@@ -100,7 +119,9 @@ export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, Inf
                     actualCellHeight = this.props.cellHeight * actualCellWidth / this.props.cellWidth;
                 }
 
-                return <Grid
+                return <div style={{width: dimensions.width, height: dimensions.height}}>
+                 <Grid
+                    style={{overflowX: "hidden"}}
                     cellRenderer={this.cellRenderer}
                     columnCount={this.columnCount}
                     columnWidth={actualCellWidth}
@@ -111,6 +132,7 @@ export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, Inf
                     onSectionRendered={params => this.onSectionRendered(params, this.columnCount)}
                     ref={this.registerGrid}
                 />
+                </div>
             }}
         </AutoSizer>;
     }

@@ -14,8 +14,7 @@ export default class ScrollContainer extends React.Component<any, any>{
         scrollBox: HTMLElement
     }
 
-    initScroller(){
-        var wrap = this.refs.scrollContainer;
+    static initScroller(element: HTMLElement, options?){
         //var inner = this.getScrollPaneNode();
 
         //this is needed to support convenient max-height option on parent element,
@@ -23,10 +22,17 @@ export default class ScrollContainer extends React.Component<any, any>{
         //inner.style.height = wrap.offsetHeight + "px";
         //inner.style.width = wrap.offsetWidth + "px";
 
-        $(wrap).antiscroll({
+        $(element).antiscroll(Object.assign({
             onlyOnWindows: false,
             initialDisplay: false
-        });
+        }, options));
+    }
+
+    static destroyScroller(element: HTMLElement) {
+        var antiscroll = $(element).data('antiscroll');
+        if (antiscroll){
+            antiscroll.destroy();
+        }
     }
 
     onScroll = (e) => {
@@ -56,7 +62,7 @@ export default class ScrollContainer extends React.Component<any, any>{
     }
 
     componentDidMount(){
-        this.initScroller();
+        ScrollContainer.initScroller(this.refs.scrollContainer);
 
         if(this.props.scrollEnd) {
             this.refs.scrollPane.scrollTop = Number.MAX_VALUE;
@@ -70,17 +76,14 @@ export default class ScrollContainer extends React.Component<any, any>{
 
     componentDidUpdate(){
         //bug in antiscroll, it does not clear the width/height from the previous content
-        this.initScroller();
+        ScrollContainer.initScroller(this.refs.scrollContainer);
         if(this.props.scrollEnd) {
             this.refs.scrollPane.scrollTop = Number.MAX_VALUE;
         }
     }
 
     componentWillUnmount(){
-        var antiscroll = $(this.refs.scrollContainer).data('antiscroll');
-        if (antiscroll){
-            antiscroll.destroy();
-        }
+        ScrollContainer.destroyScroller(this.refs.scrollContainer);
     }
 
     render(){

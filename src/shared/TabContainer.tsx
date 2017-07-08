@@ -65,7 +65,6 @@ export default class TabContainer extends Component<ITabContainerProps, ITabCont
 
     render() {
         var { onTabChanged, defaultTabId, currentTabId, type, className, children, ...rest } = this.props;
-        type = type || 'stretched';
         var cn = bem('gui-pages-container', null, type, className);
         return <div className={cn} {...rest}>
             {children}

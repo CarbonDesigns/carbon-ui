@@ -68,10 +68,10 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             promise = backend.staticResourcesProxy.staticResources(startIndex, stopIndex, this.state.query);
         }
         else if (this.state.tabId === TabGallery) {
-            promise = backend.shareProxy.resources(ResourceScope.Public, startIndex, stopIndex, this.state.query);
+            promise = backend.galleryProxy.resources(startIndex, stopIndex, this.state.query);
         }
         else {
-            promise = backend.shareProxy.resources(ResourceScope.Company, startIndex, stopIndex, this.state.query);
+            promise = backend.shareProxy.resources(startIndex, stopIndex, this.state.query);
         }
 
         return promise.finally(() => this.setState({ loading: false }));

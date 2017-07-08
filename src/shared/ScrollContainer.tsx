@@ -87,14 +87,14 @@ export default class ScrollContainer extends React.Component<any, any>{
     }
 
     render(){
-        var {insideFlyout, className, boxProps, boxClassName, ...rest} = this.props;
+        var {insideFlyout, className, boxClassName, ...rest} = this.props;
 
         var classes = cx(className, "antiscroll-wrap");
         var box_classes = cx("antiscroll-box", boxClassName);
 
         return <div {...rest} className={classes} ref="scrollContainer">
             <div className="antiscroll-inner" ref="scrollPane" onScroll={this.onScroll}>
-                <div className={box_classes} {...boxProps} ref="scrollBox">
+                <div className={box_classes} ref="scrollBox">
                     {this.props.children}
                 </div>
             </div>

@@ -38,8 +38,7 @@ export default class DataPanel extends Component<{}, DataPanelState> {
         var builtInConfig = app.dataManager.getBuiltInProvider().getConfig();
         var {children, ...rest} = this.props;
 
-        return <div {...rest} id="data_page" className="data">
-            <TabContainer className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("data", tabId))}>
+        return <TabContainer className="gui-page__content data" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("data", tabId))}>
                 <TabTabs
                     items={[
                         <i className="ico--library"/>,
@@ -59,8 +58,7 @@ export default class DataPanel extends Component<{}, DataPanelState> {
                     <TabPage tabId="3" className="gui-page"> <span>json</span> </TabPage>
                     <TabPage tabId="4" className="gui-page"> <span>search</span> </TabPage>
                 </TabArea>
-            </TabContainer>
-        </div>;
+            </TabContainer>;
     }
 }
 

@@ -1,5 +1,5 @@
 .antiscroll-wrap {
-  display: block;
+  display: flex;
   overflow: visible;
   position: relative;
 }
@@ -42,8 +42,7 @@
 .antiscroll-inner {
   overflow: scroll;
   -ms-overflow-style: none;
-  height: 100%;
-  width:100%;
+  flex: auto;
 }
 /** A bug in Chrome 25 on Lion requires each selector to have their own
     blocks. E.g. the following:

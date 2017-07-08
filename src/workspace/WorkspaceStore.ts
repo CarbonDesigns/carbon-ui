@@ -7,7 +7,7 @@ import { app } from "carbon-core";
 export default class WorkspaceStore extends CarbonStore {
     @handles(CarbonActions.loaded)
     onLoaded(){
-        if (!app.pagesWithSymbols().length) {
+        if (!app.serverless() && !app.id() && !app.pagesWithSymbols().length) {
             dispatchAction({type: "Dialog_Show", dialogType: "ImportResourceDialog", async: true});
         }
     }

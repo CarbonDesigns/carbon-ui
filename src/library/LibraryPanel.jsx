@@ -73,7 +73,7 @@ export default class LibraryPanel extends Component {
                         ]}
                     />
 
-                    <TabArea className="gui-pages panel__stretcher">
+                    <TabArea className="gui-pages">
                         <TabPage tabId="1" className="gui-page">
                             <StencilsPage />
                         </TabPage>

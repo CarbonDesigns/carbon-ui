@@ -28,6 +28,14 @@ export function registerEvents() {
         dispatch(CarbonActions.toolChanged(tool));
     });
 
+    app.resourceChanged.bindAsync((resourceType, element) => {
+        dispatch(CarbonActions.resourceChanged(resourceType, element));
+    });
+
+    app.resourceDeleted.bindAsync((resourceType, element) => {
+        dispatch(CarbonActions.resourceDeleted(resourceType, element));
+    });
+
     PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => dispatch(CarbonActions.propsChanged(e, props, oldProps)));
 
     Selection.onElementSelected.bindAsync((e, prevSelectedElements) =>

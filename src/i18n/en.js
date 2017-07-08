@@ -123,7 +123,8 @@ export default
         "Label": "Label", //
         "Content": "Content", //
         "Text type": "Text type", //
-        "Font": "Font", //
+        "@font": "Font", //
+        "@symbol": "Symbol",
         "Default font": "Default font", //
         "Content font": "Content font", //
         "Typeface": "Typeface", //
@@ -194,7 +195,7 @@ export default
         "General": "General", //
         "Grid": "Grid", //
         "Rulers": "Rulers", //
-        "Snapping": "Snapping", //
+        "@snapping": "Snapping", //
         "Frame": "Frame", //
         "Horizontal lines": "Horizontal lines", //
         "Accent each": "Accent each", //
@@ -203,14 +204,12 @@ export default
         "show numbers on rulers": "show numbers on rulers", //
         "show rulers out of page borders": "show rulers out of page borders", //
         "show selection sizes on rulers": "show selection sizes on rulers", //
-        "Snap to": "Snap to", //
-        "columns": "columns", //
-        "guides": "guides", //
-        "gird": "gird", //
-        "object corners": "object corners", //
-        "object centers": "object centers", //
-        "edge centers": "edge centers", //
-        "snap to locked objects": "snap to locked objects", //
+        "@snap to": "Snap to", //
+        "@columns": "columns", //
+        "@guides": "guides", //
+        "@grid": "grid", //
+        "@only visible objects": "only visible objects", //
+        "@snap to locked objects": "snap to locked objects", //
         "Stretchable": "Stretchable", //
         "Fixed, below page": "Fixed, below page", //
         "Fixed, above page": "Fixed, above page", //
@@ -253,6 +252,7 @@ export default
         "Allow drag elements out": "Allow drag elements out", //
         "Group": "Group", //
         "Repeater": "Repeater", //
+        "@regular" : "Regular",
         "@repeater.marginX": "H spacing", //
         "@repeater.marginY": "V spacing", //
         "@repeater.offsetX": "Offset X", //
@@ -267,19 +267,19 @@ export default
         "State": "State",
         "Dash pattern": "Dash pattern",
         "button.addNewProperty": "Add property",
-        "transition.target"   : "Target",
-        "transition.type"     : "Transition type",
-        "transition.easing"   : "Easing",
-        "transition.duration" : "Duration",
-        "transitionType.slideleft"  : "Slide Left",
-        "transitionType.slideright" : "Slide Right",
-        "transitionType.slideup"    : "Slide Up",
-        "transitionType.slidedown"  : "Slide Down",
-        "transitionType.dissolve"   : "Dissolve",
-        "easing.out"   : "Ease Out",
-        "easing.in"    : "Ease In",
-        "easing.inout" : "Ease In-Out",
-        "easing.none"  : "None",
+        "transition.target": "Target",
+        "transition.type": "Transition type",
+        "transition.easing": "Easing",
+        "transition.duration": "Duration",
+        "transitionType.slideleft": "Slide Left",
+        "transitionType.slideright": "Slide Right",
+        "transitionType.slideup": "Slide Up",
+        "transitionType.slidedown": "Slide Down",
+        "transitionType.dissolve": "Dissolve",
+        "easing.out": "Ease Out",
+        "easing.in": "Ease In",
+        "easing.inout": "Ease In-Out",
+        "easing.none": "None",
         "Allow horizontal resize": "Allow horizontal resize",
         "Allow vertical resize": "Allow vertical resize",
         "button.addNewScenario": "Add flow",
@@ -388,6 +388,7 @@ export default
         "type.a_frame": "Frame",
         "type.a_symbol": "Symbol",
         "type.a_template": "Template",
+        "type.a_iconset": "Icon set",
         "type.n": "Anchor",
         "type.N": "Page",
         "type.x": "Corrupted element",
@@ -519,6 +520,7 @@ export default
         "@idle.resume": "Resume",
 
         "@symbols": "Symbols",
+        "@palette": "Palette",
         "@symbols.create": "Create symbol",
         "@symbols.editMaster": "Edit symbol master",
         "@symbols.markAsText": "Mark as text",
@@ -528,11 +530,19 @@ export default
         "@symbols.noneFound": "We did not find any symbols in this project",
         "@symbols.import": "Import from gallery",
 
+        "@resources.markAsPaletteItem": "Use background in swatches",
+        "@resources.removeFromPalette": "Remove from swatches",
+        "@iconset": "Icon set",
+        "@resources.removeFromIconSet": "Remove from icon set",
+        "@resources.markAsIcon": "Add to icon set",
+
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",
         "@textAutoWidth.Grow": "Grow",
         "@saveImage": "Save image",
         "@changeImage": "Change image",
+
+        "@template": "Template",
 
         "@arrange.behavior": "Behavior",
 

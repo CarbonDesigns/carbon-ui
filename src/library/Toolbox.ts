@@ -3,7 +3,7 @@ import dragAndDrop from "./DragAndDrop";
 import {handles, CarbonStore, dispatch} from "../CarbonFlux";
 import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
-import { StencilsAction } from "./stencils/StencilsActions";
+import { StencilsAction, StencilInfo } from "./stencils/StencilsActions";
 import { app, Symbol, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer } from "carbon-core";
 
@@ -77,15 +77,15 @@ export class Toolbox extends CarbonStore<IToolboxState>{
                 this.setState({currentPage: action.page});
                 return;
             case "Stencils_Clicked":
-                this.clicked(action.e, action.templateType, action.templateId, action.sourceId);
+                this.clicked(action);
                 return;
         }
     }
 
-    clicked(e: React.KeyboardEvent<HTMLElement>, templateType: string, templateId: string, sourceId: string){
-        var element = this.elementFromTemplate(templateType, templateId, sourceId);
+    clicked(info: StencilInfo){
+        var element = this.elementFromTemplate(info);
         var scale = Environment.view.scale();
-        var location = Environment.controller.choosePasteLocation([element], e.ctrlKey || e.metaKey);
+        var location = Environment.controller.choosePasteLocation([element], info.e.ctrlKey || info.e.metaKey);
         var w = element.boundaryRect().width;
         var h = element.boundaryRect().height;
         var x, y;
@@ -101,7 +101,7 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         }
 
         var screenPoint = Environment.view.pointToScreen({x: x * scale, y: y * scale});
-        var node = dragAndDrop.cloneNode(e.currentTarget);
+        var node = dragAndDrop.cloneNode(info.e.currentTarget);
         document.body.appendChild(node);
         velocity(node, {left: screenPoint.x, top: screenPoint.y, width: w*scale, height: h*scale, opacity: .1}, {
             duration: 500,
@@ -110,7 +110,7 @@ export class Toolbox extends CarbonStore<IToolboxState>{
                 document.body.removeChild(node);
 
                 Environment.controller.insertAndSelect([element], location.parent, x, y);
-                this._onElementAdded(templateType);
+                this._onElementAdded(info.templateType);
 
                 //analytics.event("Toolbox", "Single-click", templateId);
             }});
@@ -120,10 +120,12 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         var templateId = event.target.dataset.templateId;
         var templateType = event.target.dataset.templateType;
         var sourceId = event.target.dataset.sourceId;
+        var pageId = event.target.dataset.templatePid;
+        var artboardId = event.target.dataset.templateAid;
         interaction.templateType = templateType;
         interaction.templateId = templateId;
         interaction.sourceId = sourceId;
-        var element = this.elementFromTemplate(templateType, templateId, sourceId);
+        var element = this.elementFromTemplate(event.target.dataset);
         interaction.placeholder = element;
         interaction.dropPromise = new Promise<IDropElementData>((resolve, reject) => {
             interaction.resolveDrop = resolve;
@@ -152,15 +154,15 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         //analytics.event("Toolbox", "Drag-drop", interaction.templateType + "/" + interaction.templateId);
     };
 
-    elementFromTemplate(templateType, templateId, sourceId){
-        var store = this._stores[templateType];
+    elementFromTemplate(data: StencilInfo){
+        var store = this._stores[data.templateType];
         var element;
         if (store){
-            element = store.createElement(templateId);
+            element = store.createElement(data);
         }
         else{
             element = new Symbol();
-            element.source({pageId: sourceId, artboardId: templateId});
+            element.source({pageId: data.sourceId, artboardId: data.templateId});
         }
 
         // switch (templateType){
@@ -186,6 +188,8 @@ export class Toolbox extends CarbonStore<IToolboxState>{
                 return "font " + source.icon;
             case ImageSourceType.Url:
                 return "url " + source.url;
+            case ImageSourceType.Element:
+                return "element " + source.elementId;
             case ImageSourceType.None:
                 return "none";
         }

@@ -27,6 +27,7 @@ export default class ImageList extends Component<any, any> {
         var templateType = e.currentTarget.dataset.templateType;
         dispatchAction({type: "Stencils_Clicked", e, templateType, templateId});
     };
+
     onLoadMore = page => {
         return this.props.onLoadMore(page)
             .then(data => Object.assign({}, data, {

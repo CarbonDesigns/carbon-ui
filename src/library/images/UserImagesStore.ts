@@ -17,8 +17,8 @@ class UserImagesStore extends CarbonStore<any>{
         return this.state.images.find(img => img.id === id);
     }
 
-    createElement(id){
-        var image = this.findById(id);
+    createElement({templatedId}){
+        var image = this.findById(templatedId);
         var element = new Image();
         element.setProps({
             width  : image.realWidth,

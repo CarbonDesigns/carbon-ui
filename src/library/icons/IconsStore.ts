@@ -3,7 +3,7 @@ import {CarbonStore} from '../../CarbonFlux';
 import Toolbox from "../Toolbox";
 
 export class IconsStore extends CarbonStore<void> {
-    createElement(id: string){
+    createElement({templateId}){
         var templateConfig = {
             realWidth: 50,
             realHeight: 50
@@ -12,7 +12,7 @@ export class IconsStore extends CarbonStore<void> {
         element.setProps({
             width: templateConfig.realWidth,
             height: templateConfig.realHeight,
-            source: Image.createFontSource(id)
+            source: Image.createFontSource(templateId)
         });
         return element;
     }

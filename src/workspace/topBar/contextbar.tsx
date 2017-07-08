@@ -1,17 +1,17 @@
-import React                  from 'react';
-import cx                     from 'classnames';
-import Dots                   from "../../shared/dots";
+import React from 'react';
+import cx from 'classnames';
+import Dots from "../../shared/dots";
 
 // import {Pane, PaneList, PaneListItem, PaneRow, PaneButton} from "../../shared/Pane";
-import {Pane      }           from "../../shared/Pane";
-import {PaneRow   }           from "../../shared/Pane";
-import {PaneLabel }           from "../../shared/Pane";
-import {PaneButton}           from "../../shared/Pane";
-import {PaneList     }        from "../../shared/Pane";
-import {PaneListItem }        from "../../shared/Pane";
+import { Pane } from "../../shared/Pane";
+import { PaneRow } from "../../shared/Pane";
+import { PaneLabel } from "../../shared/Pane";
+import { PaneButton } from "../../shared/Pane";
+import { PaneList } from "../../shared/Pane";
+import { PaneListItem } from "../../shared/Pane";
 import CarbonActions from "../../CarbonActions";
-import {app, Selection, Environment, ContextBarPosition} from "carbon-core";
-import {handles, Component, CarbonLabel} from "../../CarbonFlux";
+import { app, Selection, Environment, ContextBarPosition } from "carbon-core";
+import { handles, Component, CarbonLabel } from "../../CarbonFlux";
 import FlyoutButton from "../../shared/FlyoutButton";
 
 
@@ -20,30 +20,30 @@ export class ContextButton extends React.Component<any, any> {
         var caption;
         var icon;
 
-        if (this.props.icon)
+        if (this.props.icon) {
             switch (this.props.icon) {
-                case 'dots' :
-                    icon = (<i className="contextbar__icon"><Dots/></i>);
+                case 'dots':
+                    icon = (<i className="contextbar__icon"><Dots /></i>);
                     break;
-                default :
-                    icon = <i className={cx("contextbar__icon", this.props.icon)}/>;
+                default:
+                    icon = <i className={cx("contextbar__icon", this.props.icon)} />;
             }
-
-        if (this.props.children != null) {
+        }
+        if (this.props.children) {
             caption = (<span className="contextbar__cap">{this.props.children}</span>);
         }
 
         return (
             <div className="contextbar__button" onClick={this.props.onClick}>
-                { icon }
-                { caption }
+                {icon}
+                {caption}
             </div>
         )
     }
 }
 
 ContextButton['props'] = {
-    icon : ''
+    icon: ''
 };
 
 export class ContextDropdown extends React.Component<any, any> {
@@ -52,15 +52,15 @@ export class ContextDropdown extends React.Component<any, any> {
         var icon;
 
         switch (this.props.icon) {
-            case 'dots' :
-                icon = <i key="icon" className="contextbar__icon contextbar__icon_dots"><Dots/></i>;
+            case 'dots':
+                icon = <i key="icon" className="contextbar__icon contextbar__icon_dots"><Dots /></i>;
                 break;
-            default :
+            default:
                 icon = (<i key="icon" className={cx("contextbar__icon", this.props.icon)}></i>);
         }
         return <div className="contextbar__dropdown-pill">
-            { icon }
-            <CarbonLabel id={label}/>
+            {icon}
+            <CarbonLabel id={label} />
             <div className="contextbar__dropdown-arrow"></div>
         </div>;
     }
@@ -68,7 +68,7 @@ export class ContextDropdown extends React.Component<any, any> {
     render() {
         return (
             <div className="contextbar__dropdown">
-                <FlyoutButton position={{targetHorizontal: "right"}} renderContent={this.renderPill}>
+                <FlyoutButton position={{ targetHorizontal: "right" }} renderContent={this.renderPill}>
                     <div className="contextbar__dropdown-panel">
                         {this.props.children}
                     </div>
@@ -79,42 +79,42 @@ export class ContextDropdown extends React.Component<any, any> {
 }
 
 ContextButton['props'] = {
-    icon : ''
+    icon: ''
 };
 
 export default class ContextBar extends Component<any, any> {
     constructor(props) {
         super(props);
         this.state = {
-            pinned : true,
-            items:[]
+            pinned: true,
+            items: []
         };
     }
 
     @handles(CarbonActions.elementSelected, CarbonActions.activeLayerChanged)
-    onElementSelected(){
-        var menu: any = {items: []};
+    onElementSelected() {
+        var menu: any = { items: [] };
         var context = {
             selectComposite: Selection.selectComposite()
         };
         app.onBuildMenu.raise(context, menu);
-        this.setState({items:menu.items});
+        this.setState({ items: menu.items, isolationActive: app.isolationActive() });
     }
 
-    _renderItem(item){
-        if(!item.items) {
-            return <ContextButton key={item.name} onClick={item.callback} icon={item.icon}><CarbonLabel id={item.name}/></ContextButton>;
+    _renderItem(item) {
+        if (!item.items) {
+            return <ContextButton key={item.name} onClick={item.callback} icon={item.icon}><CarbonLabel id={item.name} /></ContextButton>;
         }
 
         if (item.items.every(a => a.disabled)) {
             return null;
         }
 
-        if(!item.rows || item.rows.length === 1) {
+        if (!item.rows || item.rows.length === 1) {
             return <ContextDropdown key={item.name} icon={item.icon} label={item.name}>
                 <Pane>
                     <PaneList>
-                        {item.items.map(a=><PaneListItem key={item.name + a.name} onClick={a.callback} icon={a.icon} disabled={a.disabled}><CarbonLabel id={a.name}/></PaneListItem>)}
+                        {item.items.map(a => <PaneListItem key={item.name + a.name} onClick={a.callback} icon={a.icon} disabled={a.disabled}><CarbonLabel id={a.name} /></PaneListItem>)}
                     </PaneList>
                 </Pane>
             </ContextDropdown>
@@ -123,34 +123,34 @@ export default class ContextBar extends Component<any, any> {
 
         return <ContextDropdown icon={item.icon} label={item.name} key={item.name}>
             <Pane>
-                {item.rows.map((r, i)=> {
-                    var rowItems = item.items.filter(a=>a.row === i).map(a => <PaneButton key={a.name} onClick={a.callback} icon={a.icon} label={a.name} disabled={a.disabled}/>);
-                    if (!rowItems.length){
+                {item.rows.map((r, i) => {
+                    var rowItems = item.items.filter(a => a.row === i).map(a => <PaneButton key={a.name} onClick={a.callback} icon={a.icon} label={a.name} disabled={a.disabled} />);
+                    if (!rowItems.length) {
                         return null;
                     }
-                    return [<PaneLabel key={r+'label'}><CarbonLabel id={r}/></PaneLabel>,
-                        <PaneRow key={r+'row'}>
-                            {rowItems}
-                        </PaneRow>]
+                    return [<PaneLabel key={r + 'label'}><CarbonLabel id={r} /></PaneLabel>,
+                    <PaneRow key={r + 'row'}>
+                        {rowItems}
+                    </PaneRow>]
                 })}
             </Pane>
         </ContextDropdown>
     }
 
     render() {
-        var contextbar_classname = cx("contextbar", { "contextbar_pinned" : this.state.pinned});
+        var contextbar_classname = cx("contextbar", { "contextbar_pinned": this.state.pinned, "isolation_active": this.state.isolationActive });
 
         return (
             <div className={contextbar_classname}>
 
                 {/* Left part */}
                 <div className="contextbar__part contextbar__part_left">
-                    {this.state.items.filter(a=>a.contextBar & ContextBarPosition.Left).map(this._renderItem)}
+                    {this.state.items.filter(a => a.contextBar & ContextBarPosition.Left).map(this._renderItem)}
                 </div>
 
                 {/* Right part */}
                 <div className="contextbar__part contextbar__part_right">
-                    {this.state.items.filter(a=>a.contextBar & ContextBarPosition.Right).map(this._renderItem)}
+                    {this.state.items.filter(a => a.contextBar & ContextBarPosition.Right).map(this._renderItem)}
                     {/*<ContextDropdown icon="ico-small-align-tops">
                         <Pane>
                             <PaneLabel>Align</PaneLabel>
@@ -216,32 +216,32 @@ export class AltContext extends React.Component<any, any> {
 
     constructor(props) {
         super(props);
-        this.state = { secondaryIsOpen : false};
+        this.state = { secondaryIsOpen: false };
     }
 
     _openSecondary = () => {
-        this.setState({ secondaryIsOpen : true});
+        this.setState({ secondaryIsOpen: true });
     };
 
     _closeSecondary = () => {
-        this.setState({ secondaryIsOpen : false});
+        this.setState({ secondaryIsOpen: false });
     };
 
-    render(){
+    render() {
 
-        var cn = cx("altcontext", {"altcontext_secondary-open" : this.state.secondaryIsOpen});
+        var cn = cx("altcontext", { "altcontext_secondary-open": this.state.secondaryIsOpen });
         return <div className={cn}>
             {/* First (main) page*/}
-            <div className="altcontext__primary"  onClick={this._openSecondary}>
+            <div className="altcontext__primary" onClick={this._openSecondary}>
                 <Pane>
                     <PaneList>
                         <PaneRow>
                             <PaneButton icon="ico-small-move-upper">Action one</PaneButton>
-                            <PaneButton icon="ico-small-move-lower"/>
+                            <PaneButton icon="ico-small-move-lower" />
                         </PaneRow>
                         <PaneRow>
-                            <PaneButton icon="ico-small-send-to-foreground"/>
-                            <PaneButton icon="ico-small-send-to-background"/>
+                            <PaneButton icon="ico-small-send-to-foreground" />
+                            <PaneButton icon="ico-small-send-to-background" />
                         </PaneRow>
                     </PaneList>
                 </Pane>
@@ -252,25 +252,25 @@ export class AltContext extends React.Component<any, any> {
                     <PaneList>
                         <PaneRow>
                             <PaneButton icon="ico-small-move-upper">Action one</PaneButton>
-                            <PaneButton icon="ico-small-move-lower"/>
+                            <PaneButton icon="ico-small-move-lower" />
                         </PaneRow>
                         <PaneRow>
-                            <PaneButton icon="ico-small-send-to-foreground"/>
-                            <PaneButton icon="ico-small-send-to-background"/>
-                            <PaneButton icon="ico-small-send-to-background"/>
-                            <PaneButton icon="ico-small-send-to-background"/>
+                            <PaneButton icon="ico-small-send-to-foreground" />
+                            <PaneButton icon="ico-small-send-to-background" />
+                            <PaneButton icon="ico-small-send-to-background" />
+                            <PaneButton icon="ico-small-send-to-background" />
                         </PaneRow>
                         <PaneRow>
-                            <PaneButton icon="ico-small-move-upper"/>
-                            <PaneButton icon="ico-small-send-to-background"/>
-                            <PaneButton icon="ico-small-move-upper"/>
+                            <PaneButton icon="ico-small-move-upper" />
+                            <PaneButton icon="ico-small-send-to-background" />
+                            <PaneButton icon="ico-small-move-upper" />
                         </PaneRow>
                     </PaneList>
                 </Pane>
 
             </div>
 
-            <div className="altcontext__secondary-closer" onClick={this._closeSecondary}/>
+            <div className="altcontext__secondary-closer" onClick={this._closeSecondary} />
         </div>
     }
 }

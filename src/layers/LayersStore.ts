@@ -14,29 +14,40 @@ interface ILayersStoreState {
     collapsed: IdMap,
     isIsolation: boolean;
     version: number;
+    topLevel?: boolean;
 }
 
 export default class LayersStore extends CarbonStore<ILayersStoreState> {
     constructor(props) {
         super(props);
-        this.state = { layers: [], expanded: {}, selected: {}, collapsed: {}, isIsolation: false, version: 0 }
+        this.state = { layers: [], expanded: {}, selected: {}, collapsed: {}, isIsolation: false, version: 0, topLevel:true }
     }
 
     refreshLayersTree() {
         let that = this;
         let page_elements;
+        var topLevel = false;
         if (Environment.view.isolationLayer && Environment.view.isolationLayer.isActive) {
             page_elements = Environment.view.isolationLayer.children;
         }
         else {
-            page_elements = app.activePage.children;
+            let artboard = app.activePage.getActiveArtboard();
+            if (artboard) {
+                page_elements = artboard.children;
+            } else {
+                topLevel = true;
+                page_elements = app.activePage.children;
+            }
         }
+
         let r, page_element, layers2 = [];
         for (let i = page_elements.length - 1; i >= 0; --i) {
             page_element = page_elements[i];
-            layers2.push(that.mapLayersTreeForItem(page_element, 0));
+            layers2.push(that.mapLayersTreeForItem(page_element, 0, !topLevel));
         }
-        this.setState({ layers: layers2 });
+        let state: any = { layers: layers2 };
+
+        this.setState(state);
     }
 
     /**
@@ -45,7 +56,7 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
      * @param indent
      * @returns {{indent: *, id: *, uid: *, element: *, name: *, borderColor: *, backgroundColor: *, visible: *, locked: *, canSelect: *, type: *, expanded: boolean, hasChildren: (boolean|*)}}
      */
-    mapLayersTreeForItem(element, indent, nodeMutator = null) {
+    mapLayersTreeForItem(element, indent, recursive = true, nodeMutator = null) {
         let that = this;
 
         let elementId = element.id();
@@ -63,7 +74,7 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
             canSelect: element.canSelect() || element.runtimeProps.selectFromLayersPanel,
             type: iconType(element),
             expanded: this.state.expanded[elementId],
-            hasChildren: element.children && element.children.length
+            hasChildren: element.children && element.children.length && recursive
         };
 
         if (nodeMutator) {
@@ -79,7 +90,7 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
         if (element.t === Types.RepeatContainer && element.children.length) {
             let cell = element.children[0];
             for (let i = cell.children.length - 1; i >= 0; --i) {
-                let r = that.mapLayersTreeForItem(cell.children[i], indent + 1, n => {
+                let r = that.mapLayersTreeForItem(cell.children[i], indent + 1, true, n => {
                     n.repeater = element;
                 });
                 node.childLayers.push(r);
@@ -87,7 +98,7 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
         }
         else if (element.children) {
             for (let i = element.children.length - 1; i >= 0; --i) {
-                let r = that.mapLayersTreeForItem(element.children[i], indent + 1, nodeMutator);
+                let r = that.mapLayersTreeForItem(element.children[i], indent + 1, true, nodeMutator);
                 node.childLayers.push(r);
             }
         }
@@ -251,6 +262,11 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
             return;
         }
         this.setState({ expanded: {} });
+        this.refreshLayersTree();
+    }
+
+    @handles(CarbonActions.activeArtboardChanged)
+    onActiveArtboardChanged({ newArtboard }) {
         this.refreshLayersTree();
     }
 

@@ -326,6 +326,8 @@ export default
         "@flow.header": "Flow: {name}", //
         "@prototype.header": "Prototype: {name}", //
         "@story.description": "Description", //
+        "@edit.Flow": "Edit flow",
+        "@edit.Prototype": "Edit prototype",
 
         "publishpage.caption": "Publish current page", //
         "@publish.choosePage": "Choose the page to publish",
@@ -555,6 +557,8 @@ export default
         "@bring.forward": "Bring Forward",
         "@send.backward": "Send Backward",
         "@flatten": "Flatten",
+
+        "@back": "back",
 
         "@requiredField": "This field is required",
 

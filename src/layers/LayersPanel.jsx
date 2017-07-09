@@ -1,17 +1,16 @@
-import { Component, listenTo } from '../CarbonFlux';
+import { Component, listenTo, CarbonLabel } from '../CarbonFlux';
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import {FormattedHTMLMessage} from 'react-intl';
-//import {msg} from '../intl/store';
 import Panel from '../layout/Panel'
 import { richApp } from '../RichApp';
 import cx from 'classnames';
 import LayersActions from './LayersActions';
 import ScrollContainer from "../shared/ScrollContainer";
-import { app, Invalidate, Selection, Environment} from "carbon-core";
+import { app, Invalidate, Selection, Environment } from "carbon-core";
 import { node_offset, say } from "../shared/Utils";
 import bem from "bem";
 import FlyoutPopupSpawner from "../shared/FlyoutPopup";
+import { MarkupLine } from "../shared/ui/Markup";
 
 import EnterInput from "../shared/EnterInput";
 import { GuiButton, GuiInput, GuiButtonedInput } from "../shared/ui/GuiComponents";
@@ -104,15 +103,12 @@ class LayerRenamer extends Component {
             onMouseDown={this._stopPropagation}
             onKeyDown={this.onKeyDown}
         >
-            { /* <p className="layers-panel__rename-intro">{say("Rename layer")}</p> */}
-
             <GuiButtonedInput>
                 <GuiInput
                     ref="rename_input_wrapper"
                     className="layers-panel__rename-input"
                     onKeyDown={this._onKeyDown}
                     defaultValue={this.state.layer_name}
-                // onBlur={this._onCancelRenameClick}
                 />
                 <GuiButton onClick={this._onSaveRenameClick} mods={["hover-success", "square"]} className="layers-panel__rename-save" icon="ok-white" />
                 <GuiButton onClick={this._onCancelRenameClick} mods={["hover-cancel", "square"]} className="layers-panel__rename-cancel" icon="cancel" />
@@ -200,9 +196,9 @@ class LayerItem extends Component {
         Invalidate.requestInteractionOnly();
     }
 
-    _findSelectionTarget(){
+    _findSelectionTarget() {
         var element = this.props.element;
-        if (this.props.repeater){
+        if (this.props.repeater) {
             element = this.props.repeater.findSelectionTarget(element);
         }
         return element;
@@ -244,15 +240,14 @@ class LayerItem extends Component {
 
     _executeLayerReordering(that, part, ev) {
         let targets = Selection.selectedElements();
-        if(!targets || !targets.length) {
+        if (!targets || !targets.length) {
             return;
         }
 
         Selection.makeSelection([]);
 
         if (part === 'first') {
-            for(let i = 0; i < targets.length ; ++i)
-            {
+            for (let i = 0; i < targets.length; ++i) {
                 let target = targets[i];
                 let gm = target.globalViewMatrix();
                 target.setTransform(gm);
@@ -260,8 +255,7 @@ class LayerItem extends Component {
             }
         }
         else if (part === 'last') {
-            for(let i = targets.length - 1; i >= 0 ; --i)
-            {
+            for (let i = targets.length - 1; i >= 0; --i) {
                 let target = targets[i];
                 let gm = target.globalViewMatrix();
                 target.setTransform(gm);
@@ -272,7 +266,7 @@ class LayerItem extends Component {
             var element = this.props.element;
             if (element) {
                 if (part === 'mid') {
-                    targets.forEach((target, i)=>{
+                    targets.forEach((target, i) => {
                         let gm = target.globalViewMatrix();
                         target.setTransform(element.globalViewMatrixInverted().appended(gm));
                         element.add(target);
@@ -281,7 +275,7 @@ class LayerItem extends Component {
                     element.performArrange();
                 } else {
                     let parent = element.parent();
-                    targets.forEach(a=>{
+                    targets.forEach(a => {
                         let gm = a.globalViewMatrix();
                         // set transform before removal, otherwise undo will not work
                         a.setTransform(parent.globalViewMatrixInverted().appended(gm));
@@ -291,11 +285,11 @@ class LayerItem extends Component {
                     // index must be retrieved after removal of all elements
                     let index = element.index();
 
-                    if(part === 'top') {
-                        index ++;
+                    if (part === 'top') {
+                        index++;
                     }
 
-                    for(let i = targets.length - 1; i >=0; --i) {
+                    for (let i = targets.length - 1; i >= 0; --i) {
                         parent.insert(targets[i], index);
                     }
 
@@ -321,6 +315,10 @@ class LayerItem extends Component {
     _onTitleDoubleClick = (ev) => {
         return this._execute('rename', ev);
     };
+
+    _onIconDoubleClick = (ev) => {
+        return this._execute('activate', ev);
+    }
 
     _onLayerBodyMouseLeave = (ev) => {
         if (this.listening_to) {
@@ -363,6 +361,15 @@ class LayerItem extends Component {
 
             case 'rename':
                 this.context.startRenamingLayer(this);
+                break;
+
+            case 'activate':
+                app.activePage.setActiveArtboardById(this.props.id);
+                var artboard = app.activePage.getActiveArtboard();
+                if(artboard) {
+                    Environment.view.ensureScale([artboard]);
+                    Environment.view.ensureVisible([artboard]);
+                }
                 break;
         }
         return prevent(ev);
@@ -527,10 +534,12 @@ class LayerItem extends Component {
                 </div>
                 <div className={b('title')}
                     onMouseDown={this._onLayerMouseDown}
-                    onDoubleClick={this._onTitleDoubleClick}
-                >
-                    <i className={b('icon', null, `type-icon_${layer.type}`)} />
-                    <div className={b('name')}>{layer.name}</div>
+                    onDoubleClick={this._onIconDoubleClick} >
+                    <i className={b('icon', null, `type-icon_${layer.type}`)}
+                    />
+                    <div
+                        onDoubleClick={this._onTitleDoubleClick}
+                        className={b('name')}>{layer.name}</div>
                 </div>
             </div>
 
@@ -666,7 +675,7 @@ class LayersPanel extends Component {
     };
 
     _saveRenamingLayer = (layer, new_name) => {
-        layer.element.setProps({name:new_name});
+        layer.element.setProps({ name: new_name });
         this.refs['popup'].close();
     };
 
@@ -808,6 +817,28 @@ class LayersPanel extends Component {
         return layers_list;
     };
 
+    goBack = () => {
+        app.activePage.setActiveArtboard(null);
+        var artboards = app.activePage.children;
+        Environment.view.ensureScale(artboards);
+        Environment.view.ensureVisible(artboards);
+    }
+
+    renderBackButton() {
+        if (!app.activePage) {
+            return null;
+        }
+
+        var artboard = app.activePage.getActiveArtboard();
+        if (!artboard) {
+            return null;
+        }
+
+
+        return <MarkupLine className="layers-back__button">
+            <div onClick={this.goBack}><u>← <CarbonLabel id={artboard.name()} /></u></div>
+        </MarkupLine>;
+    }
 
     render() {
         var layers_list = this._renderAllLayers();
@@ -829,7 +860,7 @@ class LayersPanel extends Component {
             position={{ disableAutoClose: true, targetHorizontal: 'left', targetVertical: 'top' }}
             drawContent={(content_props) =>
                 <LayerRenamer
-                    layer = {content_props.layer}
+                    layer={content_props.layer}
                     layer_name={content_props.layer_name}
                     save={this._saveRenamingLayer}
                     cancel={this._cancelRenamingLayer}
@@ -837,9 +868,12 @@ class LayersPanel extends Component {
             }
         />);
 
+
         return (
             <Panel {...this.props} ref="panel" header="Layers" id="layers-panel">
                 <div className="layers-panel__layer-filters" onClick={this._toggleDragMode}></div>
+
+                {this.renderBackButton()}
 
                 <div
                     className={bem("layers-panel", "layers-list", list_modes, "panel__stretcher")}

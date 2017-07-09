@@ -21,6 +21,34 @@ export function nodeOffset(elem) {
     };
 }
 
+/**
+ * Ensures that an absolutely positioned element is not clipped by the specified container.
+ * @param element The element to position.
+ * @param container The container to use as a constraint.
+ */
+export function ensureElementVisible(element: HTMLElement, container: HTMLElement) {
+    var documentWidth = container.clientWidth;
+    var offset = nodeOffset(element);
+
+    if (offset.left + element.clientWidth > documentWidth) {
+        element.style.right = '0px';
+        element.style.left = 'inherit';
+    }
+
+    var documentHeight = container.clientHeight;
+    var actualHeight = element.offsetHeight;
+    if (actualHeight === 0) {
+        for (var i = 0; i < element.children.length; ++i) {
+            var c = element.children[i] as any;
+            actualHeight += c.offsetHeight;
+        }
+    }
+    var heightDiff = documentHeight - offset.top - actualHeight;
+    if (heightDiff < 0) {
+        element.style.top = (element.offsetTop + heightDiff) + "px";
+    }
+}
+
 export function findTransformProp(){
     return 'transform' in document.body.style
         ? 'transform' : 'webkitTransform' in document.body.style

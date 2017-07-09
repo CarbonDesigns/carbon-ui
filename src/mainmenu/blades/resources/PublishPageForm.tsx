@@ -92,7 +92,10 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                 backend.shareProxy.validatePageName({ name, scope: this.state.scope })
                     .then(response => {
                         dispatchAction({ type: "Publish_NameValidation", response });
-                        this.setState({ validatedName: name, publishStep: "1" });
+                        this.setState({ validatedName: name });
+                        if (!force) {
+                            this.setState({ publishStep: "1" });
+                        }
                     });
 
                 return state.set("status", "checking").set("error", "");
@@ -109,18 +112,18 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
     }
 
     private onNameChanged = (e) => {
-        this.setState({name: e.target.value, validatedName: ""});
+        this.setState({ name: e.target.value, validatedName: "" });
     }
     private onDescriptionChanged = (e) => {
-        this.setState({description: e.target.value});
+        this.setState({ description: e.target.value });
     }
     private onTagsChanged = (e) => {
-        this.setState({tags: e.target.value});
+        this.setState({ tags: e.target.value });
     }
     private onPrivacyChanged = () => {
         let scope = this.state.scope === ResourceScope.Company ? ResourceScope.Public : ResourceScope.Company;
         this.setState({ scope, publishStep: "1", validatedName: "" });
-        dispatchAction({type: "Publish_PrivacyChanged", newValue: scope});
+        dispatchAction({ type: "Publish_PrivacyChanged", newValue: scope });
     }
 
     private onPublishButtonClick = () => {
@@ -243,7 +246,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                     </label>
 
                     <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={this.state.scope === ResourceScope.Company} onChange={this.onPrivacyChanged} disabled={!this.props.page}/>
+                        <input type="radio" checked={this.state.scope === ResourceScope.Company} onChange={this.onPrivacyChanged} disabled={!this.props.page} />
                         <i />
                         <FormattedMessage id="@publish.private" />
                     </label>

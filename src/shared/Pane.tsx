@@ -101,10 +101,10 @@ export class PaneListItem extends React.Component<any>  {
         var caption = _get_caption(this.props);
 
         return (
-            <p className={cn} onClick={this.onClick}>
+            <div className={cn} onClick={this.onClick}>
                 {icon}
                 {caption}
-            </p>
+            </div>
         )
     }
 }

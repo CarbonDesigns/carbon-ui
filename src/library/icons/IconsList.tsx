@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
-import { Component, dispatch, handles } from "../../CarbonFlux";
+import { Component, dispatch, handles, dispatchAction } from "../../CarbonFlux";
 import { IconsInfo } from "carbon-core";
 import StencilsActions from '../stencils/StencilsActions';
 import LessVars from "../../styles/LessVars";
@@ -41,7 +41,7 @@ export default class IconsList extends Component<IIconsListProps, any>{
     onClicked = (e) => {
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
-        dispatch(StencilsActions.clicked({ e, templateType, templateId }));
+        dispatchAction({ type: "Stencils_Clicked", e, templateType, templateId });
     };
 
     onLoadMore = page => {

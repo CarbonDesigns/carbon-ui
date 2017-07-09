@@ -1,28 +1,17 @@
 import React from "react";
 import ReactDom from "react-dom";
-
-<<<<<<< HEAD
 import { Component, listenTo, dispatchAction } from "../../CarbonFlux";
-import {richApp} from "../../RichApp";
-import {FormattedHTMLMessage, defineMessages} from 'react-intl';
-=======
-import { Component, listenTo } from "../../CarbonFlux";
 import { richApp } from "../../RichApp";
 import StencilsActions from "./StencilsActions";
 import { FormattedHTMLMessage, defineMessages } from 'react-intl';
->>>>>>> f0ae3b365cc9269dd98d3aaf75539906c1833fb5
-import bem from '../../utils/commonUtils';
+import bem from "../../utils/commonUtils";
 
 export default class SpriteView extends Component<any, any>{
     onClicked = (e) => {
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
         var sourceId = e.currentTarget.dataset.sourceId;
-<<<<<<< HEAD
-        dispatchAction({type: "Stencils_Clicked", e, templateType, templateId, sourceId});
-=======
-        richApp.dispatch(StencilsActions.clicked({ e, ...e.currentTarget.dataset }));
->>>>>>> f0ae3b365cc9269dd98d3aaf75539906c1833fb5
+        dispatchAction({type: "Stencils_Clicked", e, ...e.currentTarget.dataset});
     };
     getCategoryNode(name) {
         return ReactDom.findDOMNode(this.refs[name]);

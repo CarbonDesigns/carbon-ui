@@ -45,10 +45,7 @@
 
         & ~ .stencils-container {
             .transition(transform .2s);
-            .transform(translateX(@shift));
-        }
-        .antiscroll-inner{
-            width: @width + @shift !important;
+            .transform(translateX(@shift + .5rem));
         }
     }
 

@@ -1,17 +1,19 @@
 .context-menu {
     .bgc(@bg_inner1);
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: @air_half 0;
     color: @font_color;
+    min-width: 130px;
+    .f12;
 
     &__item {
+        .rel;
         .act;
-        position: relative;
+        display: flex;
+        align-items: center;
         white-space: nowrap;
-        line-height: 24px;
-        height: 24px;
-        padding-left: 20px;
-        padding-right: 20px;
+        line-height: 2rem;
+        height: 2rem;
+        padding: 0 @air_double;
 
         &_disabled{
             .colorfade(20, @font_color);
@@ -35,19 +37,17 @@
     }
     &__separator {
         margin: 0.3rem 0;
-        border-top: 1px dotted @bg4_panel_body;
+        border-top: 1px solid @color_panel_divider;
     }
     &__submenu {
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding: @air_half 0;
         .bgc(@bg_inner1);
         position: absolute;
-        top: 0;
+        top: -@air_half;
         left: 100%;
-        display: none;
 
-        &:hover {
-            display: block;
+        & .context-menu__item {
+            padding: 0 @line_air;
         }
     }
 
@@ -55,4 +55,7 @@
         display: block;
     }
 
+    &__icon {
+        margin-right: @air_half;
+    }
 }

@@ -3,6 +3,12 @@ var glob = require('glob');
 var path = require('path');
 var lib  = process.cwd();
 
+var authorInfo = {
+    authorId: "carbonium",
+    authorName: "Carbonium",
+    authorAvatar: "/ava/carbonium.png"
+};
+
 function BundleResourcesPlugin(options) {
     if(!options.target){
         throw "target folder for resource bundling is not defined";
@@ -35,7 +41,8 @@ BundleResourcesPlugin.prototype.apply = function (compiler) {
 
                 var resource = JSON.parse(text);
                 resource.dataUrl = that.cdn + "/target/"+i+"/data.json";
-                resource.imageUrl = that.cdn + "/target/"+i+"/image.png";
+                resource.coverUrl = that.cdn + "/target/"+i+"/image.png";
+                Object.assign(resource, authorInfo);
                 data.push(resource);
             }
 

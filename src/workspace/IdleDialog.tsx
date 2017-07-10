@@ -7,7 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { backend, IDisposable } from "carbon-core";
 import { ConnectionState } from "carbon-api";
 
-export default class IdleDialog extends Dialog<void, void>{
+export default class IdleDialog extends Dialog {
     _connectionToken: IDisposable;
 
     private resume = () => {

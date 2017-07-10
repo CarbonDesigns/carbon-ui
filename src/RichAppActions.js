@@ -33,12 +33,6 @@ var RichAppActions = {
             type: 'RichAppActions_hideMainMenu'
         }
     },
-    showResourcesBlade: (props)=>{
-        return {
-            type: 'RichAppActions_showResourcesBlade',
-            props
-        }
-    },
     switchFrameState: (frameVisible) => {
         return {
             type: 'RichAppActions_switchFrameState',

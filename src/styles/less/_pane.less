@@ -1,4 +1,6 @@
 .pane {
+    .f12;
+
     &-row {
 
     }
@@ -49,11 +51,6 @@
         }
     }
 
-    &-row > &-button{
-        margin-right: @air_half;
-        margin-top: @air_half;
-    }
-
     &-button {
         height: @line;
         min-width: @line;
@@ -66,7 +63,7 @@
     &-list {
         &__item {
             .bbox;
-            padding: @line_air;
+            padding: @air_half;
             .flex();
             .jmiddle();
             flex-wrap : nowrap;

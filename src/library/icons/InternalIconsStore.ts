@@ -4,6 +4,7 @@ import CarbonActions from "../../CarbonActions";
 import { handles, CarbonStore, dispatch } from '../../CarbonFlux';
 import { Image, Brush, ContentSizing, ArtboardType, UIElementFlags, IconSetSpriteManager, PatchType } from "carbon-core";
 import Toolbox from "../Toolbox";
+import { StencilInfo } from "../stencils/StencilsActions";
 
 var key = 0;
 
@@ -25,13 +26,13 @@ export class InternalIconsStore extends CarbonStore<any>{
         };
     }
 
-    createElement({ templatePid, templateAid, templateId, templateWidth, templateHeight }) {
+    createElement(info: StencilInfo) {
         var element = new Image();
 
         element.setProps({
-            width: templateWidth ? parseFloat(templateWidth) : 46,
-            height: templateHeight ? parseFloat(templateHeight) : 46,
-            source: Image.createElementSource(templatePid, templateAid, templateId)
+            width: info.templateWidth ? parseFloat(info.templateWidth) : 46,
+            height: info.templateHeight ? parseFloat(info.templateHeight) : 46,
+            source: Image.createElementSource(info.templatePid, info.templateAid, info.templateId)
         });
 
         return element;

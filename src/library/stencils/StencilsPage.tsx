@@ -2,7 +2,6 @@ import React from "react";
 import StandardStencils from "./StandardStencils";
 import RecentStencils from "./RecentStencils";
 import SearchStencils from "./SearchStencils";
-import StencilsActions from "./StencilsActions";
 import {domUtil} from "carbon-core";
 import {listenTo, Component, dispatch} from "../../CarbonFlux";
 // import {default as TabContainer, TabArea, TabHeader, TabPage} from "../../shared/TabContainer";
@@ -27,7 +26,7 @@ export default class StencilsPage extends Component<any, any> {
     }
 
     render(){
-        return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={s => dispatch(LibraryActions.changeTab("stencils", s.tabId))}>
+        return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("stencils", tabId))}>
             <TabTabs
                 items={[
                     <i className="ico--library"/>,

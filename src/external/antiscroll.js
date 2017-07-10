@@ -103,7 +103,7 @@
     this.marginTop = undefined === this.options.marginTop ? 2 : this.options.marginTop;
     this.padding = undefined === this.options.padding ? 2 : this.options.padding;
 
-    this.inner = this.el.find('.antiscroll-inner');
+    this.inner = this.el.find(this.options.innerSelector || '.antiscroll-inner');
 
     if (options.debug) {
       console.group('Antiscroll');

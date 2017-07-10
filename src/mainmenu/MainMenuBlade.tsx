@@ -183,9 +183,9 @@ export default class MainMenuBlade extends React.Component<any, any> {
                 </section>
 
                 {/*<section data-mode-target="#blade1" onClick={this._resolveSetBladePage("recent-projects",RecentProjectsBlade)}>
-                 <div className="main-menu__icon"><i /></div>
-                 <span>Show more...</span>
-                 </section>*/}
+                <div className="main-menu__icon"><i /></div>
+                <span>Show more...</span>
+                </section>*/}
             </div>
 
             <footer className="main-menu__section" id="main-menu__branding">
@@ -194,7 +194,6 @@ export default class MainMenuBlade extends React.Component<any, any> {
                     <a href="javascript:void(0)"/>
                 </div>
             </footer>
-
         </div>
     }
 

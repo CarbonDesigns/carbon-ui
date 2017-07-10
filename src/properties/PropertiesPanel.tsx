@@ -49,8 +49,9 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
 
 
     render(){
+        let {children, ...rest} = this.props;
         return (
-            <Panel ref="panel" {...this.props} header="Properties" id="edit-panel">
+            <Panel ref="panel" {...rest} header="Properties" id="edit-panel">
                 {this.renderProperties()}
             </Panel>
         );

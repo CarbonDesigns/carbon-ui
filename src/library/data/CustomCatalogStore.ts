@@ -1,12 +1,14 @@
-import {app} from "carbon-core";
+import { app, IApp } from "carbon-core";
 import CarbonActions from '../../CarbonActions';
-import {handles, CarbonStore} from "../../CarbonFlux";
+import { handles, CarbonStore } from "../../CarbonFlux";
 import Toolbox from "../Toolbox";
 import DataStore from "./DataStore";
 
-class CustomCatalogStore extends DataStore{
+class CustomCatalogStore extends DataStore<any> {
+    _app: IApp;
+
     @handles(CarbonActions.loaded)
-    onLoaded({app}){
+    onLoaded({ app }) {
         this._app = app;
         this._app.enablePropsTracking();
 
@@ -14,15 +16,15 @@ class CustomCatalogStore extends DataStore{
     }
 
     @handles(CarbonActions.propsChanged)
-    _onPropsChanged = ({element, props}) => {
-        if (element === this._app && props.dataProviders !== undefined){
+    _onPropsChanged({ element, props }) {
+        if (element === this._app && props.dataProviders !== undefined) {
             this._updateState();
         }
-    };
+    }
 
-    _updateState(){
+    _updateState() {
         var customProviders = app.dataManager.getCustomProviders();
-        if (customProviders.length){
+        if (customProviders.length) {
             this.setState({
                 config: [{
                     name: "Lists",
@@ -30,7 +32,7 @@ class CustomCatalogStore extends DataStore{
                         .filter(x => x.format === "list")
                         .map(x => {
                             var config = x.getConfig();
-                            return {name: x.name, examples: config[0].examples, templateType: CustomCatalogStore.StoreType, templateId: x.id + ":default"}
+                            return { name: x.name, examples: config[0].examples, templateType: CustomCatalogStore.StoreType, templateId: x.id + ":default" }
                         })
                 }]
             });

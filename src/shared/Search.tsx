@@ -2,10 +2,20 @@ import React    from "react";
 import ReactDom from "react-dom";
 import {util}   from "carbon-core";
 import cx       from "classnames";
+import { Component } from "../CarbonFlux";
 
 const DEBOUNCE_DELAY_MS = 500;
 
-export default class Search extends React.Component<any, any>{
+interface ISearchProps extends ISimpleReactElementProps {
+    onQuery: (term: string) => void;
+    placeholder?: string;
+}
+
+type SearchState = {
+    query: string;
+}
+
+export default class Search extends Component<ISearchProps, SearchState>{
     onChangeDebounced: () => any;
 
     refs: {
@@ -35,10 +45,11 @@ export default class Search extends React.Component<any, any>{
         input.select();
     }
     render(){
-        const { placeholder, onQuery, className, ...other } = this.props;
+        let { placeholder, onQuery, className, children, ...other } = this.props;
+        placeholder = placeholder || "@search";
         const cn = cx('search-field', className);
         return <div {...other} className={cn}>
-            <input className="search-field__input" placeholder={placeholder} onChange={this.onChange} value={this.state.query} ref="input"/>
+            <input className="search-field__input" placeholder={this.formatLabel(placeholder)} onChange={this.onChange} value={this.state.query} ref="input"/>
             <div className="search-field__ico">
                 <i className="ico--search"/>
             </div>

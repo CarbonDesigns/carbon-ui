@@ -7,7 +7,7 @@ import FlyoutButton from "../../shared/FlyoutButton";
 
 import ViewSettingsPopup from "./ViewSettings/ViewSettingsPopup";
 
-export default class ViewSettingsButton extends Component<any, void>{
+export default class ViewSettingsButton extends Component<any>{
     constructor(props){
         super(props);
     }

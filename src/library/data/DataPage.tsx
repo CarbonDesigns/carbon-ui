@@ -13,7 +13,15 @@ import LibraryActions from "../LibraryActions";
 
 require("./DataStore");
 
-export default class DataPanel extends Component {
+type DataPanelState = {
+    tabId: string;
+}
+
+export default class DataPanel extends Component<{}, DataPanelState> {
+    refs: {
+        catalog: Navigateable;
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -28,9 +36,9 @@ export default class DataPanel extends Component {
 
     render(){
         var builtInConfig = app.dataManager.getBuiltInProvider().getConfig();
+        var {children, ...rest} = this.props;
 
-        return <div {...this.props} id="data_page" className="data">
-            <TabContainer className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={s => dispatch(LibraryActions.changeTab("data", s.tabId))}>
+        return <TabContainer className="gui-page__content data" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("data", tabId))}>
                 <TabTabs
                     items={[
                         <i className="ico--library"/>,
@@ -42,7 +50,7 @@ export default class DataPanel extends Component {
                 />
                 <TabArea className="gui-pages">
                     <TabPage tabId="1" className="gui-page">
-                        <Navigateable className="navigateable" getCategoryNode={c => this.refs["catalog"].refs[c]} config={builtInConfig}>
+                        <Navigateable className="navigateable" getCategoryNode={c => this.refs.catalog.refs[c]} config={builtInConfig}>
                             <CatalogView ref="catalog" config={builtInConfig} templateType="data"/>
                         </Navigateable>
                     </TabPage>
@@ -50,8 +58,7 @@ export default class DataPanel extends Component {
                     <TabPage tabId="3" className="gui-page"> <span>json</span> </TabPage>
                     <TabPage tabId="4" className="gui-page"> <span>search</span> </TabPage>
                 </TabArea>
-            </TabContainer>
-        </div>;
+            </TabContainer>;
     }
 }
 

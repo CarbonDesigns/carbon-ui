@@ -5,7 +5,7 @@ import { AccountAction } from "./AccountActions";
 import LoginForm from "./LoginForm";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 
-export default class LoginPage extends RouteComponent<IRouteComponentProps, void> {
+export default class LoginPage extends RouteComponent<IRouteComponentProps> {
     canHandleActions() {
         return true;
     }

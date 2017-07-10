@@ -1,10 +1,9 @@
 import React from "react";
 import ReactDom from "react-dom";
-import {Component, listenTo} from "../../CarbonFlux";
+import { Component, listenTo, dispatchAction } from "../../CarbonFlux";
 import Search from "../../shared/Search";
 import ScrollContainer from "../../shared/ScrollContainer";
 import SpriteView from "./SpriteView";
-import StencilsActions from "./StencilsActions";
 import {domUtil} from "carbon-core";
 import {richApp} from "../../RichApp";
 
@@ -30,7 +29,7 @@ export default class SearchStencils extends Component<any, any>{
         domUtil.onCssTransitionEnd(page, () => this.refs.search.focus(), 800);
     }
     search = (q) => {
-        richApp.dispatch(StencilsActions.search(q));
+        dispatchAction({type: "Stencils_Search", q});
     };
     render(){
         var placeHolderMessage = this.context.intl.formatMessage({id:"Find stencil (F3)...", defaultMessage:"Find stencil (F3)..."})

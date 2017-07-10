@@ -56,6 +56,8 @@ export default
         "@chooseArtboard": "Select an artboard",
         "@noPagesWithSymbols": "No pages with symbols found",
 
+        "@search": "Search... (F3)",
+
         "Basic": "Basic", // group in library
         "Navigation": "Navigation", // group in library
         "Keyboards": "Keyboards", // group in library
@@ -297,7 +299,6 @@ export default
         "caption.resourceblade": "Resources",
         "caption.mirroringblade": "Device mirroring", //
         "caption.publishpage": "Publish symbols",
-        "caption.importpageblade": "Import page",
         "@caption.editCover": "Edit cover",
 
         "resources.static": "Published by carbonium.io",
@@ -340,6 +341,13 @@ export default
         "@publish.privacy": "Privacy",
         "@publish.confirm": "The symbols with this name already exist",
         "@publish.done": "The symbols have been published to the gallery.",
+
+        "@import": "Import",
+        "@import.header": "Import symbols",
+        "@import.builtin": "Built-in",
+        "@import.gallery": "Gallery",
+        "@import.team": "Team",
+
         "@nameTaken": "This name is already taken",
 
         "@imageEdit.artboardSnapshot": "use a snapshot of an artboard",
@@ -354,10 +362,10 @@ export default
         "btn.publish": "Publish", //
         "btn.publishpage": "Publish my current page", //
         "sharepage.scope": "Is Public?", //
-        "data.loading": "Loading...", //
-        "list.empty": "No items found", //
+        "@sarch": "Search...",
+        "@loading": "Loading...", //
+        "@empty": "Nothing found", //
         "refresh.toolbox": "Refresh library", //
-        "@add.more": "Add more...", //
         "@tilesize": "Tile size",
         "@tilesize.small": "Small (1x1)",
         "@tilesize.large": "Wide (1x2)",
@@ -520,6 +528,10 @@ export default
         "@symbols.markAsText": "Mark as text",
         "@symbols.markAsBackground": "Mark as background",
         "@symbols.detach": "Detach instance",
+        "@symbols.add": "Add more symbols...",
+        "@symbols.noneFound": "We did not find any symbols in this project",
+        "@symbols.import": "Import from gallery",
+
         "@resources.markAsPaletteItem": "Use background in swatches",
         "@resources.removeFromPalette": "Remove from swatches",
         "@iconset": "Icon set",

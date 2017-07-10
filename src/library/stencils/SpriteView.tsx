@@ -1,18 +1,17 @@
 import React from "react";
 import ReactDom from "react-dom";
-
-import { Component, listenTo } from "../../CarbonFlux";
+import { Component, listenTo, dispatchAction } from "../../CarbonFlux";
 import { richApp } from "../../RichApp";
 import StencilsActions from "./StencilsActions";
 import { FormattedHTMLMessage, defineMessages } from 'react-intl';
-import bem from '../../utils/commonUtils';
+import bem from "../../utils/commonUtils";
 
 export default class SpriteView extends Component<any, any>{
     onClicked = (e) => {
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
         var sourceId = e.currentTarget.dataset.sourceId;
-        richApp.dispatch(StencilsActions.clicked({ e, ...e.currentTarget.dataset }));
+        dispatchAction({type: "Stencils_Clicked", e, ...e.currentTarget.dataset});
     };
     getCategoryNode(name) {
         return ReactDom.findDOMNode(this.refs[name]);
@@ -62,6 +61,8 @@ export default class SpriteView extends Component<any, any>{
 
             var imageStyle: any = {
                 backgroundImage: 'url(' + spriteUrl + ')',
+                width: width,
+                height: height,
                 overflow: 'hidden'
             };
 
@@ -93,7 +94,6 @@ export default class SpriteView extends Component<any, any>{
                 style={containerStyle}
                 onClick={this.onClicked}>
                 <div className={bem("stencil", "image", null, x.imageClass)} style={imageStyle}>
-                    <div className={bem("stencil", "image-volume")} style={{ width: width, paddingBottom: (100 * height / width) + '%' }}></div>
                 </div>
                 {modification_badge}
             </div>);

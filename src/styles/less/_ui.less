@@ -514,10 +514,7 @@
 .gui-pages-container {
     display: flex;
     flex-direction: column;
-
-    &_stretched {
-        .stretch();
-    }
+    flex: auto;
 }
 
 
@@ -529,42 +526,19 @@
     .flex();
     align-items: stretch;
     flex-wrap: nowrap;
-
-    .gui-pages-container_normal & {
-    }
-    .gui-pages-container_stretched & {
-        //.stretch();
-    }
 }
 
 //noinspection ALL
 .gui-page {
-
+    display: flex;
+    flex-direction: column;
     //    .transition("all .3s cubic-bezier(.39,.38,.59,1.32) 0");
 
-    .transition(all .3s );
+    .transition(all .3s);
 
     width: 100%;
     min-width: 100%;
     flex-shrink: 0;
-
-    .gui-pages-container_stretched & {
-        .abs;
-        top:0;
-        height: 100%;
-
-        &:nth-of-type(1) {margin-left: 0;}
-        &:nth-of-type(2) {margin-left: 100% * (2 - 1);}
-        &:nth-of-type(3) {margin-left: 100% * (3 - 1);}
-        &:nth-of-type(4) {margin-left: 100% * (4 - 1);}
-        &:nth-of-type(5) {margin-left: 100% * (5 - 1);}
-        &:nth-of-type(6) {margin-left: 100% * (6 - 1);}
-        &:nth-of-type(7) {margin-left: 100% * (7 - 1);}
-        &:nth-of-type(8) {margin-left: 100% * (8 - 1);}
-    }
-
-
-
 
     .gui-pages[data-current-tab="1"] > & {@left: -100% * (1 - 1); .transform(translateX(@left))}
     .gui-pages[data-current-tab="2"] > & {@left: -100% * (2 - 1); .transform(translateX(@left))}
@@ -594,7 +568,7 @@
 
 
 .gui-tabs {
-    .flex();
+    .flexcenter();
     flex-wrap: nowrap;
     flex-shrink: 0;
 }
@@ -607,13 +581,16 @@
     flex-grow: 1;
     .op60;
     .clip;
-    &_active, &:active:hover {
+    &&_active, &:active:hover {
         .op1;
     }
-    &:not(.gui-tabs__tab_active):hover{
+    &&:not(.gui-tabs__tab_active):hover{
         .op1;
         color: @sel_color;
         .transition(all .15s);
+    }
+    &&_nogrow {
+        flex-grow: 0;
     }
 }
 
@@ -1060,6 +1037,9 @@
         margin-bottom: @r;
         &_space {
             margin-top   : 3*@r;
+        }
+        &_center {
+            text-align: center;
         }
     }
     &-submit {
@@ -1963,8 +1943,12 @@
         margin-top: @line_air;
     }
 
+    & + & {
+        margin-left: @air_half;
+    }
+
     .noselect;
-    .f14;
+    .f12;
     &, & > span, & > b {
         line-height: 1;
     }
@@ -2667,4 +2651,9 @@
             display: none;
         }
     }
+}
+
+
+.navigateable{
+    .flex(row);
 }

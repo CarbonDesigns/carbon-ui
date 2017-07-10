@@ -3,7 +3,7 @@ import dragAndDrop from "./DragAndDrop";
 import {handles, CarbonStore, dispatch} from "../CarbonFlux";
 import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
-import StencilsActions from "./stencils/StencilsActions";
+import { StencilsAction, StencilInfo } from "./stencils/StencilsActions";
 import { app, Symbol, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer } from "carbon-core";
 
@@ -69,18 +69,23 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         this.setState({pages: app.pages, currentPage:index===-1?app.pages[0]:this.state.currentPage});
     }
 
-    @handles(StencilsActions.changePage)
-    pageChanged({page}){
-        //var config = this.findProjectConfig(projectType);
-        this.setState({currentPage: page});
+    onAction(action: StencilsAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Stencils_ChangePage":
+                this.setState({currentPage: action.page});
+                return;
+            case "Stencils_Clicked":
+                this.clicked(action);
+                return;
+        }
     }
 
-    @handles(StencilsActions.clicked)
-    clicked(data){
-        var {e, templateType, templateId, sourceId} = data;
-        var element = this.elementFromTemplate(data);
+    clicked(info: StencilInfo){
+        var element = this.elementFromTemplate(info);
         var scale = Environment.view.scale();
-        var location = Environment.controller.choosePasteLocation([element], e.ctrlKey || e.metaKey);
+        var location = Environment.controller.choosePasteLocation([element], info.e.ctrlKey || info.e.metaKey);
         var w = element.boundaryRect().width;
         var h = element.boundaryRect().height;
         var x, y;
@@ -96,7 +101,7 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         }
 
         var screenPoint = Environment.view.pointToScreen({x: x * scale, y: y * scale});
-        var node = dragAndDrop.cloneNode(e.currentTarget);
+        var node = dragAndDrop.cloneNode(info.e.currentTarget);
         document.body.appendChild(node);
         velocity(node, {left: screenPoint.x, top: screenPoint.y, width: w*scale, height: h*scale, opacity: .1}, {
             duration: 500,
@@ -105,7 +110,7 @@ export class Toolbox extends CarbonStore<IToolboxState>{
                 document.body.removeChild(node);
 
                 Environment.controller.insertAndSelect([element], location.parent, x, y);
-                this._onElementAdded(templateType);
+                this._onElementAdded(info.templateType);
 
                 //analytics.event("Toolbox", "Single-click", templateId);
             }});
@@ -149,7 +154,7 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         //analytics.event("Toolbox", "Drag-drop", interaction.templateType + "/" + interaction.templateId);
     };
 
-    elementFromTemplate(data){
+    elementFromTemplate(data: StencilInfo){
         var store = this._stores[data.templateType];
         var element;
         if (store){

@@ -1,6 +1,6 @@
 import React from "react";
 import BladePage from "../BladePage";
-import { app, backend, IPage, Rect, Workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, PublishScope } from "carbon-core";
+import { app, backend, IPage, Rect, Workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ResourceScope } from "carbon-core";
 import { Component, dispatchAction } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
@@ -29,7 +29,7 @@ interface IPublishBladeState {
     defaultSetup: ISharedPageSetup;
 }
 
-const EmptySetup: ISharedPageSetup = { name: "", description: "", tags: "", scope: PublishScope.Public, coverUrl: "" };
+const EmptySetup: ISharedPageSetup = { name: "", description: "", tags: "", scope: ResourceScope.Public, coverUrl: "" };
 
 export default class PublishBlade extends Component<void, IPublishBladeState> {
     constructor(props) {

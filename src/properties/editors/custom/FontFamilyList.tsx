@@ -7,7 +7,7 @@ import LessVars from "../../../styles/LessVars";
 import FlyoutActions from "../../../FlyoutActions";
 import FontFamilyActions from "./FontFamilyActions";
 import { GuiCheckbox, GuiSpinner }           from "../../../shared/ui/GuiComponents";
-import {backend, FontsProxy} from "carbon-core";
+import {backend} from "carbon-core";
 import bem from '../../../utils/commonUtils';
 import GuiSelect from "../../../shared/ui/GuiSelect";
 
@@ -70,8 +70,8 @@ export default class FontFamilyList extends Component<any, any>{
         });
 
         var operation = this.state.query ?
-            FontsProxy.search(this.state.query, nextPage) :
-            FontsProxy.system(nextPage);
+            backend.fontsProxy.search(this.state.query, nextPage) :
+            backend.fontsProxy.system(nextPage);
 
         operation
             .then(result => Dispatcher.dispatch(FontFamilyActions.pageLoaded(result, nextPage)));

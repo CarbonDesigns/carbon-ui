@@ -6,7 +6,7 @@ import RegistrationForm from "./RegistrationForm";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import { FormattedMessage } from "react-intl";
 
-export default class RegistrationPage extends RouteComponent<IRouteComponentProps, void> {
+export default class RegistrationPage extends RouteComponent<IRouteComponentProps> {
     canHandleActions() {
         return true;
     }

@@ -95,6 +95,7 @@ packVendors(argv, function(err, file){
         devServer: false,
         minimize: true,
         debug: false,
+        trace: false,
         devtool: "#source-map",
         host: "",
         port: ""

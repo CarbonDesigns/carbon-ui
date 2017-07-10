@@ -12,7 +12,7 @@ interface IQuickAppProps extends IRouteComponentProps{
 }
 
 //this component can be used to render password dialog, some intro page, etc
-export default class QuickApp extends RouteComponent<IQuickAppProps, void> {
+export default class QuickApp extends RouteComponent<IQuickAppProps> {
     _openApp(code){
         backend.ensureLoggedIn()
             .then(() => backend.shareProxy.use(code))

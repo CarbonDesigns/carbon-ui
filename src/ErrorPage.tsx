@@ -6,7 +6,7 @@ interface IErrorPageProps{
         code: ErrorCode
     }
 }
-export default class ErrorPage extends React.Component<IErrorPageProps, void>{
+export default class ErrorPage extends React.Component<IErrorPageProps>{
     render(){
         var code = this.props.params.code;
         var message;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Component, listenTo, dispatch } from "./CarbonFlux";
-import { nodeOffset } from "./utils/domUtil";
+import { nodeOffset, ensureElementVisible } from "./utils/domUtil";
 import FlyoutActions from './FlyoutActions';
 import flyoutStore from "./FlyoutStore";
 
@@ -35,26 +35,7 @@ class FlyoutHost extends Component<any, any> {
 
     ensurePosition() {
         var flyout = this.refs["flyout"] as HTMLElement;
-
-        var documentWidth = document.documentElement.clientWidth;
-        var popupWidth = flyout.clientWidth;
-        if (this.props.offset.left + popupWidth > documentWidth) {
-            flyout.style.right = (documentWidth - this.props.offset.left - this.props.targetSize.width) + 'px';
-            flyout.style.left = 'inherit';
-        }
-
-        var documentHeight = document.documentElement.clientHeight;
-        var actualHeight = flyout.offsetHeight;
-        if (actualHeight === 0) {
-            for (var i = 0; i < flyout.children.length; ++i) {
-                var c = flyout.children[i] as any;
-                actualHeight += c.offsetHeight;
-            }
-        }
-        var heightDiff = documentHeight - flyout.offsetTop - actualHeight;
-        if (heightDiff < 0) {
-            flyout.style.top = (flyout.offsetTop + heightDiff) + "px";
-        }
+        ensureElementVisible(flyout, document.documentElement);
     }
 }
 

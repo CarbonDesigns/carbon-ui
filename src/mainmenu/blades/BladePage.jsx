@@ -51,7 +51,7 @@ export default class BladePage extends Component {
                         : <BladeHeader caption={this.props.caption || this.caption}/>
                     }
 
-                    <ScrollContainer className="blade__scroller thin"  boxProps={this.props.contentProps}>
+                    <ScrollContainer className="thin">
                         {this.props.children}
                     </ScrollContainer>
 

@@ -1,11 +1,13 @@
-import { ILayer } from "carbon-core";
+import { ILayer, IApp } from "carbon-core";
 
+export type CarbonAction =
+    { type: "Carbon_AppLoaded" } |
+    { type: "Carbon_AppRestored" };
+
+//TODO: migrate to union types
 var CarbonActions = {
     loaded:(app)=>{
-        return {
-            type:"CARBON_LOADED",
-            app
-        }
+        return {type: "Carbon_AppLoaded", app}
     },
     pageChanged:(oldPage, newPage)=>{
         return {
@@ -41,7 +43,7 @@ var CarbonActions = {
         }
     },
     restoredLocally:()=>{
-        return {type:"CARBON_RESTORED_LOCALLY"}
+        return {type:"Carbon_Restored"}
     },
     elementSelected:(selection, prevSelectedElements?)=> {
         return {

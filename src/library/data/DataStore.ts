@@ -2,9 +2,11 @@ import Toolbox from "../Toolbox";
 import LibraryStore from "../LibraryStore";
 import { handles, dispatch } from "../../CarbonFlux";
 import { app } from "carbon-core";
+import { StencilInfo } from "../stencils/StencilsActions";
 
-export default class DataStore extends LibraryStore {
-    createElement({templateId}){
+export default class DataStore<T> extends LibraryStore<T> {
+    createElement(info: StencilInfo){
+        let templateId = info.templateId;
         var colon = templateId.indexOf(":");
         var providerId = null, field = null;
         if (colon !== -1){

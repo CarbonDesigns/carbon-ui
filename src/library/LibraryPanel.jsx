@@ -61,7 +61,7 @@ export default class LibraryPanel extends Component {
     render() {
         return (
             <Panel ref="panel" {...this.props} header="Library" id="library-panel">
-                <TabContainer currentTabId={this.state.tabId} onTabChanged={s => dispatch(LibraryActions.changeTab("library", s.tabId))}>
+                <TabContainer currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("library", tabId))}>
                     <TabTabs
                         tabMods="level1"
                         insertBefore={this.state.progressVisible ? <Progress /> : null}
@@ -73,7 +73,7 @@ export default class LibraryPanel extends Component {
                         ]}
                     />
 
-                    <TabArea className="gui-pages panel__stretcher">
+                    <TabArea className="gui-pages">
                         <TabPage tabId="1" className="gui-page">
                             <StencilsPage />
                         </TabPage>

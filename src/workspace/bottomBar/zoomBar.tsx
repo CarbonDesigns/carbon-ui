@@ -9,7 +9,7 @@ import {listenTo, Component} from '../../CarbonFlux';
 import AppActions from '../../RichAppActions';
 import {default as bem, join_bem_mods} from '../../utils/commonUtils';
 
-class ContiniouseAction extends Component<any, void> {
+class ContiniouseAction extends Component<any> {
   stopExecution = true;
 
   _onMouseDown=(event)=>{
@@ -49,7 +49,7 @@ class ContiniouseAction extends Component<any, void> {
   }
 }
 
-class ZoomMenuAction extends Component<any, void> {
+class ZoomMenuAction extends Component<any> {
   _onMouseDown(event) {
     event.preventDefault();
     event.stopPropagation();

@@ -10,7 +10,7 @@ import Immutable from "immutable";
 interface IGuiInlineLabelProps extends IReactElementProps {
     text?: string
 }
-export class GuiInlineLabel extends Component<IGuiInlineLabelProps, void> {
+export class GuiInlineLabel extends Component<IGuiInlineLabelProps> {
     constructor(props) {
         super(props);
     }
@@ -178,7 +178,7 @@ interface IGuiSwitchProps {
     checked: boolean;
     onChange: React.EventHandler<React.ChangeEvent<HTMLInputElement>>;
 }
-export class GuiSwitch extends Component<IGuiSwitchProps, void> {
+export class GuiSwitch extends Component<IGuiSwitchProps> {
     constructor(props) {
         super(props);
     }
@@ -218,7 +218,7 @@ interface IGuiRadioProps {
     label?: string;
     onChange: React.EventHandler<React.ChangeEvent<HTMLInputElement>>;
 }
-export class GuiRadio extends Component<IGuiRadioProps, void> {
+export class GuiRadio extends Component<IGuiRadioProps> {
     constructor(props) {
         super(props);
     }
@@ -262,7 +262,7 @@ interface IGuiCheckboxProps {
     defaultMessage?: string;
     onChange?: React.EventHandler<React.ChangeEvent<HTMLInputElement>>;
 }
-export class GuiCheckbox extends Component<IGuiCheckboxProps, void> {
+export class GuiCheckbox extends Component<IGuiCheckboxProps> {
     constructor(props) {
         super(props);
     }
@@ -306,19 +306,29 @@ export class GuiCheckbox extends Component<IGuiCheckboxProps, void> {
     }
 }
 
-interface IGuiButtonProps extends IReactElementProps {
+interface IGuiButtonProps extends IReactElementProps, IHasMods<
+    "hover-white" |
+    "hover-success" |
+    "hover-cancel" |
+    "submit" |
+    "delete" |
+    "square" |
+    "spinning" |
+    "full" |
+    "small" |
+    "simple"
+> {
     className?: string;
     icon?: string|boolean;
     caption?: string;
     defaultMessage?: string;
     bold?: boolean;
-    mods?: string | string[];
     disabled?: boolean;
     progressPercents?: number;
     progressColor?: string;
     onClick: (e?) => void;
 }
-export class GuiButton extends Component<IGuiButtonProps, void>{
+export class GuiButton extends Component<IGuiButtonProps>{
     private onClick = e => {
         if (!this.props.disabled && this.props.onClick) {
             this.props.onClick(e);
@@ -326,26 +336,24 @@ export class GuiButton extends Component<IGuiButtonProps, void>{
     };
 
     render() {
-        var { className, icon, caption, defaultMessage, bold, mods, disabled, progressPercents, progressColor, onClick, ...rest } = this.props;
+        var { className, icon, caption, defaultMessage, bold, mods, disabled, progressPercents, progressColor, onClick, children, ...rest } = this.props;
 
         var cn = bem('gui-btn', null, mods, className);
         if (disabled)
             cn += ' gui-btn_disabled';
 
-        var content = this.props.children;
-        var children = null;
-        if (content == null) {
-            children = [];
+        if (!children) {
+            var newChildren = [];
             if (icon != null) {
                 var ico_cn = (typeof icon === 'string') ? "ico--" + icon : null;
-                children.push(<i key="icon" className={ico_cn} />);
+                newChildren.push(<i key="icon" className={ico_cn} />);
             }
             if (caption != null || defaultMessage != null) {
                 var caption_tagName = bold != null ? "b" : "span";
-                children.push(<FormattedMessage key="caption" tagName={caption_tagName} id={caption} defaultMessage={defaultMessage} />)
+                newChildren.push(<FormattedMessage key="caption" tagName={caption_tagName} id={caption} defaultMessage={defaultMessage} />)
             }
-            if (!children.length) {
-                children = null;
+            if (newChildren.length) {
+                children = newChildren;
             }
         }
 
@@ -355,7 +363,7 @@ export class GuiButton extends Component<IGuiButtonProps, void>{
             var percentString = Math.max(100, progressPercents).toFixed(2);
             progressbar = <div className="gui-btn__progressbar" style={{ backgroundColor: progressColor, width: percentString + '%' }}></div>
         }
-        return <div {...rest} onClick={this.onClick} className={cn}>{progressbar}{content || children}</div>
+        return <div {...rest} onClick={this.onClick} className={cn}>{progressbar}{children}</div>
     }
 }
 
@@ -363,14 +371,14 @@ interface IGuiButtonLockProps {
     className?: string;
     mods?: string;
 }
-export class GuiButtonBlock extends Component<IGuiButtonLockProps, void>{
+export class GuiButtonBlock extends Component<IGuiButtonLockProps>{
     constructor(props) {
         super(props);
     }
     render() {
-        var { className, mods, ...rest } = this.props;
+        var { className, mods, children, ...rest } = this.props;
         var cn = bem("gui-btn-block", null, mods, className);
-        return <div {...rest} className={cn}>{this.props.children}</div>
+        return <div {...rest} className={cn}>{children}</div>
     }
 }
 
@@ -380,11 +388,11 @@ export class GuiButtonBlock extends Component<IGuiButtonLockProps, void>{
 interface IGuiButtonedInputProps {
     className?: string;
 }
-export class GuiButtonedInput extends Component<IGuiButtonedInputProps, void>{
+export class GuiButtonedInput extends Component<IGuiButtonedInputProps>{
     render() {
-        var { className, ...rest } = this.props;
+        var { className, children, ...rest } = this.props;
         return <div className={cx("gui-buttoned-input", className)} {...rest}>
-            {this.props.children}
+            {children}
         </div>
     }
 }
@@ -396,11 +404,11 @@ export class GuiButtonedInput extends Component<IGuiButtonedInputProps, void>{
 interface IGuiButtonStackProps {
     className?: string;
 }
-export class GuiButtonStack extends Component<IGuiButtonStackProps, void>{
+export class GuiButtonStack extends Component<IGuiButtonStackProps>{
     render() {
-        var { className, ...rest } = this.props;
+        var { className, children, ...rest } = this.props;
         return <div className={cx("gui-btn-stack", className)} {...rest}>
-            {this.props.children}
+            {children}
         </div>
     }
 }
@@ -408,11 +416,11 @@ export class GuiButtonStack extends Component<IGuiButtonStackProps, void>{
 
 interface IGuiDropDownProps extends IDropdownProps {
 }
-export class GuiDropDown extends Component<IGuiDropDownProps, void>{
+export class GuiDropDown extends Component<IGuiDropDownProps>{
     render() {
-        var { className, ...rest } = this.props;
+        var { className, children, ...rest } = this.props;
         return <DropDown className={cx("gui-drop", className)} {...rest}>
-            {this.props.children}
+            {children}
         </DropDown>
     }
 }
@@ -430,7 +438,7 @@ interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputEleme
     selectOnFocus?: boolean;
 }
 
-export class GuiInput extends Component<IGuiInputProps, void>{
+export class GuiInput extends Component<IGuiInputProps>{
     refs: {
         input: HTMLInputElement;
     }
@@ -483,7 +491,7 @@ interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAre
     suffix?: any;
 }
 
-export class GuiTextArea extends Component<IGuiTextAreaProps, void> {
+export class GuiTextArea extends Component<IGuiTextAreaProps> {
     refs: {
         input: HTMLTextAreaElement;
     }

@@ -20,6 +20,7 @@ require("react-infinite");
 require("react-intl");
 require("react-pure-render");
 require("react-router");
+require("react-virtualized");
 require("velocity-animate");
 require('unsplash-js');
 require("webfontloader");

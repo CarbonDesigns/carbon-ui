@@ -16,7 +16,8 @@ var ImagesActions = {
     webSearch:(term) => {
         return {
             type:'IMAGES_WEB_SEARCH',
-            term
+            term,
+            async: true
         }
     },
     userImagesLoaded:(images)=> {

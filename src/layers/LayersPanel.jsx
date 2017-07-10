@@ -1,6 +1,7 @@
 import { Component, listenTo, CarbonLabel } from '../CarbonFlux';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from "prop-types";
 import Panel from '../layout/Panel'
 import { richApp } from '../RichApp';
 import cx from 'classnames';
@@ -571,10 +572,10 @@ class LayerItem extends Component {
     }
 
     static contextTypes = {
-        startRenamingLayer: React.PropTypes.func,
-        dragStart: React.PropTypes.func,
-        dragOver: React.PropTypes.func,
-        dragEnd: React.PropTypes.func
+        startRenamingLayer: PropTypes.func,
+        dragStart: PropTypes.func,
+        dragOver: PropTypes.func,
+        dragEnd: PropTypes.func
     };
 }
 
@@ -912,12 +913,12 @@ class LayersPanel extends Component {
     }
 
     static childContextTypes = {
-        dragStart: React.PropTypes.func,
-        dragOutside: React.PropTypes.func,
-        dragInside: React.PropTypes.func,
-        dragOver: React.PropTypes.func,
-        dragEnd: React.PropTypes.func,
-        startRenamingLayer: React.PropTypes.func,
+        dragStart: PropTypes.func,
+        dragOutside: PropTypes.func,
+        dragInside: PropTypes.func,
+        dragOver: PropTypes.func,
+        dragEnd: PropTypes.func,
+        startRenamingLayer: PropTypes.func,
     };
 }
 

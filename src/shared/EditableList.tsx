@@ -185,19 +185,7 @@ export default class EditableList extends Component<any, any> {
         // )
     }
 
-    static PropTypes = {
-        items     : React.PropTypes.any,
-        onClick   : React.PropTypes.func,
-        onRename  : React.PropTypes.func,
-        onDelete  : React.PropTypes.func,
-        insideFlyout : React.PropTypes.bool,
-        canDelete : React.PropTypes.any
-    }
     static defaultProps = {
-        // items     : React.PropTypes.any,
-        // onClick   : React.PropTypes.func,
-        // onRename  : React.PropTypes.func,
-        // onDelete  : React.PropTypes.func,
         insideFlyout : false,
         canDelete : true
     }

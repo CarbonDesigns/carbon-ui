@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 
 var ExpandArrow = (props)=>{
@@ -60,7 +61,7 @@ class Node extends React.Component {
         </div>
     }
 }
-Node.contextTypes = {onClick: React.PropTypes.any, template: React.PropTypes.any};
+Node.contextTypes = {onClick: PropTypes.any, template: PropTypes.any};
 
 
 export default class Tree extends React.Component{
@@ -74,4 +75,4 @@ export default class Tree extends React.Component{
         return {onClick: this.props.onClick, template: this.props.nodeTemplate || DefaultNode};
     }
 }
-Tree.childContextTypes = {onClick: React.PropTypes.any, template: React.PropTypes.any};
+Tree.childContextTypes = {onClick: PropTypes.any, template: PropTypes.any};

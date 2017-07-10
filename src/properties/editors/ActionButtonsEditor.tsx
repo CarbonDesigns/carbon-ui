@@ -4,10 +4,6 @@ import {GuiButton}         from "../../shared/ui/GuiComponents";
 
 export default class ActionButtonsEditor extends React.Component<any, any> {
 
-    static propTypes = {
-        buttons : React.PropTypes.array,
-    };
-
     _onClick = (ev) => {
       if (typeof this.props.onClick === 'function') {
           this.props.onClick(ev, this.props.e);

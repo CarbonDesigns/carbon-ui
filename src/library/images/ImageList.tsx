@@ -1,25 +1,34 @@
 import React from "react";
 import cx from "classnames";
 import { Component, dispatch, dispatchAction } from "../../CarbonFlux";
-import {IconsInfo} from "carbon-core";
+import { IconsInfo, IPaginatedResult } from "carbon-core";
 import LessVars from "../../styles/LessVars";
-import InfiniteScrollContainer from "../../shared/InfiniteScrollContainer";
+import InfiniteList from "../../shared/InfiniteList";
+import { IStencil } from "../ToolboxConfiguration";
 
-export default class ImageList extends Component<any, any> {
-    constructor(props){
-        super(props);
-        this.state = {
-            initialElements: props.initialItems.map(this._renderItem),
-            elementHeight: props.initialItems.map(this._getItemHeight)
-        }
+export interface IImageStencil extends IStencil {
+    type: string;
+    url: string;
+    portrait: boolean;
+    cover?: boolean;
+    thumbUrl: string;
+    thumbHeight: number;
+    credits?: {
+        link: string;
+        name: string;
     }
+}
 
-    componentWillReceiveProps(nextProps){
-        if (nextProps.initialItems !== this.props.initialItems){
-            this.setState({
-                initialElements: nextProps.initialItems.map(this._renderItem),
-                elementHeight: nextProps.initialItems.map(this._getItemHeight)});
-        }
+type ImageStencilList = new (props) => InfiniteList<IImageStencil>;
+const ImageStencilList = InfiniteList as ImageStencilList;
+
+interface IImageListProps extends ISimpleReactElementProps {
+    onLoadMore: (startIndex: number, stopIndex: number) => Promise<IPaginatedResult<IImageStencil>>;
+}
+
+export default class ImageList extends Component<IImageListProps> {
+    refs: {
+        list: InfiniteList<IImageStencil>;
     }
 
     onClicked = (e) =>{
@@ -28,23 +37,16 @@ export default class ImageList extends Component<any, any> {
         dispatchAction({type: "Stencils_Clicked", e, templateType, templateId});
     };
 
-    onLoadMore = page => {
-        return this.props.onLoadMore(page)
-            .then(data => Object.assign({}, data, {
-                elements: data.items.map(this._renderItem),
-                elementHeight: data.items.map(this._getItemHeight)
-            }))
-    };
-    _getItemHeight(i){
+    _getItemHeight(i: IImageStencil){
         if (i.thumbHeight){
             return i.thumbHeight;
         }
-        return i.cx.portrait ? LessVars.libraryImageHeightPortrait : LessVars.libraryImageHeight;
+        return i.portrait ? LessVars.libraryImageHeightPortrait : LessVars.libraryImageHeight;
     }
 
-    _renderItem = stencil => {
+    _renderItem = (stencil: IImageStencil) => {
         var imageStyle: any = {
-            backgroundImage: 'url(' + stencil.spriteUrl + ')'
+            backgroundImage: 'url(' + stencil.thumbUrl + ')'
         };
         if (stencil.hasOwnProperty("thumbHeight")){
             imageStyle.height = stencil.thumbHeight;
@@ -53,8 +55,8 @@ export default class ImageList extends Component<any, any> {
         var credits = (stencil.credits) && <a className="credits ext-link" href={stencil.credits.link} target="_blank"><span>{stencil.credits.name}</span></a>
         return <div
             key={stencil.id}
-            className={cx("stencil image-holder", stencil.cx)}
-            title={stencil.name}
+            className={cx("stencil image-holder", {cover: stencil.cover, portrait: stencil.portrait})}
+            title={stencil.title}
             data-template-type={stencil.type}
             data-template-id={stencil.id}
             onClick={this.onClicked}
@@ -65,10 +67,10 @@ export default class ImageList extends Component<any, any> {
     };
 
     render(){
-        return <InfiniteScrollContainer className={this.props.className}
-                                        elementHeight={this.state.elementHeight}
-                                        containerHeight={this.props.containerHeight}
-                                        initialElements={this.state.initialElements}
-                                        onLoadMore={this.onLoadMore}/>
+        return <ImageStencilList className={this.props.className}
+                                 ref="list"
+                                 rowHeight={this._getItemHeight}
+                                 rowRenderer={this._renderItem}
+                                 loadMore={this.props.onLoadMore}/>
     }
 }

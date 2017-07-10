@@ -1,4 +1,5 @@
 import {Component, listenTo, dispatch, stopPropagationHandler} from '../CarbonFlux';
+import PropTypes from "prop-types";
 import React from 'react';
 import cx from "classnames";
 import ScrollContainer from "../shared/ScrollContainer";
@@ -29,11 +30,11 @@ export class StoriesListItem extends Component<any, any> {
 
 export class StoriesPopupList extends Component<any, any> {
     static propTypes = {
-        stories      : React.PropTypes.any,
-        padding      : React.PropTypes.any,
-        insideFlyout : React.PropTypes.any,
-        selectStory  : React.PropTypes.func,
-        activeStory  : React.PropTypes.any
+        stories      : PropTypes.any,
+        padding      : PropTypes.any,
+        insideFlyout : PropTypes.any,
+        selectStory  : PropTypes.func,
+        activeStory  : PropTypes.any
     }
 
     render() {
@@ -61,10 +62,10 @@ export class StoriesPopupList extends Component<any, any> {
 
 export default class StoriesList extends Component<any, any> {
     static propTypes = {
-        stories      : React.PropTypes.any,
-        selectStory  : React.PropTypes.func,
-        activeStory  : React.PropTypes.any,
-        viewDetails  : React.PropTypes.func
+        stories      : PropTypes.any,
+        selectStory  : PropTypes.func,
+        activeStory  : PropTypes.any,
+        viewDetails  : PropTypes.func
     }
 
     render() {

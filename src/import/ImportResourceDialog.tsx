@@ -9,6 +9,7 @@ import { app, backend, IDisposable, ISharedResource, IPaginatedResult, ResourceS
 import { default as TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../shared/TabContainer";
 import { Markup, MarkupLine, MarkupSubmit } from "../shared/ui/Markup";
 import Search from "../shared/Search";
+import ResourceSharer from "../library/ResourceSharer";
 import bem from '../utils/commonUtils';
 import ResourceDetails from "./ResourceDetails";
 import ResourceTile from "./ResourceTile";
@@ -87,7 +88,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
     private importResource = () => {
         fetch(this.state.selectedResource.dataUrl)
             .then(response => response.json())
-            .then(data => app.importPage(data))
+            .then(data => ResourceSharer.importPage(data))
             .then(page => {
                 dispatchAction({ type: "Stencils_ChangePage", page });
                 super.close();

@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import Infinite from "react-infinite";
 import {Component, CarbonStore, handles, Dispatcher} from "../../../CarbonFlux";
 import Search from "../../../shared/Search";
 import LessVars from "../../../styles/LessVars";
@@ -199,7 +198,7 @@ export default class FontFamilyList extends Component<any, any>{
             </div>
 
             <div className="font-options__body  antiscroll-wrap" ref="scrollContainer">
-                <Infinite className="prop__options antiscroll-inner"
+                {/*<Infinite className="prop__options antiscroll-inner"
                     elementHeight={LessVars.propOptionHeight}
                     containerHeight={LessVars.flyoutMaxHeight}
                     infiniteLoadBeginEdgeOffset={300}
@@ -255,7 +254,7 @@ export default class FontFamilyList extends Component<any, any>{
                     }
                     <div className="prop__optgroup-title" key={'category-popular'}>Popular</div>
                     {this.state.elements}
-                </Infinite>
+                </Infinite>*/}
             </div>
         </div>
     }

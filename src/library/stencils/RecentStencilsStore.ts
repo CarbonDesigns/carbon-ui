@@ -1,5 +1,6 @@
-import { app, Image, ToolboxConfiguration, IUIElement, Workspace } from "carbon-core";
+import { app, Image, IUIElement, workspace } from "carbon-core";
 import AbstractStore from "../AbstractRecentStore";
+import ToolboxConfiguration from "../ToolboxConfiguration";
 
 export default class RecentStencilsStore extends AbstractStore{
     constructor(){
@@ -30,7 +31,7 @@ export default class RecentStencilsStore extends AbstractStore{
             type: "recentElement",
             json: e.toJSON(),
             title: e.displayName(),
-            spriteUrl: Workspace.view.renderElementToDataUrl(e),
+            spriteUrl: workspace.view.renderElementToDataUrl(e),
             realWidth: e.width(),
             realHeight: e.height(),
             spriteMap: [0, 0, tileSize.width, tileSize.height],

@@ -492,6 +492,7 @@ export default
         "@account.logout": "Log out",
         "@account.registrationMessage": "You don't have an account yet. It takes just a few seconds to register...",
         "@account.create": "Create account",
+        "@account.noUsername": "Please enter your name",
         "@account.noEmail": "Please enter your email",
         "@account.badEmail": "Please enter a valid email",
         "@account.duplicateEmail": "A user with this email is already registered",

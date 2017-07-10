@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {app} from "carbon-core";
 import cx from 'classnames';
 
@@ -10,7 +11,7 @@ interface IActionButtonProps extends IReactElementProps
 
 export default class ActionButton extends React.Component<IActionButtonProps, any> {
     static contextTypes = {
-        intl: React.PropTypes.object
+        intl: PropTypes.object
     };
 
     constructor(props) {

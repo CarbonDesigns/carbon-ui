@@ -124,7 +124,6 @@ export class InternalIconsStore extends CarbonStore<any>{
 
             for (let e of elements) {
                 group.templates.push({
-                    "autoPosition": "center",
                     "id": e.id(),
                     "type": InternalIconsStore.StoreType,
                     "pageId": set.pageId,

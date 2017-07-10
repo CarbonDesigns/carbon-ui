@@ -220,9 +220,7 @@ export default class UserImages extends Component<any, any>{
         this.queueSize = queue.size;
 
         this.setState(newState);
-
     }
-
 
     @handles(LayoutActions.resizePanel, LayoutActions.togglePanelGroup, LayoutActions.windowResized)
     onResizePanel() {
@@ -239,7 +237,6 @@ export default class UserImages extends Component<any, any>{
     _onLoadMore = p => {
         return Promise.resolve({ items: [], hasMore: false });
     };
-
 
     componentDidMount() {
         super.componentDidMount();

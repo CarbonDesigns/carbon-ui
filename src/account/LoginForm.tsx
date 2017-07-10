@@ -1,32 +1,23 @@
 import React from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import { FormattedMessage } from "react-intl";
 import { backend } from "carbon-api";
 import { dispatch, handles, Component, dispatchAction } from "../CarbonFlux";
 import { AccountAction } from "./AccountActions";
 import { GuiButton, GuiRadio, GuiInput, IFieldState, ValidationTrigger, GuiValidatedInput, IFormState } from "../shared/ui/GuiComponents";
+import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import Socials from "./Socials";
 import Immutable from "immutable";
-import Intl from "react-intl";
-import Router from "react-router";
 
-interface ILoginFormProps{
+interface ILoginFormProps extends IRouteComponentProps {
     messageId: string;
 }
 
-export default class LoginForm extends Component<ILoginFormProps, IFormState> {
-    context: {
-        router: Router.InjectedRouter
-    }
-
+export default class LoginForm extends RouteComponent<ILoginFormProps, IFormState> {
     refs: {
         email: GuiValidatedInput;
         password: GuiValidatedInput;
-    }
-
-    static contextTypes = {
-        router: React.PropTypes.any,
-        intl: React.PropTypes.object
     }
 
     constructor(props) {
@@ -44,11 +35,11 @@ export default class LoginForm extends Component<ILoginFormProps, IFormState> {
             this.refs.email.clearError();
             this.refs.password.clearError();
 
-            if (action.response.ok === false){
-                if (action.response.errors.email){
+            if (action.response.ok === false) {
+                if (action.response.errors.email) {
                     this.refs.email.setErrorLabel(action.response.errors.email);
                 }
-                if (action.response.errors.password){
+                if (action.response.errors.password) {
                     this.refs.password.setErrorLabel(action.response.errors.password);
                 }
             }
@@ -59,14 +50,14 @@ export default class LoginForm extends Component<ILoginFormProps, IFormState> {
     _onSubmit = e => {
         e.preventDefault();
 
-        if (this.state.status === "sending"){
+        if (this.state.status === "sending") {
             return;
         }
 
         var ok = this.refs.email.validate(true);
         ok = this.refs.password.validate(true) && ok;
 
-        if (!ok){
+        if (!ok) {
             return;
         }
         this.setState({
@@ -76,9 +67,9 @@ export default class LoginForm extends Component<ILoginFormProps, IFormState> {
         var email = this.refs.email.getValue();
         var password = this.refs.password.getValue();
 
-        backend.loginAsUser({email, password})
+        backend.loginAsUser({ email, password })
             .then(response => {
-                dispatchAction({type: "Account_LoginResponse", response});
+                dispatchAction({ type: "Account_LoginResponse", response });
                 this._onSuccess();
             })
             .catch(this._onFail);
@@ -96,7 +87,7 @@ export default class LoginForm extends Component<ILoginFormProps, IFormState> {
             return state.set("status", "error").set("error", this.formatLabel("@account.badEmail"));
         }
 
-        if (force && !email){
+        if (force && !email) {
             return state.set("status", "error").set("error", this.formatLabel("@account.noEmail"));
         }
 
@@ -113,10 +104,7 @@ export default class LoginForm extends Component<ILoginFormProps, IFormState> {
     private forgotPasswordLink = e => {
         e.preventDefault();
 
-        this.context.router.push({
-            pathname: "/account/forgotPassword",
-            state: {email: this.refs.email.getValue()}
-        });
+        this.goTo("/account/forgotPassword", { email: this.refs.email.getValue() });
 
         return false;
     };
@@ -150,7 +138,7 @@ export default class LoginForm extends Component<ILoginFormProps, IFormState> {
             </div>
 
             <section className="form__line form__line-right">
-                <a href="#" onClick={this.forgotPasswordLink}><FormattedMessage id="@account.forgotPassword?"/></a>
+                <a href="#" onClick={this.forgotPasswordLink}><FormattedMessage id="@account.forgotPassword?" /></a>
             </section>
 
             <Socials message="or log in with" />
@@ -158,10 +146,15 @@ export default class LoginForm extends Component<ILoginFormProps, IFormState> {
     }
 
     private renderConnectionErrorIfAny() {
-        if (this.state.status === "error"){
+        if (this.state.status === "error") {
             //TODO: (design) we probably need some generic "Could not connect to the server notification"
             return <span>Could not connect to the server right now.</span>
         }
         return null;
+    }
+
+    static contextTypes = {
+        router: PropTypes.object.isRequired,
+        intl: PropTypes.object
     }
 }

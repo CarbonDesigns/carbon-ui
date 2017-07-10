@@ -11,7 +11,6 @@ import unsplashStore from "./UnsplashStore";
 
 export default class Unsplash extends Component<any, any>{
     refs: {
-        container: HTMLElement,
         page: HTMLElement,
         search: Search
     }
@@ -34,18 +33,6 @@ export default class Unsplash extends Component<any, any>{
         })
     }
 
-    @handles(LayoutActions.resizePanel, LayoutActions.togglePanelGroup, LayoutActions.windowResized)
-    onResizePanel(){
-        setTimeout(() => {
-            var node = this.refs.container;
-            if (node){
-                this.setState({
-                    containerHeight: node.offsetHeight
-                });
-            }
-        }, 100);
-    }
-
     activated(){
         var page = ReactDom.findDOMNode(this.refs.page);
         // setting focus during css transition causes weird side effects
@@ -58,21 +45,20 @@ export default class Unsplash extends Component<any, any>{
 
     componentDidMount(){
         super.componentDidMount();
-        this.setState({containerHeight: this.refs.container.offsetHeight});
         this.refs.search.query(unsplashStore.state.term);
     }
 
-    _onLoadMore = p => {
-        return unsplashStore.runQuery(p);
+    _onLoadMore = (start: number, stop: number) => {
+        return unsplashStore.runQuery(start);
     };
 
     render(){
         return <div ref="page">
-            <div className="library-page__content" ref="container">
+            <div className="library-page__content">
                 <div className="filter">
                     <Search onQuery={this.changeTerm} placeholder="Find image..." ref="search" className="search-container"/>
                 </div>
-                <section className="stencils-group">
+                <section className="stencils-group web-images__container">
                     {this._renderList()}
                 </section>
             </div>
@@ -85,8 +71,6 @@ export default class Unsplash extends Component<any, any>{
         }
         if (this.state.term){
             return <ImageList className="list"
-                              containerHeight={this.state.containerHeight}
-                              initialItems={this.state.initialItems}
                               onLoadMore={this._onLoadMore}/>;
         }
         return <div/>;

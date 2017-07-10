@@ -60,7 +60,7 @@ class UserImagesStore extends CarbonStore<any>{
                 id          : img.name,
                 type        : UserImagesStore.StoreType,
                 url         : img.url,
-                name        : `${img.name} (${img.width}×${img.height})`,
+                title       : `${img.name} (${img.width}×${img.height})`,
                 spriteUrl   : img.thumbUrl,
                 thumbHeight : thumbHeight,
                 realWidth   : img.width,

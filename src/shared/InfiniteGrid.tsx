@@ -26,7 +26,6 @@ type InfiniteGridState<T> = {
  * Just a guess number for infinite loader to initiate fetch. Must be >= 40, otherwise, two initial requests are made for some reason.
  */
 const InitialTotalCount = 40;
-var i = 0;
 
 export default class InfiniteGrid<T> extends Component<InfiniteGridProps<T>, InfiniteGridState<T>> {
     private onRowsRendered: (params: { startIndex: number, stopIndex: number }) => void = null;

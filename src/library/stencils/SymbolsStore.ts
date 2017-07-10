@@ -1,7 +1,8 @@
 import { CarbonStore, dispatchAction } from "../../CarbonFlux";
-import { IPage, app, IDisposable, ToolboxConfiguration } from "carbon-core";
+import { IPage, app, IDisposable } from "carbon-core";
 import { CarbonAction } from "../../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
+import ToolboxConfiguration from "../ToolboxConfiguration";
 
 export type SymbolsStoreState = {
     dirtyConfig: boolean;

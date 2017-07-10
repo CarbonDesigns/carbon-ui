@@ -3,6 +3,7 @@ import invariant from 'invariant';
 import {Dispatcher as FluxDispatcher} from 'flux';
 import {Record} from 'immutable';
 import React from 'react';
+import PropTypes from "prop-types";
 import shallowCompare from 'react-addons-shallow-compare';
 import { FormattedMessage } from 'react-intl';
 import { AccountAction } from "./account/AccountActions";
@@ -21,7 +22,7 @@ import { StencilsAction } from "./library/stencils/StencilsActions";
 export class Component<P = {}, S = {}> extends React.Component<P,S> {
 
     static contextTypes = {
-        intl: React.PropTypes.object
+        intl: PropTypes.object
     };
 
     shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): boolean {

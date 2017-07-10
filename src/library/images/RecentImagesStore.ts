@@ -1,10 +1,10 @@
 import {app, Brush, Image} from "carbon-core";
-import {ToolboxConfiguration} from "carbon-core";
 import {IconsInfo} from "carbon-core";
 import AbstractStore from "../AbstractRecentStore";
 import Toolbox from "../Toolbox";
 import { ImageSource, ImageSourceType, IImage } from "carbon-model";
-import { Workspace } from "carbon-core";
+import { workspace } from "carbon-core";
+import ToolboxConfiguration from "../ToolboxConfiguration";
 
 export default class RecentImagesStore extends AbstractStore{
     constructor(){
@@ -37,7 +37,7 @@ export default class RecentImagesStore extends AbstractStore{
             id: imageDesc,
             type: "recentImage",
             json: e.toJSON(),
-            spriteUrl: Workspace.view.renderElementToDataUrl(e, tileSize),
+            spriteUrl: workspace.view.renderElementToDataUrl(e, tileSize),
             tileWidth: tileSize.width,
             tileHeight: tileSize.height,
             fit: tileSize.scale < 1,

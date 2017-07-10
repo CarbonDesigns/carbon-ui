@@ -8,7 +8,7 @@ import AppActions from '../../RichAppActions';
 import IconsActions from "./IconsActions";
 import { FormattedMessage } from "react-intl";
 // import StencilsActions from "./StencilsActions";
-import { ToolboxConfiguration, app, NullPage, IPage } from "carbon-core";
+import { app, NullPage, IPage } from "carbon-core";
 import InternalIconsStore from "./InternalIconsStore";
 import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';

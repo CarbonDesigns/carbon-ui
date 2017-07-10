@@ -7,6 +7,7 @@ import { PublishAction } from "./PublishActions";
 import { MarkupLine } from "../../../shared/ui/Markup";
 import electronEndpoint from "electronEndpoint";
 import TabContainer, { TabArea, TabPage } from "../../../shared/TabContainer";
+import ResourceSharer from "../../../library/ResourceSharer";
 
 interface IPublishPageFormProps {
     page: IPage;
@@ -147,7 +148,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         }
 
         // TODO: show progress bar here
-        app.exportPage(this.props.page)
+        ResourceSharer.exportPage(this.props.page)
             .then(data => backend.shareProxy.publishPage({
                 name: this.refs.name.getValue(),
                 description: this.refs.description.getValue(),
@@ -167,7 +168,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
 
     private saveToDisk() {
         electronEndpoint.saveResource(() => {
-            return app.exportPage(app.activePage).then(data => {
+            return ResourceSharer.exportPage(app.activePage).then(data => {
                 return {
                     name: this.refs.name.getValue(),
                     data: data,

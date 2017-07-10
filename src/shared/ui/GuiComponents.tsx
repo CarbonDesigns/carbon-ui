@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from "prop-types";
 // import {app} from '../../../RichApp'
 import { FormattedMessage } from "react-intl";
 import { Component } from "../../CarbonFlux";
@@ -566,7 +567,7 @@ interface IGuiValidatedInputState{
  */
 export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiValidatedInputState>{
     static contextTypes = {
-        intl: React.PropTypes.object
+        intl: PropTypes.object
     };
 
     refs: {

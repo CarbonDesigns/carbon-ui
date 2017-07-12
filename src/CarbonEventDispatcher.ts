@@ -3,11 +3,30 @@ import IdleDialog from "./workspace/IdleDialog";
 import { dispatch, dispatchAction } from "./CarbonFlux";
 import { app, backend, PropertyTracker, Selection, Environment, IDisposable, IPage } from "carbon-core";
 
-let disposables: IDisposable[] = [];
+let workspaceTokens: IDisposable[] = [];
+let frequentAppTokens: IDisposable[] = [];
 
 export function registerEvents() {
     app.onLoad(() => {
         dispatch(CarbonActions.loaded(app))
+    });
+
+    app.updating.bind(() => {
+        frequentAppTokens.forEach(x => x.dispose());
+        frequentAppTokens.length = 0;
+    });
+
+    app.updated.bind(() => {
+        let token = app.resourceAdded.bindAsync((resourceType, resource) => dispatchAction({type: "Carbon_ResourceAdded", resourceType, resource}));
+        frequentAppTokens.push(token);
+
+        token = app.resourceChanged.bindAsync((resourceType, resource) => dispatchAction({type: "Carbon_ResourceChanged", resourceType, resource}));
+        frequentAppTokens.push(token);
+
+        token = app.resourceDeleted.bindAsync((resourceType, resource, parent) => dispatchAction({type: "Carbon_ResourceDeleted", resourceType, resource, parent}));
+        frequentAppTokens.push(token);
+
+        dispatchAction({ type: "Carbon_AppUpdated" });
     });
 
     app.modeChanged.bindAsync(mode => {
@@ -18,22 +37,8 @@ export function registerEvents() {
         dispatch((CarbonActions.appChanged(events)));
     });
 
-    app.restoredLocally.bindAsync(() => dispatch(CarbonActions.restoredLocally()));
-
-    app.changeToolboxPage.bindAsync((page: IPage) => {
-        dispatchAction({type: "Stencils_ChangePage", page});
-    });
-
     app.currentToolChanged.bindAsync((tool) => {
         dispatch(CarbonActions.toolChanged(tool));
-    });
-
-    app.resourceChanged.bindAsync((resourceType, element) => {
-        dispatch(CarbonActions.resourceChanged(resourceType, element));
-    });
-
-    app.resourceDeleted.bindAsync((resourceType, element) => {
-        dispatch(CarbonActions.resourceDeleted(resourceType, element));
     });
 
     PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => dispatch(CarbonActions.propsChanged(e, props, oldProps)));
@@ -42,24 +47,24 @@ export function registerEvents() {
         dispatch(CarbonActions.elementSelected(e, prevSelectedElements)));
 
     Environment.detaching.bind(() => {
-        disposables.forEach(x => x.dispose());
-        disposables.length = 0;
+        workspaceTokens.forEach(x => x.dispose());
+        workspaceTokens.length = 0;
     });
 
     Environment.attached.bind((view, controller) => {
         if (controller.inlineEditModeChanged) {
             let token = controller.inlineEditModeChanged.bindAsync(mode => dispatch(CarbonActions.inlineEditModeChanged(mode)));
-            disposables.push(token);
+            workspaceTokens.push(token);
         }
 
         if (view.activeLayerChanged){
             let token = view.activeLayerChanged.bindAsync(layer => dispatch(CarbonActions.activeLayerChanged(layer)));
-            disposables.push(token);
+            workspaceTokens.push(token);
         }
 
         let token = controller.onArtboardChanged.bindAsync((newArtboard, oldArtboard) =>
             dispatch(CarbonActions.activeArtboardChanged(oldArtboard, newArtboard)));
-        disposables.push(token);
+        workspaceTokens.push(token);
     });
 
     app.pageChanged.bindAsync((oldPage, newPage) => dispatch(CarbonActions.pageChanged(oldPage, newPage)));

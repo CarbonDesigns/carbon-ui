@@ -1,6 +1,6 @@
 import IconFinderApi from "./IconFinderApi";
 import IconsActions from "./IconsActions";
-import CarbonActions from "../../CarbonActions";
+import CarbonActions, { CarbonAction } from "../../CarbonActions";
 import { handles, CarbonStore, dispatch } from '../../CarbonFlux';
 import { Image, Brush, ContentSizing, ArtboardType, UIElementFlags, IconSetSpriteManager, PatchType } from "carbon-core";
 import Toolbox from "../Toolbox";
@@ -192,8 +192,18 @@ export class InternalIconsStore extends CarbonStore<any>{
         }
     }
 
-    @handles(CarbonActions.resourceChanged)
-    onResourceChanged({ resourceType, element }) {
+    onAction(action: CarbonAction) {
+        super.onAction(action);
+
+        if (action.type === "Carbon_ResourceChanged") {
+            this.onResourceChanged(action.resourceType, action.resource);
+        }
+        else if (action.type === "Carbon_ResourceDeleted") {
+            this.onIconSetDeleted(action.resourceType, action.resource);
+        }
+    }
+
+    onResourceChanged(resourceType, element) {
         if (this.updating) {
             return;
         }
@@ -228,8 +238,7 @@ export class InternalIconsStore extends CarbonStore<any>{
         this.updating = false;
     }
 
-    @handles(CarbonActions.resourceDeleted)
-    onIconSetDeleted({ resourceType, element }) {
+    onIconSetDeleted(resourceType, element) {
         if (resourceType !== ArtboardType.IconSet) {
             return;
         }

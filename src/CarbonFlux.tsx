@@ -10,6 +10,7 @@ import { BackendAction } from "./BackendActions";
 import { DialogAction } from "./dialogs/DialogActions";
 import { PublishAction } from "./mainmenu/blades/resources/PublishActions";
 import { StencilsAction } from "./library/stencils/StencilsActions";
+import { CarbonAction } from "./CarbonActions";
 
 // import diff from 'immutablediff';
 
@@ -224,7 +225,7 @@ export function dispatch(action) {
 }
 
 //just a strongly typed wrapper while not all actions are union types
-export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction | StencilsAction) {
+export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction | StencilsAction | CarbonAction) {
     dispatch(action);
 }
 

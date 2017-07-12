@@ -201,7 +201,7 @@
 
         .abs;
         bottom: -4px;
-        right: -2px;
+        right: 0;
         z-index: 2;
         .flexcenter;
         .rounded();
@@ -209,7 +209,7 @@
         .bgc(rgba(228, 177, 4, 0.93));
     }
 
-    &_modified  &__modification-indicator {
+    &&_modified  &__modification-indicator {
         bottom: -2px;
         .trn2;
         .op1;
@@ -218,11 +218,13 @@
     }
 
 
-    &_modified{
+    &&_modified{
         box-shadow: inset 0 0 0 10000px fadeout(@bg1_topbar, 40%);
         .trn2;
+        overflow: visible;
+        cursor: auto;
     }
-    &_modified > i {
+    &&_modified > i {
         .trn2;
         .op80;
     }

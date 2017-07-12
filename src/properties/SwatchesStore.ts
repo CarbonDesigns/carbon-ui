@@ -1,6 +1,6 @@
 import { handles, CarbonStore, dispatch } from "../CarbonFlux";
 import Immutable from "immutable";
-import CarbonActions from "../CarbonActions";
+import CarbonActions, { CarbonAction } from "../CarbonActions";
 import { PropertyTracker, Selection, Brush, app, PropertyMetadata, ChangeMode, ArtboardType, ActionManager, UIElementFlags } from "carbon-core";
 import SwatchesActions from './SwatchesActions';
 
@@ -47,35 +47,11 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
         this.setState({ fill, stroke, font })
     }
 
-    @handles(CarbonActions.pageAdded)
-    onPageAdded({ page }) {
-        var paletteArtboards = page.getAllResourceArtboards(ArtboardType.Palette);
-        var palettes = this.state.palettes.slice();
-        for (var i = 0; i < paletteArtboards.length; ++i) {
-            palettes.push(this._buildPaletteForElement(paletteArtboards[i]));
-        }
-
-        this.setState({ palettes: palettes });
-    }
-
-    @handles(CarbonActions.loaded)
-    onAppLoaded({ app }) {
+    onAppUpdated() {
         var paletteArtboards = app.getAllResourceArtboards(ArtboardType.Palette);
         var palettes = [];
         for (var i = 0; i < paletteArtboards.length; ++i) {
             palettes.push(this._buildPaletteForElement(paletteArtboards[i]));
-        }
-
-        this.setState({ palettes: palettes });
-    }
-
-    @handles(CarbonActions.pageRemoved)
-    onPageRemoved({ page }) {
-        var palettes = this.state.palettes.slice();
-        for (var i = palettes.length - 1; i >= 0; --i) {
-            if (palettes[i].pageId === page.id()) {
-                palettes.splice(i, 1);
-            }
         }
 
         this.setState({ palettes: palettes });
@@ -86,8 +62,24 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
         this.setState({ active: active });
     }
 
-    @handles(CarbonActions.resourceChanged)
-    onPaletteChanged({ resourceType, element }) {
+    onAction(action: CarbonAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Carbon_AppUpdated":
+                this.onAppUpdated();
+                return;
+            case "Carbon_ResourceAdded":
+            case "Carbon_ResourceChanged":
+                this.onPaletteChanged(action.resourceType, action.resource);
+                return;
+            case "Carbon_ResourceDeleted":
+                this.onPaletteDeleted(action.resourceType, action.resource);
+                return;
+        }
+    }
+
+    onPaletteChanged(resourceType, element) {
         if (resourceType !== ArtboardType.Palette) {
             return;
         }
@@ -111,8 +103,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
         this.setState({ palettes: palettes });
     }
 
-    @handles(CarbonActions.resourceDeleted)
-    onPaletteDeleted({ resourceType, element }) {
+    onPaletteDeleted(resourceType, element) {
         if (resourceType !== ArtboardType.Palette) {
             return;
         }

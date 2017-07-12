@@ -21,8 +21,6 @@ interface IInteraction {
 }
 
 interface IToolboxState{
-    pages: IPage[];
-    currentPage: IPage | null;
 }
 
 export class Toolbox extends CarbonStore<IToolboxState>{
@@ -30,15 +28,9 @@ export class Toolbox extends CarbonStore<IToolboxState>{
 
     constructor(){
         super();
-        this._templateConfigCache = {};
         this._stores = {};
 
         this._setupDragAndDrop();
-
-        this.state = {
-            pages:[],
-            currentPage: null
-        };
     }
 
     registerStore(name, store){
@@ -49,33 +41,10 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         return store;
     }
 
-    @handles(CarbonActions.loaded, CarbonActions.restoredLocally)
-    onAppLoaded(){
-        this.setState({pages: app.pages, currentPage:app.activePage || app.pages[0]});
-    }
-
-    @handles(CarbonActions.pageAdded)
-    onPageAdded(){
-        this.setState({pages: app.pages, currentPage:app.activePage || app.pages[0]});
-    }
-
-    @handles(CarbonActions.pageRemoved)
-    onPageRemoved(){
-        let index = -1;
-        if (this.state.currentPage) {
-            index = app.pages.indexOf(this.state.currentPage);
-        }
-
-        this.setState({pages: app.pages, currentPage:index===-1?app.pages[0]:this.state.currentPage});
-    }
-
     onAction(action: StencilsAction) {
         super.onAction(action);
 
         switch (action.type) {
-            case "Stencils_ChangePage":
-                this.setState({currentPage: action.page});
-                return;
             case "Stencils_Clicked":
                 this.clicked(action);
                 return;

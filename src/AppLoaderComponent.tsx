@@ -45,7 +45,9 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
         this._resolveCompanyId(app, location, data.companyName)
             .then(x => {
                 app.companyId(x.companyId);
-                app.id(data.appId);
+                if (data.appId) {
+                    app.id(data.appId);
+                }
 
                 if (!app.id() && !app.serverless()) {
                     var token = app.actionManager.subscribe("save", (name, result) => {

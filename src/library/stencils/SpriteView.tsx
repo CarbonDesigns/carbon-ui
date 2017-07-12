@@ -11,7 +11,9 @@ export default class SpriteView extends Component<any, any>{
         var templateId = e.currentTarget.dataset.templateId;
         var templateType = e.currentTarget.dataset.templateType;
         var sourceId = e.currentTarget.dataset.sourceId;
-        dispatchAction({type: "Stencils_Clicked", e, ...e.currentTarget.dataset});
+        if (templateId !== this.props.changedId) {
+            dispatchAction({type: "Stencils_Clicked", e, ...e.currentTarget.dataset});
+        }
     };
     getCategoryNode(name) {
         return ReactDom.findDOMNode(this.refs[name]);

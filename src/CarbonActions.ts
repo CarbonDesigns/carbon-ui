@@ -1,8 +1,11 @@
-import { ILayer, IApp } from "carbon-core";
+import { ILayer, IApp, ArtboardType, IArtboard, IPage } from "carbon-core";
 
 export type CarbonAction =
     { type: "Carbon_AppLoaded" } |
-    { type: "Carbon_AppRestored" };
+    { type: "Carbon_AppUpdated" } |
+    { type: "Carbon_ResourceAdded", resourceType: ArtboardType, resource: IArtboard } |
+    { type: "Carbon_ResourceChanged", resourceType: ArtboardType, resource: IArtboard } |
+    { type: "Carbon_ResourceDeleted", resourceType: ArtboardType, resource: IArtboard, parent: IPage };
 
 //TODO: migrate to union types
 var CarbonActions = {
@@ -42,9 +45,6 @@ var CarbonActions = {
             name
         }
     },
-    restoredLocally:()=>{
-        return {type:"Carbon_Restored"}
-    },
     elementSelected:(selection, prevSelectedElements?)=> {
         return {
             type:"CARBON_ELEMENT_SELECTED",
@@ -83,20 +83,6 @@ var CarbonActions = {
             element,
             props,
             oldProps
-        }
-    },
-    resourceChanged:(resourceType, element)=>{
-        return {
-            type:"CARBON_RESOURCE_CHANGED",
-            element,
-            resourceType
-        }
-    },
-    resourceDeleted:(resourceType, element)=>{
-        return {
-            type:"CARBON_RESOURCE_DELETED",
-            element,
-            resourceType
         }
     },
     inlineEditModeChanged: mode => {

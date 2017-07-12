@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import {Link} from "react-router";
 
 import { backend } from "carbon-api";
-import { handles, Component } from "../CarbonFlux";
+import { handles, Component, CarbonLabel } from "../CarbonFlux";
 import FlyoutButton from "../shared/FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
 import { AccountAction } from "../account/AccountActions";
@@ -51,6 +51,26 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
             <div className="gui-button">
                 <Link to="/app"><FormattedMessage id="StartDesigning" defaultMessage="Start designing" /></Link>
             </div>
+            <nav className="header-container">
+                <figure className="header-container__logo"></figure>
+                <ul className="navigation-menu">
+                    <li className="navigation-menu__item"><CarbonLabel id="@nav.communitylibrary"/></li>
+                    <li className="navigation-menu__item"><CarbonLabel id="@nav.teamslack"/></li>
+                    <li className="navigation-menu__item"><CarbonLabel id="@nav.github"/></li>
+                    <li className="navigation-menu__item_button"><CarbonLabel id="@nav.login"/></li>
+                </ul>
+            </nav>
+            <section className="hero-container">
+                <h1 className="hero-container__hero-title"><CarbonLabel id="@hero.title"/></h1>
+                <h2 className="hero-container__hero-subtitle"><CarbonLabel id="@hero.subtitle"/></h2>
+            </section>
+            <section className="subscribe-container">
+                <details className="subscribe-container__details"><CarbonLabel id="@subscribe.details"/></details>
+                <form className="subscribe-form">
+                    <input type="text" className="subscribe-form__email"/>
+                    <button><CarbonLabel id="@subscribe"/></button>
+                </form>
+            </section>
         </div>;
     }
 }

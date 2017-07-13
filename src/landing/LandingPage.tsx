@@ -1,6 +1,6 @@
 import React from "react";
 import { FormattedMessage } from 'react-intl';
-import {Link} from "react-router";
+import { Link } from "react-router";
 
 import { backend } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
@@ -43,32 +43,36 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
     }
 
     render() {
-        return <div>
-            <div><span style={{ color: "aqua", fontSize: 32 }}>Landing page</span></div>
+        return <div className="landing-page">
+            {/* <div><span style={{ color: "aqua", fontSize: 32 }}>Landing page</span></div>
 
             {backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginFlyout()}
 
             <div className="gui-button">
                 <Link to="/app"><FormattedMessage id="StartDesigning" defaultMessage="Start designing" /></Link>
-            </div>
+            </div> */}
             <nav className="header-container">
-                <figure className="header-container__logo"></figure>
+
+                <a href="/" className="header-container__logo" title="carbonium.io"></a>
+
                 <ul className="navigation-menu">
-                    <li className="navigation-menu__item"><CarbonLabel id="@nav.communitylibrary"/></li>
-                    <li className="navigation-menu__item"><CarbonLabel id="@nav.teamslack"/></li>
-                    <li className="navigation-menu__item"><CarbonLabel id="@nav.github"/></li>
-                    <li className="navigation-menu__item_button"><CarbonLabel id="@nav.login"/></li>
+                    <li className="navigation-menu__item"><CarbonLabel id="@nav.communitylibrary" /></li>
+                    <li className="navigation-menu__item"><CarbonLabel id="@nav.teamslack" /></li>
+                    <li className="navigation-menu__item"><CarbonLabel id="@nav.github" /></li>
+                    <li className="navigation-menu__item navigation-menu__item_button"><CarbonLabel id="@nav.login" /></li>
                 </ul>
             </nav>
             <section className="hero-container">
-                <h1 className="hero-container__hero-title"><CarbonLabel id="@hero.title"/></h1>
-                <h2 className="hero-container__hero-subtitle"><CarbonLabel id="@hero.subtitle"/></h2>
+                <header className="hero-container__heading">
+                    <h1 className="hero-container__hero-title"><CarbonLabel id="@hero.title" /></h1>
+                    <strong className="hero-container__hero-subtitle"><CarbonLabel id="@hero.subtitle" /></strong>
+                </header>
             </section>
             <section className="subscribe-container">
-                <details className="subscribe-container__details"><CarbonLabel id="@subscribe.details"/></details>
+                <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details" /></p>
                 <form className="subscribe-form">
-                    <input type="text" className="subscribe-form__email"/>
-                    <button><CarbonLabel id="@subscribe"/></button>
+                    <input type="text" className="subscribe-form__email" placeholder="Your email address" />
+                    <button className="subscribe-form__button"><CarbonLabel id="@subscribe" /></button>
                 </form>
             </section>
         </div>;

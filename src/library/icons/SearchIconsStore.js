@@ -22,7 +22,7 @@ export default class SearchIconsStore extends CarbonStore{
             r.lastIndex = 0;
             if (r.test(icon.name)){
                 var searchGroup = this._findOrCreateGroup(result, "Library icons");
-                searchGroup.templates.push(icon);
+                searchGroup.items.push(icon);
             }
         }
 
@@ -40,7 +40,7 @@ export default class SearchIconsStore extends CarbonStore{
                 return group;
             }
         }
-        var group = {name: name, templates: []};
+        var group = {name: name, items: []};
         config.groups.push(group);
         return group;
     }

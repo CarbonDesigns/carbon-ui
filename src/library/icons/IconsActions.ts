@@ -1,3 +1,10 @@
+export type IconsAction =
+    { type: "Icons_Refresh" } |
+    { type: "Icons_Loaded", iconSets: any[], config: any, async: true } |
+    { type: "Icons_Dirty", changedId: string, async: true } |
+    { type: "Icons_ClickedCategory", category: any } |
+    { type: "Icons_ScrolledToCategory", category: any };
+
 var IconsActions = {
     search:(term) => {
         return {

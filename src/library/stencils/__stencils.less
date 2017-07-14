@@ -115,6 +115,7 @@
         .box-shadow(none);
     }
 
+    flex: auto;
 }
 
 
@@ -132,14 +133,15 @@
 .stencil {
     .rel;
     .cursor_pointer;
-    border-color: @bg_panel_inner2;
     .bgc(@bg_stencil);
-    margin: 0 1px 1px 0;
+    .w100;
+    .h100;
 
     flex-grow: 1;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
 
     &__image{
         .norepeat;
@@ -227,6 +229,12 @@
     &&_modified > i {
         .trn2;
         .op80;
+    }
+
+    &&_bordered {
+        border-width: 0 1px 1px 0;
+        border-style: solid;
+        border-color: @bg4_panel_body;
     }
     //& {
     //    @w : 100% / 8;

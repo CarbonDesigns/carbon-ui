@@ -240,7 +240,7 @@ export default class ToolboxConfiguration {
             let spriteUrl2xPromise = ToolboxConfiguration.renderElementsToSprite(elements, null, 2);
             let group: any = {
                 name: groupName,
-                templates: config
+                items: config
             };
             groups.push(group);
 

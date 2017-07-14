@@ -1,6 +1,6 @@
 import React from "react";
 import SpriteView from "./SpriteView";
-import Navigateable from "../../shared/Navigateable";
+import Navigatable from "../../shared/Navigatable";
 import { dispatchAction, StoreComponent } from "../../CarbonFlux";
 import { FormattedMessage } from "react-intl";
 import { GuiButton } from "../../shared/ui/GuiComponents";
@@ -71,12 +71,12 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
             <div className={bem("library-page", "header", "with-dropdown")}>
                 {this.renderPageSelect(page)}
             </div>
-            <Navigateable className={bem("library-page", "content")}
+            <Navigatable className={bem("library-page", "content")}
                 config={config.groups}
                 getCategoryNode={c => this.refs.spriteView.getCategoryNode(c)}>
                 {this.renderRefresher()}
                 <SpriteView config={config} changedId={this.state.changedId} sourceId={page.id()} ref="spriteView" />
-            </Navigateable>
+            </Navigatable>
         </div>
     }
 

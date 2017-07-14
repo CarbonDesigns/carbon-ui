@@ -4,7 +4,7 @@ import { Component, dispatch, handles, dispatchAction } from "../../CarbonFlux";
 import { IconsInfo } from "carbon-core";
 import StencilsActions from '../stencils/StencilsActions';
 import LessVars from "../../styles/LessVars";
-import VirtualList from "../../shared/VirtualList";
+import VirtualGrid from "../../shared/VirtualList";
 import LayoutActions from '../../layout/LayoutActions';
 //import FlyoutActions from "../../FlyoutActions";
 //import IconFinderSet from "./IconFinderSet";
@@ -99,13 +99,10 @@ export default class IconsList extends Component<IIconsListProps, any>{
     // }
 
     render() {
-        if (!this.state.containerHeight) {
-            return <div />;
-        }
         var padding = LessVars.stencilsContainerPadding;
         var cols = (this.state.containerWidth - padding.left - padding.right) / LessVars.iconStencilHeight | 0;
-        return <VirtualList className={this.props.className}
-            key={this.state.scrollKey}
+        return <VirtualGrid className={this.props.className}
+
             elementHeight={LessVars.iconStencilHeight / cols}
             containerHeight={this.state.containerHeight}
             initialElements={this.state.initialElements}

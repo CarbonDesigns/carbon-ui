@@ -185,6 +185,7 @@ function getLoaders(settings) {
     var plugins = [];
 
     plugins.push(
+        require.resolve("babel-plugin-transform-promise-to-bluebird"),
         require.resolve("babel-plugin-transform-runtime"),
         require.resolve("babel-plugin-add-module-exports"),
         //remove when babel 6 has proper support for decorators

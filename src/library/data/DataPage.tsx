@@ -1,7 +1,7 @@
 import {Component, handles, dispatch, listenTo} from '../../CarbonFlux';
 import React from 'react';
 import {app, PropertyTracker} from "carbon-core";
-import Navigateable from "../../shared/Navigateable";
+import Navigatable from "../../shared/Navigatable";
 import {FormattedHTMLMessage, defineMessages} from 'react-intl';
 import CustomProviders from './CustomProviders';
 import CatalogView from './CatalogView';
@@ -19,7 +19,7 @@ type DataPanelState = {
 
 export default class DataPanel extends Component<{}, DataPanelState> {
     refs: {
-        catalog: Navigateable;
+        catalog: Navigatable;
     }
 
     constructor(props) {
@@ -50,9 +50,9 @@ export default class DataPanel extends Component<{}, DataPanelState> {
                 />
                 <TabArea className="gui-pages">
                     <TabPage tabId="1" className="gui-page">
-                        <Navigateable className="navigateable" getCategoryNode={c => this.refs.catalog.refs[c]} config={builtInConfig}>
+                        <Navigatable className="Navigatable" getCategoryNode={c => this.refs.catalog.refs[c]} config={builtInConfig}>
                             <CatalogView ref="catalog" config={builtInConfig} templateType="data"/>
-                        </Navigateable>
+                        </Navigatable>
                     </TabPage>
                     <TabPage tabId="2" className="gui-page"> <CustomProviders/> </TabPage>
                     <TabPage tabId="3" className="gui-page"> <span>json</span> </TabPage>

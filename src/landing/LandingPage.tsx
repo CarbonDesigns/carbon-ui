@@ -138,13 +138,11 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
     }
 
     _renderLoginButton() {
-        return <div className="gui-button">
-            <a href="#"><span>Log in</span></a>
-        </div>;
+        return <CarbonLabel id="@nav.login" />;
     }
     _renderLoginFlyout() {
         return <FlyoutButton className="login-flyout" renderContent={this._renderLoginButton}
-            position={{ targetVertical: "bottom", disableAutoClose: true }}>
+            position={{ targetVertical: "bottom", targetHorizontal: "right", disableAutoClose: true }}>
             <div id="login">
                 <LoginPopup />
             </div>
@@ -171,6 +169,21 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
         }
     }
 
+    // _renderSignup(){
+    //     return  <FlyoutButton
+    //             className="signup__button"
+    //             content={<FormattedMessage id="Sign up" tagName="p"/>}
+    //             position={{
+    //                 targetVertical: "bottom",
+    //                 disableAutoClose: true
+    //             }}
+    //         >
+    //             <div id="register">
+    //                 <RegistrationPopup/>
+    //             </div>
+    //     </FlyoutButton>
+    // }
+
     render() {
         return <div className="landing-page">
             {/* <div><span style={{ color: "aqua", fontSize: 32 }}>Landing page</span></div>
@@ -188,7 +201,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                     <li className="navigation-menu__item"><CarbonLabel id="@nav.communitylibrary" /></li>
                     <li className="navigation-menu__item"><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>
                     <li className="navigation-menu__item"><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>
-                    <li className="navigation-menu__item navigation-menu__item_button"><CarbonLabel id="@nav.login" /></li>
+                    <li className="navigation-menu__item navigation-menu__item_button">{backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginFlyout()}</li>
                 </ul>
             </nav>
 

@@ -122,18 +122,18 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
 
     componentDidMount() {
         super.componentDidMount();
-        var canvas: any = this.refs.backCanvas;
-        this.destContext = (canvas as any).getContext('2d');
+        // var canvas: any = this.refs.backCanvas;
+        // this.destContext = (canvas as any).getContext('2d');
 
-        canvas.width = (this.refs.heroContainer as any).clientWidth;
-        canvas.height = (this.refs.heroContainer as any).clientHeight;
+        // canvas.width = (this.refs.heroContainer as any).clientWidth;
+        // canvas.height = (this.refs.heroContainer as any).clientHeight;
 
-        window.requestAnimationFrame(this._renderLoop);
+        // window.requestAnimationFrame(this._renderLoop);
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        this.destContext = null;
+        // this.destContext = null;
     }
 
     _renderLoginButton() {
@@ -205,7 +205,8 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
             </nav>
 
             <section ref="heroContainer" className="hero-container">
-                <canvas ref="backCanvas" className="hero-container__canvas"></canvas>
+                {/* <canvas ref="backCanvas" className="hero-container__canvas"></canvas> */}
+                <div className="hero-container__canvas"></div>
                 <header className="hero-container__heading">
                     <h1 className="hero-container__hero-title"><CarbonLabel id="@hero.title" /></h1>
                     <strong className="hero-container__hero-subtitle"><CarbonLabel id="@hero.subtitle" /></strong>

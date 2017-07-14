@@ -6,9 +6,9 @@ import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
 
 export type CellSize = CollectionCellSizeAndPosition;
-export type A = SectionRenderedParams;
 
-const SizeZero = { x: 0, y: 0, width: 0, height: 0 };
+const SizeZero: CellSize = { x: 0, y: 0, width: 0, height: 0 };
+const DimensionsZero: Dimensions = { width: 0, height: 0 };
 
 interface VirtualCollectionProps extends ISimpleReactElementProps {
     cellCount: number;
@@ -19,11 +19,10 @@ interface VirtualCollectionProps extends ISimpleReactElementProps {
     onScroll?: any;
 }
 
-export default class VirtualCollection<T> extends Component<VirtualCollectionProps> {
+export default class VirtualCollection extends Component<VirtualCollectionProps> {
     private collection: Collection = null;
     private measureCache: CellSize[] = [];
-    private lastDimensions: Dimensions = { width: 0, height: 0 };
-    private currentDimensions: Dimensions = { width: 0, height: 0 };
+    private lastDimensions: Dimensions = DimensionsZero;
 
     reset() {
         if (this.collection) {
@@ -43,6 +42,12 @@ export default class VirtualCollection<T> extends Component<VirtualCollectionPro
         this.initScroller();
     }
 
+    componentWillReceiveProps(nextProps: VirtualCollectionProps) {
+        if (nextProps.cellCount !== this.props.cellCount) {
+            this.lastDimensions = DimensionsZero;
+        }
+    }
+
     componentWillUnmount() {
         let listNode = ReactDom.findDOMNode<HTMLElement>(this.collection);
         ScrollContainer.destroyScroller(listNode.parentElement);
@@ -58,19 +63,17 @@ export default class VirtualCollection<T> extends Component<VirtualCollectionPro
         this.collection = collection;
     }
 
-    private ensureCellsMeasured() {
-        if (!this.currentDimensions.width || !this.currentDimensions.height) {
+    private ensureCellsMeasured(currentDimensions: Dimensions) {
+        if (!currentDimensions.width || !currentDimensions.height) {
             return;
         }
-        if (this.lastDimensions.width !== this.currentDimensions.width || this.lastDimensions.height !== this.currentDimensions.height) {
-            this.measureCache = this.props.cellsMeasurer(this.currentDimensions.width);
-            this.lastDimensions = this.currentDimensions;
+        if (this.lastDimensions.width !== currentDimensions.width || this.lastDimensions.height !== currentDimensions.height) {
+            this.measureCache = this.props.cellsMeasurer(currentDimensions.width);
+            this.lastDimensions = currentDimensions;
         }
     }
 
     private cellMeasurer = (props: Index) => {
-        this.ensureCellsMeasured()
-
         if (props.index < 0 || props.index >= this.measureCache.length) {
             return SizeZero;
         }
@@ -86,7 +89,8 @@ export default class VirtualCollection<T> extends Component<VirtualCollectionPro
     render() {
         return <AutoSizer>
             {dimensions => {
-                this.currentDimensions = dimensions;
+                this.ensureCellsMeasured(dimensions);
+
                 let cellCount = dimensions.width && dimensions.width ? this.props.cellCount : 0;
 
                 return <div style={{ width: dimensions.width, height: dimensions.height }}>

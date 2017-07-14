@@ -41,17 +41,6 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
         </p>
     }
 
-    private renderRefresher() {
-        var visible = this.state.dirtyConfig;
-        var cn = bem("stencils-refresher", null, { hidden: !visible });
-        return <div className={cn}>
-            <GuiButton onClick={this.onRefreshLibrary}
-                mods={['small', 'hover-white']}
-                icon="refresh"
-                caption="refresh.toolbox"/>
-        </div>
-    }
-
     render() {
         if (!this.state.config) {
             return <Markup>

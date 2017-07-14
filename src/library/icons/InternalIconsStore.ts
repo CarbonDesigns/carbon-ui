@@ -18,6 +18,7 @@ export type InternalIconsStoreState = {
     iconSets: any[],
     version: number,
     config: any,
+    dirtyConfig: boolean,
     changedId: string | null,
     activeCategory: any,
     lastScrolledCategory: any
@@ -33,6 +34,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
             iconSets: [],
             version: -1,
             config: null,
+            dirtyConfig: false,
             changedId: null,
             lastScrolledCategory: null,
             activeCategory: null
@@ -159,8 +161,11 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
     generateConfig() {
         var iconSets = this.state.iconSets;
         if (!iconSets.length) {
+            dispatchAction({ type: "Icons_Loaded", config: null, iconSets, async: true });
             return;
         }
+
+        this.updating = true;
 
         var config = {
             groups: [],
@@ -181,18 +186,22 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
         for (var i = 0; i < iconSetArtboards.length; ++i) {
             iconSets.push(this._buildIconSet(iconSetArtboards[i]));
         }
-        this.setState({ iconSets: iconSets });
+        this.setState({ iconSets: iconSets, dirtyConfig: false });
 
         this.generateConfig();
     }
 
-    private onLoaded(config) {
+    private onLoaded(iconSets, config) {
+        if (iconSets !== this.state.iconSets) {
+            return;
+        }
         let activeCategory = null;
-        if (config.groups.length) {
+        if (config && config.groups.length) {
             activeCategory = config.groups[0];
         }
 
-        this.setState({ config, activeCategory });
+        this.setState({ config, activeCategory, dirtyConfig: false });
+        this.updating = false;
     }
 
     private onCategoryClicked(category) {
@@ -206,13 +215,16 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
         super.onAction(action);
 
         switch (action.type) {
+            case "Icons_Refresh":
             case "Carbon_AppUpdated":
                 this.onUpdated();
                 return;
             case "Icons_Loaded":
-                if (action.iconSets === this.state.iconSets) {
-                    this.onLoaded(action.config);
-                }
+                this.onLoaded(action.iconSets, action.config);
+                return;
+
+            case "Carbon_ResourceAdded":
+                this.onResourceAdded(action.resourceType, action.resource);
                 return;
             case "Carbon_ResourceChanged":
                 this.onResourceChanged(action.resourceType, action.resource);
@@ -220,12 +232,30 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
             case "Carbon_ResourceDeleted":
                 this.onIconSetDeleted(action.resourceType, action.resource);
                 return;
+
             case "Icons_ClickedCategory":
                 this.onCategoryClicked(action.category);
                 return;
             case "Icons_ScrolledToCategory":
                 this.onScrolledToCategory(action.category);
                 return;
+        }
+    }
+
+    onResourceAdded(resourceType: ArtboardType, element) {
+        if (resourceType !== ArtboardType.IconSet) {
+            return;
+        }
+
+        if (this.updating) {
+            return;
+        }
+
+        if (!this.state.config) {
+            this.onUpdated();
+        }
+        else {
+            this.setState({ dirtyConfig: true });
         }
     }
 
@@ -260,7 +290,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
             iconSets.push(iconSet);
         }
 
-        this.setState({ iconSets: iconSets });
+        this.setState({ iconSets: iconSets, dirtyConfig: true });
         this.updating = false;
     }
 
@@ -269,11 +299,15 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
             return;
         }
 
+        if (this.updating) {
+            return;
+        }
+
         let iconSets = this.state.iconSets.slice();
-        var index = iconSets.findIndex(p => p.id === element.id());
+        var index = iconSets.findIndex(p => p.artboard.id() === element.id());
         if (index !== -1) {
             iconSets.splice(index, 1);
-            this.setState({ iconSets: iconSets });
+            this.setState({ iconSets: iconSets, dirtyConfig: true });
         }
     }
 

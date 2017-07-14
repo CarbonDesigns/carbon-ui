@@ -1,6 +1,5 @@
 import React from "react";
 
-import StandardIcons from "./StandardIcons";
 import InternalIcons from "./InternalIcons";
 import RecentIcons from "./RecentIcons";
 import IconFinder from "./IconFinder";

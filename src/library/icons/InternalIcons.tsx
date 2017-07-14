@@ -12,6 +12,7 @@ import { app, NullPage, IPage } from "carbon-core";
 import InternalIconsStore, { InternalIconsStoreState } from "./InternalIconsStore";
 import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
+import Refresher from "../Refresher";
 
 export default class InternalIcons extends StoreComponent<any, InternalIconsStoreState> {
     refs: {
@@ -37,19 +38,6 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
         dispatchAction({ "type": "Icons_ScrolledToCategory", category });
     }
 
-    _renderRefresher() {
-        return null;
-        // var visible = this.state.dirtyConfig;
-        // var cn = bem("stencils-refresher", null, { hidden: !visible });
-        // return <div className={cn} onClick={visible ? this._refreshLibrary : null}>
-        //     <GuiButton onClick={visible ? this._refreshLibrary : null}
-        //         mods={['small', 'hover-white']}
-        //         icon="refresh"
-        //         caption="refresh.toolbox"
-        //         defaultMessage="Refresh" />
-        // </div>
-    }
-
     render() {
         var config = this.state.config;
         if (!config) {
@@ -61,7 +49,7 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
             onCategoryChanged={this.onCategoryChanged}
             config={config}>
 
-            {this._renderRefresher()}
+            <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>
 
             <SpriteView config={config}
                 changedId={this.state.changedId}

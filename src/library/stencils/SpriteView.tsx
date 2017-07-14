@@ -18,7 +18,7 @@ export default class SpriteView extends Component<any, any>{
     private measureCache: CellSize[];
 
     refs: {
-        collection: VirtualCollection<any>;
+        collection: VirtualCollection;
     }
 
     constructor(props) {
@@ -95,6 +95,10 @@ export default class SpriteView extends Component<any, any>{
     }
 
     private onScroll = (params) => {
+        if (!this.measureCache) {
+            return;
+        }
+
         let count = 0;
         let groups = this.props.config.groups;
         let activeCategory = null;

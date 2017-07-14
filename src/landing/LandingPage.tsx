@@ -8,7 +8,6 @@ import FlyoutButton from "../shared/FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
 import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
-import { IContext } from "carbon-core";
 
 var gradientCanvas = document.createElement('canvas');
 gradientCanvas.width = 1;
@@ -87,7 +86,7 @@ var a = 0, b = 0, c = 1, d = 1;
 var stepA = 0, stepB = 0, stepС = 0, stepD = 0;
 
 export default class LandingPage extends RouteComponent<IRouteComponentProps>{
-    destContext: IContext;
+    destContext: any;
     lastTimestamp: number = 0;
     _renderLoop = (timestamp) => {
         if (!this.destContext) {

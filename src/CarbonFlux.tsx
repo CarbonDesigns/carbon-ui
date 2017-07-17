@@ -4,7 +4,6 @@ import {Dispatcher as FluxDispatcher} from 'flux';
 import {Record} from 'immutable';
 import React from 'react';
 import PropTypes from "prop-types";
-import shallowCompare from 'react-addons-shallow-compare';
 import { FormattedMessage } from 'react-intl';
 import { AccountAction } from "./account/AccountActions";
 import { BackendAction } from "./BackendActions";
@@ -21,31 +20,11 @@ import { IconsAction } from "./library/icons/IconsActions";
  * Purified React.Component. Goodness.
  * http://facebook.github.io/react/docs/advanced-performance.html
  */
-export class Component<P = {}, S = {}> extends React.Component<P,S> {
+export class Component<P = {}, S = {}> extends React.PureComponent<P,S> {
 
     static contextTypes = {
         intl: PropTypes.object
     };
-
-    shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): boolean {
-        // TODO: Make whole React Pure, add something like dangerouslySetLocalState.
-        // https://github.com/gaearon/react-pure-render#known-issues
-        // https://twitter.com/steida/status/600395820295450624
-        // if (this.context.router) {
-        //     const changed = this.pureComponentLastPath !== this.context.router.getCurrentPath();
-        //     this.pureComponentLastPath = this.context.router.getCurrentPath();
-        //     if (changed) return true;
-        // }
-
-        const shouldUpdate: boolean = shallowCompare(this, nextProps, nextState);
-        //!shallowEqual(this.props, nextProps) || !shallowEqual(this.state, nextState);
-
-        //console.log("ShouldUpdate: " + shouldUpdate, this);
-        // if (shouldUpdate)
-        //   this._logShouldUpdateComponents(nextProps, nextState)
-
-        return shouldUpdate;
-    }
 
     constructor(props) {
         super(props);
@@ -148,13 +127,6 @@ export interface IComponentImmutableState {
 }
 
 export class ComponentWithImmutableState<P,S extends IComponentImmutableState> extends Component<P,S> {
-    shouldComponentUpdate(nextProps, nextState) {
-        const shouldUpdate = this.props !== nextProps || this.state.data !== nextState.data;
-
-        return shouldUpdate;
-    }
-
-
     mergeStateData(state){
         var data = this.state.data;
         var newData = data.merge(state);

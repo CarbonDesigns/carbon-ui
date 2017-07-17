@@ -59,10 +59,6 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         })};
     }
 
-    shouldComponentUpdate(nextState, nextProps) {
-        return super.shouldComponentUpdate.apply(this, arguments);
-    }
-
     @listenTo(AppStore)
     onChange() {
         this.mergeStateData({activeTool: AppStore.state.activeTool, loaded: AppStore.state.loaded});

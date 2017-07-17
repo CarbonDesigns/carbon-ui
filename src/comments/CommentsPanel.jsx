@@ -146,8 +146,8 @@ function _getUser (userId) {
 //——————————————————————————————————————————————————————————————————————
 
 function _renderTime(date, className){
-    var time = "Jan 09, 3:02"; //fixme 'M d, g:i'
-    return <time key="time" className={className}>{time}</time>
+    //var time = "Jan 09, 3:02"; //fixme 'M d, g:i'
+    return null;// <time key="time" className={className}>{time}</time>
 }
 
 

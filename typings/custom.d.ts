@@ -4,6 +4,10 @@ declare var require: {
     ensure: (paths: string[], callback: (require: <T>(path: string) => T) => void, chunkName: string | null) => void;
 };
 
+declare var module: {
+    hot?: any;
+}
+
 declare function clone(object:any):any;
 declare function extend(...objects:object[]):any;
 declare function EventHandler(target, method):any;
@@ -71,7 +75,7 @@ declare module 'react-color/lib/helpers/color' {
     export = color;
 }
 
-declare module 'react-color/lib/components/sketched/SketchPresetColors' {
+declare module 'react-color/lib/components/sketch/SketchPresetColors' {
     export default function SketchPresetColors();
 }
 

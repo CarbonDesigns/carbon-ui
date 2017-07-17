@@ -17,8 +17,8 @@ import CommentsPanel    from './comments/CommentsPanel';
 import PropertiesPanel  from './properties/PropertiesPanel';
 import SwatchesPanel    from './properties/SwatchesPanel';
 
-import Perf from "react-addons-perf";
-window['Perf'] = Perf
+//import Perf from "react-addons-perf";
+//window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent{
     render() {

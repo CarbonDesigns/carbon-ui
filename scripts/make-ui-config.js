@@ -38,8 +38,10 @@ function getEntry(settings) {
         ]
     };
     if (settings.devServer) {
-        entry.index.unshift('webpack-dev-server/client?' + settings.authority);
-        entry.index.unshift('webpack/hot/only-dev-server');
+        entry.index.unshift(
+            'webpack-dev-server/client?' + settings.authority,
+            'webpack/hot/only-dev-server',
+            'react-hot-loader/patch');
     }
     return entry;
 }
@@ -55,16 +57,16 @@ function getOutput(settings) {
     return output;
 }
 function getResolve(settings) {
-    var root = [];
-    root.push(fullPath("../src"));
-
     var resolves = {
-        root: root,
+        modules: [
+            fullPath("../src"),
+            fullPath("../node_modules")
+        ],
         alias: {
             "bem": fullPath("../src/utils/commonUtils"),
-            'react/lib/ReactMount': 'react-dom/lib/ReactMount'
+            "fbjs/lib/memoizeStringOnly": fullPath("../node_modules/fbjs/lib/memoizeStringOnly")
         },
-        extensions: ["", ".ts", ".tsx", ".js", ".jsx", ".less", ".html"]
+        extensions: [".ts", ".tsx", ".js", ".jsx", ".less", ".html"]
     };
 
     return resolves;
@@ -108,9 +110,6 @@ function getPlugins(settings) {
     }
 
     var plugins = [
-        //breaks incremental updates in watch mode...
-        //new webpack.optimize.DedupePlugin(),
-
         new HtmlWebpackPlugin({
             template: './res/index.ejs',
             chunksSortMode: 'none',
@@ -130,25 +129,31 @@ function getPlugins(settings) {
         new BundleResourcesPlugin({
             cdn: getAppCdnPath(settings),
             target: fullPath("../resources/")
+        }),
+
+        new webpack.LoaderOptionsPlugin({
+            debug: settings.debug
         })
     ];
 
     if (settings.devServer) {
-        plugins.push(new webpack.HotModuleReplacementPlugin());
+        plugins.push(
+            new webpack.HotModuleReplacementPlugin(),
+            new webpack.NamedModulesPlugin()
+        );
     }
 
     var defines = {
         DEBUG: settings.debug,
-        'process.env.NODE_ENV': settings.minimize ? '"production"' : '"dev"'
+        'process.env.NODE_ENV': !settings.minimize ? '"production"' : '"dev"'
     };
     plugins.push(new webpack.DefinePlugin(defines));
 
     if (settings.minimize) {
         if (!settings.noUglify) {
             plugins.push(new webpack.optimize.UglifyJsPlugin({
-                compressor: {
-                    warnings: false
-                }
+                sourceMap: true,
+                minimize: true
             }));
         }
 
@@ -166,8 +171,6 @@ function getPlugins(settings) {
                 manifestVariable: "webpackManifest"
             }),
 
-            //breaks incremental updates in watch mode...
-            new webpack.optimize.OccurrenceOrderPlugin(),
             new ExtractTextPlugin("[name]-[contenthash].css")
         );
     }
@@ -188,6 +191,7 @@ function getLoaders(settings) {
         require.resolve("babel-plugin-transform-promise-to-bluebird"),
         require.resolve("babel-plugin-transform-runtime"),
         require.resolve("babel-plugin-add-module-exports"),
+        require.resolve("react-hot-loader/babel"),
         //remove when babel 6 has proper support for decorators
         require.resolve("babel-plugin-transform-decorators-legacy")
     );
@@ -209,7 +213,10 @@ function getLoaders(settings) {
         "plugins": plugins,
         cacheDirectory: true
     };
-    var babelLoader = "babel?" + JSON.stringify(babelSettings);
+    var babelLoader = {
+        loader: "babel-loader",
+        options: babelSettings
+    };
 
     var excludedFolders = ["node_modules", "libs", "generated"];
     var excludedFiles = ["carbon-core-.*", "carbon-api-.*"];
@@ -220,36 +227,41 @@ function getLoaders(settings) {
         {
             test: /\.js$/,
             include: /oidc\-client/,
-            loaders: [babelLoader]
+            use: [babelLoader]
         },
         {
             test: /\.js$/,
             include: /react\-color/,
-            loaders: [babelLoader, "react-map-styles"]
+            use: [babelLoader, "react-map-styles"]
         },
         {
             test: /\.jsx$/,
-            loaders: ["react-hot", babelLoader],
+            use: [babelLoader],
             exclude: excludes
         },
         {
             test: /\.tsx$/,
-            loaders: ["react-hot", babelLoader, "awesome-typescript-loader"],
+            use: [babelLoader, "awesome-typescript-loader"],
             exclude: excludes
         },
         {
             test: /\.ts$/,
-            loaders: [babelLoader, "awesome-typescript-loader"],
+            use: [babelLoader, "awesome-typescript-loader"],
             exclude: /node_modules/
         },
         {
             test: /\.js$/,
-            loaders: [babelLoader],
+            use: [babelLoader],
             exclude: excludes
         },
         {
             test: /\.(png|gif|jpeg|jpg|cur|woff|woff2|eot|ttf|svg)$/,
-            loaders: [util.format("file?name=[path][name]%s.[ext]", settings.hashPattern)],
+            use: [{
+                loader: "file-loader",
+                options: {
+                    name: util.format("[path][name]%s.[ext]", settings.hashPattern)
+                }
+            }],
             exclude: excludes
         }
     ];
@@ -257,16 +269,31 @@ function getLoaders(settings) {
     if (settings.minimize) {
         loaders.push({
             test: /\.less$/,
-            loader: ExtractTextPlugin.extract(
-                'css?sourceMap!less?sourceMap'
-            )
+            use: ExtractTextPlugin.extract({
+                use: [
+                    "css-loader",
+                    {
+                        loader: "sourceMap-loader",
+                        options: {
+                            less: true
+                        }
+                    }]
+            })
         });
     }
     else {
-        var lessSettings = {};
         loaders.push({
             test: /\.less$/,
-            loaders: ["style", "css?-minimize&sourceMap", 'less?' + JSON.stringify(lessSettings)]
+            use: [
+                "style-loader",
+                {
+                    loader: "css-loader",
+                    options: {
+                        minimize: false,
+                        sourceMap: true
+                    }
+                },
+                "less-loader"]
         });
     }
     return loaders;
@@ -289,16 +316,12 @@ module.exports = function (settings) {
             "carbon-core": "window.c.core",
             "carbon-api": "window.c.api"
         },
-        resolveLoader: {
-            root: fullPath("../node_modules")
-        },
         amd: { jQuery: true },
         module: {
             loaders: getLoaders(settings)
         },
         plugins: getPlugins(settings),
         devtool: settings.devtool,
-        debug: !settings.minimize,
         devServer: {
             contentBase: fullPath('../'),
             publicPath: settings.fullPublicPath,
@@ -319,6 +342,7 @@ module.exports = function (settings) {
                     }
                 ]
             },
+            disableHostCheck: true,
             headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
@@ -336,11 +360,6 @@ module.exports = function (settings) {
                 errors: settings.errors,
                 errorDetails: settings.errors
             }
-        },
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
         },
         cache: true
     };

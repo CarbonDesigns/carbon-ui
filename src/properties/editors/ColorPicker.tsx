@@ -7,7 +7,7 @@ import Hue from 'react-color/lib/components/common/Hue';
 import Checkboard from 'react-color/lib/components/common/Checkboard';
 import Saturation from 'react-color/lib/components/common/Saturation';
 import color from 'react-color/lib/helpers/color';
-import SketchPresetColors from 'react-color/lib/components/sketched/SketchPresetColors'
+import SketchPresetColors from 'react-color/lib/components/sketch/SketchPresetColors'
 
 function SketchFields ({ onChange, rgb, hsl, hex, disableAlpha }) {
   const styles = {

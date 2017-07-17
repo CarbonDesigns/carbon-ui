@@ -30,10 +30,10 @@ export default class RecentIcons extends Component{
 
     _renderList(){
         if (this.state.mounted){
-            return <IconsList className="list"
-                              container={this.refs.container}
-                              initialItems={recentIconsStore.getItems()}
-                              onLoadMore={this._onLoadMore}/>;
+            // return <IconsList className="list"
+            //                   container={this.refs.container}
+            //                   initialItems={recentIconsStore.getItems()}
+            //                   onLoadMore={this._onLoadMore}/>;
         }
         return <div/>;
     }

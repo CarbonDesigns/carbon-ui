@@ -7,18 +7,16 @@ import { richApp } from "../../RichApp";
 import AppActions from '../../RichAppActions';
 import IconsActions from "./IconsActions";
 import { FormattedMessage } from "react-intl";
-// import StencilsActions from "./StencilsActions";
 import { app, NullPage, IPage } from "carbon-core";
 import InternalIconsStore, { InternalIconsStoreState } from "./InternalIconsStore";
 import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
 import Refresher from "../Refresher";
 
-export default class InternalIcons extends StoreComponent<any, InternalIconsStoreState> {
-    refs: {
-        spriteView: SpriteView;
-    };
+const OverscanCount = 20;
+const IconSize = 40;
 
+export default class InternalIcons extends StoreComponent<any, InternalIconsStoreState> {
     constructor(props) {
         super(props, InternalIconsStore);
     }
@@ -51,12 +49,13 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
 
             <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>
 
-            <SpriteView config={config}
+            <SpriteView config={config} configVersion={this.state.configVersion}
                 changedId={this.state.changedId}
                 scrollToCategory={this.state.lastScrolledCategory}
                 onScrolledToCategory={this.onScrolledToCategory}
-                columnWidth={40}
-                ref="spriteView" />
+                overscanCount={OverscanCount}
+                columnWidth={IconSize}
+                keepAspectRatio={true}/>
         </Navigatable>;
     }
 }

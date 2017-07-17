@@ -1494,16 +1494,16 @@
 
 .transition(@_string) when (isstring(@_string)){
     @transition: e(@_string);
-    transition: @transition;
+    //transition: @transition;
 }
 
 .transition(@_num) when (isnumber(@_num)){
     @transition: all (1s * @_num);
-    transition: @transition;
+    //transition: @transition;
 }
 
 .transition(@transition: all .03s;){
-    transition: @transition;
+    //transition: @transition;
 }
 
 .trans(...) { .transition(@arguments); }

@@ -6,8 +6,9 @@ import { Component } from "../CarbonFlux";
 
 const DEBOUNCE_DELAY_MS = 500;
 
-interface ISearchProps extends ISimpleReactElementProps {
+interface SearchProps extends ISimpleReactElementProps {
     onQuery: (term: string) => void;
+    query?: string;
     placeholder?: string;
 }
 
@@ -15,16 +16,16 @@ type SearchState = {
     query: string;
 }
 
-export default class Search extends Component<ISearchProps, SearchState>{
+export default class Search extends Component<SearchProps, SearchState>{
     onChangeDebounced: () => any;
 
     refs: {
         input: HTMLInputElement;
     }
 
-    constructor(props){
+    constructor(props: SearchProps){
         super(props);
-        this.state = {query: ""};
+        this.state = {query: props.query || ""};
     }
     query(term){
         this.setState({query: term});
@@ -34,6 +35,11 @@ export default class Search extends Component<ISearchProps, SearchState>{
         this.setState({query: e.target.value});
         this.onChangeDebounced();
     };
+    componentWillReceiveProps(nextProps: Readonly<SearchProps>, context) {
+        if (nextProps.query !== this.state.query) {
+            this.setState({ query: nextProps.query });
+        }
+    }
     componentWillMount(){
         this.onChangeDebounced = util.debounce(() => {
             this.props.onQuery(this.state.query);
@@ -45,7 +51,7 @@ export default class Search extends Component<ISearchProps, SearchState>{
         input.select();
     }
     render(){
-        let { placeholder, onQuery, className, children, ...other } = this.props;
+        let { placeholder, onQuery, className, children, query, ...other } = this.props;
         placeholder = placeholder || "@search";
         const cn = cx('search-field', className);
         return <div {...other} className={cn}>

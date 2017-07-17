@@ -1,6 +1,6 @@
 import React from "react";
 import { Component } from "../../../CarbonFlux";
-import Dropzone, { DropzoneOptions } from "Dropzone";
+import Dropzone, { DropzoneOptions } from "dropzone";
 import { backend, IImagesResult, IDisposable } from "carbon-core";
 import { ico, say } from "../../../shared/Utils";
 import bem from "../../../utils/commonUtils";

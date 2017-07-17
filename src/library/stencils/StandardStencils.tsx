@@ -9,8 +9,12 @@ import { PageSelect } from "../../shared/ui/GuiSelect";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import SymbolsStore, { SymbolsStoreState } from "./SymbolsStore";
 import { IPage, app } from "carbon-core";
+import Refresher from "../Refresher";
 
 require("../../import/ImportResourceDialog");
+
+const OverscanCount = 10;
+const ColumnWidth = 128;
 
 export default class StandardStencils extends StoreComponent<{}, SymbolsStoreState> {
     refs: {
@@ -31,6 +35,13 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
 
     private onRefreshLibrary = () => {
         dispatchAction({ type: "Stencils_Refresh" });
+    }
+
+    private onCategoryChanged = category => {
+        dispatchAction({ "type": "Stencils_ClickedCategory", category });
+    }
+    private onScrolledToCategory = category => {
+        dispatchAction({ "type": "Stencils_ScrolledToCategory", category });
     }
 
     private renderPageItem = (page: IPage) => {
@@ -61,10 +72,22 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
                 {this.renderPageSelect(page)}
             </div>
             <Navigatable className={bem("library-page", "content")}
-                config={config.groups}
-                getCategoryNode={c => this.refs.spriteView.getCategoryNode(c)}>
-                {this.renderRefresher()}
-                <SpriteView config={config} changedId={this.state.changedId} sourceId={page.id()} ref="spriteView" />
+                activeCategory={this.state.activeCategory}
+                onCategoryChanged={this.onCategoryChanged}
+                config={config}>
+
+                <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>
+
+                <SpriteView
+                    config={config}
+                    configVersion={this.state.configVersion}
+                    changedId={this.state.changedId}
+                    scrollToCategory={this.state.lastScrolledCategory}
+                    onScrolledToCategory={this.onScrolledToCategory}
+                    overscanCount={OverscanCount}
+                    columnWidth={ColumnWidth}
+                    sourceId={page.id()}
+                    borders={true}/>
             </Navigatable>
         </div>
     }

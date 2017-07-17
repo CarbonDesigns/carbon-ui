@@ -539,6 +539,8 @@ export default
         "@resources.removeFromIconSet": "Remove from icon set",
         "@resources.markAsIcon": "Add to icon set",
 
+        "@icons.find": "Find icon...",
+
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",
         "@textAutoWidth.Grow": "Grow",

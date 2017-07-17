@@ -6,7 +6,7 @@ export class LibraryTabStore extends CarbonStore{
         super();
 
         this.state = {
-            library: "2",
+            library: "1",
             stencils: "1",
             icons: "1",
             images: "1",

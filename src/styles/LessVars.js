@@ -6,7 +6,6 @@ export default {
     tabTransition: 300,
     tile3Height: 200,
     iconStencilHeight: 50,
-    stencilsContainerPadding: {top: 0, bottom: 0, left: 2, right: 2},
     libraryImageHeight: 200,
     libraryImageHeightPortrait: 300
 }

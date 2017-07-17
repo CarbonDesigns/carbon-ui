@@ -23,13 +23,29 @@ export default class VirtualCollection extends Component<VirtualCollectionProps>
     private collection: Collection = null;
     private measureCache: CellSize[] = [];
     private lastDimensions: Dimensions = DimensionsZero;
+    private suspended = false;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            version: 0
+        };
+    }
 
     reset() {
         if (this.collection) {
+            this.ensureCellsMeasured(this.lastDimensions, true);
+
             this.collection.calculateSizeAndPositionData();
             this.collection.forceUpdate();
-            this.initScroller();
         }
+    }
+
+    suspend() {
+        this.suspended = true;
+    }
+    resume() {
+        this.suspended = false;
     }
 
     componentDidMount() {
@@ -63,11 +79,18 @@ export default class VirtualCollection extends Component<VirtualCollectionProps>
         this.collection = collection;
     }
 
-    private ensureCellsMeasured(currentDimensions: Dimensions) {
+    private ensureCellsMeasured(currentDimensions: Dimensions, force?: boolean) {
         if (!currentDimensions.width || !currentDimensions.height) {
             return;
         }
-        if (this.lastDimensions.width !== currentDimensions.width || this.lastDimensions.height !== currentDimensions.height) {
+
+        //memorize last dimensions for a later update
+        if (this.suspended) {
+            this.lastDimensions = currentDimensions;
+            return;
+        }
+
+        if (force || this.lastDimensions.width !== currentDimensions.width || this.lastDimensions.height !== currentDimensions.height) {
             this.measureCache = this.props.cellsMeasurer(currentDimensions.width);
             this.lastDimensions = currentDimensions;
         }

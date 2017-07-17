@@ -17,11 +17,11 @@
   box-shadow: 0 0 1px #ffffff;
   position: absolute;
   opacity: 0;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-  -webkit-transition: linear 300ms opacity;
-  -moz-transition: linear 300ms opacity;
-  -o-transition: linear 300ms opacity;
-  transition: linear 300ms opacity;
+  // filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  // -webkit-transition: linear 300ms opacity;
+  // -moz-transition: linear 300ms opacity;
+  // -o-transition: linear 300ms opacity;
+  //transition: linear 300ms opacity;
 }
 .antiscroll-scrollbar-shown {
   opacity: 1;
@@ -68,4 +68,27 @@
 .ReactVirtualized__Grid::scrollbar {
   width: 0;
   height: 0;
+}
+
+.ReactVirtualized__Collection__innerScrollContainer::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.ReactVirtualized__Collection__innerScrollContainer::scrollbar {
+  width: 0;
+  height: 0;
+}
+
+#viewContainer::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+#viewContainer::scrollbar {
+  width: 0;
+  height: 0;
+}
+
+#viewContainer, .antiscroll-inner, .ReactVirtualized__Grid, .ReactVirtualized__Collection__innerScrollContainer {
+  //hide scrollbars in edge
+  -ms-overflow-style: none;
 }

@@ -2,14 +2,14 @@ import {backend} from "carbon-core";
 
 const PageSize = 50;
 const base = "https://api.iconfinder.com/v2";
-const fetchOptions = {method: "GET", mode: 'cors'};
+const fetchOptions: RequestInit = {method: "GET", mode: 'cors'};
 
 export default class IconFinderApi {
-    search(term, page){
+    search(term: string, start: number, stop: number){
         var data = {
             query: term,
-            count: PageSize,
-            offset: PageSize*(page - 1),
+            count: stop - start,
+            offset: start,
             premium: false
         };
         var url = base + "/icons/search?" + backend.encodeUriData(data);
@@ -34,7 +34,7 @@ function checkStatus(response){
         return response;
     }
     var error = new Error(response.statusText);
-    error.response = response;
+    error["response"] = response;
     throw error;
 }
 

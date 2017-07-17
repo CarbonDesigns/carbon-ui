@@ -1,8 +1,14 @@
 import IconFinderApi from "./IconFinderApi";
 import IconsActions from "./IconsActions";
 import {handles, CarbonStore, dispatch} from '../../CarbonFlux';
-import {Image, Brush, ContentSizing} from "carbon-core";
+import { Image, Brush, ContentSizing, IPaginatedResult } from "carbon-core";
 import Toolbox from "../Toolbox";
+
+export type IconFinderStoreState = {
+    error: boolean;
+    message: string;
+    term: string;
+}
 
 var key = 0;
 
@@ -17,9 +23,7 @@ export class IconFinderStore extends CarbonStore<any>{
         this.state = {
             error: false,
             message: "",
-            term: "football",
-            hasMore: false,
-            results: []
+            term: "football"
         };
     }
 
@@ -48,7 +52,7 @@ export class IconFinderStore extends CarbonStore<any>{
     }
 
     @handles(IconsActions.search, IconsActions.webSearch)
-    search({term}){
+    search({term}) {
         if (term){
             this.setState({
                 term, error: false, message: "", results: [], hasMore: true
@@ -56,11 +60,11 @@ export class IconFinderStore extends CarbonStore<any>{
         }
     }
 
-    runQuery(page){
+    runQuery(start: number, stop: number): Promise<IPaginatedResult<any>> {
         if (!this.state.term){
             return Promise.reject(new Error("No iconfinder search term"));
         }
-        return this._api.search(this.state.term, page)
+        return this._api.search(this.state.term, start, stop)
             .then(data => this.handleResults(data))
             .catch(e =>{
                 dispatch(IconsActions.iconFinderError("Could not connect"));
@@ -68,7 +72,7 @@ export class IconFinderStore extends CarbonStore<any>{
             });
     }
 
-    handleResults(data){
+    handleResults(data): IPaginatedResult<any> {
         var page = data.icons.map(x => {
             var largestSize = x.raster_sizes[x.raster_sizes.length-1].size;
             var thumbUrl = null;
@@ -98,7 +102,7 @@ export class IconFinderStore extends CarbonStore<any>{
                 id: ++key + "", //sometimes the same icon is returned on different pages
                 type: IconFinderStore.StoreType,
                 name: sizeDesc + ", " + x.tags.join(", "),
-                spriteUrl: thumbUrl,
+                url: thumbUrl,
                 realWidth: thumbSize,
                 realHeight: thumbSize,
                 premium: x.is_premium,
@@ -124,18 +128,11 @@ export class IconFinderStore extends CarbonStore<any>{
 
             return icon;
         });
-        var newState: any = {};
-        if (page.length){
-            newState = {results: this.state.results.concat(page)};
-        }
-        else{
-            if (!this.state.results.length){
-                dispatch(IconsActions.iconFinderNoResults());
-            }
-            newState.hasMore = false;
-        }
-        this.setState(newState);
-        return {items: page, hasMore: page.length > 0};
+
+        return {
+            pageData: page,
+            totalCount: data.total_count
+        };
     }
 
     notFound(){

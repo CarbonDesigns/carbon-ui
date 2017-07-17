@@ -85,6 +85,7 @@ interface IPanelContainerProps extends IReactElementProps {
     container: any;
     minimized: boolean;
     temporaryVisiblePanel: string;
+    zIndex: number;
 }
 
 function dockToString(dock: LayoutDockPosition): string {
@@ -129,6 +130,7 @@ export default class PanelContainer extends Component<IPanelContainerProps> {
         style['width'] = container.width;
         style['left'] = container.x;
         style['top'] = container.y;
+        style['zIndex'] = this.props.zIndex;
 
         return style;
     }

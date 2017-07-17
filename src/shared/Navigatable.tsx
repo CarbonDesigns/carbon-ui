@@ -6,7 +6,13 @@ import ScrollContainer from "./ScrollContainer";
 //strange webpack bug, scroll container import is removed
 ScrollContainer.bind(this);
 
-export default class Navigatable extends Component<any, any>{
+interface NavigatableProps extends ISimpleReactElementProps {
+    config: any;
+    onCategoryChanged: (category) => void;
+    activeCategory: any;
+}
+
+export default class Navigatable extends Component<NavigatableProps>{
     private onCategoryClick = e => {
         let index = parseInt(e.currentTarget.dataset.index);
         let category = this.props.config.groups[index];
@@ -26,7 +32,7 @@ export default class Navigatable extends Component<any, any>{
     render() {
         var { config, activeCategory, onCategoryChanged, children, ...other } = this.props;
         return <div {...other}>
-            <div className="stencils-navigator">
+             <div className="stencils-navigator">
                 <ScrollContainer className="wrap thin" x={false}>
                     {config.groups.map(this.renderCategory)}
                 </ScrollContainer>

@@ -143,7 +143,7 @@ export default class ToolboxConfiguration {
                     }
                 }
 
-                return { imageData: context.canvas.toDataURL("image/png"), size: { width, height } };
+                return { imageData: "url(" + context.canvas.toDataURL("image/png") + ")", size: { width, height } };
             })
             .finally(() => {
                 workspace.contextPool.releaseContext(context);

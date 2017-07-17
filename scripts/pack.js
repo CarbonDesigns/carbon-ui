@@ -85,8 +85,12 @@ function fullPath(){
     return path.join.apply(path, args);
 }
 
+var vendorsOptions = Object.assign({}, argv, {
+    minimize: true
+});
+
 var packVendors = require("./packVendors");
-packVendors(argv, function(err, file){
+packVendors(vendorsOptions, function(err, file){
     if (err){
         throw err;
     }

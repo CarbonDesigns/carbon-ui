@@ -550,8 +550,6 @@ export default class PreviewWorkspace extends ComponentWithImmutableState {
                         position: 'absolute'
                     }} />
                 <div className="preview__device" ref="device">
-                    <div id="htmlPanel"></div>
-
                     <canvas ref="canvas1" className={classNames}
                         style={{
                             position: 'absolute'

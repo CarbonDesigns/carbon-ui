@@ -31,15 +31,15 @@
 
 .layout:not(.layout_resizing) {
     .lbox {
-        transition: left 0.15s ease,
-                top 0.15s ease,
-                bottom 0.15s ease,
-                width 0.15s ease,
-                height 0.15s ease,
-                margin 0.15s ease,
-                right  0.15s ease;
+        //transition: left 0.15s ease,
+                // top 0.15s ease,
+                // bottom 0.15s ease,
+                // width 0.15s ease,
+                // height 0.15s ease,
+                // margin 0.15s ease,
+                // right  0.15s ease;
 
-        transition: opacity 0.2s ease-in;
+        //transition: opacity 0.2s ease-in;
     }
 }
 
@@ -54,7 +54,7 @@
 
     &.autohide:not(.tmpVisible) {
         opacity: 0.5;
-        transition: opacity 0.25s ease-in;
+        //transition: opacity 0.25s ease-in;
         &.lbox_left {
             left:unset;
             margin-left: -100%;
@@ -75,11 +75,13 @@
     }
 
     &.tmpVisible {
-        z-index: 2500;
+        //overrule element style
+        z-index: 2500 !important;
     }
 
     &.floating {
-        z-index: 2000;
+        //overrule element style
+        z-index: 2000 !important;
     }
 
 
@@ -159,7 +161,7 @@
         flex-basis: 0;
         .pills-bar__pill {
             left: 0;
-            transition: left 0s linear 1s;
+            //transition: left 0s linear 1s;
         }
     }
 }
@@ -206,7 +208,7 @@
     }
 
     width:  @pillsbar_wide;
-    transition: all @pillTransitionTime;
+    //transition: all @pillTransitionTime;
 
     &_empty {
         display:none;
@@ -497,7 +499,7 @@ body.compact-mode , body.ninja-mode {
 .panel {
     display: flex;
     flex-direction: column;
-    transition: opacity 0.2s linear;
+    //transition: opacity 0.2s linear;
 
     .stretch();
     @icon_and_name_opacity: .7;

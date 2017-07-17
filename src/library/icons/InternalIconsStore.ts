@@ -1,7 +1,7 @@
 import IconFinderApi from "./IconFinderApi";
 import IconsActions, { IconsAction } from "./IconsActions";
 import CarbonActions, { CarbonAction } from "../../CarbonActions";
-import { handles, CarbonStore, dispatch, dispatchAction } from '../../CarbonFlux';
+import { CarbonStore, dispatchAction } from '../../CarbonFlux';
 import { Image, Brush, ContentSizing, ArtboardType, UIElementFlags, IconSetSpriteManager, PatchType, app } from "carbon-core";
 import Toolbox from "../Toolbox";
 import { StencilInfo } from "../stencils/StencilsActions";
@@ -16,8 +16,8 @@ interface InternalIconInfo {
 
 export type InternalIconsStoreState = {
     iconSets: any[],
-    version: number,
     config: any,
+    configVersion: number,
     dirtyConfig: boolean,
     changedId: string | null,
     activeCategory: any,
@@ -32,8 +32,8 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
 
         this.state = {
             iconSets: [],
-            version: -1,
             config: null,
+            configVersion: 0,
             dirtyConfig: false,
             changedId: null,
             lastScrolledCategory: null,
@@ -51,19 +51,6 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
         });
 
         return element;
-    }
-
-    @handles(CarbonActions.pageAdded)
-    onPageAdded({ page }) {
-        var iconSetArtboards = page.getAllResourceArtboards(ArtboardType.IconSet);
-        var iconSets = this.state.iconSets.slice();
-        for (var i = 0; i < iconSetArtboards.length; ++i) {
-            iconSets.push(this._buildIconSet(iconSetArtboards[i]));
-        }
-
-        if (this.state.iconSets.length !== iconSets.length) {
-            this.setState({ iconSets: iconSets });
-        }
     }
 
     _buildIconSet(artboard) {
@@ -200,7 +187,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
             activeCategory = config.groups[0];
         }
 
-        this.setState({ config, activeCategory, dirtyConfig: false });
+        this.setState({ config, activeCategory, dirtyConfig: false, configVersion: ++this.state.configVersion });
         this.updating = false;
     }
 

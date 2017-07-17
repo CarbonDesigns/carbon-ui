@@ -33,7 +33,7 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         this._setupDragAndDrop();
     }
 
-    registerStore(name, store){
+    registerStore<T>(name, store: T) {
         if (this._stores.hasOwnProperty("name")){
             throw new Error("Store already registered: " + name);
         }

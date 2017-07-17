@@ -7,8 +7,9 @@ export default class ToolboxMasonry {
     constructor(private categoryHeight: number, private widthAccessor: (item) => number, private heightAccessor: (item) => number) {
     }
 
-    measure(config, collectionWidth: number, columnWidth: number): CellSize[] {
+    measure(config, collectionWidth: number, columnWidth: number, keepAspectRatio?: boolean): CellSize[] {
         let colCount = Math.floor(collectionWidth / columnWidth);
+        colCount = Math.max(colCount, 1);
         this.columns.length = 0;
         for (var i = 0; i < colCount; i++) {
             this.columns.push(0);
@@ -28,14 +29,14 @@ export default class ToolboxMasonry {
                 let width = this.widthAccessor(item);
                 let height = this.heightAccessor(item);
 
-                result.push(this.placeItem(width, height, columnWidth, flexShare));
+                result.push(this.placeItem(width, height, columnWidth, flexShare, false, keepAspectRatio));
             }
         }
 
         return result;
     }
 
-    private placeItem(width: number, height: number, columnWidth: number, flexShare: number, header?: boolean): CellSize {
+    private placeItem(width: number, height: number, columnWidth: number, flexShare: number, header?: boolean, keepAspectRatio?: boolean): CellSize {
         let span = Math.round(width / columnWidth);
         span = Math.max(span, 1);
         span = Math.min(span, this.columns.length);
@@ -50,7 +51,7 @@ export default class ToolboxMasonry {
             }
         }
 
-        if (!header) {
+        if (!header && keepAspectRatio) {
             height = height * (columnWidth * span / width) + flexShare * span;
         }
 

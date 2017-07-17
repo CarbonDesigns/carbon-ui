@@ -19,4 +19,6 @@ export type StencilsAction =
     { type: "Stencils_ChangeCategory", category: string } |
     { type: "Stencils_ScrollCategory", category: string } |
     { type: "Stencils_Search", q: string } |
-    { type: "Stencils_Clicked"} & StencilInfo;
+    { type: "Stencils_Clicked"} & StencilInfo |
+    { type: "Stencils_ClickedCategory", category: any } |
+    { type: "Stencils_ScrolledToCategory", category: any };

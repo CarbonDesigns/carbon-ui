@@ -5,40 +5,73 @@ import { richApp } from "../../RichApp";
 import StencilsActions from "./StencilsActions";
 import { FormattedHTMLMessage, defineMessages, FormattedMessage } from 'react-intl';
 import bem from "../../utils/commonUtils";
-import VirtualGroupedList from "../../shared/collections/VirtualGroupedList";
 import VirtualCollection, { CellSize } from "../../shared/collections/VirtualCollection";
 import ToolboxMasonry from "../ToolboxMasonry";
-import LayoutActions from "../../layout/LayoutActions";
+import LayoutActions, { LayoutAction } from "../../layout/LayoutActions";
 import { util } from "carbon-core";
+import { isRetina } from "../../utils/domUtil";
 
 const CategoryHeight = 36;
 
-export default class SpriteView extends Component<any, any>{
+interface SpriteViewProps extends ISimpleReactElementProps {
+    config: any;
+    configVersion: number;
+    columnWidth: number;
+    onScrolledToCategory?: (category) => void;
+    scrollToCategory?: any;
+    changedId?: string | null;
+    overscanCount?: number;
+    sourceId?: string;
+    borders?: boolean;
+    keepAspectRatio?: boolean;
+}
+
+export default class SpriteView extends Component<SpriteViewProps>{
     private masonry: ToolboxMasonry = new ToolboxMasonry(CategoryHeight, x => x.spriteMap[2], x => x.spriteMap[3]);
     private measureCache: CellSize[];
+    private lastConfigVersion = 0;
 
     refs: {
         collection: VirtualCollection;
     }
 
-    constructor(props) {
+    constructor(props: SpriteViewProps) {
         super(props);
 
         this.onScroll = util.debounce(this.onScroll, 100);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+
+        if (this.props.configVersion !== this.lastConfigVersion) {
+            this.refs.collection.reset();
+        }
+    }
+
+    componentWillUnmoumt() {
+        super.componentWillUnmount();
+        this.measureCache = null;
     }
 
     canHandleActions() {
         return true;
     }
 
-    @handles(LayoutActions.resizePanel)
-    onResizePanel() {
-        this.refs.collection.reset();
-    }
-
-    componentWillUnmoumt() {
-        super.componentWillUnmount();
-        this.measureCache = null;
+    onAction(action: LayoutAction) {
+        switch (action.type) {
+            case "Layout_StartResizing":
+                this.refs.collection.suspend();
+                return;
+            case "Layout_StopResizing":
+                this.refs.collection.resume();
+                return;
+            case "Layout_PanelsResized":
+                if (action.panels.indexOf("library") !== -1) {
+                    this.refs.collection.reset();
+                }
+                return;
+        }
     }
 
     onClicked = (e) => {
@@ -50,18 +83,9 @@ export default class SpriteView extends Component<any, any>{
         }
     };
 
-    isRetina() {
-        if (window.matchMedia) {
-            var mq = window.matchMedia("only screen and (-moz-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 2.6/2), only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen  and (min-device-pixel-ratio: 1.3), only screen and (min-resolution: 1.3dppx)");
-            if (mq && mq.matches) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private measureCells = (collectionWidth: number) => {
-        this.measureCache = this.masonry.measure(this.props.config, collectionWidth, this.props.columnWidth);
+        this.measureCache = this.masonry.measure(this.props.config, collectionWidth, this.props.columnWidth, this.props.keepAspectRatio);
+        this.lastConfigVersion = this.props.configVersion;
         return this.measureCache;
     }
 
@@ -150,7 +174,7 @@ export default class SpriteView extends Component<any, any>{
         var spriteMap = x.spriteMap;
         var spriteUrl;
 
-        if (this.isRetina()) {
+        if (isRetina) {
             spriteUrl = (x.spriteUrl2x || g.spriteUrl2x || x.spriteUrl || g.spriteUrl);
         } else {
             spriteUrl = (x.spriteUrl || g.spriteUrl);
@@ -160,7 +184,7 @@ export default class SpriteView extends Component<any, any>{
         var height = spriteMap[3];
 
         var imageStyle: any = {
-            backgroundImage: 'url(' + spriteUrl + ')',
+            backgroundImage: spriteUrl,
             width: width,
             height: height,
             overflow: 'hidden'
@@ -177,7 +201,8 @@ export default class SpriteView extends Component<any, any>{
         var modification_badge = modified ? <div className="stencil__modification-indicator"><i className="ico--refresh" /></div> : null;
 
         var cn = bem("stencil", null, {
-            modified: modified
+            modified: modified,
+            bordered: this.props.borders
         });
 
         return <div key={g.name + x.id}
@@ -204,13 +229,14 @@ export default class SpriteView extends Component<any, any>{
         }
 
         let cellCount = this.calculateCellCount();
-
         return <VirtualCollection
             ref="collection"
             cellCount={cellCount}
             cellRenderer={this.renderCell}
             cellsMeasurer={this.measureCells}
             scrollToCell={this.calculateScrollToCell(this.props.scrollToCategory)}
-            onScroll={this.onScroll} />
+            overscanCount={this.props.overscanCount}
+            onScroll={this.onScroll}
+            />
     }
 }

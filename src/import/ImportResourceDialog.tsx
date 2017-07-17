@@ -100,7 +100,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             return <FormattedMessage tagName="p" id="@loading" />
         }
 
-        return <ResourceGrid ref="grid" cellHeight={280} cellWidth={200} flex
+        return <ResourceGrid ref="grid" cellHeight={280} cellWidth={200}
             loadMore={this.onLoadMore}
             cellRenderer={resource =>
                 <ResourceTile

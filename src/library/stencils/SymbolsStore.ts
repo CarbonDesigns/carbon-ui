@@ -8,7 +8,10 @@ export type SymbolsStoreState = {
     dirtyConfig: boolean;
     changedId: string;
     config: any;
+    configVersion: number;
     currentPage: IPage;
+    activeCategory: any;
+    lastScrolledCategory: any;
 };
 
 class SymbolsStore extends CarbonStore<SymbolsStoreState> {
@@ -17,8 +20,11 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
         this.state = {
             currentPage: null,
             config: null,
+            configVersion: 0,
             changedId: null,
-            dirtyConfig: false
+            dirtyConfig: false,
+            activeCategory: null,
+            lastScrolledCategory: null
         };
     }
 
@@ -32,7 +38,12 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
                 return;
             case "Stencils_Loaded":
                 if (action.page === this.state.currentPage) {
-                    this.setState({ config: action.config, dirtyConfig: false, changedId: null });
+                    let activeCategory = null;
+                    if (action.config && action.config.groups.length) {
+                        activeCategory = action.config.groups[0];
+                    }
+
+                    this.setState({ config: action.config, dirtyConfig: false, changedId: null, activeCategory, configVersion: ++this.state.configVersion });
                 }
                 return;
             case "Carbon_ResourceAdded":
@@ -60,6 +71,13 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
                 return;
             case "Carbon_AppUpdated":
                 this.loadInitialConfig();
+                return;
+
+            case "Stencils_ClickedCategory":
+                this.onCategoryClicked(action.category);
+                return;
+            case "Stencils_ScrolledToCategory":
+                this.onScrolledToCategory(action.category);
                 return;
         }
     }
@@ -119,6 +137,13 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
             .then(config => {
                 dispatchAction({ type: "Stencils_Loaded", config: config, page: this.state.currentPage, async: true });
             });
+    }
+
+    private onCategoryClicked(category) {
+        this.setState({ activeCategory: category, lastScrolledCategory: category });
+    }
+    private onScrolledToCategory(category) {
+        this.setState({ activeCategory: category });
     }
 }
 

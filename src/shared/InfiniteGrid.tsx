@@ -4,30 +4,26 @@ import { InfiniteLoader, AutoSizer, Grid, Dimensions, InfiniteLoaderChildProps, 
 import { Component } from "../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "./ScrollContainer";
+import { DimensionsZero } from "./collections/CollectionUtil";
 
 interface InfiniteGridProps<T = any> extends ISimpleReactElementProps {
     cellWidth: number;
     cellHeight: number;
     cellRenderer: (item: T) => React.ReactNode;
     loadMore: (startIndex: number, stopIndex: number) => Promise<IPaginatedResult<T>>;
-    overscanCount?: number;
 }
 
 type InfiniteGridState<T> = {
     data: T[];
-    totalCount: number;
     invalidateVersion: number;
-    noResults: boolean;
+    rowCount: number;
+    columnCount: number;
+    totalCount: number;
+    dimensions: Dimensions;
 }
 
 export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T>, InfiniteGridState<T>> {
-    static defaultProps: Partial<InfiniteGridProps> = {
-        overscanCount: 0
-    }
-
     private onRowsRendered: (params: { startIndex: number, stopIndex: number }) => void = null;
-    private columnCount: number = 0;
-    private rowCount: number = 0;
     private grid: Grid = null;
     private registerChild: (child: any) => void;
     private firstPageStart = 0;
@@ -40,7 +36,14 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     constructor(props) {
         super(props);
 
-        this.state = { data: [], totalCount: 0, invalidateVersion: 0, noResults: false };
+        this.state = {
+            data: [],
+            dimensions: DimensionsZero,
+            rowCount: 0,
+            columnCount: 0,
+            totalCount: 1000,
+            invalidateVersion: 0
+        };
     }
 
     componentDidMount() {
@@ -64,12 +67,15 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     }
 
     getItem(rowIndex: number, columnIndex: number) {
-        return this.state.data[rowIndex * this.columnCount + columnIndex];
+        return this.state.data[rowIndex * this.state.columnCount + columnIndex];
     }
 
     reset() {
         this.refs.loader.resetLoadMoreRowsCache();
-        this.setState({ data: [], totalCount: 0, invalidateVersion: this.state.invalidateVersion + 1, noResults: false });
+
+        let newState = this.recalculateStateToFit(this.state.dimensions);
+        newState = Object.assign({ data: [], totalCount: 1000, invalidateVersion: this.state.invalidateVersion + 1 }, newState)
+        this.setState(newState);
     }
 
     private initScroller() {
@@ -87,11 +93,14 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     }
     private loadMoreRows = (params: IndexRange) => {
         return this.props.loadMore(params.startIndex, params.stopIndex)
-            .then(result => this.setState({
-                data: this.appendPage(result.pageData),
-                totalCount: result.totalCount,
-                noResults: this.state.totalCount === 0 && result.totalCount === 0
-            }));
+            .then(result => {
+                let rowCount = Math.ceil(result.totalCount / this.state.columnCount);
+                this.setState({
+                    data: this.appendPage(result.pageData),
+                    totalCount: result.totalCount,
+                    rowCount
+                });
+            });
     }
     private appendPage(pageData: T[]) {
         for (var i = 0; i < pageData.length; i++) {
@@ -103,25 +112,46 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     /**
      * On the first load, calculate possible amount of rows and update itself to query for data.
      * On subsequent loads, calculate number of rows based on known data.
-     * @param dimensions Current dimensions
-     * @param columnCount Number of columns
      */
-    private getRowCount(dimensions: Dimensions, columnCount: number) {
-        let total = this.state.totalCount;
-        if (total === 0 && !this.state.noResults) {
-            let possibleRows = Math.ceil(dimensions.height / this.props.cellHeight);
-            total = columnCount * possibleRows;
-            if (total) {
-                setTimeout(() => {
-                    this.refs.loader.resetLoadMoreRowsCache();
-                    this.setState({ totalCount: total });
-                }, 1);
-            }
-
-            return 0;
+    private onNewDimensions(dimensions: Dimensions) {
+        if (!dimensions.width || !dimensions.height) {
+            return;
         }
 
-        return columnCount === 0 ? 0 : Math.ceil(total / columnCount);
+        if (this.state.dimensions === DimensionsZero) {
+            setTimeout(() => {
+                this.refs.loader.resetLoadMoreRowsCache();
+                let newState = this.recalculateStateToFit(dimensions);
+                this.setState(newState);
+            }, 1);
+
+            return;
+        }
+
+        if (this.state.dimensions.width !== dimensions.width || this.state.dimensions.height !== dimensions.height) {
+            let newState;
+            if (this.state.data.length) {
+                let columnCount = this.getColumnCount(dimensions);
+                let rowCount = Math.ceil(this.state.totalCount/columnCount);
+                newState = { columnCount, rowCount, dimensions };
+            }
+            else {
+                newState = this.recalculateStateToFit(dimensions);
+            }
+
+            setTimeout(() => this.setState(newState), 1);
+        }
+    }
+
+    private recalculateStateToFit(dimensions: Dimensions) {
+        let rowCount = Math.ceil(dimensions.height / this.props.cellHeight);
+        let columnCount = this.getColumnCount(dimensions);
+        let totalCount = columnCount * rowCount;
+        return { totalCount, columnCount, rowCount, dimensions };
+    }
+
+    private getColumnCount(dimensions: Dimensions) {
+        return Math.floor(dimensions.width / this.props.cellWidth);
     }
 
     private infiniteLoaderChildFunction = (loaderProps: InfiniteLoaderChildProps) => {
@@ -130,25 +160,23 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
 
         return <AutoSizer>
             {dimensions => {
-                this.columnCount = Math.floor(dimensions.width / this.props.cellWidth);
-                this.rowCount = this.getRowCount(dimensions, this.columnCount);
+                this.onNewDimensions(dimensions);
 
                 //cells with aspect ratio
-                let actualCellWidth = dimensions.width / (this.columnCount || 1);
+                let actualCellWidth = dimensions.width / (this.state.columnCount || 1);
                 let actualCellHeight = this.props.cellHeight * actualCellWidth / this.props.cellWidth;
 
                 return <div className={this.props.className} style={{ width: dimensions.width, height: dimensions.height }}>
                     <Grid
                         style={{ overflowX: "hidden" }}
                         cellRenderer={this.cellRenderer}
-                        columnCount={this.columnCount}
+                        columnCount={this.state.columnCount}
                         columnWidth={actualCellWidth}
-                        rowCount={this.rowCount}
+                        rowCount={this.state.rowCount}
                         rowHeight={actualCellHeight}
                         width={dimensions.width}
                         height={dimensions.height}
-                        overscanRowCount={Math.ceil(this.props.overscanCount/this.columnCount)}
-                        onSectionRendered={params => this.onSectionRendered(params, this.columnCount)}
+                        onSectionRendered={params => this.onSectionRendered(params, this.state.columnCount)}
                         ref={this.registerGrid}
                     />
                 </div>
@@ -183,7 +211,8 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     }
 
     render() {
-        return <InfiniteLoader ref="loader" isRowLoaded={this.isRowLoaded} loadMoreRows={this.loadMoreRows} rowCount={this.state.totalCount}>
+        return <InfiniteLoader ref="loader" isRowLoaded={this.isRowLoaded} loadMoreRows={this.loadMoreRows}
+            rowCount={this.state.totalCount}>
             {this.infiniteLoaderChildFunction}
         </InfiniteLoader>;
     }

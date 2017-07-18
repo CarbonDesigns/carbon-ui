@@ -6,7 +6,7 @@ import { Component, handles, dispatch, StoreComponent, dispatchAction } from "..
 import Search from "../../shared/Search";
 import {domUtil} from "carbon-core";
 import IconsActions from './IconsActions';
-import iconFinderStore, { IconFinderStoreState } from "./IconFinderStore";
+import iconFinderStore, { IconFinderStoreState, IconFinderStore } from "./IconFinderStore";
 import InfiniteGrid from "../../shared/InfiniteGrid";
 
 const IconSize = 40;
@@ -41,7 +41,7 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
 
     private onClicked = (e) => {
         var templateId = e.currentTarget.dataset.templateId;
-        dispatchAction({ type: "Stencils_Clicked", e, templateType: "icon", templateId });
+        dispatchAction({ type: "Stencils_Clicked", e, templateType: IconFinderStore.StoreType, templateId });
     }
 
     private renderItem = i => {

@@ -1,14 +1,14 @@
 import {backend} from "carbon-core";
 
-const PageSize = 50;
 const base = "https://api.iconfinder.com/v2";
 const fetchOptions: RequestInit = {method: "GET", mode: 'cors'};
+const MaxIconsPerRequest = 100;
 
 export default class IconFinderApi {
     search(term: string, start: number, stop: number){
         var data = {
             query: term,
-            count: stop - start,
+            count: Math.min(stop - start + 1, MaxIconsPerRequest),
             offset: start,
             premium: false
         };

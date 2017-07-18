@@ -1,14 +1,11 @@
 import React from "react";
 import ReactDom from "react-dom";
-import { AutoSizer, Dimensions, Index, IndexRange, List, ListRowProps, Collection, CollectionCellRendererParams, CollectionCellSizeAndPosition, SectionRenderedParams } from "react-virtualized";
+import { AutoSizer, Dimensions, Index, IndexRange, List, ListRowProps, Collection, CollectionCellRendererParams, SectionRenderedParams } from "react-virtualized";
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
+import { CellSize, DimensionsZero, SizeZero } from "./CollectionUtil";
 
-export type CellSize = CollectionCellSizeAndPosition;
-
-const SizeZero: CellSize = { x: 0, y: 0, width: 0, height: 0 };
-const DimensionsZero: Dimensions = { width: 0, height: 0 };
 
 interface VirtualCollectionProps extends ISimpleReactElementProps {
     cellCount: number;

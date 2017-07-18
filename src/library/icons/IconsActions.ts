@@ -15,8 +15,7 @@ var IconsActions = {
     webSearch:(term) => {
         return {
             type:'ICONS_WEB_SEARCH',
-            term,
-            async:true
+            term
         }
     },
     iconFinderNoResults:()=> {

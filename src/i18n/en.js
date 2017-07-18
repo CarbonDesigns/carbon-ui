@@ -586,6 +586,7 @@ export default
         "@hero.title" : "Addictive design solution",
         "@hero.subtitle": "Universal app for prototypes and final designs",
         "@subscribe.details": "We are currently in private beta. For news, updates and first releases subscribe now and become an early adopter!",
+        "@subscribe.details2": "Join growing community of world best designers and UX experts. Subscribe now and become an early adopter!",
         "@subscribe": "Subscribe",
 
         "": "", //

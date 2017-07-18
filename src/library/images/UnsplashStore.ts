@@ -1,12 +1,35 @@
 import Unsplash, {toJson} from "unsplash-js";
 import ImagesActions from "./ImagesActions";
 import {handles, CarbonStore, dispatch} from "../../CarbonFlux";
-import {Image} from "carbon-core";
+import { Image, IPaginatedResult, util } from "carbon-core";
 import Toolbox from "../Toolbox";
+import { IStencil } from "../ToolboxConfiguration";
+import { IToolboxStore } from "../LibraryDefs";
 
 const PageSize = 15;
 
-export class UnsplashStore extends CarbonStore<any> {
+export interface IUnsplashStencil extends IStencil {
+    type: string;
+    url: string;
+    portrait: boolean;
+    cover?: boolean;
+    thumbUrl: string;
+    thumbHeight: number;
+    credits: {
+        link: string;
+        name: string;
+    }
+}
+
+export type UnsplashStoreState = {
+    error: boolean;
+    term: string;
+    results: any[];
+}
+
+export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IToolboxStore {
+    storeType = "unsplash";
+
     [name: string]: any;
 
     constructor(){
@@ -20,19 +43,13 @@ export class UnsplashStore extends CarbonStore<any> {
 
         this.state = {
             error: false,
-            message: "",
             term: "cars",
-            hasMore: false,
             results: []
         };
     }
 
-    findById(id){
-        return this.state.results.find(x => x.id === id);
-    }
-
     createElement({templateId}){
-        var image = this.findById(templateId);
+        var image = this.state.results.find(x => x.id === templateId);
         var element = new Image();
         element.setProps({
             width: image.realWidth, height: image.realHeight,
@@ -41,43 +58,74 @@ export class UnsplashStore extends CarbonStore<any> {
         });
         return element;
     }
+    elementAdded() {
+    }
 
     @handles(ImagesActions.search, ImagesActions.webSearch)
     search({term}){
         if (term){
             this.setState({
-                term, error: false, message: "", results: [], hasMore: true
+                term, error: false, results: []
             });
         }
     }
 
-    runQuery(page){
+    runQuery(start: number, stop: number): Promise<IPaginatedResult<any>> {
         if (!this.state.term){
             return Promise.reject(new Error("No unsplash search term"));
         }
-        return this._unsplash.photos.searchPhotos(this.state.term, undefined, page, PageSize)
-            .then(toJson)
-            .then(data => this.handleResults(data))
+
+        let startPage = Math.floor(start / PageSize);
+        let stopPage = Math.ceil(stop / PageSize);
+
+        let promises = [];
+        for (let i = startPage; i < stopPage; ++i) {
+            promises.push(this._unsplash.search.photos(this.state.term, i + 1, PageSize)
+                .then(x => {
+                    if (x.status !== 200) {
+                        throw new Error("Could not contact unsplash");
+                    }
+                    return x;
+                })
+                .then(x => toJson(x)));
+        }
+
+        return Promise.all(promises)
+            .then((pages) => {
+                let images = [];
+                if (!pages.length) {
+                    return { pageData: images, totalCount: 0 };
+                }
+
+                //return more than asked since we already have data anyway
+                let startIndex = start % PageSize;
+                let stopIndex = pages[0].results.length;
+                images = pages[0].results.slice(startIndex, stopIndex);
+
+                for (let i = 1; i < pages.length - 1; ++i) {
+                    util.pushAll(images, pages[i].results);
+                }
+
+                return { pageData: images, totalCount: pages[0].total };
+            })
+            .then(data => this.handleResults(data, start))
             .catch(e =>{
-                dispatch(ImagesActions.unsplashError("Could not connect"));
+                dispatch(ImagesActions.unsplashError());
                 throw e;
             });
     }
 
-    handleResults(data){
-        var page = data.map(x =>{
+    handleResults(data, start: number): IPaginatedResult<any>{
+        var page = data.pageData.map(x =>{
             return {
                 id: x.id,
-                type: UnsplashStore.StoreType,
+                type: this.storeType,
                 name: x.width + "x" + x.height + " " + x.categories.map(x => x.title).join(", "),
-                spriteUrl: x.urls.small,
+                thumbUrl: x.urls.small,
                 url: x.urls.full,
                 realWidth: x.width,
                 realHeight: x.height,
-                cx: {
-                    portrait: x.height >= x.width
-                },
-                fill: true,
+                portrait: x.height >= x.width,
                 credits: {
                     name: 'by ' + x.user.name,
                     link: x.user.links.html
@@ -105,31 +153,20 @@ export class UnsplashStore extends CarbonStore<any> {
                 }
             };
         });
-        var newState: any = {};
-        if (page.length){
-            newState = {results: this.state.results.concat(page)};
-        }
-        else{
-            if (!this.state.results.length){
-                dispatch(ImagesActions.unsplashNoResults());
-            }
-            newState.hasMore = false;
-        }
-        this.setState(newState);
-        return {items: page, hasMore: page.length > 0};
-    }
 
-    @handles(ImagesActions.unsplashNoResults)
-    handleNoResults(){
-        this.setState({message: "Nothing found..."});
+        let results = this.state.results;
+        for (let i = 0; i < page.length; ++i) {
+            results[i + start] = page[i];
+        }
+        this.setState({ results });
+
+        return {pageData: page, totalCount: data.totalCount};
     }
 
     @handles(ImagesActions.unsplashError)
-    handleError({message}){
-        this.setState({message, error: true});
+    handleError(){
+        this.setState({error: true});
     }
-
-    static StoreType = "unsplash";
 }
 
-export default Toolbox.registerStore(UnsplashStore.StoreType, new UnsplashStore());
+export default Toolbox.registerStore(new UnsplashStore());

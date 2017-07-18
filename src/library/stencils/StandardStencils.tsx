@@ -87,7 +87,8 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
                     overscanCount={OverscanCount}
                     columnWidth={ColumnWidth}
                     sourceId={page.id()}
-                    borders={true}/>
+                    borders={true}
+                    templateType={SymbolsStore.storeType}/>
             </Navigatable>
         </div>
     }

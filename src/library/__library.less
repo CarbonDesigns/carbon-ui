@@ -11,33 +11,6 @@
     }
 
     #images-page{
-        .list .antiscroll-inner{
-            .borderbox;
-            padding-bottom: 30px; //some whitespace in the bottom
-        }
-
-        //images stretched to full width by default
-        .image-holder{
-            .w100;
-            .image{
-                .w100;
-                .h100;
-            }
-        }
-
-        //unsplash images are all big, so show them big and cover
-        .web-images .image-holder{
-            height: 200px;
-
-            &.portrait{
-                height: 300px;
-            }
-
-            .image{
-                background-size: cover;
-            }
-        }
-
         //user-images center by default and covered on-demand
         .user-images .image-holder{
             &.cover .image{
@@ -46,23 +19,6 @@
 
             & .image{
                 background-position: center center;
-            }
-        }
-
-        .credits{
-            right: 0;
-        }
-    }
-
-    #icons-page{
-        .list {
-            & > .antiscroll-inner > div{
-                display: flex;
-                flex-wrap: wrap;
-            }
-
-            .icon-holder{
-                flex-grow: 1;
             }
         }
     }
@@ -81,16 +37,6 @@
     .tile-1{
         width: 60px;
         height: 60px;
-    }
-
-    .ext-link{
-        background: rgba(0, 0, 0, .5);
-        position: absolute;
-        bottom: 0;
-        text-decoration: none;
-        color: #EEE;
-        padding: 2px 4px;
-        .point;
     }
 }
 
@@ -298,6 +244,32 @@
             //min-height: inherit;
         }
 
+    }
+}
+
+.unsplash {
+    &__holder {
+        .rel;
+        .w100;
+        .h100;
+    }
+
+    &__image {
+        .w100;
+        .h100;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    &__credits {
+        right: 0;
+        background: rgba(0, 0, 0, .5);
+        position: absolute;
+        bottom: 0;
+        text-decoration: none;
+        color: #EEE;
+        padding: 2px 4px;
+        .point;
     }
 }
 

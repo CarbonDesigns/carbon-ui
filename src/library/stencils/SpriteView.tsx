@@ -5,15 +5,17 @@ import { richApp } from "../../RichApp";
 import StencilsActions from "./StencilsActions";
 import { FormattedHTMLMessage, defineMessages, FormattedMessage } from 'react-intl';
 import bem from "../../utils/commonUtils";
-import VirtualCollection, { CellSize } from "../../shared/collections/VirtualCollection";
+import VirtualCollection from "../../shared/collections/VirtualCollection";
 import ToolboxMasonry from "../ToolboxMasonry";
 import LayoutActions, { LayoutAction } from "../../layout/LayoutActions";
 import { util } from "carbon-core";
 import { isRetina } from "../../utils/domUtil";
+import { CellSize } from "../../shared/collections/CollectionDefs";
 
 const CategoryHeight = 36;
 
 interface SpriteViewProps extends ISimpleReactElementProps {
+    templateType: string;
     config: any;
     configVersion: number;
     columnWidth: number;
@@ -76,7 +78,6 @@ export default class SpriteView extends Component<SpriteViewProps>{
 
     onClicked = (e) => {
         var templateId = e.currentTarget.dataset.templateId;
-        var templateType = e.currentTarget.dataset.templateType;
         var sourceId = e.currentTarget.dataset.sourceId;
         if (templateId !== this.props.changedId) {
             dispatchAction({ type: "Stencils_Clicked", e, ...e.currentTarget.dataset });
@@ -208,7 +209,7 @@ export default class SpriteView extends Component<SpriteViewProps>{
         return <div key={g.name + x.id}
             className={cn}
             data-template-id={x.id}
-            data-template-type={x.type}
+            data-template-type={this.props.templateType}
             data-template-pid={x.pageId}
             data-template-aid={x.artboardId}
             data-template-width={x.realWidth}

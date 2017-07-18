@@ -17,7 +17,8 @@ type SearchState = {
 }
 
 export default class Search extends Component<SearchProps, SearchState>{
-    onChangeDebounced: () => any;
+    private onChangeDebounced: () => any;
+    private lastQuery: string;
 
     refs: {
         input: HTMLInputElement;
@@ -32,8 +33,14 @@ export default class Search extends Component<SearchProps, SearchState>{
         this.props.onQuery(term);
     }
     onChange = (e) => {
-        this.setState({query: e.target.value});
-        this.onChangeDebounced();
+        let newQuery: string = e.target.value;
+        this.setState({query: newQuery});
+
+        let trimmed = newQuery.trim();
+        if (this.lastQuery !== trimmed) {
+            this.lastQuery = trimmed;
+            this.onChangeDebounced();
+        }
     };
     componentWillReceiveProps(nextProps: Readonly<SearchProps>, context) {
         if (nextProps.query !== this.state.query) {

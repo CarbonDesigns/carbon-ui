@@ -4,7 +4,7 @@ import CarbonActions, { CarbonAction } from "../../CarbonActions";
 import { CarbonStore, dispatchAction } from '../../CarbonFlux';
 import { Image, Brush, ContentSizing, ArtboardType, UIElementFlags, IconSetSpriteManager, PatchType, app } from "carbon-core";
 import Toolbox from "../Toolbox";
-import { StencilInfo } from "../stencils/StencilsActions";
+import { IToolboxStore, StencilInfo } from "../LibraryDefs";
 
 var key = 0;
 
@@ -24,7 +24,9 @@ export type InternalIconsStoreState = {
     lastScrolledCategory: any
 }
 
-export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
+export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> implements IToolboxStore{
+    storeType = "internalIcons";
+
     private updating: boolean;
 
     constructor() {
@@ -51,6 +53,8 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
         });
 
         return element;
+    }
+    elementAdded() {
     }
 
     _buildIconSet(artboard) {
@@ -127,7 +131,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
             for (let e of elements) {
                 group.items.push({
                     "id": e.id(),
-                    "type": InternalIconsStore.StoreType,
+                    "type": this.storeType,
                     "pageId": set.pageId,
                     "artboardId": set.artboard.id(),
                     "realHeight": e.height(),
@@ -297,9 +301,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState>{
             this.setState({ iconSets: iconSets, dirtyConfig: true });
         }
     }
-
-    static StoreType = "internalIcons";
 }
 
-export default Toolbox.registerStore(InternalIconsStore.StoreType, new InternalIconsStore());
+export default Toolbox.registerStore(new InternalIconsStore());
 

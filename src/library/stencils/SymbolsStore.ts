@@ -1,8 +1,10 @@
 import { CarbonStore, dispatchAction } from "../../CarbonFlux";
-import { IPage, app, IDisposable, ArtboardType } from "carbon-core";
+import { IPage, app, IDisposable, ArtboardType, Symbol } from "carbon-core";
 import { CarbonAction } from "../../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
 import ToolboxConfiguration from "../ToolboxConfiguration";
+import Toolbox from "../Toolbox";
+import { IToolboxStore, StencilInfo } from "../LibraryDefs";
 
 export type SymbolsStoreState = {
     dirtyConfig: boolean;
@@ -14,7 +16,9 @@ export type SymbolsStoreState = {
     lastScrolledCategory: any;
 };
 
-class SymbolsStore extends CarbonStore<SymbolsStoreState> {
+class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxStore {
+    storeType = "Symbols";
+
     constructor() {
         super();
         this.state = {
@@ -26,6 +30,14 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
             activeCategory: null,
             lastScrolledCategory: null
         };
+    }
+
+    createElement(data: StencilInfo) {
+        var element = new Symbol();
+        element.source({pageId: data.sourceId, artboardId: data.templateId});
+        return element;
+    }
+    elementAdded(){
     }
 
     onAction(action: StencilsAction | CarbonAction) {
@@ -147,4 +159,4 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
     }
 }
 
-export default new SymbolsStore();
+export default Toolbox.registerStore(new SymbolsStore());

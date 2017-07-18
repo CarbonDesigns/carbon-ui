@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDom from "react-dom";
 import { InfiniteLoader, AutoSizer, Dimensions, InfiniteLoaderChildProps, Index, IndexRange, List, ListRowProps } from "react-virtualized";
-import { Component } from "../CarbonFlux";
+import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
-import ScrollContainer from "./ScrollContainer";
+import ScrollContainer from "../ScrollContainer";
 
 interface VirtualListProps<T> extends ISimpleReactElementProps {
     data: T[];

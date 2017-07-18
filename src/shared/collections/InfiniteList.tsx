@@ -1,26 +1,31 @@
 import React from "react";
 import ReactDom from "react-dom";
 import { InfiniteLoader, AutoSizer, Dimensions, InfiniteLoaderChildProps, Index, IndexRange, List, ListRowProps } from "react-virtualized";
-import { Component } from "../CarbonFlux";
+import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
-import ScrollContainer from "./ScrollContainer";
+import ScrollContainer from "../ScrollContainer";
+import { DimensionsZero } from "./CollectionDefs";
 
 interface InfiniteListProps<T> extends ISimpleReactElementProps {
     rowHeight: number | ((item: T, index: number) => number);
+    estimatedRowHeight?: number;
     rowRenderer: (item: T) => React.ReactNode;
     loadMore: (startIndex: number, stopIndex: number) => Promise<IPaginatedResult<T>>;
+    noContentRenderer?: () => React.ReactNode;
 }
 
 type InfiniteListState<T> = {
     data: T[];
+    rowCount: number;
     totalCount: number;
-    invalidateVersion: number;
+    dimensions: Dimensions;
+    version: number;
 }
 
 /**
- * Just a guess number for infinite loader to initiate fetch. Must be >= 40, otherwise, two initial requests are made for some reason.
+ * Just a guess number for infinite loader to initiate fetch.
  */
-const InitialTotalCount = 40;
+const InitialTotalCount = 1000;
 
 export default class InfiniteList<T> extends Component<InfiniteListProps<T>, InfiniteListState<T>> {
     private onRowsRendered: (params: { startIndex: number, stopIndex: number }) => void = null;
@@ -29,6 +34,10 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
     private firstPageStart = 0;
     private firstPageStop = 0;
 
+    static defaultProps: Partial<InfiniteListProps<any>> = {
+        estimatedRowHeight: 10
+    }
+
     refs: {
         loader: InfiniteLoader;
     }
@@ -36,7 +45,7 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
     constructor(props) {
         super(props);
 
-        this.state = { data: [], totalCount: InitialTotalCount, invalidateVersion: 0 };
+        this.state = { data: [], totalCount: InitialTotalCount, version: 0, dimensions: DimensionsZero, rowCount: 1 };
     }
 
     componentDidMount() {
@@ -52,8 +61,8 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
     componentDidUpdate(prevProps: InfiniteListProps<T>, prevState: InfiniteListState<T>) {
         this.initScroller();
 
-        if (this.state.invalidateVersion !== prevState.invalidateVersion) {
-            //if the grid has been reset, re-fetch the first page
+        if (this.state.version !== prevState.version) {
+            //if the list has been reset, re-fetch the first page
             this.onRowsRendered({ startIndex: this.firstPageStart, stopIndex: this.firstPageStop });
             this.list.scrollToPosition(0);
         }
@@ -65,7 +74,8 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
 
     reset() {
         this.refs.loader.resetLoadMoreRowsCache();
-        this.setState({ data: [], totalCount: InitialTotalCount, invalidateVersion: this.state.invalidateVersion + 1 });
+        let rowCount = this.calculateRowsToFit(this.state.dimensions);
+        this.setState({ data: [], totalCount: InitialTotalCount, rowCount, version: this.state.version + 1 });
     }
 
     private initScroller(){
@@ -95,7 +105,8 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
         return this.props.loadMore(params.startIndex, params.stopIndex)
             .then(result => this.setState({
                 data: this.appendPage(result.pageData),
-                totalCount: result.totalCount
+                totalCount: result.totalCount,
+                rowCount: result.totalCount
             }));
     }
     private appendPage(pageData: T[]) {
@@ -105,17 +116,44 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
         return this.state.data;
     }
 
+    private calculateRowsToFit(dimensions: Dimensions) {
+        let height = this.props.rowHeight;
+        if (typeof height === "function") {
+            height = this.props.estimatedRowHeight;
+        }
+        return Math.ceil(dimensions.height / height);
+    }
+
+    private onNewDimensions(dimensions: Dimensions) {
+        if (!dimensions.width || !dimensions.height) {
+            return;
+        }
+
+        if (!this.state.dimensions.width || !this.state.dimensions.height) {
+            setTimeout(() => {
+                this.refs.loader.resetLoadMoreRowsCache();
+                let rowCount = this.calculateRowsToFit(dimensions);
+                this.setState({ rowCount, dimensions });
+            }, 1);
+
+            return;
+        }
+    }
+
     private infiniteLoaderChildFunction = (loaderProps: InfiniteLoaderChildProps) => {
         this.onRowsRendered = loaderProps.onRowsRendered;
         this.registerChild = loaderProps.registerChild;
 
         return <AutoSizer>
             {dimensions => {
+                this.onNewDimensions(dimensions);
+
                 return <div style={{width: dimensions.width, height: dimensions.height}}>
                     <List
                         className={this.props.className}
                         rowRenderer={this.rowRenderer}
-                        rowCount={this.state.totalCount}
+                        noContentRenderer={this.props.noContentRenderer}
+                        rowCount={this.state.rowCount}
                         rowHeight={this.getRowHeight}
                         width={dimensions.width}
                         height={dimensions.height}

@@ -23,10 +23,9 @@ var IconsActions = {
             type:'ICONS_ICONFINDER_EMPTY'
         }
     },
-    iconFinderError:(message) => {
+    iconFinderError:() => {
         return {
-            type:'ICONS_ICONFINDER_ERROR',
-            message
+            type:'ICONS_ICONFINDER_ERROR'
         }
     }
 };

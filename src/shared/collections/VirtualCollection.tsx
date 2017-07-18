@@ -4,7 +4,7 @@ import { AutoSizer, Dimensions, Index, IndexRange, List, ListRowProps, Collectio
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
-import { CellSize, DimensionsZero, SizeZero } from "./CollectionUtil";
+import { CellSize, DimensionsZero, SizeZero } from "./CollectionDefs";
 
 
 interface VirtualCollectionProps extends ISimpleReactElementProps {

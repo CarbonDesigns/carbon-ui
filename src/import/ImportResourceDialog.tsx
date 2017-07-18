@@ -13,7 +13,7 @@ import ResourceSharer from "../library/ResourceSharer";
 import bem from '../utils/commonUtils';
 import ResourceDetails from "./ResourceDetails";
 import ResourceTile from "./ResourceTile";
-import InfiniteGrid from "../shared/InfiniteGrid";
+import InfiniteGrid from "../shared/collections/InfiniteGrid";
 
 const TabBuiltIn = "1";
 const TabGallery = "2";

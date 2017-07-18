@@ -2,10 +2,16 @@ import { app, IApp } from "carbon-core";
 import CarbonActions from '../../CarbonActions';
 import { handles, CarbonStore } from "../../CarbonFlux";
 import Toolbox from "../Toolbox";
-import DataStore from "./DataStore";
+import { IToolboxStore, StencilInfo } from "../LibraryDefs";
+import { DataStore } from "./DataStore";
 
-class CustomCatalogStore extends DataStore<any> {
+class CustomCatalogStore extends DataStore<any> implements IToolboxStore {
+    storeType = "customData";
     _app: IApp;
+
+    createElement(info: StencilInfo) {
+        return null;
+    }
 
     @handles(CarbonActions.loaded)
     onLoaded({ app }) {
@@ -32,16 +38,12 @@ class CustomCatalogStore extends DataStore<any> {
                         .filter(x => x.format === "list")
                         .map(x => {
                             var config = x.getConfig();
-                            return { name: x.name, examples: config[0].examples, templateType: CustomCatalogStore.StoreType, templateId: x.id + ":default" }
+                            return { name: x.name, examples: config[0].examples, templateType: this.storeType, templateId: x.id + ":default" }
                         })
                 }]
             });
         }
     }
-
-    static StoreType = "customData";
 }
 
-var store = new CustomCatalogStore();
-Toolbox.registerStore(CustomCatalogStore.StoreType, store);
-export default store;
+export default Toolbox.registerStore(new CustomCatalogStore());

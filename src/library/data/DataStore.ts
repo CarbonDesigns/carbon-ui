@@ -2,9 +2,11 @@ import Toolbox from "../Toolbox";
 import LibraryStore from "../LibraryStore";
 import { handles, dispatch } from "../../CarbonFlux";
 import { app } from "carbon-core";
-import { StencilInfo } from "../stencils/StencilsActions";
+import { IToolboxStore, StencilInfo } from "../LibraryDefs";
 
-export default class DataStore<T> extends LibraryStore<T> {
+export class DataStore<T> extends LibraryStore<T> implements IToolboxStore {
+    storeType: string = "Data";
+
     createElement(info: StencilInfo){
         let templateId = info.templateId;
         var colon = templateId.indexOf(":");
@@ -24,9 +26,6 @@ export default class DataStore<T> extends LibraryStore<T> {
     elementAdded(){
         app.dataManager.generateForSelection();
     }
-
-    static StoreType = "data";
 }
 
-var store = new DataStore();
-Toolbox.registerStore(DataStore.StoreType, store);
+export default Toolbox.registerStore(new DataStore());

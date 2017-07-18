@@ -540,6 +540,10 @@ export default
         "@resources.markAsIcon": "Add to icon set",
 
         "@icons.find": "Find icon...",
+        "@iconfinder.error": "Could not concant the IconFinder.com service. Please try again later.",
+
+        "@images.find": "Find image...",
+        "@unsplash.error": "Could not contact the Unsplash.com service. Please try again later.",
 
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",

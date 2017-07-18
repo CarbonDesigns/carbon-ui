@@ -16,8 +16,7 @@ var ImagesActions = {
     webSearch:(term) => {
         return {
             type:'IMAGES_WEB_SEARCH',
-            term,
-            async: true
+            term
         }
     },
     userImagesLoaded:(images)=> {
@@ -37,10 +36,9 @@ var ImagesActions = {
             type:'IMAGES_NOTHING_FOUND'
         }
     },
-    unsplashError:(message)=> {
+    unsplashError:()=> {
         return {
-            type:'IMAGES_CONNECTION_ERROR',
-            message
+            type:'IMAGES_CONNECTION_ERROR'
         }
     },
 

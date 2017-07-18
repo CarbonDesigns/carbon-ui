@@ -358,7 +358,7 @@ export default class UserImages extends Component<any, any>{
         return <div className="library-page__content">
 
             <div className="library-page__upload  dropzone " ref="dropzone" >
-                <div className="library-page__list" ref="container">
+                {/* <div className="library-page__list" ref="container">
                     {(this.state.containerHeight)
                         ? <ImageList
                             containerWidth={this.state.containerWidth}
@@ -368,7 +368,7 @@ export default class UserImages extends Component<any, any>{
                         />
                         : <div></div>
                     }
-                </div>
+                </div> */}
 
                 <div className={bem('zone', null, { "list-open": this.state.list_is_open })}>
                     {

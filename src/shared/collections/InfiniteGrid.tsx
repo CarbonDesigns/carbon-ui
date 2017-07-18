@@ -1,26 +1,32 @@
 import React from "react";
 import ReactDom from "react-dom";
 import { InfiniteLoader, AutoSizer, Grid, Dimensions, InfiniteLoaderChildProps, SectionRenderedParams, Index, IndexRange, GridCellProps } from "react-virtualized";
-import { Component } from "../CarbonFlux";
+import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
-import ScrollContainer from "./ScrollContainer";
-import { DimensionsZero } from "./collections/CollectionUtil";
+import ScrollContainer from "../ScrollContainer";
+import { DimensionsZero } from "./CollectionDefs";
 
 interface InfiniteGridProps<T = any> extends ISimpleReactElementProps {
     cellWidth: number;
     cellHeight: number;
     cellRenderer: (item: T) => React.ReactNode;
     loadMore: (startIndex: number, stopIndex: number) => Promise<IPaginatedResult<T>>;
+    noContentRenderer?: () => React.ReactNode;
 }
 
 type InfiniteGridState<T> = {
     data: T[];
-    invalidateVersion: number;
+    version: number;
     rowCount: number;
     columnCount: number;
     totalCount: number;
     dimensions: Dimensions;
 }
+
+/**
+ * Just a guess number for infinite loader to initiate fetch.
+ */
+const InitialTotalCount = 1000;
 
 export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T>, InfiniteGridState<T>> {
     private onRowsRendered: (params: { startIndex: number, stopIndex: number }) => void = null;
@@ -41,8 +47,8 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
             dimensions: DimensionsZero,
             rowCount: 0,
             columnCount: 0,
-            totalCount: 1000,
-            invalidateVersion: 0
+            totalCount: InitialTotalCount,
+            version: 0
         };
     }
 
@@ -59,7 +65,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     componentDidUpdate(prevProps: InfiniteGridProps<T>, prevState: InfiniteGridState<T>) {
         this.initScroller();
 
-        if (this.state.invalidateVersion !== prevState.invalidateVersion) {
+        if (this.state.version !== prevState.version) {
             //if the grid has been reset, re-fetch the first page
             this.onRowsRendered({ startIndex: this.firstPageStart, stopIndex: this.firstPageStop });
             this.grid.scrollToPosition({ scrollLeft: 0, scrollTop: 0 });
@@ -74,7 +80,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
         this.refs.loader.resetLoadMoreRowsCache();
 
         let newState = this.recalculateStateToFit(this.state.dimensions);
-        newState = Object.assign({ data: [], totalCount: 1000, invalidateVersion: this.state.invalidateVersion + 1 }, newState)
+        newState = Object.assign({ data: [], totalCount: InitialTotalCount, version: this.state.version + 1 }, newState)
         this.setState(newState);
     }
 
@@ -118,7 +124,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
             return;
         }
 
-        if (this.state.dimensions === DimensionsZero) {
+        if (!this.state.dimensions.width || !this.state.dimensions.height) {
             setTimeout(() => {
                 this.refs.loader.resetLoadMoreRowsCache();
                 let newState = this.recalculateStateToFit(dimensions);
@@ -170,6 +176,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
                     <Grid
                         style={{ overflowX: "hidden" }}
                         cellRenderer={this.cellRenderer}
+                        noContentRenderer={this.props.noContentRenderer}
                         columnCount={this.state.columnCount}
                         columnWidth={actualCellWidth}
                         rowCount={this.state.rowCount}

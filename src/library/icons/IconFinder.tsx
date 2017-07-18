@@ -4,10 +4,12 @@ import cx from "classnames";
 import IconsList from "./IconsList";
 import { Component, handles, dispatch, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import Search from "../../shared/Search";
-import {domUtil} from "carbon-core";
+import { domUtil } from "carbon-core";
 import IconsActions from './IconsActions';
 import iconFinderStore, { IconFinderStoreState, IconFinderStore } from "./IconFinderStore";
-import InfiniteGrid from "../../shared/InfiniteGrid";
+import InfiniteGrid from "../../shared/collections/InfiniteGrid";
+import { Markup, MarkupLine } from "../../shared/ui/Markup";
+import { FormattedMessage } from "react-intl";
 
 const IconSize = 40;
 
@@ -22,7 +24,7 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
         super(props, iconFinderStore);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         super.componentDidMount();
         var page = ReactDom.findDOMNode(this.refs.page);
         // setting focus during css transition causes weird side effects
@@ -40,8 +42,30 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
     }
 
     private onClicked = (e) => {
+        var templateType = e.currentTarget.dataset.templateType;
         var templateId = e.currentTarget.dataset.templateId;
-        dispatchAction({ type: "Stencils_Clicked", e, templateType: IconFinderStore.StoreType, templateId });
+        dispatchAction({ type: "Stencils_Clicked", e, templateType, templateId });
+    }
+
+    private renderError() {
+        if (this.state.error) {
+            return <Markup>
+                <MarkupLine>
+                    <FormattedMessage tagName="p" id="@iconfinder.error" />
+                </MarkupLine>
+            </Markup>;
+        }
+        return null;
+    }
+
+    private renderList() {
+        return <InfiniteGrid className="list"
+            cellHeight={IconSize}
+            cellWidth={IconSize}
+            cellRenderer={this.renderItem}
+            noContentRenderer={this.renderNoContent}
+            loadMore={this.onLoadMore}
+            ref="grid" />
     }
 
     private renderItem = i => {
@@ -51,9 +75,10 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
         return <div className="stencil stencil_icon"
             title={i.name}
             key={i.name}
-            data-template-id={i.name}
+            data-template-type={IconFinderStore.StoreType}
+            data-template-id={i.id}
             onClick={this.onClicked}>
-            <i className="stencil_icon__holder" style={iconStyle}/>
+            <i className="stencil_icon__holder" style={iconStyle} />
             {this.renderPrice(i)}
         </div>;
     }
@@ -65,29 +90,25 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
         return null;
     }
 
-    render(){
+    private renderNoContent = () => {
+        return <Markup>
+            <MarkupLine>
+                <FormattedMessage tagName="p" id="@empty" />
+            </MarkupLine>
+        </Markup>;
+    }
+
+    render() {
         return <div ref="page">
             <div className="library-page__content">
                 <div className="filter">
-                    <Search query={this.state.term} onQuery={this.onSearch} placeholder="@icons.find" ref="search" className="search-container"/>
+                    <Search query={this.state.term} onQuery={this.onSearch} placeholder="@icons.find" ref="search" className="search-container" />
                 </div>
-                <section className="stencils-group" ref="container">
-                    {this._renderList()}
+                <section className="fill" ref="container">
+                    {this.renderError()}
+                    {this.renderList()}
                 </section>
             </div>
         </div>;
-    }
-
-    _renderList(){
-        if (this.state.message){
-            return <span className={cx("message", {error: this.state.error})}>{this.state.message}</span>
-        }
-
-        return <InfiniteGrid className="list"
-            cellHeight={IconSize}
-            cellWidth={IconSize}
-            cellRenderer={this.renderItem}
-            loadMore={this.onLoadMore}
-            ref="grid"/>
     }
 }

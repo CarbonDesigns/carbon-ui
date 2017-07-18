@@ -55,7 +55,8 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
                 onScrolledToCategory={this.onScrolledToCategory}
                 overscanCount={OverscanCount}
                 columnWidth={IconSize}
-                keepAspectRatio={true}/>
+                keepAspectRatio={true}
+                templateType={InternalIconsStore.storeType}/>
         </Navigatable>;
     }
 }

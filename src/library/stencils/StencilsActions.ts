@@ -1,15 +1,5 @@
 import { IPage } from "carbon-core";
-
-export type StencilInfo = {
-    e: React.KeyboardEvent<HTMLElement>;
-    templateType: string;
-    templateId: string;
-    sourceId?: string;
-    templatePid?: string;
-    templateAid?: string;
-    templateWidth?: string;
-    templateHeight?: string;
-}
+import { StencilInfo } from "../LibraryDefs";
 
 export type StencilsAction =
     { type: "Stencils_ChangePage", page: IPage } |

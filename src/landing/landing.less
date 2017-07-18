@@ -15,8 +15,7 @@
 .header-container {
     width:100%;
     min-height: 80px;
-    position: absolute;
-    top:30px;
+    padding-top: 30px;
     display: flex;
     justify-content: space-between;
     z-index: 60;
@@ -26,7 +25,6 @@
     width:152px;
     height:40px;
     display: block;
-    margin-left: 50px;
     background-image: url("../res/app/logo.png");
     z-index: 61;
 }
@@ -47,7 +45,7 @@
 }
 
 .navigation-menu__item {
-    margin-right: 30px;
+    margin-left: 30px;
 
     &:hover {
         text-decoration: underline;
@@ -92,11 +90,22 @@
     filter: blur(10px);
 }
 
+.hero-container__preview {
+    width:960px;
+    height: 540px;
+    background-image: url("../res/app/main.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    z-index: 100;
+    align-self: center;
+    margin-top:80px;
+}
+
 .hero-container__heading {
     text-align: center;
     display: block;
-    margin-bottom: 10.69vh;
-    margin:0;
+    margin: 80px 0 0 0;
     padding: 0;
     text-size-adjust:100%;
     z-index: 10;
@@ -137,7 +146,7 @@
 .quote-container {
     width:100%;
     min-height: 100px;
-    background-color: rgba(240, 240, 252, .05);
+    background-color: black;// rgba(240, 240, 252, .05);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -148,10 +157,13 @@
     position: relative;
     color: #E8E8F5;
     font-family: Poppins;
-    font-size: 16px;
+    font-size: 22px;
     line-height: 25px;
-    font-style: italic;
     text-align: center;
+
+    a {
+        color: #E8E8F5;
+    }
 }
 
 .subscribe-container__details {
@@ -262,7 +274,7 @@
     padding: 50px 0 50px 50px;
     z-index: 100;
     align-items: center;
-    min-height: 600px;
+    min-height: 800px;
     position: relative;
 }
 
@@ -360,14 +372,17 @@
         padding: 0 60px 0 0;
     }
 
-    .feature-section__header {
-        margin-top: 0px;
-    }
-
     .feature-section__description {
         padding: 0 40px 0 9%;
     }
 
+
+    .feature-section {
+        max-height: 100vw;
+    }
+}
+
+@media screen and(min-width:800px) and (min-height: 700px) {
     .feature-section__index {
         position: absolute;
         top:50px;
@@ -378,9 +393,10 @@
         top:70px
     }
 
-    .feature-section {
-        max-height: 100vw;
+    .feature-section__header {
+        margin-top: 0px;
     }
+
 }
 
 @media screen and(max-width:720px) {

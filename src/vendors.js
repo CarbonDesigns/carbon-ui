@@ -16,7 +16,6 @@ require("react-addons-perf");
 require("react-bootstrap");
 require("react-color");
 require("react-dom");
-require("react-infinite");
 require("react-intl");
 require("react-pure-render");
 require("react-router");

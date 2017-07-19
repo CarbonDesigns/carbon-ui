@@ -544,6 +544,7 @@ export default
 
         "@images.find": "Find image...",
         "@unsplash.error": "Could not contact the Unsplash.com service. Please try again later.",
+        "@userImages.error": "Could not connect to the server. Please try again later.",
 
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",

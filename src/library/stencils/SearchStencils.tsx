@@ -40,7 +40,7 @@ export default class SearchStencils extends Component<any, any>{
 
             <div className="library-page__content">
                 <ScrollContainer className="stencils-container thin dark">
-                    <SpriteView config={this.state.config}/>
+                    {/* <SpriteView config={this.state.config}/> */}
                 </ScrollContainer>
             </div>
         </div>;

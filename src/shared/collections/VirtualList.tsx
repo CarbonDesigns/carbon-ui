@@ -7,15 +7,16 @@ import ScrollContainer from "../ScrollContainer";
 
 interface VirtualListProps<T> extends ISimpleReactElementProps {
     data: T[];
-    rowHeight: number;
+    rowHeight: number | ((item: T, index: number) => number);
     rowRenderer: (item: T) => React.ReactNode;
 }
 
 export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     private list: List = null;
 
-    refs: {
-        loader: InfiniteLoader;
+    reset() {
+        this.list.recomputeRowHeights();
+        this.list.scrollToRow(0);
     }
 
     componentDidMount() {
@@ -37,6 +38,17 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
         this.list = list;
     }
 
+    private getRowHeight = (params: Index) => {
+        if (typeof this.props.rowHeight === "function") {
+            let item = this.props.data[params.index];
+            if (!item) {
+                return 0;
+            }
+            return this.props.rowHeight(item, params.index);
+        }
+        return this.props.rowHeight;
+    }
+
     private rowRenderer = (props: ListRowProps) => {
         let item = this.props.data[props.index];
         let child = item ? this.props.rowRenderer(item) : null;
@@ -46,12 +58,12 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     render() {
         return <AutoSizer>
             {dimensions => {
-                return <div style={{width: dimensions.width, height: dimensions.height}}>
+                return <div className={this.props.className} style={{width: dimensions.width, height: dimensions.height}}>
                     <List
                         className={this.props.className}
                         rowRenderer={this.rowRenderer}
                         rowCount={this.props.data.length}
-                        rowHeight={this.props.rowHeight}
+                        rowHeight={this.getRowHeight}
                         width={dimensions.width}
                         height={dimensions.height}
                         ref={this.registerList}

@@ -1,5 +1,5 @@
 import React from "react";
-import ImageView from "./ImageView";
+//import ImageView from "./ImageView";
 import {Component, listenTo} from "../../CarbonFlux";
 import ScrollContainer from "../../shared/ScrollContainer";
 import {richApp} from "../../RichApp";
@@ -17,7 +17,7 @@ export default class RecentImages extends Component<any, any>{
         }
         return <div className="library-page__content">
                 <ScrollContainer className="stencils-container thin dark">
-                    <ImageView config={this.state.config.elements}/>
+                    {/* <ImageView config={this.state.config.elements}/> */}
                 </ScrollContainer>
             </div>;
     }

@@ -44,7 +44,7 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
         var oldImages = this.state.images;
         for (var i = oldImages.length - 1; i >= 0; --i) {
             var image = oldImages[i];
-            if (newImages.some(img => img.name === image.name)) {
+            if (newImages.some(img => img.title === image.title)) {
                 oldImages.splice(i, 1);
             }
         }
@@ -70,9 +70,7 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
                 thumbHeight: thumbHeight,
                 realWidth: img.width,
                 realHeight: img.height,
-                cx: {
-                    "cover": img.thumbHeight > thumbHeight
-                }
+                cover: img.thumbHeight > thumbHeight
             };
         });
     }

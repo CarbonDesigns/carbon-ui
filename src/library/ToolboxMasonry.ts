@@ -1,4 +1,4 @@
-import { CellSize } from "../shared/collections/VirtualCollection";
+import { CellSize } from "../shared/collections/CollectionDefs";
 
 export default class ToolboxMasonry {
     private columns: number[] = [];

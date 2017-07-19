@@ -7,8 +7,8 @@ const _MOD_SEP = "_";
 /**
  * Desribes all mods that a component supports in css.
  */
-export interface IHasMods<TMods>{
-    mods?: TMods | TMods[];
+export interface IHasMods<TMods extends string>{
+    mods?: TMods | TMods[] | { [K in TMods]?: boolean };
 }
 
 export function resolve_block(block) {

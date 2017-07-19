@@ -109,6 +109,7 @@
         .box-shadow(none);
     }
 
+    display: flex;
     flex: auto;
 }
 
@@ -116,7 +117,6 @@
 .stencils-group{
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 1rem; //should not have whitespace above for scroll positioning
 
     &__name {
         padding: @line_air;
@@ -218,10 +218,16 @@
         align-items: stretch;
     }
 
-    &_icon__holder {
+    &&_icon__holder {
         flex: auto;
         background-size: contain;
         background-position: center center;
+    }
+
+    &&_data {
+        width: 100px;
+        height: 80px;
+        overflow: hidden;
     }
     //& {
     //    @w : 100% / 8;

@@ -13,7 +13,14 @@ export class MarkupSubmit extends Component<IReactElementProps> {
     }
 }
 
-export class MarkupLine extends Component<IReactElementProps & IHasMods<"space" | "center">> {
+export class MarkupLine extends Component<IReactElementProps & IHasMods<
+    "space" |
+    "slim" |
+    "center" |
+    "stretch" |
+    "fill" |
+    "horizontal"
+>> {
     render() {
         var { className, mods, children, ...rest } = this.props;
         var cn = bem("markup-line", null, mods, className);

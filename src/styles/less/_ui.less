@@ -1015,6 +1015,10 @@
 
 .markup {
     @r : 1rem;
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+
     &-header {
         padding-top: @r;
         margin-bottom: @r;
@@ -1035,11 +1039,29 @@
     &-line {
         margin-top   : @r;
         margin-bottom: @r;
-        &_space {
+        display: flex;
+        align-items: flex-start;
+        flex: 0 0 auto;
+        flex-direction: column;
+
+        &&_space {
             margin-top   : 3*@r;
         }
-        &_center {
-            text-align: center;
+        &&_slim {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        &&_center {
+            align-items: center;
+        }
+        &&_stretch {
+            align-items: stretch;
+        }
+        &&_fill {
+            flex: auto;
+        }
+        &&_horizontal {
+            flex-direction: row;
         }
     }
     &-submit {
@@ -1310,8 +1332,17 @@
         }
     }
 
+    &&_fill {
+        flex: auto;
+        display: flex;
+        align-items: stretch;
+    }
     &_resize-v textarea{
         resize: vertical;
+    }
+
+    &&_small {
+        .f14;
     }
 }
 
@@ -1608,12 +1639,14 @@
     }
 }
 
+.gui-check {
+    .f18;
+}
 
 .gui-check, .gui-radio {
     .nowrap;
     @bgc : rgb(212, 222, 212);
 
-    .f18;
     line-height: 1.1;
 
     &:before {
@@ -1941,10 +1974,6 @@
 .gui-btn {
     .gui-btn-stack &+&{
         margin-top: @line_air;
-    }
-
-    & + & {
-        margin-left: @air_half;
     }
 
     .noselect;
@@ -2660,4 +2689,6 @@
 
 .fill {
     flex: auto;
+    display: flex;
+    flex-direction: column;
 }

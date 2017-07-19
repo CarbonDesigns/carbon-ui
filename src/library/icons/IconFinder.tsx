@@ -75,7 +75,7 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
         return <div className="stencil stencil_icon"
             title={i.name}
             key={i.name}
-            data-template-type={IconFinderStore.StoreType}
+            data-template-type={iconFinderStore.storeType}
             data-template-id={i.id}
             onClick={this.onClicked}>
             <i className="stencil_icon__holder" style={iconStyle} />

@@ -1,6 +1,6 @@
 import React from "react";
 
-import ImageList from "./ImageList";
+//import ImageList from "./ImageList";
 import {Component} from "../../CarbonFlux";
 import {FormattedHTMLMessage} from "react-intl";
 

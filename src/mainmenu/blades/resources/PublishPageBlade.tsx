@@ -232,7 +232,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             <TabContainer currentTabId={this.state.publishStep}>
                 <TabArea className="gui-pages">
                     <TabPage className="gui-page" tabId="1">
-                        <MarkupLine>
+                        <MarkupLine mods="stretch">
                             <div className="gui-input">
                                 <p className={"gui-input__label"}>
                                     <FormattedMessage id="@publish.choosePage" />
@@ -241,12 +241,12 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                             </div>
                         </MarkupLine>
 
-                        <MarkupLine>
+                        <MarkupLine mods="stretch">
                             <p className={"gui-input__label"}>
                                 <FormattedMessage id="@publish.choosePage1" defaultMessage="Create your cover" />
                             </p>
                         </MarkupLine>
-                        <MarkupLine className="publish__avatar">
+                        <MarkupLine className="publish__avatar" mods={["stretch", "horizontal"]}>
                             <figure className="publish__avatar-image"
                                 style={{ backgroundImage: "url('" + this.state.coverUrl + "')" }}
                             />

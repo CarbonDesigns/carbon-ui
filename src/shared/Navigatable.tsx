@@ -30,8 +30,9 @@ export default class Navigatable extends Component<NavigatableProps>{
     }
 
     render() {
-        var { config, activeCategory, onCategoryChanged, children, ...other } = this.props;
-        return <div {...other}>
+        var { className, config, activeCategory, onCategoryChanged, children, ...other } = this.props;
+        var classes = cx("navigatable", className);
+        return <div className={classes} {...other}>
              <div className="stencils-navigator">
                 <ScrollContainer className="wrap thin" x={false}>
                     {config.groups.map(this.renderCategory)}

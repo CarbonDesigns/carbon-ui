@@ -1,73 +1,59 @@
 import React from "react";
 import cx from 'classnames';
-import {FormattedMessage} from 'react-intl';
-import {app, PropertyTracker} from "carbon-core";
-import CarbonActions from '../../CarbonActions';
-import {GuiButton, GuiInput, GuiCheckbox} from "../../shared/ui/GuiComponents";
-import {handles, listenTo, Component} from "../../CarbonFlux";
+import { GuiButton, GuiInput, GuiCheckbox, GuiTextArea } from "../../shared/ui/GuiComponents";
+import { Component, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import CatalogView from "./CatalogView";
 import Toolbox from "../Toolbox";
-import customCatalogStore from "./CustomCatalogStore";
+import customCatalogStore, { CustomCatalogStoreState } from "./CustomCatalogStore";
+import { Markup, MarkupLine, MarkupSubmit } from "../../shared/ui/Markup";
 
-export default class CustomProviders extends Component<any, any> {
+export default class CustomProviders extends StoreComponent<{}, CustomCatalogStoreState> {
     refs: {
-        text: HTMLInputElement;
-        value: HTMLInputElement;
+        name: GuiInput;
+        text: GuiTextArea;
     }
 
-    constructor(props){
-        super(props);
-        this.state = {editing: false, config: []};
-    }
-
-    @listenTo(customCatalogStore)
-    _storeChanged(){
-        this.setState({config: customCatalogStore.state.config});
+    constructor(props) {
+        super(props, customCatalogStore);
     }
 
     _addCatalog = () => {
-        this.setState({
-            editing: true
-        });
+        dispatchAction({ type: "Data_AddCatalog" });
     };
 
     _saveCatalog = () => {
-        var text = this.refs["text"].value;
-        var name = this.refs["name"].value;
-        app.dataManager.createCustomProvider(name, text);
-        this.setState({editing: false});
+        var name = this.refs.name.getValue();
+        var data = this.refs.text.getValue();
+        dispatchAction({ type: "Data_SaveCatalog", name, data });
     };
 
     _cancelEditing = () => {
-        this.setState({
-            editing: false
-        });
+        dispatchAction({ type: "Data_CancelCatalog" });
     };
 
-    render(){
-        if (this.state.editing){
+    render() {
+        if (this.state.editing) {
             return this._renderEdit();
         }
-        return <div>
-            <GuiButton mods={["full", "hover-success"]} onClick={this._addCatalog} caption="button.addDataset" defaultMessage="Add dataset" bold/>
-            <CatalogView config={this.state.config}/>
+        return <div className="fill">
+            <GuiButton mods={["full", "hover-success"]} onClick={this._addCatalog} caption="button.addDataset" defaultMessage="Add dataset" bold />
+            <CatalogView config={this.state.config} />
         </div>;
     }
 
-    _renderEdit(){
-        return <div className="form form_flex">
-            <div className="form__line form__line-dataset">
-                <GuiInput ref="name" type="text" placeholder="Dataset name" autoFocus/>
-                <GuiCheckbox label="csv"/>
-            </div>
-            <div className="form__line form__line-fill">
-                <GuiInput ref="text" type="textarea" placeholder="Enter one item per line. Press Cmd+Enter to save."/>
-            </div>
+    _renderEdit() {
+        return <Markup>
+            <MarkupLine>
+                <GuiInput ref="name" type="text" placeholder="@data.customName" mods="small" autoFocus />
+            </MarkupLine>
+            <MarkupLine mods={["fill", "slim"]}>
+                <GuiTextArea ref="text" placeholder="@data.customBody" mods={["small", "fill"]} />
+            </MarkupLine>
 
-            <div className="form__submit">
-                <GuiButton mods={["hover-success"]} onClick={this._saveCatalog}   caption="button.save" defaultMessage="Save" bold/>
-                <GuiButton mods={["hover-cancel"]}  onClick={this._cancelEditing} caption="button.cancel" defaultMessage="Cancel" bold/>
-            </div>
-        </div>;
+            <MarkupLine mods="horizontal">
+                <GuiButton mods={["hover-success"]} onClick={this._saveCatalog} caption="button.save" defaultMessage="Save" bold />
+                <GuiButton mods={["hover-cancel"]} onClick={this._cancelEditing} caption="button.cancel" defaultMessage="Cancel" bold />
+            </MarkupLine>
+        </Markup>;
     }
 }

@@ -94,7 +94,7 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
             key={stencil.id}
             className={cx("stencil unsplash__holder", { "unsplash__holder_portrait": stencil.portrait })}
             title={stencil.title}
-            data-template-type={UnsplashStore.StoreType}
+            data-template-type={unsplashStore.storeType}
             data-template-id={stencil.id}
             onClick={this.onClicked}
         >

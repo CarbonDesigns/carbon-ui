@@ -4,7 +4,7 @@ import { Component, dispatch, handles, dispatchAction } from "../../CarbonFlux";
 import { IconsInfo } from "carbon-core";
 import StencilsActions from '../stencils/StencilsActions';
 import LessVars from "../../styles/LessVars";
-import InfiniteGrid from "../../shared/InfiniteGrid";
+//import InfiniteGrid from "../../shared/InfiniteGrid";
 import LayoutActions from '../../layout/LayoutActions';
 //import FlyoutActions from "../../FlyoutActions";
 //import IconFinderSet from "./IconFinderSet";

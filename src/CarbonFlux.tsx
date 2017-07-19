@@ -14,6 +14,7 @@ import { StencilsAction } from "./library/stencils/StencilsActions";
 import { CarbonAction } from "./CarbonActions";
 import { IconsAction } from "./library/icons/IconsActions";
 import { LayoutAction } from "./layout/LayoutActions";
+import { DataAction } from "./library/data/DataActions";
 
 // import diff from 'immutablediff';
 
@@ -100,8 +101,8 @@ export class Component<P = {}, S = {}> extends React.Component<P,S> {
         }
     };
 
-    formatLabel(labelId: string){
-        return this.context.intl.formatMessage({id: labelId});
+    formatLabel(labelId: string, defaultMessage?: string){
+        return this.context.intl.formatMessage({id: labelId, defaultMessage});
     }
 
     // // Helper to check which component was changed and why.
@@ -228,7 +229,7 @@ export function dispatch(action) {
 }
 
 //just a strongly typed wrapper while not all actions are union types
-export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction | StencilsAction | CarbonAction | IconsAction | LayoutAction) {
+export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction | StencilsAction | CarbonAction | IconsAction | LayoutAction | DataAction) {
     dispatch(action);
 }
 

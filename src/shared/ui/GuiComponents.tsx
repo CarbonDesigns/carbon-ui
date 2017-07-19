@@ -430,11 +430,15 @@ export class GuiDropDown extends Component<IGuiDropDownProps>{
 /**
  * GuiInput
  */
-interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement> {
+interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement>, IHasMods<
+    "small" |
+    "valid" |
+    "checking" |
+    "error"
+> {
     label?: any;
     caption?: string;
     defaultMessage?: string;
-    mods?: any;
     suffix?: any;
     selectOnFocus?: boolean;
 }
@@ -445,6 +449,7 @@ export class GuiInput extends Component<IGuiInputProps>{
     }
 
     focus() {
+        var a: IGuiInputProps = { mods: {checking: true, valid: false, error: false}};
         this.refs.input.focus();
     }
 
@@ -460,7 +465,7 @@ export class GuiInput extends Component<IGuiInputProps>{
 
     render() {
         // todo - borrow from edit input
-        var { className, label, caption, defaultMessage, mods, suffix, selectOnFocus, ...rest } = this.props;
+        var { className, label, caption, defaultMessage, placeholder, mods, suffix, selectOnFocus, ...rest } = this.props;
         var cn = bem("gui-input", null, mods, className);
         var renderedLabel = null;
 
@@ -473,11 +478,16 @@ export class GuiInput extends Component<IGuiInputProps>{
             </p>);
         }
 
+        if (placeholder) {
+            placeholder = this.formatLabel(placeholder, placeholder);
+        }
+
         var renderedInput = <input
             ref="input"
             className={bem("gui-input", "input")}
             onFocus={this.selectOnFocus}
             type={this.props.type}
+            placeholder={placeholder}
             {...rest}
         />;
 
@@ -485,7 +495,11 @@ export class GuiInput extends Component<IGuiInputProps>{
     }
 }
 
-interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAreaElement>, IHasMods<"resize-v"> {
+interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAreaElement>, IHasMods<
+    "resize-v" |
+    "small" |
+    "fill"
+> {
     label?: any;
     caption?: string;
     defaultMessage?: string;
@@ -511,7 +525,7 @@ export class GuiTextArea extends Component<IGuiTextAreaProps> {
 
     render() {
         // todo - borrow from edit input
-        var { className, label, caption, defaultMessage, mods, suffix, ...rest } = this.props;
+        var { className, label, caption, defaultMessage, mods, suffix, placeholder, ...rest } = this.props;
         var cn = bem("gui-input", null, mods, className);
         var renderedLabel = null;
 
@@ -524,9 +538,14 @@ export class GuiTextArea extends Component<IGuiTextAreaProps> {
             </p>);
         }
 
+        if (placeholder) {
+            placeholder = this.formatLabel(placeholder, placeholder);
+        }
+
         var renderedInput = <textarea
             ref="input"
             className={bem("gui-input", "input")}
+            placeholder={placeholder}
             {...rest}
         />;
 

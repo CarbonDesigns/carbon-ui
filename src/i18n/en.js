@@ -585,5 +585,9 @@ export default
         "@textAutoWidth.Wrap": "Wrap",
         "@textAutoWidth.Grow": "Grow",
 
+        "@data.customName": "Dataset name",
+        "@data.customBody": "Enter one item per line",
+
+
         "": "", //
     };

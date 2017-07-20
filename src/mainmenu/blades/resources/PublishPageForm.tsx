@@ -7,6 +7,7 @@ import { PublishAction } from "./PublishActions";
 import { MarkupLine } from "../../../shared/ui/Markup";
 import electronEndpoint from "electronEndpoint";
 import TabContainer, { TabArea, TabPage } from "../../../shared/TabContainer";
+import ResourceSharer from "../../../library/ResourceSharer";
 
 interface IPublishPageFormProps {
     page: IPage;
@@ -147,7 +148,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         }
 
         // TODO: show progress bar here
-        app.exportPage(this.props.page)
+        ResourceSharer.exportPage(this.props.page)
             .then(data => backend.shareProxy.publishPage({
                 name: this.refs.name.getValue(),
                 description: this.refs.description.getValue(),
@@ -167,7 +168,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
 
     private saveToDisk() {
         electronEndpoint.saveResource(() => {
-            return app.exportPage(app.activePage).then(data => {
+            return ResourceSharer.exportPage(app.activePage).then(data => {
                 return {
                     name: this.refs.name.getValue(),
                     data: data,
@@ -210,7 +211,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
 
     render() {
         return <div>
-            <MarkupLine mods="space">
+            <MarkupLine mods={["space", "stretch"]}>
                 <GuiValidatedInput ref="name" caption="@publish.name" placeholder={this.formatLabel("@publish.nameHint")}
                     value={this.state.name} onChange={this.onNameChanged}
                     onValidate={this.validateName}
@@ -219,21 +220,21 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                     trigger={ValidationTrigger.blur} />
             </MarkupLine>
 
-            <MarkupLine>
+            <MarkupLine mods="stretch">
                 <GuiTextArea ref="description" caption="@publish.description"
                     mods="resize-v"
                     value={this.state.description} onChange={this.onDescriptionChanged}
                     disabled={!this.props.page}
                     placeholder={this.formatLabel("@publish.descriptionHint")} />
             </MarkupLine>
-            <MarkupLine>
+            <MarkupLine mods="stretch">
                 <GuiRequiredInput ref="tags" caption="@tags"
                     value={this.state.tags} onChange={this.onTagsChanged}
                     disabled={!this.props.page}
                     placeholder="buttons, ios, flat, etc" />
             </MarkupLine>
 
-            <MarkupLine>
+            <MarkupLine mods="stretch">
                 <div className="gui-input">
                     <p className={"gui-input__label"}>
                         <FormattedMessage id="@publish.privacy" />

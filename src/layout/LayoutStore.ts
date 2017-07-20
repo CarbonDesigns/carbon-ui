@@ -1,6 +1,6 @@
 import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
-import LayoutActions from "./LayoutActions";
+import LayoutActions, { LayoutAction } from "./LayoutActions";
 import { LayoutDirection, LayoutDockPosition, IAreaConstraint } from "carbon-core";
 
 enum PanelType {
@@ -719,16 +719,19 @@ export class LayoutStore extends CarbonStore<any> {
         });
     }
 
-    @handles(LayoutActions.startResizing)
-    onStartResizing() {
-        this.resizing = true;
-        this.state = this.state.set('resizing', true);
-    }
+    onAction(action: LayoutAction) {
+        super.onAction(action);
 
-    @handles(LayoutActions.stopResizing)
-    onStopResizing() {
-        this.resizing = false;
-        this.state = this.state.set('resizing', false);
+        switch (action.type) {
+            case "Layout_StartResizing":
+                this.resizing = true;
+                this.state = this.state.set('resizing', true);
+                return;
+            case "Layout_StopResizing":
+                this.resizing = false;
+                this.state = this.state.set('resizing', false);
+                return;
+        }
     }
 
     @handles(LayoutActions.resizingPanel)

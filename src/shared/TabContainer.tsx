@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Component } from "../CarbonFlux"
 import LessVars from "../styles/LessVars";
 import cx from "classnames";
@@ -80,9 +81,9 @@ export default class TabContainer extends Component<ITabContainerProps, ITabCont
     }
 
     static childContextTypes = {
-        activeTabId  : React.PropTypes.string,
-        oldTabId     : React.PropTypes.string,
-        tabContainer : React.PropTypes.any
+        activeTabId  : PropTypes.string,
+        oldTabId     : PropTypes.string,
+        tabContainer : PropTypes.any
     }
 }
 
@@ -110,9 +111,9 @@ export class TabHeader extends React.Component<ITabHeaderProps> {
     }
 
     static contextTypes = {
-        activeTabId  : React.PropTypes.string,
-        oldTabId     : React.PropTypes.string,
-        tabContainer : React.PropTypes.any
+        activeTabId  : PropTypes.string,
+        oldTabId     : PropTypes.string,
+        tabContainer : PropTypes.any
     }
 }
 
@@ -129,9 +130,9 @@ export class TabPage extends React.Component<ITabPageProps> {
     }
 
     static contextTypes = {
-        activeTabId  : React.PropTypes.string,
-        oldTabId     : React.PropTypes.string,
-        tabContainer : React.PropTypes.any
+        activeTabId  : PropTypes.string,
+        oldTabId     : PropTypes.string,
+        tabContainer : PropTypes.any
     };
 }
 
@@ -144,7 +145,7 @@ export class TabArea extends React.Component<ITabAreaProps> {
         return <div {...this.props} data-current-tab={this.context.activeTabId}/>
     }
 
-    static contextTypes = { activeTabId: React.PropTypes.string, oldTabId: React.PropTypes.string, tabContainer: React.PropTypes.any }
+    static contextTypes = { activeTabId: PropTypes.string, oldTabId: PropTypes.string, tabContainer: PropTypes.any }
 }
 
 interface ITabMods<TMods> {
@@ -177,11 +178,11 @@ export class TabTabs extends React.Component<ITabTabsProps> {
     }
 
     static contextTypes = {
-        items              : React.PropTypes.array,
-        tabsClassName      : React.PropTypes.string,
-        tabClassName       : React.PropTypes.string,
-        tabActiveClassName : React.PropTypes.string,
-        tabMods            : React.PropTypes.any, //array or object or string
-        insertBefore       : React.PropTypes.node
+        items              : PropTypes.array,
+        tabsClassName      : PropTypes.string,
+        tabClassName       : PropTypes.string,
+        tabActiveClassName : PropTypes.string,
+        tabMods            : PropTypes.any, //array or object or string
+        insertBefore       : PropTypes.node
     };
 }

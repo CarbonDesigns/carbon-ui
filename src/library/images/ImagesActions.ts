@@ -25,6 +25,11 @@ var ImagesActions = {
             images
         }
     },
+    userImagesError:()=> {
+        return {
+            type:'IMAGES_USER_IMAGES_ERROR'
+        }
+    },
     userImagesAdded:(images)=> {
         return {
             type:'IMAGES_USER_IMAGES_ADDED',
@@ -36,10 +41,9 @@ var ImagesActions = {
             type:'IMAGES_NOTHING_FOUND'
         }
     },
-    unsplashError:(message)=> {
+    unsplashError:()=> {
         return {
-            type:'IMAGES_CONNECTION_ERROR',
-            message
+            type:'IMAGES_CONNECTION_ERROR'
         }
     },
 

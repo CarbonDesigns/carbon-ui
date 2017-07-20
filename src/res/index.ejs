@@ -42,7 +42,8 @@
         apiLoaded: false,
         api: null,
         core: null,
-        coreScript: "<%=htmlWebpackPlugin.options.coreScript%>"
+        coreScript: "<%=htmlWebpackPlugin.options.coreScript%>",
+        resourceFile: "<%=htmlWebpackPlugin.options.resourceBundleOptions.resourceFile%>"
     };
 
     window.__carbonapi = function(api){

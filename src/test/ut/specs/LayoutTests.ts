@@ -1,5 +1,6 @@
 import { LayoutStore } from '../../../layout/LayoutStore';
 import panelConfig from "../../../RichPanelConfig";
+import {assert} from "chai";
 
 function getLocation(panel) {
     return `${panel.x}:${panel.y}:${panel.width}:${panel.height}`;

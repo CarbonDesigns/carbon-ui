@@ -109,7 +109,8 @@ class ImageUploadQueueStore extends CarbonStore<IImageUploadQueueStoreState>{
             clearTimeout(this._clearTimeout);
         }
         this.setState({ queue: this.state.queue.update(fileName, function(file){
-            return file.set('status', UploadStatus.removed)
+            //removed might get called when the queue is already cleared
+            return file && file.set('status', UploadStatus.removed)
                        .set('removed_at', Date.now())
         })});
     }

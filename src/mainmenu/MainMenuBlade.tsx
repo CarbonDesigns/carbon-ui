@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import {app} from "carbon-core";
 import {richApp}    from '../RichApp';
 import {handles, ComponentWithImmutableState} from '../CarbonFlux';
@@ -198,7 +199,7 @@ export default class MainMenuBlade extends React.Component<any, any> {
     }
 
     static contextTypes = {
-        bladeContainer: React.PropTypes.any
+        bladeContainer: PropTypes.any
     };
 }
 

@@ -1,5 +1,6 @@
 import {Component} from '../CarbonFlux';
 import React from 'react';
+import PropTypes from "prop-types";
 import immutable from 'immutable';
 import LayoutActions from './LayoutActions';
 import {richApp, app} from "../RichApp";
@@ -27,8 +28,8 @@ interface IPanelState {
 
 export default class Panel extends Component<IPanelProps, IPanelState> {
     static propTypes = {
-        id: React.PropTypes.string,
-        header: React.PropTypes.string
+        id: PropTypes.string,
+        header: PropTypes.string
     }
 
     constructor(props){

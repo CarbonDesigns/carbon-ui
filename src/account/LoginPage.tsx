@@ -19,7 +19,7 @@ export default class LoginPage extends RouteComponent<IRouteComponentProps> {
     render() {
         return <div className="loginPage">
             <div className="loginPage__middle">
-                <LoginForm messageId="@account.loginNeededMessage"/>
+                <LoginForm messageId="@account.loginNeededMessage" location={this.props.location}/>
             </div>
         </div>;
     }

@@ -31,7 +31,7 @@ export default class ResourceDetails extends Component<ResourceDetailsProps> {
         }
 
         return <div className="resource-import-details">
-            <MarkupLine className="resource-import-details__metaline">
+            <MarkupLine className="resource-import-details__metaline" mods="horizontal">
                 <div className="resource-import-details__cover" style={{ backgroundImage: `url('${this.props.resource.coverUrl}')`, }}>
                 </div>
 

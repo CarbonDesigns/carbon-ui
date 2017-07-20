@@ -19,17 +19,6 @@ function stopPropagation(e) {
 
 
 export default class SelectBox extends Component<any, any>{
-    static propTypes = {
-        selectedItem: React.PropTypes.any,
-        className: React.PropTypes.any,
-        mods: React.PropTypes.any,
-        id: React.PropTypes.any,
-        onSelect: React.PropTypes.func,
-        onClick: React.PropTypes.func,
-        renderSelected: React.PropTypes.func,
-        renderEmpty: React.PropTypes.func,
-    };
-
     refs: any;
 
     constructor(props) {

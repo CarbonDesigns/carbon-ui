@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {FormattedMessage} from "react-intl";
 import ScrollContainer from "../../shared/ScrollContainer";
 import {Component} from "../../CarbonFlux";
@@ -91,6 +92,6 @@ export default class BladeContainer extends React.Component {
 }
 
 BladeContainer.childContextTypes = {
-    blades         : React.PropTypes.arrayOf(React.PropTypes.any),
-    bladeContainer : React.PropTypes.any
+    blades         : PropTypes.arrayOf(PropTypes.any),
+    bladeContainer : PropTypes.any
 };

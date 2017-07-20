@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Component, dispatchAction } from "./CarbonFlux";
 
 import { app, logger, backend } from "carbon-core";
@@ -82,7 +83,7 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
     }
 
     static contextTypes = {
-        router: React.PropTypes.any,
-        intl: React.PropTypes.object
+        router: PropTypes.any,
+        intl: PropTypes.object
     }
 }

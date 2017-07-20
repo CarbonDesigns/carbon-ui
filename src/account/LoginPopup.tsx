@@ -3,8 +3,9 @@ import { Component, dispatchAction, dispatch } from "../CarbonFlux";
 import FlyoutActions from "../FlyoutActions";
 import { AccountAction } from "./AccountActions";
 import LoginForm from "./LoginForm";
+import RouteComponent from "../RouteComponent";
 
-export default class LoginPopup extends Component {
+export default class LoginPopup extends RouteComponent {
     canHandleActions() {
         return true;
     }
@@ -18,6 +19,6 @@ export default class LoginPopup extends Component {
     }
 
     render() {
-        return <LoginForm messageId="@account.loginMessage"/>;
+        return <LoginForm messageId="@account.loginMessage" location={this.props.location}/>;
     }
 }

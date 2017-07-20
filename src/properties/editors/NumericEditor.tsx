@@ -12,13 +12,6 @@ interface INumericEditorState extends IEditorState<string>{
 }
 
 export default class NumericEditor extends EditorComponent<INumericEditorProps, INumericEditorState> {
-    static propTypes = {
-        p             : React.PropTypes.any,
-        e             : React.PropTypes.any,
-        className     : React.PropTypes.string,
-        selectOnEnter : React.PropTypes.bool,
-    };
-
     private step: number;
     private miniStep: number;
     private timeoutId: number;

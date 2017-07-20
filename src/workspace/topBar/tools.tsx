@@ -70,9 +70,9 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         if (this.state.data.activeMode !== AppStore.state.activeMode) {
             this.mergeStateData({changingActiveMode: true});
 
-            domUtil.onCssTransitionEnd(this.refs.tools, ()=> {
+            //domUtil.onCssTransitionEnd(this.refs.tools, ()=> {
                 // this.setState({activeMode: AppStore.state.activeMode, changingActiveMode:false});
-            }, 500)
+            //}, 500)
         }
     }
 

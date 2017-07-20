@@ -3,6 +3,7 @@ import invariant from 'invariant';
 import {Dispatcher as FluxDispatcher} from 'flux';
 import {Record} from 'immutable';
 import React from 'react';
+import PropTypes from "prop-types";
 import shallowCompare from 'react-addons-shallow-compare';
 import { FormattedMessage } from 'react-intl';
 import { AccountAction } from "./account/AccountActions";
@@ -11,6 +12,9 @@ import { DialogAction } from "./dialogs/DialogActions";
 import { PublishAction } from "./mainmenu/blades/resources/PublishActions";
 import { StencilsAction } from "./library/stencils/StencilsActions";
 import { CarbonAction } from "./CarbonActions";
+import { IconsAction } from "./library/icons/IconsActions";
+import { LayoutAction } from "./layout/LayoutActions";
+import { DataAction } from "./library/data/DataActions";
 
 // import diff from 'immutablediff';
 
@@ -22,7 +26,7 @@ import { CarbonAction } from "./CarbonActions";
 export class Component<P = {}, S = {}> extends React.Component<P,S> {
 
     static contextTypes = {
-        intl: React.PropTypes.object
+        intl: PropTypes.object
     };
 
     shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): boolean {
@@ -97,8 +101,8 @@ export class Component<P = {}, S = {}> extends React.Component<P,S> {
         }
     };
 
-    formatLabel(labelId: string){
-        return this.context.intl.formatMessage({id: labelId});
+    formatLabel(labelId: string, defaultMessage?: string){
+        return this.context.intl.formatMessage({id: labelId, defaultMessage});
     }
 
     // // Helper to check which component was changed and why.
@@ -225,7 +229,7 @@ export function dispatch(action) {
 }
 
 //just a strongly typed wrapper while not all actions are union types
-export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction | StencilsAction | CarbonAction) {
+export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction | StencilsAction | CarbonAction | IconsAction | LayoutAction | DataAction) {
     dispatch(action);
 }
 

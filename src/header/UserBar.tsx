@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {Component, handles, dispatch} from "../CarbonFlux";
 import FlyoutButton from "../shared/FlyoutButton";
 import {app, backend} from "carbon-core";
@@ -18,8 +19,8 @@ interface IUserBarState{
 
 export default class UserBar extends Component<IUserBarProps, IUserBarState> {
     static contextTypes = {
-        router: React.PropTypes.any,
-        intl: React.PropTypes.object
+        router: PropTypes.any,
+        intl: PropTypes.object
     }
 
     constructor(props){

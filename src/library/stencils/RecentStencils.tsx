@@ -25,7 +25,7 @@ export default class RecentStencils extends Component<any, any>{
         return <div>
             <div className="library-page__content">
                 <ScrollContainer className="stencils-container thin dark">
-                    <SpriteView config={this.state.config.elements}/>
+                    {/* <SpriteView config={this.state.config.elements}/> */}
                 </ScrollContainer>
             </div>
         </div>;

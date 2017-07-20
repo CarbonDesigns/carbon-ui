@@ -1,6 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 import BladePage from "../BladePage";
-import { app, backend, IPage, Rect, Workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ResourceScope } from "carbon-core";
+import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ResourceScope } from "carbon-core";
 import { Component, dispatchAction } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
@@ -179,7 +180,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
 
     private renderPreview(element: IUIElement) {
         const dpr = 2;
-        return Workspace.view.renderElementToDataUrl(element, CoverRect, dpr);
+        return workspace.view.renderElementToDataUrl(element, CoverRect, dpr);
     }
 
     private openImageEditor = (ev) => {
@@ -231,7 +232,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             <TabContainer currentTabId={this.state.publishStep}>
                 <TabArea className="gui-pages">
                     <TabPage className="gui-page" tabId="1">
-                        <MarkupLine>
+                        <MarkupLine mods="stretch">
                             <div className="gui-input">
                                 <p className={"gui-input__label"}>
                                     <FormattedMessage id="@publish.choosePage" />
@@ -240,12 +241,12 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                             </div>
                         </MarkupLine>
 
-                        <MarkupLine>
+                        <MarkupLine mods="stretch">
                             <p className={"gui-input__label"}>
                                 <FormattedMessage id="@publish.choosePage1" defaultMessage="Create your cover" />
                             </p>
                         </MarkupLine>
-                        <MarkupLine className="publish__avatar">
+                        <MarkupLine className="publish__avatar" mods={["stretch", "horizontal"]}>
                             <figure className="publish__avatar-image"
                                 style={{ backgroundImage: "url('" + this.state.coverUrl + "')" }}
                             />
@@ -296,7 +297,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     }
 
     static contextTypes = {
-        intl: React.PropTypes.object,
-        bladeContainer: React.PropTypes.any
+        intl: PropTypes.object,
+        bladeContainer: PropTypes.any
     }
 }

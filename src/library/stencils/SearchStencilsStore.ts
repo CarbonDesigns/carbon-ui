@@ -28,12 +28,12 @@ export default class SearchStencilsStore extends CarbonStore<any>{
             var config = this._configs[i];
             for (var j = 0; j < config.groups.length; j++){
                 var group = config.groups[j];
-                for (var k = 0; k < group.templates.length; k++){
-                    var template = group.templates[k];
+                for (var k = 0; k < group.items.length; k++){
+                    var template = group.items[k];
                     r.lastIndex = 0;
                     if (r.test(template.title)){
                         var searchGroup = this._findOrCreateGroup(result, config.name);
-                        searchGroup.templates.push(template);
+                        searchGroup.items.push(template);
                     }
                 }
             }
@@ -53,7 +53,7 @@ export default class SearchStencilsStore extends CarbonStore<any>{
                 return group;
             }
         }
-        var newGroup = {name: name, templates: []};
+        var newGroup = {name: name, items: []};
         config.groups.push(newGroup);
         return newGroup;
     }

@@ -19,4 +19,5 @@ export type InfoCode =
 export type Url =
     "/register" |
     "/account" |
-    "/login";
+    "/login" |
+    "/account/forgotPassword";

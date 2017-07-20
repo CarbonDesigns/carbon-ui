@@ -168,7 +168,13 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                     <h1 className="hero-container__hero-title"><CarbonLabel id="@hero.title" /></h1>
                     <strong className="hero-container__hero-subtitle"><CarbonLabel id="@hero.subtitle" /></strong>
                 </header>
-                <figure className="hero-container__preview"></figure>
+                <div className="hero-container__preview">
+                    <figure className="play-button">
+                        <div className="play-button__icon"></div>
+                    </figure>
+                </div>
+
+                <h3 className="hero-container__subheading">Create designs for iOS, Android, Web or any other platform</h3>
             </section>
             <section className="subscribe-container">
                 <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details" /></p>
@@ -181,15 +187,15 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 <div className="feature-section__description">
                     <div className="feature-section__index">01</div>
                     <div className="feature-section__symbol">Li</div>
-                    <h1 className="feature-section__header">Symbols library</h1>
+                    <h1 className="feature-section__header">Community library</h1>
                     <article>
                         <div className="feature-section__details">
-                            Go from blank page to a brilliant with help of the worlds top designers.
+                            Go from blank page to brilliant faster with the help of our community.
                         </div>
                         <ul className="feature-section__list">
-                            <li className="feature-section__list-item">Use stencils, icons and much more  from the reach community gallery</li>
-                            <li className="feature-section__list-item">Make and share symbols from any selection</li>
-                            <li className="feature-section__list-item">Define your design language, use it in the team or share it globally.</li>
+                            <li className="feature-section__list-item">Enjoy our shared gallery of free symbols, icons and much more...</li>
+                            <li className="feature-section__list-item">Build your team library in few clicks</li>
+                            <li className="feature-section__list-item">Help the world and share your work with the community</li>
                         </ul>
                     </article>
                 </div>
@@ -200,15 +206,15 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 <div className="feature-section__description">
                     <div className="feature-section__index">02</div>
                     <div className="feature-section__symbol">Da</div>
-                    <h1 className="feature-section__header">Data generation</h1>
+                    <h1 className="feature-section__header">Data</h1>
                     <article>
                         <div className="feature-section__details">
-                            Design with data in mind. Fill your design with meaningful content.
+                            Design with data in mind. Fill your prototypes with meaningful content.
                         </div>
                         <ul className="feature-section__list">
-                            <li className="feature-section__list-item">Quickly populate designs with realistic data</li>
+                            <li className="feature-section__list-item">Quickly populate designs with realistic text and images</li>
                             <li className="feature-section__list-item">Draw once, repeat as needed</li>
-                            <li className="feature-section__list-item">Create your own datasets or connect with real-time data with JSON and Web API</li>
+                            <li className="feature-section__list-item">Create your own datasets or connect to real-time REST API</li>
                         </ul>
                     </article>
                 </div>
@@ -222,19 +228,19 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                     <h1 className="feature-section__header">Plugins</h1>
                     <article>
                         <div className="feature-section__details">
-                            With unique extensibility technology do amazing things while staying in the absolutely safe environment.
+                            Carbonium is the first design app on the web with plugins.
                         </div>
                         <ul className="feature-section__list">
+                            <li className="feature-section__list-item">Work faster with plugins from our amazing developer community</li>
                             <li className="feature-section__list-item">Automate repetitive tasks</li>
-                            <li className="feature-section__list-item">Integrate with other services</li>
-                            <li className="feature-section__list-item">Use any extension published by community.</li>
+                            <li className="feature-section__list-item">Always stay safe. And happy ;)</li>
                         </ul>
                     </article>
                 </div>
                 <div className="feature-section__image">image</div>
             </section>
             <section className="quote-container">
-                <article> Carbonium is open source. Help us make it better! Join us on <a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
+                <article> Carbonium is open source. Let's make it better ... together! Join us on <a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
             </section>
             <section className="subscribe-container">
                 <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details2" /></p>

@@ -584,9 +584,9 @@ export default
         "@nav.login": "LogIn",
 
         "@hero.title" : "Addictive design solution",
-        "@hero.subtitle": "Universal app for prototypes and final designs",
+        "@hero.subtitle": "for prototypes, wireframes, high fidelity design and much more...",
         "@subscribe.details": "We are currently in private beta. For news, updates and first releases subscribe now and become an early adopter!",
-        "@subscribe.details2": "Subscribe now and became a part of fast growing community of world best designers and UX experts.",
+        "@subscribe.details2": "Subscribe now and become a part of fast growing community of world's best designers and UX experts.",
         "@subscribe": "Subscribe",
 
         "": "", //

@@ -43,7 +43,7 @@
         api: null,
         core: null,
         coreScript: "<%=htmlWebpackPlugin.options.coreScript%>",
-        resourceFile: "reslist.json" //replaced by hashing
+        resourceFile: "<%=htmlWebpackPlugin.options.resourceBundleOptions.resourceFile%>"
     };
 
     window.__carbonapi = function(api){

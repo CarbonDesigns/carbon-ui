@@ -8,12 +8,13 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
     storeType = "userImage";
 
     getInitialState() {
-        return { images: [] };
+        return { images: [], error: false };
     }
 
     getImages() {
         backend.fileProxy.images(app.companyId())
-            .then(data => dispatch(ImagesActions.userImagesLoaded(data.images)));
+            .then(data => dispatch(ImagesActions.userImagesLoaded(data.images)))
+            .catch(() => dispatch(ImagesActions.userImagesError()));
     }
 
     findById(id) {
@@ -35,7 +36,12 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
 
     @handles(ImagesActions.userImagesLoaded)
     onImagesLoaded({ images }) {
-        this.setState({ images: this.toMetadata(images) });
+        this.setState({ images: this.toMetadata(images), error: false });
+    }
+
+    @handles(ImagesActions.userImagesError)
+    onError({ images }) {
+        this.setState({ error: true });
     }
 
     @handles(ImagesActions.userImagesAdded)

@@ -25,6 +25,11 @@ var ImagesActions = {
             images
         }
     },
+    userImagesError:()=> {
+        return {
+            type:'IMAGES_USER_IMAGES_ERROR'
+        }
+    },
     userImagesAdded:(images)=> {
         return {
             type:'IMAGES_USER_IMAGES_ADDED',

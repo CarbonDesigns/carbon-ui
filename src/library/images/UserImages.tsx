@@ -198,13 +198,14 @@ export default class UserImages extends Component<any, any>{
             images: [],
             queue,
             list_is_open: false,
+            error: false
         };
         this.queueSize = queue.size;
     }
 
     @listenTo(UserImagesStore)
     onChange() {
-        this.setState({ images: UserImagesStore.state.images });
+        this.setState({ images: UserImagesStore.state.images, error: UserImagesStore.state.error });
     }
 
     @listenTo(ImageUploadQueueStore)
@@ -348,6 +349,15 @@ export default class UserImages extends Component<any, any>{
         return null;
     }
 
+    private renderList() {
+        if (this.state.error) {
+            return this.renderError();
+        }
+        return <div className="user-images__list">
+            <VirtualList ref="list" data={this.state.images} rowHeight={this.getItemHeight} rowRenderer={this.renderItem}/>
+        </div>;
+    }
+
     render() {
         const filteredQueue = this.state.queue.filter(function (file) {
             const status = file.get('status');
@@ -378,9 +388,7 @@ export default class UserImages extends Component<any, any>{
         return <div className="library-page__content">
 
             <div className="library-page__upload  dropzone " ref="dropzone" >
-                <div className="user-images__list">
-                    <VirtualList ref="list" data={this.state.images} rowHeight={this.getItemHeight} rowRenderer={this.renderItem}/>
-                </div>
+                {this.renderList()}
 
                 <div className={bem('zone', null, { "list-open": this.state.list_is_open })}>
                     {

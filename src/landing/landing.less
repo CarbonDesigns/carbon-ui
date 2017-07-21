@@ -5,6 +5,10 @@
 @redGradient: linear-gradient(315deg, #8B1B4D 0%, #C85439 100%);
 @purpleGradient: linear-gradient(315deg, #342559 0%, #7B3180 100%);
 
+@mainHeaderFontSize: 60px;
+
+@navigationMenuFontSize: 16px;
+
 
 .landing-page {
     min-height: 100%;
@@ -33,7 +37,7 @@
     &, & a {
         color: #E8E8F5;
         font-family: Inconsolata;
-        font-size: 16px;
+        font-size: @navigationMenuFontSize;
         text-align: center;
         display: flex;
         flex-direction: row;
@@ -136,7 +140,7 @@
 .hero-container__hero-title {
     color: #E8E8F5;
     font-family: Poppins;
-    font-size: 52px;
+    font-size: @mainHeaderFontSize;
     line-height: 1.3;
     font-weight: 500;
     display: block;

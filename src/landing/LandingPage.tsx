@@ -176,6 +176,19 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
 
                 <h3 className="hero-container__subheading">Create designs for iOS, Android, Web or any other platform</h3>
             </section>
+
+            <section className="hero-container__logos">
+                <div className="hero-container__logo microsoft"></div>
+                <div className="hero-container__logo amazon"></div>
+                <div className="hero-container__logo evernote"></div>
+                <div className="hero-container__logo paypal"></div>
+                <div className="hero-container__logo airbnb"></div>
+            </section>
+
+             <section className="subheader-container">
+                <h3>Companies of any size or individuals can draw logos like this in our app</h3>
+            </section>
+
             <section className="subscribe-container">
                 <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details" /></p>
                 <form className="subscribe-form">

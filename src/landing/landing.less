@@ -81,12 +81,10 @@
     height: 100%;
     left:0;
     top:0;
-    opacity: 0.2;
+    opacity: 0.1;
     z-index: 1;
     background-image:  url('../res/app/back_0.png');
     background-repeat: no-repeat;
-    background-size: 100% 100%;
-    filter: blur(15px);
 }
 
 .hero-container__preview {
@@ -109,7 +107,7 @@
 .hero-container__heading {
     text-align: center;
     display: block;
-    margin: 30vh 0 0 0;
+    margin: 20vh 0 0 0;
     padding: 0;
     text-size-adjust:100%;
     z-index: 10;
@@ -153,6 +151,7 @@
     align-items: center;
     z-index: 65;
     position: relative;
+    border-top: 1px solid #b5bbc2;
 }
 
 .quote-container {
@@ -300,6 +299,69 @@
 	font-family: Inconsolata;
 	font-size: 16px;
     line-height: 20px;
+}
+
+.hero-container__logos {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+    z-index: 66;
+    position: relative;
+    padding:20px 0;
+    background: @subscribeContainerFill;
+}
+
+.subheader-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+    z-index: 66;
+    position: relative;
+    width: 100%;
+    background: @subscribeContainerFill;
+    padding-bottom: 20px;
+    color:#b5bbc2;
+    font-family: Inconsolata;
+}
+
+.hero-container__logo {
+    height: 32px;
+    width: 120px;
+    align-items: center;
+    background-color: #b5bbc2;
+    background-repeat: no-repeat;
+    background-size: contain;
+    text-indent: -9999px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    &.microsoft {
+        -webkit-mask-image: url(../res/app/msft.svg);
+        mask-image: url(../res/app/msft.svg);
+    }
+
+    &.amazon {
+        -webkit-mask-image: url(../res/app/amazon.svg);
+        mask-image: url(../res/app/amazon.svg);
+    }
+
+    &.paypal {
+        -webkit-mask-image: url(../res/app/paypal.svg);
+        mask-image: url(../res/app/paypal.svg);
+    }
+
+    &.evernote {
+        -webkit-mask-image: url(../res/app/evernote.svg);
+        mask-image: url(../res/app/evernote.svg);
+    }
+
+    &.airbnb {
+        -webkit-mask-image: url(../res/app/airbnb.svg);
+        mask-image: url(../res/app/airbnb.svg);
+    }
 }
 
 .feature-section__symbol {

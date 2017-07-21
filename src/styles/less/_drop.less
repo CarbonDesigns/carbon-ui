@@ -1,0 +1,277 @@
+@bg : @bg_inner1;
+@size: @line * 3;
+@size2: @line * 2;
+@scales : 40px;
+
+@smallHeight: 26px;
+@mediumHeight: 32px;
+
+.drop {
+    & > i { .opacity(.5); }
+    &:hover {
+        .bgfade(10, #f7f7f7);
+        & > i { .opacity1 }
+    }
+}
+
+.drop{
+    position: relative;
+    &._dragging { cursor: none;}
+
+    &_open, &_open:hover {
+        & {.bgc(@bg);}
+    }
+
+    &__heading {
+        .box-shadow(0 -1px 0 0 @divider_color inset);
+        .nowrap;
+
+        .drop_down & { .tcenter; }
+    }
+
+    &&_small {
+        height: @smallHeight;
+    }
+    &&_medium {
+        height: @mediumHeight;
+    }
+}
+
+.drop__pill {
+    //line-height: .9;
+    padding-right: @line_air + @line;
+    padding-left : @line_air;
+
+    .rel;
+    .h100;
+    .w100;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    .clip;
+    .drop_line &{
+        height: auto;
+        padding-top: @line_air /2;
+        padding-bottom: @line_air /2;
+        align-items: inherit;
+    }
+    //.middler();
+    //& > * { .inbl_middle; }
+    //.inbl;
+    .nowrap;
+    .tleft;
+
+    .point;
+    padding: .5em .5em;
+    margin-bottom: 1px;
+
+    .wbg(3);
+
+    &:hover {
+        .wbg(6);
+    }
+
+    &_selected {
+        &, &:hover {
+            .wbg(10);
+        }
+    }
+
+
+    & > .ico-triangle {
+        .opacity(.3);
+        ._ico-triangle-down(@c : @font_color);
+        margin-top: -2px;
+
+        .abs;
+        top: 50%;
+        right: @line_air;
+    }
+    &:hover {
+        .bgfade(10, #f7f7f7);
+        & > .ico-triangle { .opacity1; }
+    }
+
+    .drop_open & { .opacity(40); }
+}
+
+.drop__item {
+    .tleft;
+    .nowrap;
+    padding: 0 @line_air;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    .vtop;
+    .rel;
+    &.disabled {
+        .disabled_item();
+    }
+
+    &:not(.disabled){
+        .cursor_pointer;
+    }
+
+    span, u {
+        .inbl_middle;
+    }
+
+    .drop__content_medium & {
+        .transition(height .2s linear .05s);
+        height: @mediumHeight;
+    }
+
+    .drop__content_small & {
+        .transition(height .2s linear .05s);
+        height: @smallHeight;
+    }
+
+    &_with-controls,
+    &_selectable{
+        &:not(.disabled):hover{
+            .bgsel()
+        }
+        &._active, &._current {
+            & { .bgfade(5); }
+        }
+    }
+
+    &_with-controls {
+
+    }
+
+    &_selectable{
+        padding-right: @line;
+        &._active, &._current {
+            .drop:not(.text) &:after {
+                .check();
+                .xyar(12,50%);
+                margin-top: -3px;
+            }
+        }
+    }
+}
+
+.drop__item:not(.disabled),
+.drop__slider-scales span {
+    .hovering();
+}
+
+.drop-slider_vertical {
+    .rel;
+    width: @line;
+    .clip;
+    .point;
+}
+
+.drop-slider__track {
+    @padd: @module2;
+    .xyal(50%, @padd);
+    bottom: @padd;
+    width: 4px;
+    margin-left: -2px;
+    .bgfade(25);
+    .transition(background .2s);
+    .box-shadow(0 1px 3px rgba(1,2,3, .2) inset);
+}
+
+.drop-slider__handle {
+    .rounded(100);
+    .size(12);
+    .box-shadow( 0 1px 2px @shadow_color1);
+    border: 3px solid white;
+    .bbox;
+    margin-top:-100%;
+
+    .xyal(50%, 0%);
+    margin-left: -6px;
+    background: white;
+}
+
+.drop__slider-scales {
+    width: @scales - 20px;
+
+    span {
+        .abs;
+        padding: 5px 7px;
+        margin-top: -14px;
+        &:nth-child(1) {top: 0}
+        &:nth-child(2) {top: 25%}
+        &:nth-child(3) {top: 50%}
+        &:nth-child(4) {top: 75%}
+        &:nth-child(5) {top: 100%}
+    }
+}
+
+.drop-slider:hover .drop-slider__track{
+    .bgfade(40);
+}
+
+.drop-slider__track, .drop-slider__track:hover {
+    .drop-slider._dragging & {.bgsel()}
+}
+.drop-slider__handle {
+    .drop-slider._dragging & {.bgsel()}
+}
+
+
+.drop__content {
+    .abs;
+    .tleft;
+    .box-shadow(0 1px 5px @shadow_color1);
+    max-height: 1000px;
+    min-width: 100%;
+    width: auto;
+
+    //making more specific since max-height depends on the order of selectors
+    &&_open,
+    .drop_open &  {
+        .transition(~"max-height 0.4s @{cubic_bezier1} 0s");
+    }
+
+    background: @bg_inner1;
+    z-index: @z_dropcontent;
+    white-space: normal;
+    .clip;
+
+    &._overlaying {
+        .transition(~"max-height 0.4s @{cubic_bezier1} 0s");
+        max-height: 1000px;
+    }
+
+    &.drop-content_double {
+        width: @size * 2 ;
+        .drop__item {.fl;}
+    }
+
+    &.drop-content_with-slider {
+        padding-right: @line + @scales;
+    }
+    .drop_up & {
+        bottom: 100%;
+        left: 0;
+        min-width: 100%;
+
+        //            .box-shadow(0 -1px 3px rgba(0, 0, 0, 0.13));
+        .box-shadow(0 -1px 3px @shadow_color2);
+    }
+
+    .drop_down & {
+        top: 100%;
+        right: 0;
+        //            .box-shadow(0 1px 5px rgba(0, 0, 0, 0.23));
+        .box-shadow(0 1px 5px @shadow_color1);
+    }
+}
+
+.drop_down_no-padding{
+    .drop__pill {
+        padding: 0;
+    }
+}
+
+.drop_down_line-padding{
+    .drop__pill {
+        padding: @line_air;
+    }
+}

@@ -206,7 +206,7 @@ export default class ColumnsSettings extends Component<any, any> {
                     <div className="gui-inline-data">
                         <label className="gui-spinner gui-inliner">
                             <EnterInput ref="columnsCount" data-type="int" value={this.state.setup.columnsCount}
-                                        onChange={this.setupChanged} size={5} type="text"/>
+                                        onValueEntered={this.setupChanged} size={5} type="text"/>
                         </label>
                     </div>
                 </FormLine>
@@ -215,7 +215,7 @@ export default class ColumnsSettings extends Component<any, any> {
                     <div className="gui-inline-data">
                         <label className="gui-spinner gui-inliner">
                             <EnterInput ref="columnWidth" data-type="int" value={this.state.setup.columnWidth}
-                                        onChange={this.setupChanged} size={5} type="text"
+                                        onValueEntered={this.setupChanged} size={5} type="text"
                                         disabled={this.state.setup.autoColumnWidth}/>
                         </label>
                         <label className="gui-check gui-inliner">
@@ -248,7 +248,7 @@ export default class ColumnsSettings extends Component<any, any> {
                     <div className="gui-inline-data">
                         <label className="gui-spinner gui-inliner">
                             <EnterInput ref="gutterWidth" data-type="int" value={this.state.setup.gutterWidth}
-                                        onChange={this.setupChanged} size={5} type="text"/>
+                                        onValueEntered={this.setupChanged} size={5} type="text"/>
                         </label>
                         {/*<label className="gui-switch gui-inliner">
                          <input name="radio0" type="checkbox"/>

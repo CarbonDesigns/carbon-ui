@@ -16,7 +16,10 @@ function stopPropagation(e) {
     }
 }
 
-export interface IGuiSelectProps<T> extends ISimpleReactElementProps, IHasMods<"line"> {
+export interface IGuiSelectProps<T> extends ISimpleReactElementProps, IHasMods<
+    "small" |
+    "medium"
+> {
     selectedItem?: T;
 
     items: T[];
@@ -28,6 +31,10 @@ export interface IGuiSelectProps<T> extends ISimpleReactElementProps, IHasMods<"
 }
 
 export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
+    static defaultProps: Partial<IGuiSelectProps<any>> = {
+        mods: "medium"
+    }
+
     refs: {
         scrollContainer: ScrollContainer
     }
@@ -66,8 +73,7 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
     private renderFlyoutContent() {
         let options = this.props.items.map((item, i) => {
             let classes = bem('drop', 'item',
-                { line: true, selectable: true },
-                [{ _active: item === this.props.selectedItem }]
+                { selectable: true }
             );
 
             var renderedItem = this.props.renderItem ? this.props.renderItem(item) : item;
@@ -76,12 +82,12 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
 
         if (this.props.renderCustomItems) {
             options = options.concat(this.props.renderCustomItems().map((element, i) => {
-                let classes = bem('drop', 'item', { line: true, selectable: true });
+                let classes = bem('drop', 'item', { selectable: true });
                 return <div className={classes} key={this.props.items.length + i} onMouseDown={stopPropagation}>{element}</div>;
             }));
         }
 
-        return <div className={bem('drop', 'content', ["auto-width", "in-flyout"], this.props.className)}>
+        return <div className={bem('drop', 'content', this.props.mods, this.props.className)}>
             <ScrollContainer
                 boxClassName="drop__list"
                 insideFlyout={true}

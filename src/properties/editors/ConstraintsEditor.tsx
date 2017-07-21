@@ -251,7 +251,7 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
                                 <i className="ico--vertical-double-arrow" />
                             </div>
                             <VerticalConstraintSelect
-                                mods="line"
+                                mods="small"
                                 selectedItem={c.v}
                                 items={[VerticalConstraint.Top, VerticalConstraint.Bottom, VerticalConstraint.TopBottom, VerticalConstraint.Center, VerticalConstraint.Scale]}
                                 renderItem={item => <FormattedMessage id={verticalLabel(item)} tagName="p" />}
@@ -264,7 +264,7 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
                                 <i className="ico--horizontal-double-arrow" />
                             </div>
                             <HorizontalConstraintSelect
-                                mods="line"
+                                mods="small"
                                 selectedItem={c.h}
                                 onSelect={this._onChangeHorizontal}
                                 items={[HorizontalConstraint.Left, HorizontalConstraint.Right, HorizontalConstraint.LeftRight, HorizontalConstraint.Center, HorizontalConstraint.Scale]}

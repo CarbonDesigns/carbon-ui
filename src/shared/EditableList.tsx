@@ -89,7 +89,7 @@ export class ListItem extends React.Component<any, any> {
                                     ref="input"
                                     value={text}
                                     changeOnBlur={false}
-                                    onChange={() => this._onRename()}
+                                    onValueEntered={() => this._onRename()}
                                 />
                               </div>
                             : this._renderContent(text, icon)

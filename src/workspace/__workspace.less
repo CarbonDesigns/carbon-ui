@@ -255,6 +255,7 @@
 
         display: flex;
         flex-direction: column;
+        max-height: 60vh;
 
         &-controls {
             min-width:  10rem;
@@ -678,102 +679,138 @@
 }
 
 //Zoombar
-#zoombar {
+
+.zoombar {
     .abs;
     bottom: 0;
     right: 0;
     top: 0;
     .flexstretch();
-    //height: @module3;
-    //background-color: @bg5_workspace_faded;
+    flex-wrap: nowrap;
+}
 
-    .button,
-    .drop {
-        width: @line;
-        margin-left: 1px;
+.zoom {
+    display: flex;
 
-        display: inline-flex;
+    &__button {
+        width: @tabbar_height;
+    }
+
+    &__drop {
+        .button-with-centrated-icon();
+        width: @tabbar_height;
+
+        &&_open {
+            background: @bg_inner1;
+        }
+    }
+
+    &__menu {
+        .abs;
+        bottom: @tabbar_height;
+        right: 0;
+        background: @bg_inner1;
+        height: 200px;
+        display: none;
+        align-items: stretch;
+        .f12;
+        cursor: default;
+
+        .zoom__drop_open & {
+            display: flex;
+        }
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__action {
+        flex: 1;
+        padding: @air_double;
+        display: flex;
         justify-content: center;
         align-items: center;
+
+        .clickable_item();
     }
-}
+
+    &__scales {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 40px;
+    }
+
+    &__scale {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .clickable_item();
+    }
+
+    &__input {
+        &-container {
+            width: 60px;
+            .bbox;
+            .h100;
+            .middler;
+            .rel;
+            .inbl_middle;
+
+            &:hover {
+                .zoom__input { .opacity1; }
+                .bg { .bgfade(10); }
+            }
+
+            span {
+                .f14;
+                color: @font_color;
+                .abs;
+                .xyar(4, 50%);
+                margin-top: -8px;
+                height: 12px;
+                .opacity(40);
+            }
+
+            .bg{
+                .abs;
+                .stretch-rectangle;
+                z-index: -1;
+            }
+        }
 
 
-#zoombar,
-#zoom
-{
-    .flexstretch();
-    flex-wrap: nowrap;
-    //.nowrap;
-    //& > * {
-    //    .inbl_middle;
-    //    .h100;
-    //}
-}
-
-
-
-#zoom__input {
-
-    &-container {
-        width: 60px;
-        .bbox;
-        .h100;
-        .middler;
-        .rel;
+        background-color: transparent;
+        .tright;
+        .w100;
         .inbl_middle;
+        z-index: 1;
+        padding-right : 18px;
+        padding-left: 5px;
 
-        &:hover {
-            #zoom__input { .opacity1; }
-            .bg { .bgfade(10); }
+        color: @font_color;
+        .f14;
+        .opacity(70);
+
+        &:focus {
+            .opacity1;
+            color: black;
+
+            & ~ .bg { .bgc(white); }
+            & ~ span { color: black; }
         }
-
-        span {
-            .f14;
-            color: @font_color;
-            .abs;
-            .xyar(4, 50%);
-            margin-top: -8px;
-            height: 12px;
-            .opacity(40);
-        }
-
-        .bg{
-            .abs;
-            .stretch-rectangle;
-            z-index: -1;
-        }
-    }
-
-
-    background-color: transparent;
-    .tright;
-    .w100;
-    .inbl_middle;
-    z-index: 1;
-    padding-right : 16px;
-    padding-left: 5px;
-
-    color: @font_color;
-    .f14;
-    .opacity(70);
-
-    &:focus {
-        .opacity1;
-        color: black;
-
-        & ~ .bg { .bgc(white); }
-        & ~ span { color: black; }
     }
 }
-
 
 & {
     @width: 2px;
     @height: 10px;
 
-    #zoom-out,
-    #zoom-in {
+    .zoom-out,
+    .zoom-in {
         i {
             .rel;
             .size(@module2, 100%);
@@ -791,7 +828,7 @@
         }
     }
 
-    #zoom-in{
+    .zoom-in{
         i:after {
             .size(@width, @height);
             left: 50%;

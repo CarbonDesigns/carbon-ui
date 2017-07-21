@@ -90,7 +90,7 @@ export default class VerticalSlider extends React.Component<any, any>{
         if(value > 100) value = 100;
         else if(value < 0) value = 0;
 
-        return (<div ref="slider" className="drop-slider drop-slider_vertical" onMouseDown={this._onMouseDown}>
+        return (<div className="drop-slider drop-slider_vertical" onMouseDown={this._onMouseDown}>
           <div className="drop-slider__track" ref="slider">
             <div className="drop-slider__handle" style={{top:value+'%'}} ref="handle" onMouseDown={this._handelMouseDown} />
           </div>

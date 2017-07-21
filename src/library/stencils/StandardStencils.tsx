@@ -47,7 +47,7 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
     private renderPageItem = (page: IPage) => {
         //TODO: add possibility to add page icons?
         return <p key={page.id()}>
-            <i className="ico inline-ico ico-stencil-set" />
+            {/* <i className="ico inline-ico ico-stencil-set" /> */}
             <span>{page.name()}</span>
         </p>
     }
@@ -94,12 +94,12 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
     }
 
     private renderPageSelect(page: IPage) {
-        return <PageSelect className={bem("stencils-page", "select")} selectedItem={page} onSelect={this.onPageSelected}
+        return <PageSelect className={bem("stencils-page", "select")} mods="small" selectedItem={page} onSelect={this.onPageSelected}
             items={app.pagesWithSymbols()}
             renderItem={this.renderPageItem}
             renderCustomItems={() => [
                 <p key="add_more" onClick={this.onAddMore}>
-                    <i className="ico inline-ico ico-stencil-set" />
+                    {/* <i className="ico inline-ico ico-stencil-set" /> */}
                     <FormattedMessage id="@symbols.add" />
                 </p>
             ]} />;

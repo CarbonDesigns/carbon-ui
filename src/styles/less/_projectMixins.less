@@ -17,6 +17,21 @@
 .hovering() {
     &:hover { .wbg(5); }
 }
+.disabled_item() {
+    opacity: 0.5;
+}
+
+.clickable_item {
+    &:not(&_disabled){
+        .point;
+        &:hover {
+            .hovering();
+        }
+    }
+    &&_disabled {
+        .disabled_item();
+    }
+}
 
 .hover_underline() {
     span:after {

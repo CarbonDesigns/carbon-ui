@@ -143,7 +143,9 @@ export default class ToolboxConfiguration {
                     }
                 }
 
-                return { imageData: "url(" + context.canvas.toDataURL("image/png") + ")", size: { width, height } };
+                let imageData = context.canvas.toDataURL("image/png");
+                let backgroundUrl = "url(" + imageData  + ")";
+                return { imageData, backgroundUrl, size: { width, height } };
             })
             .finally(() => {
                 workspace.contextPool.releaseContext(context);
@@ -247,8 +249,8 @@ export default class ToolboxConfiguration {
             if (app.serverless()) {
                 return Promise.all([spriteUrlPromise, spriteUrl2xPromise])
                     .then(sprites => {
-                        group.spriteUrl = sprites[0].imageData;
-                        group.spriteUrl2x = sprites[1].imageData;
+                        group.spriteUrl = sprites[0].backgroundUrl;
+                        group.spriteUrl2x = sprites[1].backgroundUrl;
                         group.size = sprites[0].size;
                     });
             }

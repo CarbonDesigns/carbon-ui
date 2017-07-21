@@ -186,7 +186,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
             </section>
 
              <section className="subheader-container">
-                <h3>Companies of any size or individuals can draw logos like this in our app</h3>
+                <h3 className="subheader-container__h">Companies of any size or individuals can draw logos like this in our app</h3>
             </section>
 
             <section className="subscribe-container">

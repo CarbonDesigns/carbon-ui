@@ -99,7 +99,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
     }
 
     _renderLogoutButton() {
-        return <div className="gui-button">
+        return <div>
             <button href="#" onClick={this._logout}><span>Log out</span></button>
         </div>;
     }

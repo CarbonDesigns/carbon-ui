@@ -169,12 +169,18 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                     <strong className="hero-container__hero-subtitle"><CarbonLabel id="@hero.subtitle" /></strong>
                 </header>
                 <div className="hero-container__preview">
-                    <figure className="play-button">
-                        <div className="play-button__icon"></div>
-                    </figure>
+                    <div className="hero-container__preview-image">
+                        <figure className="play-button">
+                            <div className="play-button__icon"></div>
+                        </figure>
+                    </div>
                 </div>
 
                 <h3 className="hero-container__subheading">Create designs for iOS, Android, Web or any other platform</h3>
+            </section>
+
+            <section className="subheader-container">
+                <h3 className="subheader-container__h">Companies of any size or individuals can draw logos like this in our app</h3>
             </section>
 
             <section className="hero-container__logos">
@@ -183,10 +189,6 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 <div className="hero-container__logo evernote"></div>
                 <div className="hero-container__logo paypal"></div>
                 <div className="hero-container__logo airbnb"></div>
-            </section>
-
-             <section className="subheader-container">
-                <h3 className="subheader-container__h">Companies of any size or individuals can draw logos like this in our app</h3>
             </section>
 
             <section className="subscribe-container">

@@ -336,7 +336,7 @@ export default
         "@publish.nameHint": "Give it a memorable name",
         "@publish.description": "Description",
         "@publish.descriptionHint": "What inspired you?",
-        "@publish.private": "Share within my account",
+        "@publish.private": "Share with my team",
         "@publish.public": "Share with everyone",
         "@publish.privacy": "Privacy",
         "@publish.confirm": "The symbols with this name already exist",

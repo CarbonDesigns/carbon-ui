@@ -21,6 +21,14 @@ import Perf from "react-addons-perf";
 window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent{
+    componentDidMount() {
+        document.body.classList.add("noscroll");
+    }
+
+    componentWillUnmout() {
+        document.body.classList.remove("noscroll");
+    }
+
     render() {
         return <RichAppRoot>
                     <div id="overlays">

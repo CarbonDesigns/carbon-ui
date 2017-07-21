@@ -8,14 +8,6 @@ export default class Root extends Component<any, any>{
         flyout: FlyoutContainer
     }
 
-    componentDidMount() {
-        document.body.classList.add("noscroll");
-    }
-
-    componentWillUnmout() {
-        document.body.classList.remove("noscroll");
-    }
-
     onMouseDown = e => {
         this.refs.flyout.onAppMouseDown(e);
     };

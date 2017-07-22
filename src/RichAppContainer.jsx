@@ -22,6 +22,7 @@ window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent{
     componentDidMount() {
+        super.componentDidMount();
         document.body.classList.add("noscroll");
     }
 

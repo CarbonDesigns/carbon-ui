@@ -20,16 +20,6 @@ function bem_simple_list(elem, mods?, mix?) {
 
 export class SimpleListItem extends React.Component<any, any> {
 
-    static propTypes = {
-        item             : React.PropTypes.any,
-        renderItemBody   : React.PropTypes.func,
-        renderItem       : React.PropTypes.func,
-        onClick   : React.PropTypes.func,
-        onDelete  : React.PropTypes.func,
-        onEdit    : React.PropTypes.func
-        // ...rest
-    }
-
     constructor(props) {
         super(props);
     }
@@ -82,18 +72,6 @@ export class SimpleListItem extends React.Component<any, any> {
 export default class SimpleList extends Component<any, any> {
     static defaultProps = {
         padding: true
-    }
-    static propTypes = {
-        className    : React.PropTypes.string,
-        boxClassName : React.PropTypes.string,
-        insideFlyout : React.PropTypes.bool,
-        padding      : React.PropTypes.bool,
-        emptyMessage : React.PropTypes.node,
-        selectedItem: React.PropTypes.any,
-        items     : React.PropTypes.array,
-        onClick   : React.PropTypes.func,
-        onDelete  : React.PropTypes.func,
-        onEdit    : React.PropTypes.func
     }
 
     render() {

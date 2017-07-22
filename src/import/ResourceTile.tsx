@@ -28,7 +28,7 @@ export default class ResourceTile extends Component<ResourceTileProps> {
 
                     <div className="resource-tile__bottom">
                         <span className="resource-tile__author">
-                            <span className="resource-tile__author-avatar" style={{ backgroundImage: `url('/target/1/image.png')` }} />
+                            <span className="resource-tile__author-avatar" />
                             <span className="resource-tile__author-name">{this.props.resource.authorName}</span>
                         </span>
 

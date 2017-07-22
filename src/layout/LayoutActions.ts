@@ -1,3 +1,11 @@
+export type LayoutPanel = "library" | "layers" | "designer" | "comments" | "swatches" | "properties"
+	| "stories" | "designer" | "preview";
+
+export type LayoutAction =
+	{ type: "Layout_PanelsResized", panels: LayoutPanel[], size: number } |
+	{ type: "Layout_StartResizing" } |
+	{ type: "Layout_StopResizing" };
+
 
 var LayoutActions = {
 	togglePanelGroup:(group, event?) =>{
@@ -26,12 +34,6 @@ var LayoutActions = {
 			sourceIndex, targetIndex, dockPosition
 		}
 	},
-	resizePanel:(panel, size) => {
-		return {
-			type:'LayoutActions_resizePanel',
-			panel, size
-		}
-	},
 	showPanel:(panel) =>{
 		return {
 			type:'LayoutActions_showPanel',
@@ -48,16 +50,6 @@ var LayoutActions = {
 			type:'LayoutActions_resizingPanel',
 			panel,
 			recalculate
-		}
-	},
-	startResizing:() => {
-		return {
-			type:'LayoutActions_startResizing'
-		}
-	},
-	stopResizing:() => {
-		return {
-			type: 'LayoutActions_stopResizing'
 		}
 	},
 	setLayout:(name, layout)=>{

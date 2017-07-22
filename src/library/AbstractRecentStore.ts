@@ -15,7 +15,7 @@ export default class AbstractRecentStore extends CarbonStore<IRecentStoreState>{
 
         this._queue = new PrioritySet(20);
 
-        var elements = {groups: [{name: name, templates: []}]};
+        var elements = {groups: [{name: name, items: []}]};
         this.state = {elements: elements};
     }
     getItems(){
@@ -76,7 +76,7 @@ export default class AbstractRecentStore extends CarbonStore<IRecentStoreState>{
 
         this._queue.push(elementConfig);
         var newState = {elements: {groups: this.state.elements.groups}};
-        newState.elements.groups[0].templates = this._queue.asEnumerable();
+        newState.elements.groups[0].items = this._queue.asEnumerable();
         this.setState(newState);
     }
 

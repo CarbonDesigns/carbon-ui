@@ -1,4 +1,5 @@
 import { Component, listenTo, dispatch, CarbonLabel } from '../CarbonFlux';
+import PropTypes from "prop-types";
 import React from 'react';
 import Panel from '../layout/Panel'
 import { FormattedMessage } from "react-intl";
@@ -143,7 +144,7 @@ class StoryDetails extends Component {
 
 export default class StoriesPanel extends Component {
     static contextTypes = {
-        intl: React.PropTypes.object
+        intl: PropTypes.object
     };
 
     constructor(props) {

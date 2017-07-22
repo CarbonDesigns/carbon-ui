@@ -1,6 +1,6 @@
 import React from "react";
 import SpriteView from "./SpriteView";
-import Navigateable from "../../shared/Navigateable";
+import Navigatable from "../../shared/Navigatable";
 import { dispatchAction, StoreComponent } from "../../CarbonFlux";
 import { FormattedMessage } from "react-intl";
 import { GuiButton } from "../../shared/ui/GuiComponents";
@@ -9,8 +9,12 @@ import { PageSelect } from "../../shared/ui/GuiSelect";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import SymbolsStore, { SymbolsStoreState } from "./SymbolsStore";
 import { IPage, app } from "carbon-core";
+import Refresher from "../Refresher";
 
 require("../../import/ImportResourceDialog");
+
+const OverscanCount = 10;
+const ColumnWidth = 128;
 
 export default class StandardStencils extends StoreComponent<{}, SymbolsStoreState> {
     refs: {
@@ -33,23 +37,19 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
         dispatchAction({ type: "Stencils_Refresh" });
     }
 
+    private onCategoryChanged = category => {
+        dispatchAction({ "type": "Stencils_ClickedCategory", category });
+    }
+    private onScrolledToCategory = category => {
+        dispatchAction({ "type": "Stencils_ScrolledToCategory", category });
+    }
+
     private renderPageItem = (page: IPage) => {
         //TODO: add possibility to add page icons?
         return <p key={page.id()}>
-            <i className="ico inline-ico ico-stencil-set" />
+            {/* <i className="ico inline-ico ico-stencil-set" /> */}
             <span>{page.name()}</span>
         </p>
-    }
-
-    private renderRefresher() {
-        var visible = this.state.dirtyConfig;
-        var cn = bem("stencils-refresher", null, { hidden: !visible });
-        return <div className={cn}>
-            <GuiButton onClick={this.onRefreshLibrary}
-                mods={['small', 'hover-white']}
-                icon="refresh"
-                caption="refresh.toolbox"/>
-        </div>
     }
 
     render() {
@@ -71,22 +71,35 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
             <div className={bem("library-page", "header", "with-dropdown")}>
                 {this.renderPageSelect(page)}
             </div>
-            <Navigateable className={bem("library-page", "content")}
-                config={config.groups}
-                getCategoryNode={c => this.refs.spriteView.getCategoryNode(c)}>
-                {this.renderRefresher()}
-                <SpriteView config={config} changedId={this.state.changedId} sourceId={page.id()} ref="spriteView" />
-            </Navigateable>
+            <Navigatable className={bem("library-page", "content")}
+                activeCategory={this.state.activeCategory}
+                onCategoryChanged={this.onCategoryChanged}
+                config={config}>
+
+                <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>
+
+                <SpriteView
+                    config={config}
+                    configVersion={this.state.configVersion}
+                    changedId={this.state.changedId}
+                    scrollToCategory={this.state.lastScrolledCategory}
+                    onScrolledToCategory={this.onScrolledToCategory}
+                    overscanCount={OverscanCount}
+                    columnWidth={ColumnWidth}
+                    sourceId={page.id()}
+                    borders={true}
+                    templateType={SymbolsStore.storeType}/>
+            </Navigatable>
         </div>
     }
 
     private renderPageSelect(page: IPage) {
-        return <PageSelect className={bem("stencils-page", "select")} selectedItem={page} onSelect={this.onPageSelected}
+        return <PageSelect className={bem("stencils-page", "select")} mods="small" selectedItem={page} onSelect={this.onPageSelected}
             items={app.pagesWithSymbols()}
             renderItem={this.renderPageItem}
             renderCustomItems={() => [
                 <p key="add_more" onClick={this.onAddMore}>
-                    <i className="ico inline-ico ico-stencil-set" />
+                    {/* <i className="ico inline-ico ico-stencil-set" /> */}
                     <FormattedMessage id="@symbols.add" />
                 </p>
             ]} />;

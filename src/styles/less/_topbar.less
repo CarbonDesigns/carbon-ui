@@ -17,7 +17,6 @@
 
     .flexline();
     align-items: stretch;
-
 }
 
 
@@ -29,9 +28,8 @@
 
     .flexstretch();
 
-    border-right: 1px solid @divider_color;
-    min-width: 160px;
-    margin-right: 2rem;
+    //border-right: 1px solid @divider_color;
+    flex: 1;
     .clip;
 
 
@@ -39,6 +37,7 @@
         //height: 100%;
         width: @top_side;
         .rel;
+        flex: 0 0 auto;
     }
 
         &__main-logo,
@@ -68,7 +67,6 @@
         .ellip;
         .flex();
         align-items: center;
-        max-width: 230px;
 
         .transition();
 
@@ -250,8 +248,9 @@
 //——————————————————————————————————————————————————————————————————————
 
 .userbar{
-    margin-left: auto;
-    .flexstretch();
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 #user-avatar {

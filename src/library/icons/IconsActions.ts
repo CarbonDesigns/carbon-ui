@@ -1,3 +1,10 @@
+export type IconsAction =
+    { type: "Icons_Refresh" } |
+    { type: "Icons_Loaded", iconSets: any[], config: any, async: true } |
+    { type: "Icons_Dirty", changedId: string, async: true } |
+    { type: "Icons_ClickedCategory", category: any } |
+    { type: "Icons_ScrolledToCategory", category: any };
+
 var IconsActions = {
     search:(term) => {
         return {
@@ -8,8 +15,7 @@ var IconsActions = {
     webSearch:(term) => {
         return {
             type:'ICONS_WEB_SEARCH',
-            term,
-            async:true
+            term
         }
     },
     iconFinderNoResults:()=> {
@@ -17,10 +23,9 @@ var IconsActions = {
             type:'ICONS_ICONFINDER_EMPTY'
         }
     },
-    iconFinderError:(message) => {
+    iconFinderError:() => {
         return {
-            type:'ICONS_ICONFINDER_ERROR',
-            message
+            type:'ICONS_ICONFINDER_ERROR'
         }
     }
 };

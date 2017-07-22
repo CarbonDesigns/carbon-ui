@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Router from "react-router";
 import { Component } from "./CarbonFlux";
 import { ErrorCode, Url, InfoCode } from "./Constants";
@@ -10,7 +11,7 @@ export interface IRouteComponentProps{
     }
 }
 
-export default class RouteComponent<P extends IRouteComponentProps, S = {}> extends Component<P, S> {
+export default class RouteComponent<P extends IRouteComponentProps = IRouteComponentProps, S = {}> extends Component<P, S> {
     context: {
         router: Router.InjectedRouter
     }
@@ -56,10 +57,11 @@ export default class RouteComponent<P extends IRouteComponentProps, S = {}> exte
         });
     }
 
-    goTo(url: Url){
+    goTo(url: Url, state?: any){
         this.context.router.push({
             pathname: url,
-            query: this.props.location.query
+            query: this.props.location.query,
+            state
         });
     }
 
@@ -68,7 +70,7 @@ export default class RouteComponent<P extends IRouteComponentProps, S = {}> exte
     }
 
     static contextTypes = {
-        router: React.PropTypes.any,
-        intl: React.PropTypes.object
+        router: PropTypes.object.isRequired,
+        intl: PropTypes.object
     }
 }

@@ -336,7 +336,7 @@ export default
         "@publish.nameHint": "Give it a memorable name",
         "@publish.description": "Description",
         "@publish.descriptionHint": "What inspired you?",
-        "@publish.private": "Share within my account",
+        "@publish.private": "Share with my team",
         "@publish.public": "Share with everyone",
         "@publish.privacy": "Privacy",
         "@publish.confirm": "The symbols with this name already exist",
@@ -492,6 +492,7 @@ export default
         "@account.logout": "Log out",
         "@account.registrationMessage": "You don't have an account yet. It takes just a few seconds to register...",
         "@account.create": "Create account",
+        "@account.noUsername": "Please enter your name",
         "@account.noEmail": "Please enter your email",
         "@account.badEmail": "Please enter a valid email",
         "@account.duplicateEmail": "A user with this email is already registered",
@@ -538,6 +539,13 @@ export default
         "@resources.removeFromIconSet": "Remove from icon set",
         "@resources.markAsIcon": "Add to icon set",
 
+        "@icons.find": "Find icon...",
+        "@iconfinder.error": "Could not concant the IconFinder.com service. Please try again later.",
+
+        "@images.find": "Find image...",
+        "@unsplash.error": "Could not contact the Unsplash.com service. Please try again later.",
+        "@userImages.error": "Could not connect to the server. Please try again later.",
+
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",
         "@textAutoWidth.Grow": "Grow",
@@ -577,6 +585,9 @@ export default
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",
         "@textAutoWidth.Grow": "Grow",
+
+        "@data.customName": "Dataset name",
+        "@data.customBody": "Enter one item per line",
 
         "@nav.communitylibrary": "Community Library",
         "@nav.teamslack": "Team Slack",

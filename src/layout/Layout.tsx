@@ -18,6 +18,10 @@ import interact from "interact.js";
 const PillsSize = 35;
 const CatcherPointSize = 30;
 const CatcherSize = 100;
+/**
+ * Perf: All panels should have a different z-index to denote a rendering stacking context.
+ */
+const ZIndexStart = 10;
 
 function resolveWithContentFactory(c) {
     var panelName = c.panelName + layoutStore.getLayoutName();
@@ -108,7 +112,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
         this.setState({ version: this.state.version + 1 });
     }
 
-    _buildPanel(container: any) {
+    _buildPanel(container: any, zIndex: number) {
         var childPanel = resolveWithContentFactory.call(this, container);
 
         if (container.type === 2) {
@@ -131,7 +135,8 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
             key={layoutStore.getLayoutName() + 'p' + container.panelName}
             minimized={layoutStore.state.minimized}
             container={container}
-            temporaryVisiblePanel={this.state.temporaryVisiblePanel}>
+            temporaryVisiblePanel={this.state.temporaryVisiblePanel}
+            zIndex={zIndex}>
             {childPanel}
         </PanelContainer>);
 
@@ -139,17 +144,17 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
         return panelContainer;
     }
 
-    _buildChildrenList(container: any, resultList: any[]) {
+    _buildChildrenList(container: any, resultList: any[], indexBag: {index: number}) {
         let childrenDom = [];
         var direction = null;
 
         var children = container.children;
 
         if (!(children instanceof Array)) {
-            resultList.push(this._buildPanel(container));
+            resultList.push(this._buildPanel(container, indexBag.index++));
         } else {
             children.forEach((child: any, ind: number) => {
-                this._buildChildrenList(child, resultList);
+                this._buildChildrenList(child, resultList, indexBag);
             });
         }
     }
@@ -401,7 +406,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
             this._splitterIndex = 0;
             var w = this.state.renderingTree.width;
             var h = this.state.renderingTree.height;
-            this._buildChildrenList(this.state.renderingTree.toJS(), childrentList);
+            this._buildChildrenList(this.state.renderingTree.toJS(), childrentList, { index: ZIndexStart });
         }
 
 

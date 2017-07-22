@@ -1,12 +1,18 @@
 import React from "react";
 import ReactDom from "react-dom";
 import FlyoutActions from '../FlyoutActions';
-import {dispatch} from '../CarbonFlux';
+import { dispatch } from '../CarbonFlux';
 import cx from 'classnames';
 
 require("../external/antiscroll");
 
-export default class ScrollContainer extends React.Component<any, any>{
+interface ScrollContainerProps extends ISimpleReactElementProps {
+    [name: string]: any;
+    x?: boolean;
+    y?: boolean;
+}
+
+export default class ScrollContainer extends React.Component<ScrollContainerProps, any>{
     private _endTimer: number;
     refs: {
         scrollContainer: HTMLElement,
@@ -14,7 +20,7 @@ export default class ScrollContainer extends React.Component<any, any>{
         scrollBox: HTMLElement
     }
 
-    static initScroller(element: HTMLElement, options?){
+    static initScroller(element: HTMLElement, options?) {
         //var inner = this.getScrollPaneNode();
 
         //this is needed to support convenient max-height option on parent element,
@@ -30,13 +36,13 @@ export default class ScrollContainer extends React.Component<any, any>{
 
     static destroyScroller(element: HTMLElement) {
         var antiscroll = $(element).data('antiscroll');
-        if (antiscroll){
+        if (antiscroll) {
             antiscroll.destroy();
         }
     }
 
     onScroll = (e) => {
-        if (this._endTimer){
+        if (this._endTimer) {
             clearTimeout(this._endTimer);
         }
         else if (!this.props.insideFlyout) {
@@ -45,7 +51,7 @@ export default class ScrollContainer extends React.Component<any, any>{
         this._endTimer = setTimeout(this.onScrollEnded, 500);
 
         var cb = this.props.onScroll;
-        if (cb){
+        if (cb) {
             cb(e);
         }
     };
@@ -57,42 +63,44 @@ export default class ScrollContainer extends React.Component<any, any>{
         return this.refs.scrollPane;
     }
 
-    getScrollBoxNode(){
+    getScrollBoxNode() {
         return this.refs.scrollBox;
     }
 
-    componentDidMount(){
-        ScrollContainer.initScroller(this.refs.scrollContainer);
+    componentDidMount() {
+        ScrollContainer.initScroller(this.refs.scrollContainer, this.scrollOptions());
 
-        if(this.props.scrollEnd) {
+        if (this.props.scrollEnd) {
             this.refs.scrollPane.scrollTop = Number.MAX_VALUE;
         }
 
-        if(this.props.insideFlyout) {
+        if (this.props.insideFlyout) {
             var parentNode = this.refs.scrollPane.parentNode as HTMLElement;
             this.refs.scrollPane.style.height = parentNode.offsetHeight + 'px';
         }
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         //bug in antiscroll, it does not clear the width/height from the previous content
-        ScrollContainer.initScroller(this.refs.scrollContainer);
-        if(this.props.scrollEnd) {
+        ScrollContainer.initScroller(this.refs.scrollContainer, this.scrollOptions());
+        if (this.props.scrollEnd) {
             this.refs.scrollPane.scrollTop = Number.MAX_VALUE;
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         ScrollContainer.destroyScroller(this.refs.scrollContainer);
     }
 
-    render(){
-        var {insideFlyout, className, boxClassName, ...rest} = this.props;
+    private scrollOptions() {
+        return { x: this.props.x, y: this.props.y };
+    }
 
-        var classes = cx(className, "antiscroll-wrap");
-        var box_classes = cx("antiscroll-box", boxClassName);
+    render() {
+        var classes = cx(this.props.className, "antiscroll-wrap");
+        var box_classes = cx("antiscroll-box", this.props.boxClassName);
 
-        return <div {...rest} className={classes} ref="scrollContainer">
+        return <div className={classes} ref="scrollContainer">
             <div className="antiscroll-inner" ref="scrollPane" onScroll={this.onScroll}>
                 <div className={box_classes} ref="scrollBox">
                     {this.props.children}

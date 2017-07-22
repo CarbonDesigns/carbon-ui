@@ -1,17 +1,44 @@
 import { CarbonStore, dispatchAction } from "../../CarbonFlux";
-import { IPage, app, IDisposable, ToolboxConfiguration } from "carbon-core";
+import { IPage, app, IDisposable, ArtboardType, Symbol } from "carbon-core";
 import { CarbonAction } from "../../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
+import ToolboxConfiguration from "../ToolboxConfiguration";
+import Toolbox from "../Toolbox";
+import { IToolboxStore, StencilInfo } from "../LibraryDefs";
 
 export type SymbolsStoreState = {
     dirtyConfig: boolean;
     changedId: string;
     config: any;
+    configVersion: number;
     currentPage: IPage;
+    activeCategory: any;
+    lastScrolledCategory: any;
 };
 
-class SymbolsStore extends CarbonStore<SymbolsStoreState> {
-    private dirtyConfigToken: IDisposable;
+class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxStore {
+    storeType = "Symbols";
+
+    constructor() {
+        super();
+        this.state = {
+            currentPage: null,
+            config: null,
+            configVersion: 0,
+            changedId: null,
+            dirtyConfig: false,
+            activeCategory: null,
+            lastScrolledCategory: null
+        };
+    }
+
+    createElement(data: StencilInfo) {
+        var element = new Symbol();
+        element.source({pageId: data.sourceId, artboardId: data.templateId});
+        return element;
+    }
+    elementAdded(){
+    }
 
     onAction(action: StencilsAction | CarbonAction) {
         switch (action.type) {
@@ -22,13 +49,47 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
                 this.loadConfig(action.page);
                 return;
             case "Stencils_Loaded":
-                this.setState({ dirtyConfig: action.dirtyConfig, config: action.config, changedId: action.changedId, currentPage: action.page });
+                if (action.page === this.state.currentPage) {
+                    let activeCategory = null;
+                    if (action.config && action.config.groups.length) {
+                        activeCategory = action.config.groups[0];
+                    }
+
+                    this.setState({ config: action.config, dirtyConfig: false, changedId: null, activeCategory, configVersion: ++this.state.configVersion });
+                }
                 return;
-            case "Stencils_Dirty":
-                this.setState({ dirtyConfig: true, changedId: action.changedId });
+            case "Carbon_ResourceAdded":
+                if (action.resourceType === ArtboardType.Symbol) {
+                    if (this.state.currentPage !== action.resource.parent()) {
+                        this.loadConfig(action.resource.parent());
+                    }
+                    else if (action.resource.parent() === this.state.currentPage) {
+                        this.setState({ dirtyConfig: true });
+                        action.resource.parent().setProps({ toolboxConfigId: null });
+                    }
+                }
                 return;
-            case "Carbon_AppLoaded":
+            case "Carbon_ResourceChanged":
+                if (action.resourceType === ArtboardType.Symbol && action.resource.parent() === this.state.currentPage) {
+                    this.setState({ dirtyConfig: true, changedId: action.resource.id() });
+                    action.resource.parent().setProps({ toolboxConfigId: null });
+                }
+                return;
+            case "Carbon_ResourceDeleted":
+                if (action.resourceType === ArtboardType.Symbol && action.parent === this.state.currentPage) {
+                    this.setState({ dirtyConfig: true, changedId: action.resource.id() });
+                    action.parent.setProps({ toolboxConfigId: null });
+                }
+                return;
+            case "Carbon_AppUpdated":
                 this.loadInitialConfig();
+                return;
+
+            case "Stencils_ClickedCategory":
+                this.onCategoryClicked(action.category);
+                return;
+            case "Stencils_ScrolledToCategory":
+                this.onScrolledToCategory(action.category);
                 return;
         }
     }
@@ -45,17 +106,15 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
         if (page) {
             this.loadConfig(page);
         }
+        else {
+            this.setState({ currentPage: null, config: null });
+        }
     }
 
     private loadConfig(page) {
         if (page === this.state.currentPage) {
             return;
         }
-
-        if (this.dirtyConfigToken) {
-            this.dirtyConfigToken.dispose();
-        }
-        this.dirtyConfigToken = page.toolboxConfigIsDirty.bind(this, this.onConfigDirty);
 
         let configPromise: Promise<any>;
         if (!page.props.toolboxConfigId) {
@@ -65,13 +124,15 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
             configPromise = ToolboxConfiguration.getConfigForPage(page);
         }
 
+        this.setState({ currentPage: page });
+
         configPromise.then(config => {
-            dispatchAction({ type: "Stencils_Loaded", dirtyConfig: false, config: config, changedId: null, page: page, async: true });
+            dispatchAction({ type: "Stencils_Loaded", config: config, page: page, async: true });
         });
     }
 
     private getCurrentSymbolsPage() {
-        let pageId = app.getUserSetting("symbolsPageId", null);
+        let pageId = app.getUserSetting("symbolsPageId");
         if (!pageId) {
             return null;
         }
@@ -83,21 +144,19 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> {
         app.setUserSetting("symbolsPageId", page.id());
     }
 
-    private onConfigDirty(forceUpdate, changedId) {
-        if (forceUpdate) {
-            this.refreshLibrary();
-        }
-        else {
-            dispatchAction({ type: "Stencils_Dirty", changedId, async: true });
-        }
-    }
-
     private refreshLibrary() {
         ToolboxConfiguration.buildToolboxConfig(this.state.currentPage)
             .then(config => {
-                dispatchAction({ type: "Stencils_Loaded", dirtyConfig: false, config: config, changedId: null, page: this.state.currentPage, async: true });
+                dispatchAction({ type: "Stencils_Loaded", config: config, page: this.state.currentPage, async: true });
             });
+    }
+
+    private onCategoryClicked(category) {
+        this.setState({ activeCategory: category, lastScrolledCategory: category });
+    }
+    private onScrolledToCategory(category) {
+        this.setState({ activeCategory: category });
     }
 }
 
-export default new SymbolsStore();
+export default Toolbox.registerStore(new SymbolsStore());

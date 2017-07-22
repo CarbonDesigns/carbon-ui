@@ -21,7 +21,7 @@ var defaults = {
     devServer: true,
     port: 8080,
     host: "http://localhost",
-    publicPath: "/target/",
+    publicPath: "/target",
     devtool: "eval",
     verbose: false,
     showConfig: true,
@@ -45,7 +45,7 @@ function getEntry(settings) {
 }
 function getOutput(settings) {
     var output = {
-        publicPath: settings.fullPublicPath
+        publicPath: settings.fullPublicPath + "/"
     };
 
     output.filename = "[name].js";
@@ -73,24 +73,12 @@ function getResolve(settings) {
 function getDebugOrCdnPath(settings, file) {
     var filePath;
     if (settings.minimize) {
-        filePath = settings.fullPublicPath + path.basename(file);
+        filePath = settings.fullPublicPath + "/" + path.basename(file);
     }
     else {
         filePath = "/" + file;
     }
     return filePath.replace(/\\/g, '/');
-}
-
-function getAppCdnPath(settings) {
-    if (!settings.authority) {
-        return '';
-    }
-
-    if (settings.authority.indexOf('localhost') !== -1) {
-        return settings.authority;
-    }
-
-    return settings.authority + '/app'
 }
 
 function getPlugins(settings) {
@@ -107,16 +95,25 @@ function getPlugins(settings) {
         apiScript = getDebugOrCdnPath(settings, path.relative(root, modules.api));
     }
 
+    let resourceBundleOptions = {resourceFile: null};
     var plugins = [
         //breaks incremental updates in watch mode...
         //new webpack.optimize.DedupePlugin(),
+
+        new BundleResourcesPlugin({
+            cdn: settings.authority,
+            publicPath: settings.publicPath,
+            target: fullPath("../resources/"),
+            resourceBundleOptions: resourceBundleOptions
+        }),
 
         new HtmlWebpackPlugin({
             template: './res/index.ejs',
             chunksSortMode: 'none',
             vendorsScript: getDebugOrCdnPath(settings, path.relative(root, settings.vendorsFile)),
             apiScript: apiScript,
-            coreScript: coreScript
+            coreScript: coreScript,
+            resourceBundleOptions: resourceBundleOptions
         }),
 
         new CheckerPlugin(),
@@ -126,11 +123,6 @@ function getPlugins(settings) {
         //     chunksSortMode: 'none',
         //     vendorsScript:  settings.authority + (settings.minimize ? settings.publicPath : "/") + settings.vendorsFile
         // }),
-
-        new BundleResourcesPlugin({
-            cdn: getAppCdnPath(settings),
-            target: fullPath("../resources/")
-        })
     ];
 
     if (settings.devServer) {
@@ -185,6 +177,7 @@ function getLoaders(settings) {
     var plugins = [];
 
     plugins.push(
+        require.resolve("babel-plugin-transform-promise-to-bluebird"),
         require.resolve("babel-plugin-transform-runtime"),
         require.resolve("babel-plugin-add-module-exports"),
         //remove when babel 6 has proper support for decorators
@@ -300,28 +293,28 @@ module.exports = function (settings) {
         debug: !settings.minimize,
         devServer: {
             contentBase: fullPath('../'),
-            publicPath: settings.fullPublicPath,
+            publicPath: settings.fullPublicPath + "/",
             host: settings.host.substring(settings.host.indexOf("//") + 2),
             port: settings.port,
             hot: true,
             historyApiFallback: {
                 rewrites: [
                     {
-                        from: /.*?(woff|ttf|eot)$/g,
+                        from: /^\/(resources|fonts)/g,
                         to: function (context) {
-                            return '/target' + context.parsedUrl.pathname;
+                            return settings.publicPath + context.parsedUrl.pathname;
                         }
                     },
                     {
-                        from: /^((?!\.(png|cur|js|ts|tsx|woff|ttf|eot|svg)).)*$/g,
-                        to: '/target/index.html'
+                        from: /^((?!\.(png|cur|js|ts|tsx|woff|ttf|eot|svg|json)).)*$/g,
+                        to: settings.publicPath + '/index.html'
                     }
                 ]
             },
             headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-                "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+                "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization, X-SessionId"
             },
             stats: {
                 colors: true,

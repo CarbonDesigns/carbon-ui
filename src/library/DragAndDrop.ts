@@ -13,7 +13,7 @@ export class DragAndDrop {
 
         var transformProp = findTransformProp();
 
-        this._stencilInteraction = interact('.stencil')
+        this._stencilInteraction = interact('.stencil:not(.stencil_modified)')
             .draggable({max: Infinity})
             .on('dragstart', event => {
                 event.interaction.x = 0;

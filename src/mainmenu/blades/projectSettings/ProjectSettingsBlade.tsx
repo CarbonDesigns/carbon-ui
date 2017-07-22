@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {app, backend} from "carbon-core";
 import {Component} from "../../../CarbonFlux";
 import {FormattedMessage} from "react-intl"
@@ -112,8 +113,8 @@ export default class ProjectSettingsBlade extends Component<any, any> {
     }
 
     static contextTypes = {
-        intl: React.PropTypes.object,
-        currentBladeId: React.PropTypes.number,
-        bladeContainer: React.PropTypes.any
+        intl: PropTypes.object,
+        currentBladeId: PropTypes.number,
+        bladeContainer: PropTypes.any
     }
 }

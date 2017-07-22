@@ -1,10 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import StringEditor from "../StringEditor";
 import {iconType} from "../../../utils/appUtils";
 
 export default class NameEditor extends StringEditor{
     static contextTypes = {
-        intl: React.PropTypes.object
+        intl: PropTypes.object
     };
 
     constructor(props){

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Component } from "../../../CarbonFlux";
 import ImageDropzone from "./ImageDropzone";
 import TabContainer, { TabPage, TabArea } from "../../../shared/TabContainer";
@@ -8,7 +9,7 @@ import { say } from "../../../shared/Utils";
 import separatorOr from "../../../shared/SeparatorOr";
 import CropEditor from "./CropEditor";
 import bem from "../../../utils/commonUtils";
-import { IUIElement, IPage, IArtboard, app, IRect, Workspace, backend } from "carbon-core";
+import { IUIElement, IPage, IArtboard, app, IRect, workspace, backend } from "carbon-core";
 import { FormattedMessage } from "react-intl";
 import { ArtboardSelect } from "../../../shared/ui/GuiSelect";
 import { BladeBody } from "../BladePage";
@@ -92,7 +93,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
     private getImageUrl(result: EditImageResult) {
         switch (result.type) {
             case "element":
-                return Workspace.view.renderElementToDataUrl(result.element, this.props.previewSize, this.props.dpr);
+                return workspace.view.renderElementToDataUrl(result.element, this.props.previewSize, this.props.dpr);
             case "dataUrl":
                 return result.dataUrl;
             case "url":
@@ -245,7 +246,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
     }
 
     static contextTypes = {
-        intl: React.PropTypes.object,
-        bladeContainer: React.PropTypes.any
+        intl: PropTypes.object,
+        bladeContainer: PropTypes.any
     }
 }

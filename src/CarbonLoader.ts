@@ -1,10 +1,6 @@
-interface Carbon{
-    coreScript: string;
-    coreLoaded: boolean;
-    coreCallback: () => void;
-}
+import { CarbonGlobals } from "carbon-api";
 
-var carbon = window['c'] as Carbon;
+var carbon = window['c'] as CarbonGlobals;
 
 export function loadCore(cb: () => void): void{
     if (carbon.coreLoaded){

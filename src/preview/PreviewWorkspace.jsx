@@ -13,8 +13,7 @@ import {
     Layer,
     Circle,
     Brush,
-    Invalidate,
-    Deferred
+    Invalidate
 } from "carbon-core";
 import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../CarbonFlux";
 import PreviewStore from "./PreviewStore";
@@ -278,7 +277,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState {
             var rect = e.getBoundaryRectGlobal();
             promises.push(this._addClickSpot(interactionLayer, rect.x + rect.width / 2 | 0, rect.y + rect.height / 2 | 0));
         }
-        Deferred.when(promises).then(() => {
+        Promise.all(promises).then(() => {
             view._unregisterLayer(interactionLayer);
             inactiveCanvas.style.zIndex = 0;
         });
@@ -550,8 +549,6 @@ export default class PreviewWorkspace extends ComponentWithImmutableState {
                         position: 'absolute'
                     }} />
                 <div className="preview__device" ref="device">
-                    <div id="htmlPanel"></div>
-
                     <canvas ref="canvas1" className={classNames}
                         style={{
                             position: 'absolute'

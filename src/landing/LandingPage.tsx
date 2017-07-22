@@ -93,7 +93,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
         return <FlyoutButton className="login-flyout" renderContent={this._renderLoginButton}
             position={{ targetVertical: "bottom", targetHorizontal: "right", disableAutoClose: true }}>
             <div id="login">
-                <LoginPopup />
+                <LoginPopup location={this.props.location} />
             </div>
         </FlyoutButton>
     }

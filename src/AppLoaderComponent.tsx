@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Component, dispatchAction } from "./CarbonFlux";
 
 import { app, logger, backend } from "carbon-core";
@@ -45,7 +46,9 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
         this._resolveCompanyId(app, location, data.companyName)
             .then(x => {
                 app.companyId(x.companyId);
-                app.id(data.appId);
+                if (data.appId) {
+                    app.id(data.appId);
+                }
 
                 if (!app.id() && !app.serverless()) {
                     var token = app.actionManager.subscribe("save", (name, result) => {
@@ -80,7 +83,7 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
     }
 
     static contextTypes = {
-        router: React.PropTypes.any,
-        intl: React.PropTypes.object
+        router: PropTypes.any,
+        intl: PropTypes.object
     }
 }

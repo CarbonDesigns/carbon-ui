@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import bem from 'bem';
 import {FormattedMessage} from "react-intl";
 import ScrollContainer from "../../shared/ScrollContainer";
@@ -62,8 +63,8 @@ export default class BladePage extends Component {
     }
 }
 
-BladePage.contextTypes = { bladeContainer: React.PropTypes.any };
+BladePage.contextTypes = { bladeContainer: PropTypes.any };
 
 BladePage.childContextTypes = {
-    currentBladeId: React.PropTypes.number
+    currentBladeId: PropTypes.number
 };

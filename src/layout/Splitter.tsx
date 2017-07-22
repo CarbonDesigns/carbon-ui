@@ -1,10 +1,10 @@
-import { Component } from '../CarbonFlux';
+import { Component, dispatchAction } from '../CarbonFlux';
 import React from 'react';
 import cx from 'classnames';
 import immutable from 'immutable';
 import LayoutActions from './LayoutActions';
 import { richApp } from "../RichApp";
-import { LayoutDirection, LayoutDockPosition } from "carbon-core";
+import { LayoutDirection, LayoutDockPosition, util } from "carbon-core";
 import layoutStore from './LayoutStore';
 
 interface ISplitterProps extends IReactElementProps {
@@ -45,7 +45,7 @@ export default class Splitter extends Component<ISplitterProps, ISplitterState> 
         this._lastX = e.clientX;
         this._lastY = e.clientY;
 
-        richApp.dispatch(LayoutActions.startResizing());
+        dispatchAction({ type: "Layout_StartResizing" });
 
         var panel1 = layoutStore.getRenderedPanelByIndex(this.props.panel1.index);
         if (this.props.direction === LayoutDirection.Row) {
@@ -77,19 +77,35 @@ export default class Splitter extends Component<ISplitterProps, ISplitterState> 
         document.removeEventListener('mouseup', this._onMouseUp);
         body.removeEventListener('mousemove', this._onMouseMove);
 
-        richApp.dispatch(LayoutActions.stopResizing());
+        dispatchAction({ type: "Layout_StopResizing" });
         this.setState({ resizing: false });
         e.preventDefault();
 
         if (this.props.panel1) {
-            richApp.dispatch(LayoutActions.resizePanel(this.props.panel1, (this.props.direction === LayoutDirection.Row) ? this.props.panel1.width : this.props.panel1.height));
+            dispatchAction({ type: "Layout_PanelsResized", panels: this.getAffectedPanels(this.props.panel1), size: (this.props.direction === LayoutDirection.Row) ? this.props.panel1.width : this.props.panel1.height });
         }
 
         if (this.props.panel2) {
-            richApp.dispatch(LayoutActions.resizePanel(this.props.panel2, (this.props.direction === LayoutDirection.Row) ? this.props.panel2.width : this.props.panel2.height));
+            dispatchAction({ type: "Layout_PanelsResized", panels: this.getAffectedPanels(this.props.panel2), size: (this.props.direction === LayoutDirection.Row) ? this.props.panel2.width : this.props.panel2.height });
         }
 
         return false;
+    }
+
+    private getAffectedPanels(panel) {
+        let result = [];
+        let queue = [panel];
+        while (queue.length) {
+            let current = queue.pop();
+            if (current.panelName) {
+                result.push(current.panelName);
+            }
+            if (current.children) {
+                util.pushAll(queue, current.children);
+            }
+        }
+
+        return result;
     }
 
     _updatePanelSize(panel, originalSize, newSize, recalculate) {

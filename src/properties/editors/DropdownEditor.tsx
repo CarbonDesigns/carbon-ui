@@ -18,16 +18,6 @@ export interface IDropdownEditorProps extends IEditorProps {
 }
 
 export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends EditorComponent<TProps, IEditorState<any>> {
-    static propTypes = {
-        p: React.PropTypes.any,
-        className: React.PropTypes.string,
-        disableAutoClose: React.PropTypes.bool,
-        formatSelectedValue: React.PropTypes.func,
-        onClosed: React.PropTypes.func,
-        onOpened: React.PropTypes.func,
-        onValueChanged: React.PropTypes.func,
-    };
-
     refs: {
         prop: HTMLElement
     }

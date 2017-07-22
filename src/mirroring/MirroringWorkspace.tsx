@@ -245,7 +245,6 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
         return (
             <div id="mobileViewContainer" ref="viewport" key="viewport" name="viewport">
                 <div className="preview__device" ref="device">
-                    <div id="htmlPanel"></div>
                     <canvas ref="canvas"
                             style={{
                                 position: 'absolute'

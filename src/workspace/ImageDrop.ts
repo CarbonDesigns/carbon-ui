@@ -233,6 +233,12 @@ export default class ImageDrop {
             previewTemplate: "<div></div>",
             clickable: [hiddenInput],
 
+            accept: function(file: Dropzone.DropzoneFile, done: () => void) {
+                if (file.type !== SvgMimeType) {
+                    done();
+                }
+            },
+
             init: function () {
                 for (var eventName in handlers) {
                     this.on(eventName, handlers[eventName]);

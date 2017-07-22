@@ -1,124 +1,62 @@
 import React from "react";
 import SpriteView from "../stencils/SpriteView";
 import Dropdown from "../../shared/Dropdown";
-import Navigateable from "../../shared/Navigateable";
-import { Component, listenTo, Dispatcher } from "../../CarbonFlux";
+import Navigatable from "../../shared/Navigatable";
+import { Component, listenTo, Dispatcher, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import { richApp } from "../../RichApp";
 import AppActions from '../../RichAppActions';
 import IconsActions from "./IconsActions";
 import { FormattedMessage } from "react-intl";
-// import StencilsActions from "./StencilsActions";
-import { ToolboxConfiguration, app, NullPage, IPage } from "carbon-core";
-import InternalIconsStore from "./InternalIconsStore";
+import { app, NullPage, IPage } from "carbon-core";
+import InternalIconsStore, { InternalIconsStoreState } from "./InternalIconsStore";
 import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
+import Refresher from "../Refresher";
 
-interface IStandardStencilsState {
-    dirtyConfig: boolean;
-    changedId: string;
-    config: any;
-}
+const OverscanCount = 20;
+const IconSize = 40;
 
-export default class StandardStencils extends Component<any, IStandardStencilsState> {
-    [name: string]: any;
-    refs: any;
-
+export default class InternalIcons extends StoreComponent<any, InternalIconsStoreState> {
     constructor(props) {
-        super(props);
-        this._cache = {};
-        this.state = {
-            dirtyConfig: false,
-            changedId: null,
-            config: null
-        };
+        super(props, InternalIconsStore);
     }
 
-    @listenTo(InternalIconsStore)
-    onChange() {
-        // var page = InternalIconsStore.state.currentPage;
-        // if (page && (!this.state.config || page !== this.state.currentPage) && page.id()) {
-        this.setState({ dirtyConfig: true });
-        // }
-
-        // this.setState({currentPage: page, pages: InternalIconsStore.state.pages});
+    private onRefreshLibrary = () => {
+        dispatchAction({ type: "Icons_Refresh" });
     }
 
-    _onConfigDirty(forceUpdate, changedId) {
-        if (forceUpdate) {
-            this._refreshLibrary();
-        } else {
-            this.setState({ dirtyConfig: true, changedId: changedId });
-        }
+    private onAddMore = () => {
+        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog" });
     }
 
-    loadConfig() {
-        // if (this._dirtyConfigToken) {
-        //     this._dirtyConfigToken.dispose();
-        // }
-        // TODO: bind to resourceChanged event to make config dirty
-        //this._dirtyConfigToken = page.toolboxConfigIsDirty.bind(this, this._onConfigDirty);
-
-        this.setState({ dirtyConfig: true });
-        // if (!page.props.toolboxConfigId) {
-        //     ToolboxConfiguration.buildToolboxConfig(page).then(config=> {
-        //         this.setState({dirtyConfig: false, config: config, changedId:null});
-        //     });
-        // } else {
-
-        //     ToolboxConfiguration.getConfigForPage(page)
-        //         .then(config=> {
-        //             this.setState({config});
-        //         })
-        // }
+    private onCategoryChanged = category => {
+        dispatchAction({ "type": "Icons_ClickedCategory", category });
     }
-
-    componentDidMount() {
-        super.componentDidMount();
-        this._refreshLibrary();
-    }
-
-    _renderPageItem(page) {
-        var name = page.name();
-        let className = "ico inline-ico ico-stencil-set ico-stencil-set_sketch";
-
-        return <p key={page.id()}>
-            <i className={className} />
-            <span>{name}</span>
-        </p>
-    }
-
-    _refreshLibrary = () => {
-        InternalIconsStore.getIconsConfig().then(config => {
-            this.setState({ dirtyConfig: false, config: config, changedId: null });
-        })
-    }
-
-    _renderRefresher() {
-        var visible = this.state.dirtyConfig;
-        var cn = bem("stencils-refresher", null, { hidden: !visible });
-        return <div className={cn} onClick={visible ? this._refreshLibrary : null}>
-            <GuiButton onClick={visible ? this._refreshLibrary : null}
-                mods={['small', 'hover-white']}
-                icon="refresh"
-                caption="refresh.toolbox"
-                defaultMessage="Refresh" />
-        </div>
-    }
-
-    _showResourcesBlade = () => {
-        Dispatcher.dispatch(AppActions.showResourcesBlade({ importOnly: true }));
+    private onScrolledToCategory = category => {
+        dispatchAction({ "type": "Icons_ScrolledToCategory", category });
     }
 
     render() {
-        var config = this.state.config || { groups: [] };
+        var config = this.state.config;
+        if (!config) {
+            return null;
+        }
 
-        return <div>
-            <Navigateable className={bem("library-page", "content")}
-                config={config.groups}
-                getCategoryNode={c => this.refs.spriteView.getCategoryNode(c)}>
-                {this._renderRefresher()}
-                <SpriteView config={config} changedId={this.state.changedId} ref="spriteView" />
-            </Navigateable>
-        </div>
+        return <Navigatable className={bem("library-page", "content")}
+            activeCategory={this.state.activeCategory}
+            onCategoryChanged={this.onCategoryChanged}
+            config={config}>
+
+            <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>
+
+            <SpriteView config={config} configVersion={this.state.configVersion}
+                changedId={this.state.changedId}
+                scrollToCategory={this.state.lastScrolledCategory}
+                onScrolledToCategory={this.onScrolledToCategory}
+                overscanCount={OverscanCount}
+                columnWidth={IconSize}
+                keepAspectRatio={true}
+                templateType={InternalIconsStore.storeType}/>
+        </Navigatable>;
     }
 }

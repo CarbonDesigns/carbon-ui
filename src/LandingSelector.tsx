@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {backend} from "carbon-api";
 import {handles, Component} from "./CarbonFlux";
 import LandingPage from "./landing/LandingPage";
@@ -38,7 +39,7 @@ export default class LandingSelector extends RouteComponent<IRouteComponentProps
     }
 
     static contextTypes = {
-        intl: React.PropTypes.any,
-        router: React.PropTypes.any
+        intl: PropTypes.any,
+        router: PropTypes.any
     }
 }

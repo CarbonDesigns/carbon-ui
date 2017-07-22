@@ -1,34 +1,41 @@
 import IconFinderApi from "./IconFinderApi";
 import IconsActions from "./IconsActions";
 import {handles, CarbonStore, dispatch} from '../../CarbonFlux';
-import {Image, Brush, ContentSizing} from "carbon-core";
+import { Image, Brush, ContentSizing, IPaginatedResult } from "carbon-core";
 import Toolbox from "../Toolbox";
+import { IToolboxStore } from "../LibraryDefs";
+
+export type IconFinderStoreState = {
+    error: boolean;
+    term: string;
+    results: any[];
+}
 
 var key = 0;
 
-export class IconFinderStore extends CarbonStore<any>{
-    [name: string]: any;
+export class IconFinderStore extends CarbonStore<IconFinderStoreState> implements IToolboxStore{
+    storeType = "iconFinder";
+
+    private api: any;
 
     constructor(){
         super();
 
-        this._api = new IconFinderApi();
+        this.api = new IconFinderApi();
 
         this.state = {
             error: false,
-            message: "",
             term: "football",
-            hasMore: false,
             results: []
         };
     }
 
     createElement({templateId}){
-        var icon = this.findById(templateId);
+        var icon = this.state.results.find(x => x.id === templateId);
         var element = new Image();
         element.setProps({
             width: icon.realWidth, height: icon.realHeight,
-            source: icon.spriteUrl ? Image.createUrlSource(icon.spriteUrl) : Image.EmptySource,
+            source: icon.url ? Image.createUrlSource(icon.url) : Image.EmptySource,
             fill: Brush.Empty,
             sizing: ContentSizing.fit,
             sourceProps: {
@@ -42,33 +49,31 @@ export class IconFinderStore extends CarbonStore<any>{
         });
         return element;
     }
-
-    findById(id){
-        return this.state.results.find(x => x.id === id);
+    elementAdded() {
     }
 
     @handles(IconsActions.search, IconsActions.webSearch)
-    search({term}){
+    search({term}) {
         if (term){
             this.setState({
-                term, error: false, message: "", results: [], hasMore: true
+                term, error: false, results: []
             });
         }
     }
 
-    runQuery(page){
+    runQuery(start: number, stop: number): Promise<IPaginatedResult<any>> {
         if (!this.state.term){
             return Promise.reject(new Error("No iconfinder search term"));
         }
-        return this._api.search(this.state.term, page)
-            .then(data => this.handleResults(data))
+        return this.api.search(this.state.term, start, stop)
+            .then(data => this.handleResults(data, start))
             .catch(e =>{
-                dispatch(IconsActions.iconFinderError("Could not connect"));
+                dispatch(IconsActions.iconFinderError());
                 throw e;
             });
     }
 
-    handleResults(data){
+    handleResults(data, start: number): IPaginatedResult<any> {
         var page = data.icons.map(x => {
             var largestSize = x.raster_sizes[x.raster_sizes.length-1].size;
             var thumbUrl = null;
@@ -96,9 +101,9 @@ export class IconFinderStore extends CarbonStore<any>{
 
             var icon: any = {
                 id: ++key + "", //sometimes the same icon is returned on different pages
-                type: IconFinderStore.StoreType,
+                type: this.storeType,
                 name: sizeDesc + ", " + x.tags.join(", "),
-                spriteUrl: thumbUrl,
+                url: thumbUrl,
                 realWidth: thumbSize,
                 realHeight: thumbSize,
                 premium: x.is_premium,
@@ -124,24 +129,23 @@ export class IconFinderStore extends CarbonStore<any>{
 
             return icon;
         });
-        var newState: any = {};
-        if (page.length){
-            newState = {results: this.state.results.concat(page)};
+
+        let results = this.state.results;
+        for (let i = 0; i < page.length; ++i) {
+            results[i + start] = page[i];
         }
-        else{
-            if (!this.state.results.length){
-                dispatch(IconsActions.iconFinderNoResults());
-            }
-            newState.hasMore = false;
-        }
-        this.setState(newState);
-        return {items: page, hasMore: page.length > 0};
+        this.setState({ results });
+
+        return {
+            pageData: page,
+            totalCount: data.total_count
+        };
     }
 
     notFound(){
         return {
             id: ++key + "",
-            type: IconFinderStore.StoreType,
+            type: this.storeType,
             name: "404 - Not Found",
             spriteUrl: "",
             realWidth: 50,
@@ -149,17 +153,10 @@ export class IconFinderStore extends CarbonStore<any>{
         };
     }
 
-    @handles(IconsActions.iconFinderNoResults)
-    handleNoResults(){
-        this.setState({message: "Nothing found..."});
-    }
-
     @handles(IconsActions.iconFinderError)
-    handleError({message}){
-        this.setState({message, error: true});
+    handleError(){
+        this.setState({error: true});
     }
-
-    static StoreType = "iconFinder";
 }
 
-export default Toolbox.registerStore(IconFinderStore.StoreType, new IconFinderStore());
+export default Toolbox.registerStore(new IconFinderStore());

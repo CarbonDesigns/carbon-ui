@@ -71,7 +71,7 @@ declare module 'react-color/lib/helpers/color' {
     export = color;
 }
 
-declare module 'react-color/lib/components/sketched/SketchPresetColors' {
+declare module 'react-color/lib/components/sketch/SketchPresetColors' {
     export default function SketchPresetColors();
 }
 

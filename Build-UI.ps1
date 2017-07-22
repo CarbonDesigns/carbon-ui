@@ -34,7 +34,7 @@ try
     if (-not $SkipCdn)
     {
         $params += "--host"
-        $params += "//carbonstatic.azureedge.net/app"
+        $params += "//carbonstatic.azureedge.net"
     }
 
     & npm $params

@@ -18,11 +18,17 @@ import PropertiesPanel  from './properties/PropertiesPanel';
 import SwatchesPanel    from './properties/SwatchesPanel';
 
 import Perf from "react-addons-perf";
-
-
-    window['Perf'] = Perf
+window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent{
+    componentDidMount() {
+        document.body.classList.add("noscroll");
+    }
+
+    componentWillUnmout() {
+        document.body.classList.remove("noscroll");
+    }
+
     render() {
         return <RichAppRoot>
                     <div id="overlays">

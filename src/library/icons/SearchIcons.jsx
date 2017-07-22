@@ -3,8 +3,6 @@ import ReactDom from "react-dom";
 import {Component, listenTo} from "../../CarbonFlux";
 import Search from "../../shared/Search";
 import ScrollContainer from "../../shared/ScrollContainer";
-import IconsView from "./IconsView";
-import IconsList from "./IconsList";
 import IconsActions from "./IconsActions";
 import {domUtil} from "carbon-core";
 import {richApp} from "../../RichApp";
@@ -44,7 +42,7 @@ export default class SearchIcons extends Component {
 
             <div className="library-page__content">
                 <ScrollContainer className="stencils-container thin dark">
-                    <IconsView config={this.state.config}/>
+                    // <IconsView config={this.state.config}/>
                     {this.renderWebIcons()}
                 </ScrollContainer>
             </div>

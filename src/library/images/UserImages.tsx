@@ -3,8 +3,7 @@ import ReactDom from "react-dom";
 import Dropzone from "dropzone";
 
 import { app, backend, createUUID, IDisposable } from "carbon-core";
-import ImageList from "./ImageList";
-import { Component, listenTo, dispatch, handles } from "../../CarbonFlux";
+import { Component, listenTo, dispatch, handles, dispatchAction } from "../../CarbonFlux";
 import ImagesActions from "./ImagesActions";
 import { FormattedMessage } from "react-intl";
 import LayoutActions from '../../layout/LayoutActions';
@@ -14,6 +13,8 @@ import { UploadStatus, IQueueFile } from "./ImageUploadQueueStore";
 import ScrollContainer from "../../shared/ScrollContainer";
 import DropzoneRegistry from "../../workspace/DropzoneRegistry";
 import bem from "bem"
+import VirtualList from "../../shared/collections/VirtualList";
+import { Markup, MarkupLine } from "../../shared/ui/Markup";
 
 function b(a, b?, c?) { return bem("image-upload", a, b, c) }
 
@@ -185,8 +186,9 @@ export default class UserImages extends Component<any, any>{
     dropzone: Dropzone;
     queueSize: number;
     refs: {
-        container: HTMLElement,
-        dropzone: HTMLElement
+        container: HTMLElement;
+        dropzone: HTMLElement;
+        list: VirtualList<any>;
     }
 
     constructor(props) {
@@ -195,16 +197,15 @@ export default class UserImages extends Component<any, any>{
         this.state = {
             images: [],
             queue,
-            containerHeight: 0,
-            containerWidth: 0,
             list_is_open: false,
+            error: false
         };
         this.queueSize = queue.size;
     }
 
     @listenTo(UserImagesStore)
     onChange() {
-        this.setState({ images: UserImagesStore.state.images });
+        this.setState({ images: UserImagesStore.state.images, error: UserImagesStore.state.error });
     }
 
     @listenTo(ImageUploadQueueStore)
@@ -220,26 +221,12 @@ export default class UserImages extends Component<any, any>{
         this.queueSize = queue.size;
 
         this.setState(newState);
-
     }
 
-
-    @handles(LayoutActions.resizePanel, LayoutActions.togglePanelGroup, LayoutActions.windowResized)
-    onResizePanel() {
-        setTimeout(() => {
-            const node = this.refs.container;
-            if (node) {
-                this.setState({
-                    containerHeight: node.offsetHeight
-                });
-            }
-        }, 100);
+    private onClicked = (e) => {
+        var templateId = e.currentTarget.dataset.templateId;
+        dispatchAction({ type: "Stencils_Clicked", e, templateType: UserImagesStore.storeType, templateId });
     }
-
-    _onLoadMore = p => {
-        return Promise.resolve({ items: [], hasMore: false });
-    };
-
 
     componentDidMount() {
         super.componentDidMount();
@@ -247,12 +234,6 @@ export default class UserImages extends Component<any, any>{
         UserImagesStore.getImages();
 
         this.onQueueChange();
-
-        const node = this.refs.container;
-        this.setState({
-            containerHeight: node.offsetHeight,
-            containerWidth: node.offsetWidth
-        });
     }
 
     componentWillUnmount() {
@@ -265,6 +246,11 @@ export default class UserImages extends Component<any, any>{
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.images !== this.state.images) {
+            this.refs.list.reset();
+        }
+    }
 
     _closeListOfUploads = (ev) => {
         this.setState({
@@ -331,6 +317,47 @@ export default class UserImages extends Component<any, any>{
             this.dropzone['options'].headers = backend.getAuthorizationHeaders());
     }
 
+    private getItemHeight = (i) => {
+        return i.thumbHeight;
+    }
+
+    private renderItem = (stencil) => {
+        var imageStyle: any = {
+            backgroundImage: 'url(' + stencil.thumbUrl + ')',
+            backgroundSize: stencil.cover ? "cover" : "contain"
+        };
+        return <div
+            key={stencil.id}
+            className="stencil stencil_userImage"
+            title={stencil.title}
+            data-template-type={UserImagesStore.storeType}
+            data-template-id={stencil.id}
+            onClick={this.onClicked}
+        >
+            <i style={imageStyle} />
+        </div>;
+    }
+
+    private renderError() {
+        if (this.state.error) {
+            return <Markup>
+                <MarkupLine>
+                    <FormattedMessage tagName="p" id="@userImages.error" />
+                </MarkupLine>
+            </Markup>;
+        }
+        return null;
+    }
+
+    private renderList() {
+        if (this.state.error) {
+            return this.renderError();
+        }
+        return <div className="user-images__list">
+            <VirtualList ref="list" data={this.state.images} rowHeight={this.getItemHeight} rowRenderer={this.renderItem}/>
+        </div>;
+    }
+
     render() {
         const filteredQueue = this.state.queue.filter(function (file) {
             const status = file.get('status');
@@ -361,17 +388,7 @@ export default class UserImages extends Component<any, any>{
         return <div className="library-page__content">
 
             <div className="library-page__upload  dropzone " ref="dropzone" >
-                <div className="library-page__list" ref="container">
-                    {(this.state.containerHeight)
-                        ? <ImageList
-                            containerWidth={this.state.containerWidth}
-                            containerHeight={this.state.containerHeight}
-                            initialItems={this.state.images}
-                            onLoadMore={this._onLoadMore}
-                        />
-                        : <div></div>
-                    }
-                </div>
+                {this.renderList()}
 
                 <div className={bem('zone', null, { "list-open": this.state.list_is_open })}>
                     {

@@ -3,9 +3,10 @@ import dragAndDrop from "./DragAndDrop";
 import {handles, CarbonStore, dispatch} from "../CarbonFlux";
 import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
-import { StencilsAction, StencilInfo } from "./stencils/StencilsActions";
+import { StencilsAction } from "./stencils/StencilsActions";
 import { app, Symbol, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer } from "carbon-core";
+import { IToolboxStore, StencilInfo } from "./LibraryDefs";
 
 interface IInteraction {
     dropElement: HTMLElement;
@@ -21,61 +22,31 @@ interface IInteraction {
 }
 
 interface IToolboxState{
-    pages: IPage[];
-    currentPage: IPage | null;
 }
 
 export class Toolbox extends CarbonStore<IToolboxState>{
     [name: string]: any;
+    private stores: {[name: string]: IToolboxStore};
 
     constructor(){
         super();
-        this._templateConfigCache = {};
-        this._stores = {};
+        this.stores = {};
 
         this._setupDragAndDrop();
-
-        this.state = {
-            pages:[],
-            currentPage: null
-        };
     }
 
-    registerStore(name, store){
-        if (this._stores.hasOwnProperty("name")){
+    registerStore<T extends IToolboxStore>(store: T): T {
+        if (this.stores.hasOwnProperty("name")){
             throw new Error("Store already registered: " + name);
         }
-        this._stores[name] = store;
+        this.stores[store.storeType] = store;
         return store;
-    }
-
-    @handles(CarbonActions.loaded, CarbonActions.restoredLocally)
-    onAppLoaded(){
-        this.setState({pages: app.pages, currentPage:app.activePage || app.pages[0]});
-    }
-
-    @handles(CarbonActions.pageAdded)
-    onPageAdded(){
-        this.setState({pages: app.pages, currentPage:app.activePage || app.pages[0]});
-    }
-
-    @handles(CarbonActions.pageRemoved)
-    onPageRemoved(){
-        let index = -1;
-        if (this.state.currentPage) {
-            index = app.pages.indexOf(this.state.currentPage);
-        }
-
-        this.setState({pages: app.pages, currentPage:index===-1?app.pages[0]:this.state.currentPage});
     }
 
     onAction(action: StencilsAction) {
         super.onAction(action);
 
         switch (action.type) {
-            case "Stencils_ChangePage":
-                this.setState({currentPage: action.page});
-                return;
             case "Stencils_Clicked":
                 this.clicked(action);
                 return;
@@ -154,16 +125,9 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         //analytics.event("Toolbox", "Drag-drop", interaction.templateType + "/" + interaction.templateId);
     };
 
-    elementFromTemplate(data: StencilInfo){
-        var store = this._stores[data.templateType];
-        var element;
-        if (store){
-            element = store.createElement(data);
-        }
-        else{
-            element = new Symbol();
-            element.source({pageId: data.sourceId, artboardId: data.templateId});
-        }
+    elementFromTemplate(data){
+        var store = this.stores[data.templateType];
+        var element = store.createElement(data);
 
         // switch (templateType){
         //     case "recentElement":
@@ -213,11 +177,8 @@ export class Toolbox extends CarbonStore<IToolboxState>{
     }
 
     _onElementAdded(templateType){
-        var store = this._stores[templateType];
-        if (store){
-            //try cast to interface instead
-            store.elementAdded && store.elementAdded();
-        }
+        var store = this.stores[templateType];
+        store.elementAdded();
     }
 
     private _setupDragAndDrop(){

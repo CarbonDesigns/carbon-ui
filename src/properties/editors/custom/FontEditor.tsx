@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from "immutable";
 
-import EditorComponent, {IEditorProps, IEditorState} from "../EditorComponent";
+import EditorComponent, { IEditorProps, IEditorState } from "../EditorComponent";
 import NumericEditor from "../NumericEditor";
 import DropDownEditor from "../DropdownEditor";
 import BrushEditor from "../BrushEditor";
@@ -13,25 +13,25 @@ import { richApp } from "../../../RichApp";
 import { app, Font, TextAlign, FontScript, FontWeight, FontStyle, UnderlineStyle, Brush } from "carbon-core";
 
 var weights = [
-    { name: "Thin (100)"        , value: 100 },
-    { name: "Extra light (200)" , value: 200 },
-    { name: "Light (300)"       , value: 300 },
-    { name: "Regular (400)"     , value: 400 },
-    { name: "Medium (500)"      , value:500 },
-    { name: "Semi bold (600)"   , value: 600 },
-    { name: "Bold (700)"        , value: 700 },
-    { name: "Extra bold (800)"  , value: 800 },
-    { name: "Heavy (900)"       , value: 900 }
+    { name: "Thin (100)", value: 100 },
+    { name: "Extra light (200)", value: 200 },
+    { name: "Light (300)", value: 300 },
+    { name: "Regular (400)", value: 400 },
+    { name: "Medium (500)", value: 500 },
+    { name: "Semi bold (600)", value: 600 },
+    { name: "Bold (700)", value: 700 },
+    { name: "Extra bold (800)", value: 800 },
+    { name: "Heavy (900)", value: 900 }
 ];
 
-interface IFontEditorState extends IEditorState<Font>{
-    family      : Immutable.Map<string, any>;
-    size        : Immutable.Map<string, any>;
-    weight      : Immutable.Map<string, any>;
-    style       : Immutable.Map<string, any>;
-    align       : Immutable.Map<string, any>;
-    lineSpacing : Immutable.Map<string, any>;
-    color       : Immutable.Map<string, any>;
+interface IFontEditorState extends IEditorState<Font> {
+    family: Immutable.Map<string, any>;
+    size: Immutable.Map<string, any>;
+    weight: Immutable.Map<string, any>;
+    style: Immutable.Map<string, any>;
+    align: Immutable.Map<string, any>;
+    lineSpacing: Immutable.Map<string, any>;
+    color: Immutable.Map<string, any>;
 }
 
 export default class FontEditor extends EditorComponent<IEditorProps, IFontEditorState> {
@@ -190,28 +190,28 @@ export default class FontEditor extends EditorComponent<IEditorProps, IFontEdito
             { field: "underline", icon: "ico-prop_underline-dotted", config: { on: UnderlineStyle.Dotted, off: UnderlineStyle.None } },
             { field: "underline", icon: "ico-prop_underline-dashed", config: { on: UnderlineStyle.Dashed, off: UnderlineStyle.None } },
             { field: "strikeout", icon: "ico-prop_striked" },
-            { field: "script"   , icon: "ico-prop_striked", config: { on: FontScript.Super, off: FontScript.Normal } },
-            { field: "script"   , icon: "ico-prop_striked", config: { on: FontScript.Sub, off: FontScript.Normal } }
+            { field: "script", icon: "ico-prop_striked", config: { on: FontScript.Super, off: FontScript.Normal } },
+            { field: "script", icon: "ico-prop_striked", config: { on: FontScript.Sub, off: FontScript.Normal } }
         );
         return options;
     }
 
     render() {
         return <div>
-            <DropDownEditor e={this.props.e} p={this.state.family} disableAutoClose>
-                <FontFamilyList e={this.props.e} p={this.state.family} onSelected={this.changeFontFamily} ref="fontFamilyList" />
-            </DropDownEditor>
-
             <NumericEditor e={this.props.e} p={this.state.size} selectOnEnter={false}
                 onSettingValue={this.changeFontSize}
                 onPreviewingValue={this.previewFontSize} />
 
-            <DropDownEditor e={this.props.e} p={this.state.weight}
-                onSettingValue={this.changeFontWeight} />
+            <DropDownEditor e={this.props.e} p={this.state.family} disableAutoClose formatSelectedValue={() => {return {name: this.state.family.get("value")}}}>
+                <FontFamilyList e={this.props.e} p={this.state.family} onSelected={this.changeFontFamily} ref="fontFamilyList" />
+            </DropDownEditor>
 
             <BrushEditor e={this.props.e} p={this.state.color}
                 onSettingValue={this.changeFontColor}
                 onPreviewingValue={this.previewFontColor} />
+
+            <DropDownEditor e={this.props.e} p={this.state.weight}
+                onSettingValue={this.changeFontWeight} />
 
             <MultiToggleEditor e={this.props.e} p={this.state.style}
                 onSettingValue={this.changeFontStyle} />

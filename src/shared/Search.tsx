@@ -10,6 +10,7 @@ interface SearchProps extends ISimpleReactElementProps {
     onQuery: (term: string) => void;
     query?: string;
     placeholder?: string;
+    autoFocus?: boolean;
 }
 
 type SearchState = {
@@ -58,11 +59,14 @@ export default class Search extends Component<SearchProps, SearchState>{
         input.select();
     }
     render(){
-        let { placeholder, onQuery, className, children, query, ...other } = this.props;
+        let { placeholder, autoFocus, onQuery, className, children, query, ...other } = this.props;
         placeholder = placeholder || "@search";
         const cn = cx('search-field', className);
         return <div {...other} className={cn}>
-            <input className="search-field__input" placeholder={this.formatLabel(placeholder)} onChange={this.onChange} value={this.state.query} ref="input"/>
+            <input className="search-field__input" placeholder={this.formatLabel(placeholder)} onChange={this.onChange}
+                value={this.state.query}
+                autoFocus={autoFocus}
+                ref="input"/>
             <div className="search-field__ico">
                 <i className="ico--search"/>
             </div>

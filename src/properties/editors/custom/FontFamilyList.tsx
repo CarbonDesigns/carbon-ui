@@ -1,157 +1,131 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import {Component, CarbonStore, handles, Dispatcher} from "../../../CarbonFlux";
+import { CarbonStore, StoreComponent, dispatch, dispatchAction } from "../../../CarbonFlux";
 import Search from "../../../shared/Search";
 import LessVars from "../../../styles/LessVars";
 import FlyoutActions from "../../../FlyoutActions";
-import FontFamilyActions from "./FontFamilyActions";
-import { GuiCheckbox, GuiSpinner }           from "../../../shared/ui/GuiComponents";
-import {backend} from "carbon-core";
+import { GuiSpinner } from "../../../shared/ui/GuiComponents";
+import { backend, FontMetadata, FontWeight, FontStyle } from "carbon-core";
 import bem from '../../../utils/commonUtils';
-import GuiSelect from "../../../shared/ui/GuiSelect";
+import fontStore, { FontStoreState } from "./FontStore";
+import VirtualList from "../../../shared/collections/VirtualList";
+import { FontCategory } from "./FontActions";
+import { Markup, MarkupLine } from "../../../shared/ui/Markup";
+import { FormattedMessage } from "react-intl";
 
+type VirtualFontList = new (props) => VirtualList<FontMetadata>;
+const VirtualFontList = VirtualList as VirtualFontList;
 
-export default class FontFamilyList extends Component<any, any>{
+export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
     refs: {
-        search: Search
-        scrollContainer: HTMLElement
+        list: VirtualList<FontMetadata>;
     }
 
     constructor(props) {
-        super(props);
-        this.state = {
-            elements: [],
-            metadata: [],
-            isInfiniteLoading: false,
-            page: 0,
-            pageCount: Number.MAX_VALUE,
-            query: '',
-            waiting: false
-        };
+        super(props, fontStore);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         super.componentDidMount();
-        this.refs.search.focus();
-    }
-    componentDidUpdate(){
-        this.initScroller();
-    }
-    componentWillUnmount(){
-        super.componentWillUnmount();
-
-        var antiscroll = $(ReactDom.findDOMNode(this.refs.scrollContainer)).data('antiscroll');
-        if (antiscroll){
-            antiscroll.destroy();
-        }
+        fontStore.loadFonts();
     }
 
-    @handles(FontFamilyActions.pageLoaded)
-    _pageLoaded(action){
-        this.setState({
-            isInfiniteLoading: false,
-            elements: this.appendPage(action.result, action.page),
-            metadata: this.state.metadata.concat(action.result.fonts),
-            pageCount: action.result.pageCount,
-            waiting: false
-        });
-    }
-
-    handleInfiniteLoad = () => {
-        if (this.state.page >= this.state.pageCount || this.state.waiting){
-            return;
-        }
-        var nextPage = this.state.page + 1;
-        this.setState({
-            isInfiniteLoading: true,
-            page: nextPage,
-            waiting: true
-        });
-
-        var operation = this.state.query ?
-            backend.fontsProxy.search(this.state.query, nextPage) :
-            backend.fontsProxy.system(nextPage);
-
-        operation
-            .then(result => Dispatcher.dispatch(FontFamilyActions.pageLoaded(result, nextPage)));
-    };
-    handleSearch = query => {
-        this.setState({elements: [], query, page: 0, pageCount: Number.MAX_VALUE});
-        if (!query || !this.state.elements.length){
-            this.handleInfiniteLoad();
-        }
+    onSearch = term => {
+        dispatchAction({ type: "Fonts_Search", term })
+        this.refs.list.reset();
     };
 
-    appendPage(result, page){
-        var fonts = result.fonts;
-        var elements = this.state.elements;
-        var mapping = {
-          1 : {key: 'popular', children: 'Popular'}  ,
-          2 : {key: 'all'    , children: 'All'   }  ,
+    private onClick = e => {
+        var index = parseInt(e.currentTarget.dataset.index);
+        var fontMetadata = this.state.currentList[index];
+        this.props.onSelected(fontMetadata);
+        dispatch(FlyoutActions.show(null));
+    };
+
+    private onCategoryToggle(category: FontCategory) {
+        dispatchAction({ type: "Fonts_ToggleCategory", category });
+    }
+
+    private renderSwitches() {
+        return <div className="font-options__filter-switches">
+            {/* <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Favorites })} title="Show favourites fonts"
+                onClick={() => this.onCategoryToggle(FontCategory.Favorites)}>
+                <i className="ico--star" />
+            </div> */}
+            <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Popular })} title="Show popular fonts"
+                onClick={() => this.onCategoryToggle(FontCategory.Popular)}>
+                <i className="ico--popular" />
+            </div>
+            <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Recent })} title="Show recent fonts"
+                onClick={() => this.onCategoryToggle(FontCategory.Recent)}>
+                <i className="ico--recent" />
+            </div>
+        </div>
+    }
+
+    private renderFont = (metadata: FontMetadata, index: number) => {
+        let spriteMap = this.state.webFonts.spriteMap[metadata.name];
+        let scale = (LessVars.propOptionHeight - 2) / spriteMap[3];
+        let style: React.CSSProperties = {
+            backgroundImage: this.state.webSpriteUrl,
+            backgroundPosition: -spriteMap[0] + 'px ' + -spriteMap[1] + 'px',
+            backgroundSize: this.state.webFonts.spriteSize[0] + "px " + this.state.webFonts.spriteSize[1] + "px",
+            width: spriteMap[2] + "px",
+            height:spriteMap[3] + "px",
+            transform: "scale(" + scale + ")"
         };
 
-        if (!this.state.query && mapping.hasOwnProperty(page) ){
-            elements.push(
-                <section key={mapping[page].key} className="prop__option">
-                     <span className="prop__optgroup-title">{mapping[page].children}</span>
-                </section>
-            );
-        }
+        return <section
+            className="prop__option font-options__typeface"
+            data-index={index}
+            onClick={this.onClick}
+        >
+            {/* <div className={bem("font-options", "typeface-star", { faved: true })}>
+                <i className="ico--star" />
+            </div> */}
 
-        let font, i, imageUrl;
-        const l = fonts.length;
+            <div className="font-options__typeface-meta">
+                <div className="font-options__typeface-name">{metadata.name}</div>
+                {this.renderVariants(metadata)}
+            </div>
 
-        for (i = 0; i < l; ++i) {
-            font = fonts[i];
-            imageUrl = backend.cdnEndpoint + "/fonts/" + font.path + "/sample.png";
-
-            elements.push(
-                <section
-                    key={font.name + page}
-                    className="prop__option"
-                    data-font={font.name}
-                    onClick={this.onClick}
-                >
-                    <div className="font-options__sample" style={{ backgroundImage: `url('${imageUrl}')` }}></div>
-                </section>
-            );
-        }
-
-        return elements;
+            <div className="font-options__typeface-sample-container">
+                <div className="font-options__typeface-sample-image" style={style}></div>
+            </div>
+        </section>
     }
 
-    elementInfiniteLoad() {
-        if (!this.state.waiting){
-            return null;
+    private renderVariants(metadata: FontMetadata) {
+        let variants: { symbol: string, title: string }[] = [];
+        if (metadata.fonts.some(x => x.weight < FontWeight.Regular)) {
+            variants.push({ symbol: "l", title: "Light" });
         }
-        // return <section className="prop__option">Loading...</section>
-        return <GuiSpinner/>
+        if (metadata.fonts.some(x => x.weight > FontWeight.Regular)) {
+            variants.push({ symbol: "b", title: "Bold" });
+        }
+        if (metadata.fonts.some(x => x.style === FontStyle.Italic)) {
+            variants.push({ symbol: "it", title: "Italic" });
+        }
+        if (metadata.subsets && metadata.subsets.indexOf("cyrillic")) {
+            variants.push({ symbol: "ru", title: "Russian" });
+        }
+
+        return <div className="font-options__typeface-variants">
+            {variants.map(x => <div className="font-options__typeface-variant">
+                <div className="font-options__typeface-variant-icon" title={x.title}>{x.symbol}</div>
+            </div>)}
+        </div>;
     }
 
-    onClick = e => {
-        var family = e.currentTarget.dataset.font;
-        var fontMetadata = this.state.metadata.find(x => x.name === family);
-        this.props.onSelected(fontMetadata);
-        Dispatcher.dispatch(FlyoutActions.show(null));
-    };
-
-    initScroller(){
-        var wrap = ReactDom.findDOMNode(this.refs.scrollContainer);
-        $(wrap).antiscroll({
-            onlyOnWindows: false,
-            initialDisplay: false
-        });
+    private renderNoContent = () => {
+        return <Markup>
+            <MarkupLine>
+                <FormattedMessage tagName="p" id="@empty" />
+            </MarkupLine>
+        </Markup>;
     }
 
-    _onCategorySelect = () => {
-        console.log(arguments)
-    };
-
-    render(){
-
-        var searchMessage = this.context.intl.formatMessage({id:"Search...", defaultMessage:"Search..."});
-
-        //fixme :   translate everything !
+    render() {
         return <div className="flyout__content prop__options-container font-options" >
             <div className="font-options__header">
 
@@ -160,103 +134,20 @@ export default class FontFamilyList extends Component<any, any>{
 
                     {/*<div className={bem("font-options", "header-line", "filters")}>*/}
                     <div className="font-options__search">
-                        <Search placeholder={searchMessage} onQuery={this.handleSearch} ref="search"/>
+                        <Search query={this.state.searchTerm} onQuery={this.onSearch} autoFocus />
                     </div>
 
-                    <div className="font-options__filter-switches">
-                        <div className="font-options__filter-switch  font-options__filter-switch_fav"
-                            title="Show favourites only"
-                        >
-                            <i className="ico--star"/>
-                        </div>
-                        {/*<div className="font-options__filter-switch  font-options__filter-switch_used">
-                            <i className="ico--recent"/>
-                        </div> */}
-                    </div>
-
-                    <div className="font-options__category-selector">
-                        {/*<GuiSelect
-                            mods="line"
-                            selectedItem={0}
-                            onSelect={this._onCategorySelect}
-                        >
-                            <p>All</p>
-                            <p>User uploaded</p>
-                            <p>Adobe Typekit</p>
-                            <p>Myfonts.com</p>
-                        </GuiSelect>*/}
-                    </div>
+                    {this.renderSwitches()}
                 </div>
-
-                {/* 2nd header line */}
-                {/*<div className="font-options__header-line  font-options__header-line_heading">*/}
-                    {/*<p>230 typefaces</p>*/}
-                    {/*<div className="font-options__collapse-styles">*/}
-                        {/*<GuiCheckbox label="translate me!" defaultMessage="collapse styles" mods="small"/>*/}
-                    {/*</div>*/}
-                {/*</div>*/}
             </div>
 
-            <div className="font-options__body  antiscroll-wrap" ref="scrollContainer">
-                {/*<Infinite className="prop__options antiscroll-inner"
-                    elementHeight={LessVars.propOptionHeight}
-                    containerHeight={LessVars.flyoutMaxHeight}
-                    infiniteLoadBeginEdgeOffset={300}
-                    onInfiniteLoad={this.handleInfiniteLoad}
-                    loadingSpinnerDelegate={this.elementInfiniteLoad()}
-                    isInfiniteLoading={this.state.isInfiniteLoading}
-                >
-                    <div className="prop__optgroup-title" key={'category-unpopular'}>Unpopular</div>
-                    {
-                        [
-                            'ofl/slabo27px',
-                            'ofl/lato',
-                            'ofl/sourcesanspro',
-                            'other/blokkneue',
-                            'ofl/montserrat',
-                            'ofl/raleway',
-                            'ofl/ptsans',
-                            'ofl/lora',
-                            'apache/robotoslab',
-                            'apache/opensanscondensed',
-                            'apache/opensans'
-                        ].map(font=>
-                        <section
-                            key={font + 1234444}
-                            className="prop__option  font-options__typeface"
-                            data-font={'arial'}
-                            onClick={console.log}
-                        >
-
-                            <div className={bem("font-options", "typeface-star", {faved: true})}>
-                                <i className="ico--star"/>
-                            </div>
-
-                            <div className="font-options__typeface-meta">
-                                <div className="font-options__typeface-name">{font.split('/')[1]}</div>
-
-                                <div className="font-options__typeface-variants">
-                                    <div className="font-options__typeface-variant">
-                                        <div className="font-options__typeface-variant-icon" title="Italic">i</div>
-                                    </div>
-                                    <div className="font-options__typeface-variant">
-                                        <div className="font-options__typeface-variant-icon" title="Russian">ru</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="font-options__typeface-sample-container">
-                                <div className="font-options__typeface-sample-image" style={{ backgroundImage: `url('//carbonstatic.azureedge.net/fonts/${font}/sample.png')` }}></div>
-                            </div>
-
-
-                        </section>)
-                    }
-                    <div className="prop__optgroup-title" key={'category-popular'}>Popular</div>
-                    {this.state.elements}
-                </Infinite>*/}
-            </div>
+            <VirtualFontList className="font-options__body"
+                ref="list"
+                data={this.state.currentList}
+                rowHeight={LessVars.propOptionHeight}
+                rowRenderer={this.renderFont}
+                noContentRenderer={this.renderNoContent}
+            />
         </div>
     }
-
 }

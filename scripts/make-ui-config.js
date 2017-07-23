@@ -300,7 +300,7 @@ module.exports = function (settings) {
             historyApiFallback: {
                 rewrites: [
                     {
-                        from: /^\/(resources|fonts)/g,
+                        from: /^\/(resources)/g,
                         to: function (context) {
                             return settings.publicPath + context.parsedUrl.pathname;
                         }

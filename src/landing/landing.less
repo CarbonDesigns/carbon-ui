@@ -16,55 +16,6 @@
     .allowselect();
 }
 
-.header-container {
-    width:100%;
-    min-height: 80px;
-    padding-top: 30px;
-    display: flex;
-    justify-content: space-between;
-    z-index: 60;
-}
-
-.header-container__logo {
-    width:152px;
-    height:40px;
-    display: block;
-    background-image: url("../res/app/logo_l.svg");
-    z-index: 61;
-}
-
-.navigation-menu {
-    &, & a {
-        color: #E8E8F5;
-        font-family: Inconsolata;
-        font-size: @navigationMenuFontSize;
-        text-align: center;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        line-height: 40px;
-        z-index: 62;
-        text-decoration: unset;
-    }
-}
-
-.navigation-menu__item {
-    margin-left: 30px;
-
-    &:hover {
-        text-decoration: underline;
-    }
-
-    &&_button {
-        font-family: Poppins;
-        font-weight: 500;
-        text-align: center;
-        width:100px;
-        height: 40px;
-        border: 1px solid #E8E8F5;
-
-    }
-}
 
 .hero-container {
     width:100%;
@@ -74,7 +25,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0 50px;
+    padding: 0;
     position: relative;
     z-index: 50;
 }
@@ -561,23 +512,10 @@
 }
 
 @media screen and(max-width:740px) {
-    .header-container {
-        flex-direction: column;
-        align-content: center;
-        padding-top:0;
-    }
 
-    .header-container__logo {
-        margin: 0 0 30px 0;
-        align-self: center;
-    }
 
     .hero-container__heading {
         margin-top:15vh;
-    }
-
-    .navigation-menu {
-        justify-content: center;
     }
 
     .hero-container {
@@ -590,35 +528,9 @@
 }
 
 
-@media screen and (max-width:600px) {
-    .navigation-menu__item {
-        margin: 0;
-        &&_button {
-            width:50px;
-        }
-    }
 
-    .navigation-menu {
-        justify-content: space-between;
-
-        &, & a{
-            font-size: 14px;
-        }
-    }
-}
 
 @media screen and (max-width:424px) {
-    .navigation-menu__item {
-        &&_button {
-            width:40px;
-        }
-    }
-    .navigation-menu {
-        &, & a{
-            font-size: 12px;
-        }
-    }
-
     .hero-container__logo {
         width: 80px;
         margin: 20px;

@@ -1,0 +1,157 @@
+
+@headerFontSize: 50px;
+
+.library-page {
+    background-color: white;
+    width:100%;
+    min-height: 100vh;
+    position: relative;
+}
+
+.libraryheader-container {
+    padding-top:30px;
+}
+
+.libraryheader-container__h {
+    color: black;
+    font-family: Poppins;
+    font-size: @headerFontSize;
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+.searchlib-container {
+    padding-top:40px;
+}
+
+.searchlib-container__input {
+    width:380px;
+    height:48px;
+    border: 2px solid #CCCBD7;
+    padding: 0 10px;
+}
+
+.searchtags-container {
+    padding: 20px 0;
+}
+
+.search-tag {
+	height: 30px;
+    border: 1px solid white;
+    margin: 5px;
+    padding: 0 18px;
+    border-radius: 4px;
+    cursor: pointer;
+
+	color: #261C30;
+	font-family: Inconsolata;
+	font-size: 16px;
+	line-height: 28px;
+	text-align: center;
+
+    &:nth-child(1){
+        border-color: #F8A21A;
+        background-color: #F9F4ED;
+        &:hover {
+            background-color: #DFAC65;
+        }
+    }
+
+    &:nth-child(2){
+        border-color: #E44EA6;
+        background-color: #F9ECF4;
+        &:hover {
+            background-color: #DF64B0;
+        }
+    }
+
+    &:nth-child(3){
+        border-color: #00AEEF;
+        background-color: #E9F5F9;
+
+        &:hover {
+            background-color: #61C0DF;
+        }
+    }
+    &:nth-child(4){
+        border-color: #95B224;
+        background-color: #F9FFE2;
+
+        &:hover {
+            background-color: #C8E559;
+        }
+    }
+}
+
+.gallery-list-container {
+    padding: 50px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap:  wrap;
+}
+
+.gallery-item {
+    width:280px;
+    height:325px;
+    background: black;
+    margin: 0 10px 20px 10px;
+    position: relative;
+}
+
+.gallery-item__name {
+	height: 51px;
+    color: #FFF;
+    position: absolute;
+    bottom: 40px;
+    left:19px;
+    right:19px;
+	font-family: Poppins;
+	font-size: 20px;
+	font-weight: 500;
+    line-height: 1.3;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: none;
+}
+
+.gallery-item__tags {
+    color: #FFF;
+    position: absolute;
+    bottom: 16px;
+    left:19px;
+    right:19px;
+	font-family: Poppins;
+	font-size: 14px;
+	font-weight: 500;
+    line-height: 14px;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: none;
+}
+
+.gallery-item__downloads {
+    color: #FFF;
+    position: absolute;
+    top: 20px;
+    right:20px;
+	font-family: Poppins;
+	font-size: 12px;
+    font-weight: 500;
+
+    &::before {
+        content: "";
+        display: inline-block;
+        width:9px;
+        height: 9px;
+        margin: 5px 5px 0 0;
+        background-image: url("../res/app/dwnld.svg");
+        background-repeat: no-repeat;
+    }
+}

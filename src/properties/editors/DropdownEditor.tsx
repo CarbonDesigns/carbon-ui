@@ -124,7 +124,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
         }
 
         if (items) {
-            return <ScrollContainer className="flyout__content prop__options-container" boxClassName="prop_selectbox__dropdown" insideFlyout={true}>
+            return <ScrollContainer className="flyout__content prop__options-container prop__drop" boxClassName="prop_selectbox__dropdown" insideFlyout={true}>
                 <div className={this.b("options")}>
                     {items.map(item => {
                         var is_selected = this.state.value === item.value;

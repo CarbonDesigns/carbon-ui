@@ -68,6 +68,7 @@
     @shift: 32;
     @x: 8;
     @y: 55;
+
     .ico-library-tab_library , .ico--library { .sprite1(@x + @shift * 0, @y, @size, @size);}
     .ico-library-tab_users   , .ico--users   { .sprite1(@x + @shift * 1, @y, @size, @size);}
     .ico-library-tab_recent  , .ico--recent  { .sprite1(@x + @shift * 2, @y, @size, @size);}
@@ -107,6 +108,8 @@
             .transform-origin(0 0 );
         }
     }
+
+    .ico--popular { .sprite1(@x + @shift * 15, @y, @size, @size); }
 }
 
 
@@ -610,7 +613,6 @@
     @x : 2;
     @y : 403;
     @shift : 32;
-
 
     .modebar__pill_edit       > .big-icon {.sprite1(@x + @shift * 15, @y); }
     .modebar__pill_prototype  > .big-icon {.sprite1(@x + @shift * 16, @y + 2); }

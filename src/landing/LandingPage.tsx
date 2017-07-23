@@ -99,14 +99,12 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
         }
 
         this.backgrounds[i].style.opacity = 1;
-        (this.refs.section1 as any).classList.remove("first-section");
-
     }
 
     componentDidMount() {
         super.componentDidMount();
         window.addEventListener("scroll", this._onScroll)
-        this.sections = document.querySelectorAll(".feature-section");// [this.refs.section1, this.refs.section2, this.refs.section3];
+        this.sections = document.querySelectorAll(".feature-section");
         this.backgrounds = [this.refs.background1, this.refs.background2, this.refs.background3];
         for (let j = 0; j < this.backgrounds.length; ++j) {
             this.backgrounds[j].style.opacity = 0;
@@ -191,7 +189,6 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
             </section>
 
             <FeatureSection
-                ref="section1"
                 className="first-section"
                 index="01"
                 symbol="Li"
@@ -203,7 +200,6 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 imageClass="symbols-image"
             />
             <FeatureSection
-                ref="section2"
                 index="02"
                 symbol="Do"
                 headerLabel="@datasec.header"
@@ -215,7 +211,6 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
             />
 
             <FeatureSection
-                ref="section3"
                 index="03"
                 symbol="Pu"
                 headerLabel="@pusec.header"

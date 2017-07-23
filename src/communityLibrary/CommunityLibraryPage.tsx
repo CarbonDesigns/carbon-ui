@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
+import {jquery as $} from "carbon-core";
 
 import { backend } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
@@ -10,6 +11,8 @@ import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
 import bem from "../utils/commonUtils";
+import InfiniteGrid from "../shared/collections/InfiniteGrid";
+import { ISharedResource, IPaginatedResult } from "carbon-core";
 
 function SearchTag(props) {
     return <div className="search-tag" onClick={()=>props.host.setState({searchText:"tags:"+props.text})}>
@@ -28,7 +31,12 @@ function GalleryListItem (props) {
 
 interface CommunityLibraryPageState {
     searchText:string;
+    loading:boolean;
 }
+
+
+type ResourceGrid = new (props) => InfiniteGrid<ISharedResource>;
+const ResourceGrid = InfiniteGrid as ResourceGrid;
 
 export default class CommunityLibraryPage extends RouteComponent<IRouteComponentProps, CommunityLibraryPageState>{
     static contextTypes = {
@@ -36,9 +44,34 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
         intl: PropTypes.object
     }
 
+    private onLoadMore = (startIndex: number, stopIndex: number) => {
+        //this.setState({ loading: true });
+
+        let promise: Promise<IPaginatedResult<ISharedResource>> = null;
+
+        promise = backend.shareProxy.resources(startIndex, stopIndex, this.state.searchText);
+
+        return promise.finally(() => this.setState({ loading: false }));
+    };
+
+// showDownloads={this.state.tabId !== TabBuiltIn}
+//                     onClick={this.openDetails}
+    private renderTiles() {
+        if (this.state.loading) {
+            return <FormattedMessage tagName="p" id="@loading" />
+        }
+
+        return <ResourceGrid ref="grid" cellHeight={280} cellWidth={200}
+            loadMore={this.onLoadMore}
+            cellRenderer={resource =>
+                <GalleryListItem
+                    item={resource}
+                />} />
+    }
+
     constructor(props) {
         super(props);
-        this.state = {searchText:""};
+        this.state = {searchText:"", loading:true};
     }
 
     componentDidMount() {

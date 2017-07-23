@@ -11,6 +11,7 @@ try
 {
     Push-Location $PSScriptRoot
 
+    New-Item .\target -ItemType "directory" -ErrorAction Ignore
     gci target -Exclude fonts,carbon-core*,carbon-api*,*.d.ts | ri -recurse
 
     if ($CopyCore)

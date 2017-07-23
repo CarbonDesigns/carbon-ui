@@ -8,7 +8,8 @@ import ScrollContainer from "../ScrollContainer";
 interface VirtualListProps<T> extends ISimpleReactElementProps {
     data: T[];
     rowHeight: number | ((item: T, index: number) => number);
-    rowRenderer: (item: T) => React.ReactNode;
+    rowRenderer: (item: T, index?: number) => React.ReactNode;
+    noContentRenderer?: () => React.ReactNode;
 }
 
 export default class VirtualList<T> extends Component<VirtualListProps<T>> {
@@ -51,7 +52,7 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
 
     private rowRenderer = (props: ListRowProps) => {
         let item = this.props.data[props.index];
-        let child = item ? this.props.rowRenderer(item) : null;
+        let child = item ? this.props.rowRenderer(item, props.index) : null;
         return <div key={props.key} style={props.style}>{child}</div>
     }
 
@@ -62,6 +63,7 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
                     <List
                         className={this.props.className}
                         rowRenderer={this.rowRenderer}
+                        noContentRenderer={this.props.noContentRenderer}
                         rowCount={this.props.data.length}
                         rowHeight={this.getRowHeight}
                         width={dimensions.width}

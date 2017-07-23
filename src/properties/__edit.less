@@ -633,7 +633,6 @@
             .cursor_pointer();
             border: 1px solid @sel_color;
             //        .transition(~"max-height 0.4s @{cubic_bezier1} 0s");
-            max-height: 200px;
 
             .transition(~"max-height 0.4s @{cubic_bezier1} 0s, min-width 0.1s ease 0s, max-width 0.1s ease 0s");
             max-width: 400px;
@@ -644,6 +643,10 @@
         //    .box-shadow(0 1px 5px rgba(0, 0, 0, 0.23));
         .box-shadow(0 1px 5px @shadow_color1);
 
+    }
+
+    .prop__drop {
+        max-height: 200px;
     }
 
     .prop__options {
@@ -699,7 +702,8 @@
         @first_line: @line;
         padding-bottom: 20px; //same as search box height
         width: 40rem;
-
+        height: 27rem;
+        max-height: 27rem;
 
         &__header {
             padding-bottom: @line_air/2;
@@ -718,6 +722,11 @@
             }
         }
 
+        &__body {
+            .rel;
+            //some extra padding for scrolling
+            padding-bottom: 15px;
+        }
 
         &__search {
             flex-grow: 2;
@@ -764,8 +773,7 @@
 
         .prop__optgroup-title,
         &__typeface {
-
-            padding: @line_air/5 @line_air;
+            padding: 0 0 0 @line_air;
 
             .font-options__body_narrow & {
                 padding: @line_air/2 @line_air;
@@ -775,11 +783,12 @@
         &__typeface {
             .tleft;
             .flexstretch();
-
+            .w100;
+            .h100;
 
             &-star {
                 .flexcenter();
-                padding: 0 @line_air;
+                padding: @line_air/5 @line_air;
                 margin-left: -@line_air;
                 >i {
                     .op20;
@@ -802,29 +811,28 @@
                     flex-direction: column;
                 }
                 flex-grow: 1;
-
+                padding: @line_air/5 0;
             }
 
             &-name {
                 .flexline();
-                width: 14rem;
+                width: 15rem;
+                overflow: hidden;
             }
 
             &-variants {
                 .f10;
-                margin-right: -.4em;
-                padding : 2px @line_air 2px 0;
                 .flexline();
 
                 flex-grow : 1;
+                margin-left: @line_air;
             }
 
             &-variant {
                 .flexcenter();
-                height: 1em;
-                line-height: 0.8;
-                margin-right: .4em;
-                padding: .2em .3em;
+                height: 2em;
+                width: 1.5em;
+                margin-right: 1px;
                 .wbg(2);
 
                 &-icon {
@@ -833,14 +841,11 @@
             }
 
             &-sample-container {
-                margin: 0 @line_air 0 1.5*@line_air;
+                width: 150px;
             }
             &-sample-image {
-                width: 100px;
-                height: 25px;
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position: 0 50%;
+                position: absolute;
+                transform-origin: 2px 2px;
             }
         }
 

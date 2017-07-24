@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
-import { InfiniteLoader, AutoSizer, Dimensions, InfiniteLoaderChildProps, Index, IndexRange, List, ListRowProps } from "react-virtualized";
+import { InfiniteLoader, AutoSizer, Dimensions, InfiniteLoaderChildProps, Index, IndexRange, List, ListRowProps, Alignment } from "react-virtualized";
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
@@ -10,10 +10,16 @@ interface VirtualListProps<T> extends ISimpleReactElementProps {
     rowHeight: number | ((item: T, index: number) => number);
     rowRenderer: (item: T, index?: number) => React.ReactNode;
     noContentRenderer?: () => React.ReactNode;
+    scrollToRow?: number;
+    scrollToAlignment?: Alignment;
 }
 
 export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     private list: List = null;
+
+    static defaultProps: Partial<VirtualListProps<any>> = {
+        scrollToAlignment: "auto"
+    }
 
     reset(keepScroll?: boolean) {
         this.list.recomputeRowHeights();
@@ -63,6 +69,8 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
                         className={this.props.className}
                         rowRenderer={this.rowRenderer}
                         noContentRenderer={this.props.noContentRenderer}
+                        scrollToIndex={this.props.scrollToRow}
+                        scrollToAlignment={this.props.scrollToAlignment}
                         rowCount={this.props.data.length}
                         rowHeight={this.getRowHeight}
                         width={dimensions.width}

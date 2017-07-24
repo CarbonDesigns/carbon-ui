@@ -184,8 +184,6 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     }
 
     render() {
-        var we_are_dragging_several_layers = Selection.elements.length > 1;
-
         var rename_popup_spawner = (<FlyoutPopupSpawner
             ref="popup"
             position={{ disableAutoClose: true, targetHorizontal: 'left', targetVertical: 'top' }}
@@ -206,16 +204,14 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
 
                 {this.renderBackButton()}
 
-                <div
-                    className={bem("layers-panel", "layers-list", null, "panel__stretcher")}
-                    data-mode="airy"
-                >
+                <div className={bem("layers-panel", "layers-list", null, "panel__stretcher")} data-mode="airy">
                     {rename_popup_spawner}
                     <VirtualLayersList className="layers__container"
                         ref="list"
                         data={this.state.layers}
                         rowHeight={this.getRowHeight}
-                        rowRenderer={this.renderLayer}/>
+                        rowRenderer={this.renderLayer}
+                        scrollToRow={this.state.scrollToLayer}/>
                 </div>
             </Panel>
         );

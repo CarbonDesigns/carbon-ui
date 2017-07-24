@@ -27,16 +27,15 @@ export type LayersStoreState = {
     layers: LayerNode[];
     expanded: IdMap;
     selected: IdMap;
-    collapsed: IdMap,
     isIsolation: boolean;
     version: number;
-    topLevel?: boolean;
+    scrollToLayer?: number;
 }
 
 class LayersStore extends CarbonStore<LayersStoreState> {
     constructor() {
         super();
-        this.state = { layers: [], expanded: {}, selected: {}, collapsed: {}, isIsolation: false, version: 0, topLevel:true }
+        this.state = { layers: [], expanded: {}, selected: {}, isIsolation: false, version: 0  }
     }
 
     refreshLayersTree(expandedMap: IdMap = this.state.expanded) {
@@ -120,6 +119,9 @@ class LayersStore extends CarbonStore<LayersStoreState> {
     _visitLayers(layers, callback) {
         for (let i = 0; i < layers.length; ++i) {
             let layer = layers[i];
+            if (!layer) {
+                continue;
+            }
             if (callback(layer) === false) {
                 return false;
             }
@@ -175,10 +177,6 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         this.refreshLayersTree(expanded);// TODO: check if we need to optimize it
     }
 
-    static uidForItem(item) {
-        return item.id();
-    }
-
     @handles(CarbonActions.elementSelected)
     onElementSelected({ selection }) {
         let selected = {};
@@ -190,7 +188,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             if (repeater) {
                 element = repeater.findMasterCounterpart(element);
             }
-            selected[LayersStore.uidForItem(element)] = true;
+            selected[element.id()] = true;
 
             let current = element.parent();
             while (current) {
@@ -202,10 +200,16 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             }
         });
 
-        this.setState({ selected, expanded });
         if (needsRefresh) {
             this.refreshLayersTree();
         }
+
+        let scrollToLayer;
+        if (selection.elements.length) {
+            scrollToLayer = this.state.layers.findIndex(x => x && x.element === selection.elements[0]);
+        }
+
+        this.setState({ selected, expanded, scrollToLayer });
     }
 
     @handles(CarbonActions.appChanged)

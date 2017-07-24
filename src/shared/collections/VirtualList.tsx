@@ -15,9 +15,11 @@ interface VirtualListProps<T> extends ISimpleReactElementProps {
 export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     private list: List = null;
 
-    reset() {
+    reset(keepScroll?: boolean) {
         this.list.recomputeRowHeights();
-        this.list.scrollToRow(0);
+        if (!keepScroll) {
+            this.list.scrollToRow(0);
+        }
     }
 
     componentDidMount() {
@@ -42,9 +44,6 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     private getRowHeight = (params: Index) => {
         if (typeof this.props.rowHeight === "function") {
             let item = this.props.data[params.index];
-            if (!item) {
-                return 0;
-            }
             return this.props.rowHeight(item, params.index);
         }
         return this.props.rowHeight;
@@ -59,7 +58,7 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     render() {
         return <AutoSizer>
             {dimensions => {
-                return <div className={this.props.className} style={{width: dimensions.width, height: dimensions.height}}>
+                return <div style={{width: dimensions.width, height: dimensions.height}}>
                     <List
                         className={this.props.className}
                         rowRenderer={this.rowRenderer}

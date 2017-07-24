@@ -5,5 +5,7 @@ export default {
     flyoutMaxHeight: 200,
     tabTransition: 300,
     tile3Height: 200,
-    iconStencilHeight: 50
+    iconStencilHeight: 50,
+    layerItemHeight: 32,
+    layerOverlayHeight: 6
 }

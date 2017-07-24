@@ -38,7 +38,8 @@ var idCounter = 0;
 // };
 
 
-export default class FlyoutPopup extends Component {
+export default class FlyoutPopup extends Component<any, any> {
+    [x: string]: any;
 
     constructor(props) {
         super(props);
@@ -52,7 +53,7 @@ export default class FlyoutPopup extends Component {
             };
     }
 
-    drawContent(content_props) {
+    drawContent(content_props?) {
         if (this.props.drawContent) {
             return this.props.drawContent(content_props);
         }
@@ -75,7 +76,7 @@ export default class FlyoutPopup extends Component {
         }
     };
 
-    toggle = (event) => {
+    toggle = (event?) => {
         this.setState({open: !this.state.open});
 
         if (!this.state.open) {
@@ -114,7 +115,7 @@ export default class FlyoutPopup extends Component {
     onKeyDown = (ev) => {
         if (ev.key === "Escape"){
             this.close();
-            return prevent(ev);
+            ev.preventDefault();
         }
 
         ev.stopPropagation();

@@ -105,7 +105,7 @@
     "react-addons-css-transition-group": "15.5.2",
     "react-addons-shallow-compare": "15.5.2",
     "react-bootstrap": "0.30.9",
-    "react-color": "2.13.1",
+    "react-color": "^2.13.1",
     "react-dom": "15.5.4",
     "react-intl": "2.3.0",
     "react-pure-render": "1.0.2",

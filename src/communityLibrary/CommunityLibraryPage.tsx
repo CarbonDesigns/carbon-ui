@@ -1,7 +1,6 @@
 import React, { PropTypes } from "react";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
-import {jquery as $} from "carbon-core";
 
 import { backend } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
@@ -14,15 +13,32 @@ import bem from "../utils/commonUtils";
 import InfiniteGrid from "../shared/collections/InfiniteGrid";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
 
+
+function debounce(func, wait, immediate?) {
+    var timeout;
+    return function () {
+        var context = this, args = arguments;
+        var later = function () {
+            timeout = null;
+            if (!immediate) { func.apply(context, args); }
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) { func.apply(context, args); }
+    };
+}
+
+
 function SearchTag(props) {
-    return <div className="search-tag" onClick={()=>props.host.setState({searchText:"tags:"+props.text})}>
+    return <div className="search-tag" onClick={() => props.host.setState({ searchText: "tags:" + props.text })}>
         {props.text}
     </div>
 }
 
-function GalleryListItem (props) {
+function GalleryListItem(props) {
     var item = props.item;
-    return <div className={bem("gallery-item")} onClick={()=>props.host.goToItem(item.id)}>
+    return <div className={bem("gallery-item")} onClick={() => props.host.goToItem(item.id)} style={{ backgroundImage: "url('" + item.coverUrl + "')" }}>
         <div className={bem("gallery-item", "downloads")}>{item.downloadCount}</div>
         <h2 className={bem("gallery-item", "name")}>{item.name}</h2>
         <h3 className={bem("gallery-item", "tags")}>{item.tags}</h3>
@@ -30,8 +46,8 @@ function GalleryListItem (props) {
 }
 
 interface CommunityLibraryPageState {
-    searchText:string;
-    loading:boolean;
+    searchText: string;
+    loading: boolean;
 }
 
 
@@ -44,42 +60,51 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
         intl: PropTypes.object
     }
 
-    private onLoadMore = (startIndex: number, stopIndex: number) => {
-        //this.setState({ loading: true });
+    refs: {
+        grid: InfiniteGrid<ISharedResource>;
+    }
 
+    private onLoadMore = (startIndex: number, stopIndex: number) => {
         let promise: Promise<IPaginatedResult<ISharedResource>> = null;
 
-        promise = backend.shareProxy.resources(startIndex, stopIndex, this.state.searchText);
+        promise = backend.galleryProxy.resources(startIndex, stopIndex, this.state.searchText);
 
         return promise.finally(() => this.setState({ loading: false }));
     };
 
-// showDownloads={this.state.tabId !== TabBuiltIn}
-//                     onClick={this.openDetails}
     private renderTiles() {
+        var res = [];
         if (this.state.loading) {
-            return <FormattedMessage tagName="p" id="@loading" />
+            res.push(<FormattedMessage tagName="p" id="@loading" />)
         }
 
-        return <ResourceGrid ref="grid" cellHeight={280} cellWidth={200}
+        res.push(<ResourceGrid ref="grid" windowScroll={true} cellHeight={345} cellWidth={300}
             loadMore={this.onLoadMore}
             cellRenderer={resource =>
                 <GalleryListItem
                     item={resource}
-                />} />
+            />} />);
+        return res;
     }
+
+    _resetSearch: () => void;
 
     constructor(props) {
         super(props);
-        this.state = {searchText:"", loading:true};
+        this.state = { searchText: "", loading: false };
+        this._resetSearch = debounce(() => {
+            this.setState({ loading: true });
+            this.refs.grid.reset();
+        }, 400);
     }
 
     componentDidMount() {
         super.componentDidMount();
     }
 
-    _onTextChange = (event)=> {
-        this.setState({searchText:event.target.value});
+    _onTextChange = (event) => {
+        this.setState({ searchText: event.target.value });
+        this._resetSearch();
     }
 
     goToItem(itemId) {
@@ -88,14 +113,14 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
 
     render() {
         return <div className="library-page">
-            <TopMenu location={this.props.location} dark={true}/>
+            <TopMenu location={this.props.location} dark={true} />
 
             <section className="libraryheader-container smooth-header section-center">
                 <h1 className={bem("libraryheader-container", "h")}><CarbonLabel id="@library.header" /></h1>
             </section>
 
             <section className="searchlib-container section-center">
-                <input value={this.state.searchText} onChange={this._onTextChange} className={bem("searchlib-container", "input")} type="text" placeholder={this.context.intl.formatMessage({id:"@search.placeholder"})}></input>
+                <input value={this.state.searchText} onChange={this._onTextChange} className={bem("searchlib-container", "input")} type="text" placeholder={this.context.intl.formatMessage({ id: "@search.placeholder" })}></input>
             </section>
 
             <section className="searchtags-container section-center">
@@ -106,16 +131,13 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
             </section>
 
             <section className="gallery-list-container">
-               <GalleryListItem item={{name:"Responsive website guidelines", tags:"ios android", downloadCount:1000}}/>
-               <GalleryListItem item={{name:"Responsive guide"}}/>
-               <GalleryListItem item={{name:"Responsive guide"}}/>
-               <GalleryListItem item={{name:"Responsiadf adf;lak jdf;lka jdsf;lad jsf;ad fa;lkdjf a;dfve guide aaa a aa"}}/>
+                {this.renderTiles()}
             </section>
 
             <section className="subscribe-container">
                 <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details" /></p>
                 <form className="subscribe-form">
-                    <input type="text"  className="subscribe-form__email" placeholder={this.context.intl.formatMessage({id:"@email.placeholder"})} />
+                    <input type="text" className="subscribe-form__email" placeholder={this.context.intl.formatMessage({ id: "@email.placeholder" })} />
                     <button className="subscribe-form__button"><CarbonLabel id="@subscribe" /></button>
                 </form>
             </section>

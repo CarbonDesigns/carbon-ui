@@ -3,7 +3,7 @@ import ReactDom from "react-dom";
 import FlyoutActions from '../FlyoutActions';
 import { dispatch } from '../CarbonFlux';
 import cx from 'classnames';
-
+require("jquery/jquery.min");
 require("../external/antiscroll");
 
 interface ScrollContainerProps extends ISimpleReactElementProps {

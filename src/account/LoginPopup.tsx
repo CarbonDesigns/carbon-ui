@@ -9,6 +9,7 @@ export default class LoginPopup extends RouteComponent {
     canHandleActions() {
         return true;
     }
+
     onAction(action: AccountAction) {
         if (action.type === "Account_LoginResponse") {
             if (action.response.ok === true){

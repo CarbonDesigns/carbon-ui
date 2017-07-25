@@ -52,10 +52,6 @@
         &__project-avatar {
         }
 
-
-    &:hover {
-        .wbg(10);
-    }
     &:hover &__name > h2 {
         text-decoration: underline dotted @font_color_faded;
     }
@@ -79,6 +75,10 @@
 
         &_big > h2 {
             .fsize(12 * (@top_side / 32));
+        }
+
+        &:hover {
+            .wbg(10);
         }
     }
 

@@ -30,7 +30,8 @@ export default class ScrollContainer extends React.Component<ScrollContainerProp
 
         $(element).antiscroll(Object.assign({
             onlyOnWindows: false,
-            initialDisplay: false
+            initialDisplay: false,
+            autoHideTimeout: 1500
         }, options));
     }
 

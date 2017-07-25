@@ -1,6 +1,6 @@
 import interact from "interact.js";
 import {domUtil} from "carbon-core";
-import {findTransformProp} from "utils/domUtil"
+import {findTransformProp} from "utils/domUtil";
 
 export class DragAndDrop {
     private _stencilInteraction: Interact.Interactable = null;

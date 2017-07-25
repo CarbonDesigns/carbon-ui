@@ -1,3 +1,5 @@
+import { util } from "carbon-api";
+
 (function ($) {
 
   function AntiscrollMock() {
@@ -257,7 +259,6 @@
     this.innerEl = this.pane.inner.get(0);
 
     this.dragging = false;
-    this.enter = false;
     this.shown = false;
 
     // hovering
@@ -276,14 +277,7 @@
     this.pane.inner.bind('mousewheel', this.innerPaneMouseWheelListener);
 
     // show
-    var initialDisplay = this.pane.options.initialDisplay;
-
-    if (initialDisplay !== false) {
-      this.show();
-      if (this.pane.autoHide) {
-        this.hiding = setTimeout($.proxy(this, 'hide'), parseInt(initialDisplay, 10) || 3000);
-      }
-    }
+    this.hideDebounced = util.debounce($.proxy(this, 'hide'), this.pane.options.autoHideTimeout);
   }
 
   /**
@@ -305,8 +299,8 @@
    * @access private
    */
   Scrollbar.prototype.mouseenter = function () {
-    this.enter = true;
     this.show();
+    this.hideDebounced();
   };
 
   /**
@@ -315,8 +309,6 @@
    * @access private
    */
   Scrollbar.prototype.mouseleave = function () {
-    this.enter = false;
-
     if (!this.dragging) {
       if (this.pane.autoHide) {
         this.hide();
@@ -332,11 +324,10 @@
   Scrollbar.prototype.scroll = function () {
     if (!this.shown) {
       this.show();
-      if (!this.enter && !this.dragging) {
-        if (this.pane.autoHide) {
-          this.hiding = setTimeout($.proxy(this, 'hide'), 1500);
-        }
-      }
+    }
+
+    if (!this.dragging) {
+      this.hideDebounced();
     }
 
     this.update();
@@ -371,10 +362,7 @@
       this.onselectstart = null;
 
       $(this).unbind('mousemove', move);
-
-      if (!self.enter) {
-        self.hide();
-      }
+      self.hide();
     };
 
     $(this.el[0].ownerDocument)
@@ -405,10 +393,14 @@
    * @access private
    */
   Scrollbar.prototype.hide = function () {
-    if (this.pane.autoHide !== false && this.shown) {
+    if (this.shown) {
       // check for dragging
       this.el.removeClass('antiscroll-scrollbar-shown');
       this.shown = false;
+      if (this.hiding) {
+        clearTimeout(this.hiding);
+        this.hiding = 0;
+      }
     }
   };
 

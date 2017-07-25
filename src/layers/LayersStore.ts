@@ -1,109 +1,99 @@
 import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
 import CarbonActions from "../CarbonActions";
-import LayersActions from "./LayersActions";
-import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerTypes } from "carbon-core";
+import LayersActions, { LayerAction } from "./LayersActions";
+import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerTypes, IUIElement, IRepeatContainer } from "carbon-core";
 import { iconType } from "../utils/appUtils";
 
 type IdMap = { [id: string]: boolean };
 
-interface ILayersStoreState {
-    layers: any[];
-    expanded: IdMap;
-    selected: IdMap;
-    collapsed: IdMap,
-    isIsolation: boolean;
-    version: number;
-    topLevel?: boolean;
+export type LayerNode = {
+    indent: number;
+    id: string;
+    element: IUIElement;
+    canSelect: boolean;
+    type: string;
+    hasChildren: boolean;
+    repeater?: IRepeatContainer;
+    //consider changing to immutable instead of updating layer properties
+    version: 0;
 }
 
-export default class LayersStore extends CarbonStore<ILayersStoreState> {
-    constructor(props) {
-        super(props);
-        this.state = { layers: [], expanded: {}, selected: {}, collapsed: {}, isIsolation: false, version: 0, topLevel:true }
+export type LayersStoreState = {
+    layers: LayerNode[];
+    expanded: IdMap;
+    selected: IdMap;
+    isIsolation: boolean;
+    version: number;
+    scrollToLayer?: number;
+}
+
+class LayersStore extends CarbonStore<LayersStoreState> {
+    constructor() {
+        super();
+        this.state = { layers: [], expanded: {}, selected: {}, isIsolation: false, version: 0  }
     }
 
-    refreshLayersTree() {
-        let that = this;
-        let page_elements;
+    refreshLayersTree(expandedMap: IdMap = this.state.expanded) {
+        let elements;
         var topLevel = false;
         if (Environment.view.isolationLayer && Environment.view.isolationLayer.isActive) {
-            page_elements = Environment.view.isolationLayer.children;
+            elements = Environment.view.isolationLayer.children;
         }
         else {
             let artboard = app.activePage.getActiveArtboard();
             if (artboard) {
-                page_elements = artboard.children;
+                elements = artboard.children;
             } else {
                 topLevel = true;
-                page_elements = app.activePage.children;
+                elements = app.activePage.children;
             }
         }
 
-        let r, page_element, layers2 = [];
-        for (let i = page_elements.length - 1; i >= 0; --i) {
-            page_element = page_elements[i];
-            layers2.push(that.mapLayersTreeForItem(page_element, 0, !topLevel));
+        //first and last elements are paddings for virtual list, need to handle it better
+        let layers = [null];
+        for (let i = elements.length - 1; i >= 0; --i) {
+            this.addLayerToList(layers, expandedMap, elements[i], 0, !topLevel);
         }
-        let state: any = { layers: layers2 };
+        layers.push(null);
 
-        this.setState(state);
+        this.setState({ layers: layers });
     }
 
-    /**
-     *
-     * @param page_element
-     * @param indent
-     * @returns {{indent: *, id: *, uid: *, element: *, name: *, borderColor: *, backgroundColor: *, visible: *, locked: *, canSelect: *, type: *, expanded: boolean, hasChildren: (boolean|*)}}
-     */
-    mapLayersTreeForItem(element, indent, recursive = true, nodeMutator = null) {
-        let that = this;
-
+    addLayerToList(layers: LayerNode[], expandedMap: IdMap, element, indent, recursive = true, nodeMutator = null) {
         let elementId = element.id();
-        let node: any = {
+        let node: LayerNode = {
             indent: indent,
             id: elementId,
-            uid: elementId,
             element: element,
-            name: element.displayName(),
-            borderColor: this._displayColor(element.stroke(), null),
-            backgroundColor: this._displayColor(element.fill(), null),
-            textColor: (element.props.font) ? element.props.font.color : null,
-            visible: element.visible(),
-            locked: element.locked(),
             canSelect: element.canSelect() || element.runtimeProps.selectFromLayersPanel,
             type: iconType(element),
-            expanded: this.state.expanded[elementId],
-            hasChildren: element.children && element.children.length && recursive
+            hasChildren: element.children && element.children.length && recursive,
+            version: 0
         };
 
         if (nodeMutator) {
             nodeMutator(node);
         }
 
+        layers.push(node);
         if (!node.hasChildren) {
-            return node;
+            return;
         }
 
-        node.childLayers = [];
-
-        if (element.t === Types.RepeatContainer && element.children.length) {
+        if (element.t === Types.RepeatContainer && element.children.length && expandedMap[node.id]) {
             let cell = element.children[0];
             for (let i = cell.children.length - 1; i >= 0; --i) {
-                let r = that.mapLayersTreeForItem(cell.children[i], indent + 1, true, n => {
+                let r = this.addLayerToList(layers, expandedMap, cell.children[i], indent + 1, true, n => {
                     n.repeater = element;
                 });
-                node.childLayers.push(r);
             }
         }
-        else if (element.children) {
+        else if (element.children && expandedMap[node.id]) {
             for (let i = element.children.length - 1; i >= 0; --i) {
-                let r = that.mapLayersTreeForItem(element.children[i], indent + 1, true, nodeMutator);
-                node.childLayers.push(r);
+                this.addLayerToList(layers, expandedMap, element.children[i], indent + 1, true, nodeMutator);
             }
         }
-
-        return node;
     }
 
     _displayColor(brush, defaultColor) {
@@ -117,9 +107,12 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
         return defaultColor;
     }
 
-    _visitLayers(layers, callback) {
+    _visitLayers(layers, callback: (node: LayerNode) => boolean | void) {
         for (let i = 0; i < layers.length; ++i) {
             let layer = layers[i];
+            if (!layer) {
+                continue;
+            }
             if (callback(layer) === false) {
                 return false;
             }
@@ -143,13 +136,9 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
         ) {
             let layers = this.state.layers;
 
-            this._visitLayers(layers, (layer) => {
+            this._visitLayers(layers, (layer: LayerNode) => {
                 if (layer.id === elementId) {
-                    if (props.hasOwnProperty("name") || props.hasOwnProperty("flags")) { layer.name = layer.element.displayName(); }
-                    if (props.hasOwnProperty("stroke")) { layer.borderColor = this._displayColor(props.stroke, 'black'); }
-                    if (props.hasOwnProperty("fill")) { layer.backgroundColor = this._displayColor(props.fill, 'white'); }
-                    if (props.hasOwnProperty("visible")) { layer.visible = props.visible; }
-                    if (props.hasOwnProperty("locked")) { layer.locked = props.locked; }
+                    layer.version += 1;
                     result = true;
 
                     return false;
@@ -160,8 +149,26 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
         return result;
     }
 
-    @handles(LayersActions.toggleExpand)
-    onToggleExpand({ elementId }) {
+    onAction(action: LayerAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Layers_toggleExpand":
+                this.onToggleExpand(action.index);
+                return;
+            case "Layers_dropped":
+                //disable auto scrolling since layer could have been moved to a different page
+                this.setState({ scrollToLayer: undefined });
+                if (!this.state.expanded[action.targetId]) {
+                    this.onToggleExpand(action.targetIndex);
+                }
+                return;
+        }
+    }
+
+    onToggleExpand(index: number) {
+        let node = this.state.layers[index];
+        let elementId = node.id;
         let expanded = this.state.expanded;
 
         if (expanded[elementId]) {
@@ -171,12 +178,8 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
             expanded[elementId] = true;
         }
 
-        this.setState({ expanded });
-        this.refreshLayersTree();// TODO: check if we need to optimize it
-    }
-
-    static uidForItem(item) {
-        return item.id();
+        this.setState({ expanded, scrollToLayer: undefined });
+        this.refreshLayersTree(expanded);// TODO: check if we need to optimize it
     }
 
     @handles(CarbonActions.elementSelected)
@@ -190,7 +193,7 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
             if (repeater) {
                 element = repeater.findMasterCounterpart(element);
             }
-            selected[LayersStore.uidForItem(element)] = true;
+            selected[element.id()] = true;
 
             let current = element.parent();
             while (current) {
@@ -202,15 +205,20 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
             }
         });
 
-        this.setState({ selected, expanded });
         if (needsRefresh) {
             this.refreshLayersTree();
         }
+
+        let scrollToLayer;
+        if (selection.elements.length) {
+            scrollToLayer = this.state.layers.findIndex(x => x && x.element === selection.elements[0]);
+        }
+
+        this.setState({ selected, expanded, scrollToLayer });
     }
 
     @handles(CarbonActions.appChanged)
     onAppChanged({ primitives }) {
-        let that = this;
         let activePageId = app.activePage.id();
         let refreshState = false;
 
@@ -234,18 +242,18 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
         }
 
         if (hasTreeChanges) {
-            that.refreshLayersTree();
+            this.refreshLayersTree();
             return;
         }
 
         for (let i = 0; i < propChanges.length; i++) {
             let p = propChanges[i];
             let elementId = p.path[p.path.length - 1];
-            refreshState = that._updateProps(elementId, p.props) || refreshState;
+            refreshState = this._updateProps(elementId, p.props) || refreshState;
         }
 
         if (refreshState) {
-            this.setState({ version: (this.state.version || 0) + 1 });
+            this.setState({ version: this.state.version + 1 });
         }
     }
 
@@ -282,4 +290,28 @@ export default class LayersStore extends CarbonStore<ILayersStoreState> {
             this.refreshLayersTree();
         }
     }
+
+    getLayerNodeFromEvent(event: React.MouseEvent<HTMLElement>) {
+        let targetLayer = event.currentTarget;
+        let layerIndex = parseInt(targetLayer.dataset.index);
+        return this.state.layers[layerIndex];
+    }
+
+    isAncestorSelected(layer: LayerNode) {
+        var selected = !!this.state.selected[layer.id];
+
+        if (!selected) {
+            let parent = layer.element.parent();
+            while (parent) {
+                if (this.state.selected[parent.id()]) {
+                    return true;
+                }
+                parent = parent.parent();
+            }
+        }
+
+        return false;
+    }
 }
+
+export default new LayersStore();

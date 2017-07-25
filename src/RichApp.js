@@ -13,7 +13,6 @@ import SearchIconsStore from './library/icons/SearchIconsStore';
 
 import RecentImagesStore from './library/images/RecentImagesStore';
 import WorkspaceStore from "./workspace/WorkspaceStore";
-import LayersStore from "./layers/LayersStore";
 import ManageStylesDialogStore from "./properties/dialogs/ManageStylesDialogStore"
 
 export class Application {
@@ -48,7 +47,6 @@ export class Application {
         this.layoutStore.setLayout("edit", RichPanelConfig.edit);
 
         this.workspaceStore = new WorkspaceStore(this.Dispatcher);
-        this.layersStore = new LayersStore(this.Dispatcher);
 
         this.manageStylesDialogStore = new ManageStylesDialogStore(this.Dispatcher);
     }

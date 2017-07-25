@@ -16,6 +16,7 @@ import { IconsAction } from "./library/icons/IconsActions";
 import { LayoutAction } from "./layout/LayoutActions";
 import { DataAction } from "./library/data/DataActions";
 import { FontAction } from "./properties/editors/custom/FontActions";
+import { LayerAction } from "./layers/LayersActions";
 
 // import diff from 'immutablediff';
 
@@ -231,7 +232,7 @@ export function dispatch(action) {
 
 //just a strongly typed wrapper while not all actions are union types
 export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction |
-    StencilsAction | CarbonAction | IconsAction | LayoutAction | DataAction | FontAction) {
+    StencilsAction | CarbonAction | IconsAction | LayoutAction | DataAction | FontAction | LayerAction) {
     dispatch(action);
 }
 

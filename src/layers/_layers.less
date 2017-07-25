@@ -12,10 +12,7 @@
 
     .layers-back__button {
         margin-left: 2rem;
-    }
-
-    .layers-panel__layer-filters {
-        padding: @line_air;
+        .f11;
     }
 
     .layers-panel__layers-container{
@@ -25,35 +22,12 @@
 
     .layers-panel__layers-box{
         .rel;
-        //padding-bottom: 5px;
         padding-bottom: @middle_highlight_height /2;
     }
 
     .layers-panel__layers-list {
-        padding-top: @middle_highlight_height /2;
         flex: auto;
         display: flex;
-    }
-
-    .layers-panel__rename {
-        min-width: 240px;
-        .abs();
-        left: 0;
-        margin: -@line_air 0 0 @line_air;
-
-        padding: @line_air / 2;
-        .bgc(@bg4_panel_body_lighten);
-        box-shadow: 0 1px 4px @bg2_darkest;
-
-        &-input {
-            .flexstretch();
-        }
-        &-save {
-
-        }
-        &-cancel {
-
-        }
     }
 
     @pt : 6px;
@@ -110,6 +84,8 @@
         border-bottom-width: 1px;
         border-bottom-style: solid;
         .rel;
+        display: flex;
+        align-items: center;
         max-height: 100px;
         .trn(
                 max-height .1s linear
@@ -128,8 +104,6 @@
 
     @border_color: rgba(75, 75, 75, 0.41);
 
-    @right_icons_width : 20px;
-
     @layer_height: (@pt)*2 + @h;
 
     .respo(@param:height, @ratio: 1){
@@ -141,9 +115,8 @@
     .layer__desc {
         max-width: 100%;
         height: @layer_height;
-        margin-left: 44px;
-        margin-right: @right_icons_width;
 
+        flex: auto;
         display: flex;
         align-items: stretch;
         flex-wrap: nowrap;
@@ -286,35 +259,35 @@
             }
 
             .layer__name {
+                .w100;
+                .h100;
                 .f11;
-                line-height: 1;
                 .ellipsis;
-                padding: .2em 14px .2em 0;
+                display: flex;
+                align-items: center;
             }
 
 
+    .layer__input {
+        .w100;
+        .h100;
+    }
 
 
     //——————————————————————————————————————————————————————————————————————
     // Icons
     //——————————————————————————————————————————————————————————————————————
 
-
-    .layer__left-icons
-    ,.layer__right-icons
-    {
-        .abs;
-        .h100;
-        top: 0;
-        .flexstretch();
+    .layer__right-icons {
+        margin-left: 4px;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
     }
 
-    .layer__left-icons  { left: 0; }
-
-    .layer__right-icons { width: @right_icons_width; }
-    .layer__right-icons { right: 0;  }
-
-
+    .layer__left-icons {
+        .flexstretch();
+    }
 
     .layer__vis
     ,.layer__lock
@@ -393,12 +366,10 @@
     }
 
     .layer__colors {
-        .abs;
-        right: 100%;
         margin-right: 4px;
 
         &-square {
-           .size(6);
+           .size(7);
             border-width: 1px;
             border-style: solid;
             .rel;
@@ -452,7 +423,8 @@
                     border-style: solid solid;
                     border-color: @font_color;
                     .transform(rotate(-45deg));
-                    right: 1px;
+                    right: 2px;
+                    top: 2px;
                     .size(5, 3);
                 }
             }
@@ -481,7 +453,18 @@
     }
 
     .layers__container_moving {
-        cursor: move;
+        &.single {
+            .c-layer_drag_single();
+        }
+        &.single.into {
+            .c-layer_drag_single_into();
+        }
+        &.multi {
+            .c-layer_drag_multi();
+        }
+        &.multi.into {
+            .c-layer_drag_multi_into();
+        }
 
         .layer {
             &__dropAbove:after {

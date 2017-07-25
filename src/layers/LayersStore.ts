@@ -1,7 +1,7 @@
 import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
 import CarbonActions from "../CarbonActions";
-import LayersActions from "./LayersActions";
+import LayersActions, { LayerAction } from "./LayersActions";
 import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerTypes, IUIElement, IRepeatContainer } from "carbon-core";
 import { iconType } from "../utils/appUtils";
 
@@ -11,16 +11,12 @@ export type LayerNode = {
     indent: number;
     id: string;
     element: IUIElement;
-    name: string;
-    borderColor: string;
-    backgroundColor: string;
-    textColor: string;
-    visible: boolean;
-    locked: boolean;
     canSelect: boolean;
     type: string;
     hasChildren: boolean;
     repeater?: IRepeatContainer;
+    //consider changing to immutable instead of updating layer properties
+    version: 0;
 }
 
 export type LayersStoreState = {
@@ -70,15 +66,10 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             indent: indent,
             id: elementId,
             element: element,
-            name: element.displayName(),
-            borderColor: this._displayColor(element.stroke(), null),
-            backgroundColor: this._displayColor(element.fill(), null),
-            textColor: (element.props.font) ? element.props.font.color : null,
-            visible: element.visible(),
-            locked: element.locked(),
             canSelect: element.canSelect() || element.runtimeProps.selectFromLayersPanel,
             type: iconType(element),
-            hasChildren: element.children && element.children.length && recursive
+            hasChildren: element.children && element.children.length && recursive,
+            version: 0
         };
 
         if (nodeMutator) {
@@ -90,7 +81,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             return;
         }
 
-        if (element.t === Types.RepeatContainer && element.children.length) {
+        if (element.t === Types.RepeatContainer && element.children.length && expandedMap[node.id]) {
             let cell = element.children[0];
             for (let i = cell.children.length - 1; i >= 0; --i) {
                 let r = this.addLayerToList(layers, expandedMap, cell.children[i], indent + 1, true, n => {
@@ -116,7 +107,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         return defaultColor;
     }
 
-    _visitLayers(layers, callback) {
+    _visitLayers(layers, callback: (node: LayerNode) => boolean | void) {
         for (let i = 0; i < layers.length; ++i) {
             let layer = layers[i];
             if (!layer) {
@@ -145,13 +136,9 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         ) {
             let layers = this.state.layers;
 
-            this._visitLayers(layers, (layer) => {
+            this._visitLayers(layers, (layer: LayerNode) => {
                 if (layer.id === elementId) {
-                    if (props.hasOwnProperty("name") || props.hasOwnProperty("flags")) { layer.name = layer.element.displayName(); }
-                    if (props.hasOwnProperty("stroke")) { layer.borderColor = this._displayColor(props.stroke, 'black'); }
-                    if (props.hasOwnProperty("fill")) { layer.backgroundColor = this._displayColor(props.fill, 'white'); }
-                    if (props.hasOwnProperty("visible")) { layer.visible = props.visible; }
-                    if (props.hasOwnProperty("locked")) { layer.locked = props.locked; }
+                    layer.version += 1;
                     result = true;
 
                     return false;
@@ -162,8 +149,26 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         return result;
     }
 
-    @handles(LayersActions.toggleExpand)
-    onToggleExpand({ elementId }) {
+    onAction(action: LayerAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Layers_toggleExpand":
+                this.onToggleExpand(action.index);
+                return;
+            case "Layers_dropped":
+                //disable auto scrolling since layer could have been moved to a different page
+                this.setState({ scrollToLayer: undefined });
+                if (!this.state.expanded[action.targetId]) {
+                    this.onToggleExpand(action.targetIndex);
+                }
+                return;
+        }
+    }
+
+    onToggleExpand(index: number) {
+        let node = this.state.layers[index];
+        let elementId = node.id;
         let expanded = this.state.expanded;
 
         if (expanded[elementId]) {
@@ -173,7 +178,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             expanded[elementId] = true;
         }
 
-        this.setState({ expanded });
+        this.setState({ expanded, scrollToLayer: undefined });
         this.refreshLayersTree(expanded);// TODO: check if we need to optimize it
     }
 
@@ -244,10 +249,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         for (let i = 0; i < propChanges.length; i++) {
             let p = propChanges[i];
             let elementId = p.path[p.path.length - 1];
-            refreshState = this._updateProps(elementId, p.props);
-            if (refreshState) {
-                break;
-            }
+            refreshState = this._updateProps(elementId, p.props) || refreshState;
         }
 
         if (refreshState) {
@@ -287,6 +289,28 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             this.setState({ isIsolation: false });
             this.refreshLayersTree();
         }
+    }
+
+    getLayerNodeFromEvent(event: React.MouseEvent<HTMLElement>) {
+        let targetLayer = event.currentTarget;
+        let layerIndex = parseInt(targetLayer.dataset.index);
+        return this.state.layers[layerIndex];
+    }
+
+    isAncestorSelected(layer: LayerNode) {
+        var selected = !!this.state.selected[layer.id];
+
+        if (!selected) {
+            let parent = layer.element.parent();
+            while (parent) {
+                if (this.state.selected[parent.id()]) {
+                    return true;
+                }
+                parent = parent.parent();
+            }
+        }
+
+        return false;
     }
 }
 

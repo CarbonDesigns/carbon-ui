@@ -2,6 +2,7 @@ import React from "react";
 import { domUtil, Container, IContainer, IUIElement, Selection, Shape, Image } from "carbon-core";
 import interact from "interact.js";
 import layersStore, { LayerNode } from "./LayersStore";
+import { dispatchAction } from "../CarbonFlux";
 
 const DragSelector = "#layers_panel .layer";
 const DropSelector = "#layers_panel .layers__container";
@@ -18,14 +19,14 @@ enum DropPosition {
  * - interact.js does not work well with virtual lists, so it is used only for dragging.
  * - each layer reports its mouseMove/Leave/Up events to the controller, which decides when to do the actual drop.
  */
-export default class LayersDragController {
+export class LayersDragController {
     private container: HTMLElement;
     private layerInteraction: Interact.Interactable;
     private currentDropPositions: number[] = [];
     private isOverLayer: boolean = false;
     private draggedElements: IUIElement[] = [];
 
-    setup() {
+    attach() {
         if (this.layerInteraction) {
             return;
         }
@@ -50,7 +51,7 @@ export default class LayersDragController {
             .on("dragend", this.onDragEnd);
     }
 
-    dispose() {
+    detach() {
         if (this.layerInteraction) {
             this.layerInteraction.unset();
             this.layerInteraction = null;
@@ -75,25 +76,40 @@ export default class LayersDragController {
         }
 
         this.container.classList.add("layers__container_moving");
+        if (this.draggedElements.length === 1) {
+            this.container.classList.add("single");
+        }
+        else {
+            this.container.classList.add("multi");
+        }
         event.preventDefault();
     }
 
     onDropMove = (event: React.MouseEvent<HTMLElement>) => {
         if (!this.draggedElements.length) {
-            return;
+            return false;
         }
         let targetLayer = event.currentTarget;
         let layerIndex = parseInt(targetLayer.dataset.index);
         let targetElement = layersStore.state.layers[layerIndex].element;
         if (this.draggedElements.indexOf(targetElement) !== -1) {
-            return;
+            return true;
         }
 
         let newPosition = this.detectDropPosition(event, targetElement);
         let oldPosition = this.currentDropPositions[layerIndex];
 
+        if (newPosition !== DropPosition.None && targetElement.parent() !== this.draggedElements[0].parent()
+            || newPosition === DropPosition.Inside
+        ) {
+            this.container.classList.add("into");
+        }
+        else {
+            this.container.classList.remove("into");
+        }
+
         if (newPosition === oldPosition) {
-            return;
+            return true;
         }
 
         if (oldPosition) {
@@ -105,11 +121,12 @@ export default class LayersDragController {
         targetLayer.classList.add(newClass);
         this.currentDropPositions[layerIndex] = newPosition;
         this.isOverLayer = true;
+        return true;
     }
 
     onDragLeave = (event: React.MouseEvent<HTMLElement>) => {
         if (!this.draggedElements.length) {
-            return;
+            return false;
         }
 
         let targetLayer = event.currentTarget;
@@ -122,6 +139,7 @@ export default class LayersDragController {
             this.currentDropPositions[layerIndex] = undefined;
         }
         this.isOverLayer = false;
+        return true;
     }
 
     onDragEnd = event => {
@@ -130,11 +148,14 @@ export default class LayersDragController {
             this.draggedElements.length = 0;
         }
         this.container.classList.remove("layers__container_moving");
+        this.container.classList.remove("single");
+        this.container.classList.remove("multi");
+        this.container.classList.remove("into");
     }
 
     onDrop = (event: React.MouseEvent<HTMLElement>) => {
         if (!this.draggedElements.length) {
-            return true;
+            return false;
         }
         let targetLayer = event.currentTarget;
         let layerIndex = parseInt(targetLayer.dataset.index);
@@ -144,17 +165,20 @@ export default class LayersDragController {
             let dropClass = this.dropPositionClass(dropPosition);
             targetLayer.classList.remove(dropClass);
 
-            this.performDrop(layersStore.state.layers[layerIndex].element, dropPosition);
+            let parent = this.performDrop(layersStore.state.layers[layerIndex].element, dropPosition);
             Selection.refreshSelection();
+
+            dispatchAction({ type: "Layers_dropped", targetId: parent && parent.id(), targetIndex: layerIndex });
         }
 
         this.draggedElements.length = 0;
         this.currentDropPositions.length = 0;
+        return true;
     }
 
-    private performDrop(target: IUIElement, dropPosition: DropPosition) {
+    private performDrop(target: IUIElement, dropPosition: DropPosition): IContainer {
         if (dropPosition === DropPosition.None) {
-            return;
+            return null;
         }
 
         if (dropPosition === DropPosition.Below || dropPosition === DropPosition.Above) {
@@ -190,7 +214,7 @@ export default class LayersDragController {
             }
 
             parent.performArrange();
-            return;
+            return parent;
         }
 
         if (dropPosition === DropPosition.Inside) {
@@ -202,7 +226,7 @@ export default class LayersDragController {
             }
 
             parent.performArrange();
-            return;
+            return parent;
         }
 
         assertNever(dropPosition);
@@ -258,3 +282,5 @@ export default class LayersDragController {
         assertNever(position);
     }
 }
+
+export default new LayersDragController();

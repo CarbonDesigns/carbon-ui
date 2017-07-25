@@ -13,23 +13,17 @@ import { say } from "../shared/Utils";
 import bem from "bem";
 import FlyoutPopupSpawner from "../shared/FlyoutPopup";
 import { MarkupLine } from "../shared/ui/Markup";
-import LayerItem from "./LayersItem";
-import LayerRenamer from "./LayersRenamer";
+import LayerItem from "./LayerItem";
 import layersStore, { LayerNode, LayersStoreState } from "./LayersStore";
-import DragController from "./LayersDragController";
+import dragController from "./LayersDragController";
 
 type VirtualLayersList = new (props) => VirtualList<LayerNode>;
 const VirtualLayersList = VirtualList as VirtualLayersList;
-
-//strange webpack bug, scroll container import is removed
-let tmp = LessVars.flyoutMaxHeight;
 
 // TODO: inherited visibility and lock style
 function b(a, b?, c?) { return bem('layer', a, b, c) }
 
 export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
-    [x: string]: any;
-    private dragController: DragController = new DragController();
     refs: {
         panel: Panel;
         list: VirtualList<LayerNode>;
@@ -39,25 +33,14 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         super(props, layersStore);
     }
 
-    componentDidUpdate(props, state) {
-        super.componentDidUpdate(props, state);
-        var keys = Object.keys(this.state.selected);
-        if (keys.length) {
-            var e = this.refs["e" + keys[0]];
-            if (e) {
-                e._scrollIntoView();
-            }
-        }
-    }
-
     componentDidMount() {
         super.componentDidMount();
-        this.dragController.setup();
+        dragController.attach();
     }
 
     componentWillUnmout() {
         super.componentWillUnmount();
-        this.dragController.dispose();
+        dragController.detach();
     }
 
     componentWillUpdate(nextProps, nextState: Readonly<LayersStoreState>) {
@@ -76,7 +59,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         this.refs.panel.updateSizeClasses();
     }
 
-    _onLock = (node: LayerNode, selected: boolean) => {
+    private onLock = (node: LayerNode, selected: boolean) => {
         if (!selected) {
             node.element.locked(!node.element.locked());
             return;
@@ -89,7 +72,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         }
     };
 
-    _onHide = (node: LayerNode, selected: boolean) => {
+    private onHide = (node: LayerNode, selected: boolean) => {
         if (!selected) {
             node.element.visible(!node.element.visible());
             return;
@@ -102,23 +85,6 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         }
     };
 
-    startRenamingLayer = (layer) => {
-        this.setState({ renaming_layer: layer.props.uid });
-
-        var ref = layer.refs.item;
-        var el = ReactDOM.findDOMNode(ref);
-        this.refs['popup'].openForTarget(el, { layer: layer.props, layer_name: layer.props.element.name() });
-    }
-
-    _cancelRenamingLayer = () => {
-        this.refs['popup'].close();
-    }
-
-    _saveRenamingLayer = (layer, new_name) => {
-        layer.element.setProps({ name: new_name });
-        this.refs['popup'].close();
-    }
-
     private renderLayer = (layer: LayerNode, index: number) => {
         if (index === 0 || index === this.state.layers.length - 1) {
             return this.renderLayerPadding();
@@ -127,35 +93,22 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         var selected = !!this.state.selected[layer.id];
         var expanded = this.state.expanded[layer.id];
 
-        var ancestorSelected = false;
-        if (!selected) {
-            let parent = layer.element.parent();
-            while (parent) {
-                if (this.state.selected[parent.id()]) {
-                    ancestorSelected = true;
-                    break;
-                }
-                parent = parent.parent();
-            }
-        }
-
-        return <LayerItem layer={layer} index={index}
+        return <LayerItem layer={layer} index={index} version={layer.version}
             selected={selected}
             expanded={expanded}
-            ancestorSelected={ancestorSelected}
-            dragController={this.dragController}
-            onLock={this._onLock}
-            onHide={this._onHide} />
+            ancestorSelected={layersStore.isAncestorSelected(layer)}
+            onLock={this.onLock}
+            onHide={this.onHide} />
     }
     /**
      * Renders a special padding element so that overlays between layers are not clipped in the beginning and in the end.
      */
     private renderLayerPadding = () => {
-        return <div className="layer__padding"/>;
+        return <div className="layer__padding" />;
     }
     private getRowHeight = (node, index: number) => {
         if (index === 0 || index === this.state.layers.length - 1) {
-            return LessVars.layerOverlayHeight/2;
+            return LessVars.layerOverlayHeight / 2;
         }
         return LessVars.layerItemHeight;
     }
@@ -167,7 +120,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         Environment.view.ensureVisible(artboards);
     }
 
-    renderBackButton() {
+    private renderBackButton() {
         if (!app.activePage) {
             return null;
         }
@@ -177,43 +130,23 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
             return null;
         }
 
-
         return <MarkupLine className="layers-back__button">
-            <div onClick={this.goBack}><u>← <CarbonLabel id={artboard.name()} /></u></div>
+            <div onClick={this.goBack}><u>← {artboard.name()} </u></div>
         </MarkupLine>;
     }
 
     render() {
-        var rename_popup_spawner = (<FlyoutPopupSpawner
-            ref="popup"
-            position={{ disableAutoClose: true, targetHorizontal: 'left', targetVertical: 'top' }}
-            drawContent={(content_props) =>
-                <LayerRenamer
-                    layer={content_props.layer}
-                    layer_name={content_props.layer_name}
-                    save={this._saveRenamingLayer}
-                    cancel={this._cancelRenamingLayer}
-                />
-            }
-        />);
+        return <Panel ref="panel" header="Layers" id="layers_panel">
+            {this.renderBackButton()}
 
-
-        return (
-            <Panel ref="panel" header="Layers" id="layers_panel">
-                <div className="layers-panel__layer-filters" onClick={this._toggleDragMode}></div>
-
-                {this.renderBackButton()}
-
-                <div className={bem("layers-panel", "layers-list", null, "panel__stretcher")} data-mode="airy">
-                    {rename_popup_spawner}
-                    <VirtualLayersList className="layers__container"
-                        ref="list"
-                        data={this.state.layers}
-                        rowHeight={this.getRowHeight}
-                        rowRenderer={this.renderLayer}
-                        scrollToRow={this.state.scrollToLayer}/>
-                </div>
-            </Panel>
-        );
+            <div className={bem("layers-panel", "layers-list", null, "panel__stretcher")} data-mode="airy">
+                <VirtualLayersList className="layers__container"
+                    ref="list"
+                    data={this.state.layers}
+                    rowHeight={this.getRowHeight}
+                    rowRenderer={this.renderLayer}
+                    scrollToRow={this.state.scrollToLayer} />
+            </div>
+        </Panel>;
     }
 }

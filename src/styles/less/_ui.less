@@ -2367,13 +2367,14 @@
 
 @media screen and(max-width:740px) {
     .navigation-menu {
-        justify-content: center;
+        justify-content: space-between;
     }
+
 
     .header-container {
         flex-direction: column;
         align-content: center;
-        padding-top:0;
+        padding: 30px 10px 0 10px;
     }
 
     .header-container__logo {
@@ -2388,6 +2389,11 @@
             width:40px;
         }
     }
+
+    .header-container__logo {
+        margin: 0 0 10px 0;
+    }
+
     .navigation-menu {
         &, & a{
             font-size: 12px;

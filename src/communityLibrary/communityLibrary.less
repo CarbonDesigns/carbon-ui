@@ -1,13 +1,14 @@
-
 @headerFontSize: 50px;
+@headerFontSizeSmall: 36px;
 
 .library-page {
     background-color: white;
     width:100%;
     min-height: 100vh;
     position: relative;
-        display: flex;
+    display: flex;
     flex-direction: column;
+    min-width: 320px;
 }
 
 .libraryheader-container {
@@ -162,5 +163,24 @@
         margin: 5px 5px 0 0;
         background-image: url("../res/app/dwnld.svg");
         background-repeat: no-repeat;
+    }
+}
+
+@media screen and(max-width: 360px) {
+    .search-tag {
+
+        &:nth-child(4){
+            display: none;
+        }
+    }
+}
+
+@media screen and(max-width: 500px) {
+    .libraryheader-container__h {
+        font-size: @headerFontSizeSmall;
+    }
+
+    .libraryheader-container {
+        padding-top: 15px;
     }
 }

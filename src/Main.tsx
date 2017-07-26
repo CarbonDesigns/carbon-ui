@@ -39,6 +39,14 @@ const rootRoute = {
             }
         },
         {
+            path: "/resource/:id",
+            getComponent(nextState, cb) {
+                require.ensure([], (require) => {
+                    cb(null, require("./communityLibrary/CommunityLibraryDetails"));
+                }, "resource");
+            }
+        },
+        {
             path: "app(/@:companyName)(/:appId)",
             getComponent(nextState, cb) {
                 loadCore(() => {

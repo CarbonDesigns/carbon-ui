@@ -621,6 +621,8 @@ export default
         "@pusec.p2": "Automate repetitive tasks",
         "@pusec.p3": "Always stay safe. And happy ;)",
 
+        "@gallery.noitems": "Your search did not match any result",
+
         "@email.placeholder":"Your email address",
         "@search.placeholder":"Search",
 

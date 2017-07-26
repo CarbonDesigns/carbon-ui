@@ -2,11 +2,8 @@ import React, { PropTypes } from "react";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
 
-import { backend } from "carbon-api";
+import { backend, util } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
-import FlyoutButton from "../shared/FlyoutButton";
-import LoginPopup from "../account/LoginPopup";
-import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
 import bem from "../utils/commonUtils";
@@ -14,32 +11,35 @@ import InfiniteGrid from "../shared/collections/InfiniteGrid";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
 
 
-function debounce(func, wait, immediate?) {
-    var timeout;
-    return function () {
-        var context = this, args = arguments;
-        var later = function () {
-            timeout = null;
-            if (!immediate) { func.apply(context, args); }
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) { func.apply(context, args); }
-    };
-}
+// function debounce(func, wait, immediate?) {
+//     var timeout;
+//     return function () {
+//         var context = this, args = arguments;
+//         var later = function () {
+//             timeout = null;
+//             if (!immediate) { func.apply(context, args); }
+//         };
+//         var callNow = immediate && !timeout;
+//         clearTimeout(timeout);
+//         timeout = setTimeout(later, wait);
+//         if (callNow) { func.apply(context, args); }
+//     };
+// }
 
 
 function SearchTag(props) {
-    return <div className="search-tag" onClick={() => props.host.setState({ searchText: "tags:" + props.text })}>
+    return <div className="search-tag" onClick={() => {
+            props.host.setState({ searchText: "tags:" + props.text });
+            props.host._resetSearch();
+        }}>
         {props.text}
     </div>
 }
 
 function GalleryListItem(props) {
     var item = props.item;
-    return <div className={bem("gallery-item")} onClick={() => props.host.goToItem(item.id)} style={{ backgroundImage: "url('" + item.coverUrl + "')" }}>
-        <div className={bem("gallery-item", "downloads")}>{item.downloadCount}</div>
+    return <div className={bem("gallery-item")} onClick={() => props.host.goToItem(item)} style={{ backgroundImage: "url('" + item.coverUrl + "')" }}>
+        <div className={bem("gallery-item", "downloads")}>{item.timesUsed}</div>
         <h2 className={bem("gallery-item", "name")}>{item.name}</h2>
         <h3 className={bem("gallery-item", "tags")}>{item.tags}</h3>
     </div>
@@ -68,9 +68,19 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
         let promise: Promise<IPaginatedResult<ISharedResource>> = null;
 
         promise = backend.galleryProxy.resources(startIndex, stopIndex, this.state.searchText);
-
+        promise.then(()=>{
+            if(this.state.searchText === "") {
+                this.context.router.replace("/library");
+            } else {
+                this.context.router.replace("/library?s="+this.state.searchText);
+            }
+        });
         return promise.finally(() => this.setState({ loading: false }));
     };
+
+    private _noItemsFound() {
+        return <div className={bem("gallery-list-container", "noresult")}><CarbonLabel id="@gallery.noitems"/></div>
+    }
 
     private renderTiles() {
         var res = [];
@@ -82,17 +92,21 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
             loadMore={this.onLoadMore}
             cellRenderer={resource =>
                 <GalleryListItem
+                    host = {this}
                     item={resource}
-            />} />);
+            />}
+            noContentRenderer={this._noItemsFound}
+            />);
         return res;
     }
+
 
     _resetSearch: () => void;
 
     constructor(props) {
         super(props);
-        this.state = { searchText: "", loading: false };
-        this._resetSearch = debounce(() => {
+        this.state = { searchText: props.location.query.s || "", loading: false };
+        this._resetSearch = util.debounce(() => {
             this.setState({ loading: true });
             this.refs.grid.reset();
         }, 400);
@@ -107,8 +121,11 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
         this._resetSearch();
     }
 
-    goToItem(itemId) {
-
+    goToItem(item) {
+        this.context.router.push({
+            pathname:"/resource/"+item.galleryId,
+            state:{data:item}
+        })
     }
 
     render() {
@@ -124,7 +141,7 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
             </section>
 
             <section className="searchtags-container section-center">
-                <SearchTag text="iOS" host={this}></SearchTag>
+                <SearchTag text="ios" host={this}></SearchTag>
                 <SearchTag text="icons" host={this}></SearchTag>
                 <SearchTag text="android" host={this}></SearchTag>
                 <SearchTag text="landing" host={this}></SearchTag>

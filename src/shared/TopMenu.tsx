@@ -59,11 +59,13 @@ export default class TopMenu extends Component<TopMenuProps, any>{
 
     render() {
         let itemCn = bem("navigation-menu", "item", {dark:this.props.dark});
+        var location = this.context.router.getCurrentLocation();
+        var libraryActive = "/library" === location.pathname;
         return <nav className="header-container">
             <a onClick={this._goHome} className={bem("header-container", "logo", { dark: this.props.dark })} title="carbonium.io"></a>
 
             <ul className="navigation-menu">
-                <li className={itemCn} onClick={this._goToCommunity} ><CarbonLabel id="@nav.communitylibrary" /></li>
+                <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})} onClick={libraryActive?null:this._goToCommunity} ><CarbonLabel id="@nav.communitylibrary" /></li>
                 <li className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>
                 <li className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>
                 <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginFlyout()}</li>

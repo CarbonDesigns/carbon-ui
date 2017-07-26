@@ -2346,6 +2346,24 @@
         height: 40px;
         border: 1px solid #E8E8F5;
     }
+
+    &&_active {
+        position:relative;
+        &:after {
+            content:"";
+            display: block;
+            position:absolute;
+            bottom:15px;
+            height:2px;
+            left:0;
+            right:0;
+            background: #8421BD;
+        }
+
+        &&:hover {
+            text-decoration: none;
+        }
+    }
 }
 
 @media screen and (max-width:600px) {
@@ -2370,7 +2388,6 @@
         justify-content: space-between;
     }
 
-
     .header-container {
         flex-direction: column;
         align-content: center;
@@ -2380,6 +2397,15 @@
     .header-container__logo {
         margin: 0 0 30px 0;
         align-self: center;
+    }
+
+    .navigation-menu__item {
+        &&_active {
+            &:after {
+                content:"";
+                bottom:8px;
+            }
+        }
     }
 }
 

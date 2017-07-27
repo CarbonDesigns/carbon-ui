@@ -10,6 +10,7 @@ import LoginPopup from "../account/LoginPopup";
 import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
+import SubscribeForm from "../shared/SubscribeForm";
 
 
 function FeatureSection(props) {
@@ -180,13 +181,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 <div className="hero-container__logo airbnb"></div>
             </section>
 
-            <section className="subscribe-container">
-                <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details" /></p>
-                <form className="subscribe-form">
-                    <input type="text" className="subscribe-form__email" placeholder={this.context.intl.formatMessage({id:"@email.placeholder"})} />
-                    <button className="subscribe-form__button"><CarbonLabel id="@subscribe" /></button>
-                </form>
-            </section>
+            <SubscribeForm mainTextLabelId="@subscribe.details"/>
 
             <FeatureSection
                 className="first-section"
@@ -224,13 +219,8 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
             <section className="quote-container">
                 <article><CarbonLabel id="@opensource.join" /><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
             </section>
-            <section className="subscribe-container">
-                <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details2" /></p>
-                <form className="subscribe-form">
-                    <input type="text" className="subscribe-form__email" placeholder={this.context.intl.formatMessage({id:"@email.placeholder"})} />
-                    <button className="subscribe-form__button"><CarbonLabel id="@subscribe" /></button>
-                </form>
-            </section>
+
+            <SubscribeForm mainTextLabelId="@subscribe.details2"/>
         </div>;
     }
 }

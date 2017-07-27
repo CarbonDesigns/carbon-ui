@@ -105,29 +105,7 @@ export class ResourceSharer {
     }
 
     importPage(data) {
-        var pageJson = data.page as IJsonNode;
-        var name = ' (' + pageJson.props.name + ')';
-        if (data.styles) {
-            for (let style of data.styles) {
-                style.name += name;
-                app.styleManager.registerStyle(style, StyleType.Visual)
-            }
-        }
-
-        if (data.textStyles) {
-            for (let style of data.textStyles) {
-                style.name += name;
-                app.styleManager.registerStyle(style, StyleType.Text)
-            }
-        }
-
-        if (data.fontMetadata) {
-            for (var metadata of data.fontMetadata) {
-                app.saveFontMetadata(metadata);
-            }
-        }
-
-        return app.importPage(pageJson);
+        return app.importExternalPage(data);
     }
 }
 

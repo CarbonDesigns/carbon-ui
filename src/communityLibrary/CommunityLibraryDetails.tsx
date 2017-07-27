@@ -6,8 +6,10 @@ import { backend } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
+import SubscribeForm from "../shared/SubscribeForm";
 import bem from "../utils/commonUtils";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
+import cx from "classnames";
 
 
 function SearchTag(props) {
@@ -60,6 +62,15 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
         }
     }
 
+    _openSymbol(dataUrl) {
+        this.context.router.push({
+            pathname:"/app",
+            state: {
+                dataUrl:dataUrl
+            }
+        })
+    }
+
     componentDidMount() {
         super.componentDidMount();
     }
@@ -96,19 +107,13 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
                     <div className={bem("resource-details", "designedby")}>{data.authorName||"carbonium"}</div>
 
                     <div className="resource-details__import-aligner">
-                        <button className={bem("resource-details", "import")}>Open symbol</button>
+                        <button onClick={()=>{this._openSymbol(data.dataUrl)}} className={cx("form-main-button", bem("resource-details", "import"))}>Open symbol</button>
                         <div className={bem("resource-details", "downloads")}>{data.timesUsed} downloads</div>
                     </div>
                 </div>
             </section>
 
-            <section className="subscribe-container">
-                <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details" /></p>
-                <form className="subscribe-form">
-                    <input type="text" className="subscribe-form__email" placeholder={this.context.intl.formatMessage({ id: "@email.placeholder" })} />
-                    <button className="subscribe-form__button"><CarbonLabel id="@subscribe" /></button>
-                </form>
-            </section>
+            <SubscribeForm mainTextLabelId="@subscribe.details"/>
         </div>;
     }
 }

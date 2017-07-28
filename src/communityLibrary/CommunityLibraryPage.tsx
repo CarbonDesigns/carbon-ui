@@ -11,23 +11,6 @@ import bem from "../utils/commonUtils";
 import InfiniteGrid from "../shared/collections/InfiniteGrid";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
 
-
-// function debounce(func, wait, immediate?) {
-//     var timeout;
-//     return function () {
-//         var context = this, args = arguments;
-//         var later = function () {
-//             timeout = null;
-//             if (!immediate) { func.apply(context, args); }
-//         };
-//         var callNow = immediate && !timeout;
-//         clearTimeout(timeout);
-//         timeout = setTimeout(later, wait);
-//         if (callNow) { func.apply(context, args); }
-//     };
-// }
-
-
 function SearchTag(props) {
     return <div className="search-tag" onClick={() => {
             props.host.setState({ searchText: "tags:" + props.text });
@@ -39,11 +22,16 @@ function SearchTag(props) {
 
 function GalleryListItem(props) {
     var item = props.item;
-    return <div className={bem("gallery-item")} onClick={() => props.host.goToItem(item)} style={{ backgroundImage: "url('" + item.coverUrl + "')" }}>
+    return <Link to={{
+                pathname:"/resource/"+item.galleryId,
+                state:{data:item}
+            }}
+            key={"/resource/"+item.galleryId}
+            className={bem("gallery-item")} style={{ backgroundImage: "url('" + item.coverUrl + "')" }}>
         <div className={bem("gallery-item", "downloads")}>{item.timesUsed}</div>
         <h2 className={bem("gallery-item", "name")}>{item.name}</h2>
         <h3 className={bem("gallery-item", "tags")}>{item.tags}</h3>
-    </div>
+    </Link>
 }
 
 interface CommunityLibraryPageState {
@@ -71,9 +59,9 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
         promise = backend.galleryProxy.resources(startIndex, stopIndex, this.state.searchText);
         promise.then(()=>{
             if(this.state.searchText === "") {
-                this.context.router.replace("/library");
+                this.context.router.push("/library");
             } else {
-                this.context.router.replace("/library?s="+this.state.searchText);
+                this.context.router.push("/library?s="+this.state.searchText);
             }
         });
         return promise.finally(() => this.setState({ loading: false }));
@@ -111,6 +99,14 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
             this.setState({ loading: true });
             this.refs.grid.reset();
         }, 400);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+        if(this.props.location.query.s && this.props.location.query.s !== this.state.searchText && prevProps.location.query.s !== this.props.location.query.s) {
+            this.setState({searchText: this.props.location.query.s});
+            this._resetSearch()
+        }
     }
 
     componentDidMount() {

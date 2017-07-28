@@ -2,6 +2,7 @@ import React, { PropTypes } from "react";
 import ReactDom from "react-dom";
 import { util } from "carbon-core";
 import cx from "classnames";
+import { Link } from "react-router";
 import { Component, CarbonLabel } from "../CarbonFlux";
 import FlyoutButton from "./FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
@@ -65,7 +66,7 @@ export default class TopMenu extends Component<TopMenuProps, any>{
             <a onClick={this._goHome} className={bem("header-container", "logo", { dark: this.props.dark })} title="carbonium.io"></a>
 
             <ul className="navigation-menu">
-                <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})} onClick={libraryActive?null:this._goToCommunity} ><CarbonLabel id="@nav.communitylibrary" /></li>
+                <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>
                 <li className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>
                 <li className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>
                 <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginFlyout()}</li>

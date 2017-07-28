@@ -25,7 +25,13 @@ export default class SubscribeForm extends Component<TopMenuProps, any>{
     _onSubmit=()=>{
         var email = this.refs.input.value;
         backend.activityProxy.subscribeForBeta(email).then(()=>{
-            this.setState({subscribed:true});
+            this.context.router.push({
+                pathname:"/thankyou",
+                state:{
+                    header:"@message.thankyou",
+                    message:"@message.wewillnotify"
+                }
+            })
         })
     }
 
@@ -34,7 +40,7 @@ export default class SubscribeForm extends Component<TopMenuProps, any>{
         return <section className="subscribe-container">
                 <p className="subscribe-container__details"><CarbonLabel id={this.props.mainTextLabelId} /></p>
                 <div className="subscribe-form">
-                    <input ref="input" type="text" className="subscribe-form__email" placeholder={this.context.intl.formatMessage({id:"@email.placeholder"})} />
+                    <input ref="input" type="email" className="subscribe-form__email" placeholder={this.context.intl.formatMessage({id:"@email.placeholder"})} />
                     <button onClick={this._onSubmit} className="subscribe-form__button form-main-button"><CarbonLabel id="@subscribe" /></button>
                 </div>
             </section>

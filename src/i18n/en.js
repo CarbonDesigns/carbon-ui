@@ -591,6 +591,9 @@ export default
         "@data.customName": "Dataset name",
         "@data.customBody": "Enter one item per line",
 
+        "@message.thankyou": "Thank you!",
+        "@message.wewillnotify": "We will update you with news about release date of the carbonium and give you an access as soon as possible.",
+
         "@nav.communitylibrary": "Community Library",
         "@nav.teamslack": "Team Slack",
         "@nav.github": "GitHub",

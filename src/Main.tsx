@@ -39,6 +39,14 @@ const rootRoute = {
             }
         },
         {
+            path: "/thankyou",
+            getComponent(nextState, cb) {
+                require.ensure([], (require) => {
+                    cb(null, require("./landing/message"));
+                }, "thankyou");
+            }
+        },
+        {
             path: "/resource/:id",
             getComponent(nextState, cb) {
                 require.ensure([], (require) => {

@@ -103,7 +103,7 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
 
     @handles(PropertyActions.patched)
     onPatched({changeType, propertyName, value}){
-        this.state.selection.patchProps(this.state.selection.elements, propertyName, changeType, value);
+        this.state.selection.patchDisplayProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
     @handles(PropertyActions.cancelEdit)
@@ -113,7 +113,7 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
 
     @handles(PropertyActions.previewPatch)
     previewPatchProperty({changeType, propertyName, value}){
-        this.state.selection.previewPatchProps(this.state.selection.elements, propertyName, changeType, value);
+        this.state.selection.previewPatchDisplayProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
     @handles(PropertyActions.changedExternally)

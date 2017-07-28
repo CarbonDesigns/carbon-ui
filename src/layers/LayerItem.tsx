@@ -193,6 +193,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         var colorsCss: React.CSSProperties = {};
         if (layer.element instanceof Text) {
             colorsCss.backgroundColor = (layer.element as IText).props.font.color;
+            colorsCss.borderColor = colorsCss.backgroundColor;
         }
         else {
             colorsCss.borderColor = this.displayColor(layer.element.stroke(), 'transparent');

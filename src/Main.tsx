@@ -31,6 +31,30 @@ const rootRoute = {
             }
         },
         {
+            path: "/library",
+            getComponent(nextState, cb) {
+                require.ensure([], (require) => {
+                    cb(null, require("./communityLibrary/CommunityLibraryPage"));
+                }, "library");
+            }
+        },
+        {
+            path: "/thankyou",
+            getComponent(nextState, cb) {
+                require.ensure([], (require) => {
+                    cb(null, require("./landing/message"));
+                }, "thankyou");
+            }
+        },
+        {
+            path: "/resource/:id",
+            getComponent(nextState, cb) {
+                require.ensure([], (require) => {
+                    cb(null, require("./communityLibrary/CommunityLibraryDetails"));
+                }, "resource");
+            }
+        },
+        {
             path: "app(/@:companyName)(/:appId)",
             getComponent(nextState, cb) {
                 loadCore(() => {

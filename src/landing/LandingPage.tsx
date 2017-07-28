@@ -1,6 +1,7 @@
-import React from "react";
+import React, { PropTypes } from "react";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
+import cx from "classnames";
 
 import { backend } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
@@ -8,14 +9,44 @@ import FlyoutButton from "../shared/FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
 import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import TopMenu from "../shared/TopMenu";
+import SubscribeForm from "../shared/SubscribeForm";
+
+
+function FeatureSection(props) {
+    var cn = cx("feature-section", props.className);
+    return <section className={cn}>
+        <div className="feature-section__description">
+            <div className="feature-section__index">{props.index}</div>
+            <div className="feature-section__symbol">{props.symbol}</div>
+            <h1 className="feature-section__header"><CarbonLabel id={props.headerLabel} /></h1>
+            <article>
+                <div className="feature-section__details">
+                    <CarbonLabel id={props.detailsLabel} />
+                </div>
+                <ul className="feature-section__list">
+                    <li className="feature-section__list-item"><CarbonLabel id={props.p1Label} /></li>
+                    <li className="feature-section__list-item"><CarbonLabel id={props.p2Label} /></li>
+                    <li className="feature-section__list-item"><CarbonLabel id={props.p3Label} /></li>
+                </ul>
+            </article>
+        </div>
+        <div className={cx("feature-section__image", props.imageClass)}></div>
+    </section>;
+}
 
 export default class LandingPage extends RouteComponent<IRouteComponentProps>{
     lastTimestamp: number = 0;
 
-    sections: any[];
+    sections: any;
     backgrounds: any[];
     activeSection: any;
     currentSectionClass: any;
+
+    static contextTypes = {
+        router: PropTypes.any,
+        intl: PropTypes.object
+    }
 
 
     _onScroll = (event) => {
@@ -69,14 +100,12 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
         }
 
         this.backgrounds[i].style.opacity = 1;
-        (this.refs.section1 as any).classList.remove("first-section");
-
     }
 
     componentDidMount() {
         super.componentDidMount();
         window.addEventListener("scroll", this._onScroll)
-        this.sections = [this.refs.section1, this.refs.section2, this.refs.section3];
+        this.sections = document.querySelectorAll(".feature-section");
         this.backgrounds = [this.refs.background1, this.refs.background2, this.refs.background3];
         for (let j = 0; j < this.backgrounds.length; ++j) {
             this.backgrounds[j].style.opacity = 0;
@@ -84,29 +113,6 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
         }
         this.backgrounds[0].style.opacity = 1;
     }
-
-    _renderLoginButton() {
-        return <CarbonLabel id="@nav.login" />;
-    }
-
-    _renderLoginFlyout() {
-        return <FlyoutButton className="login-flyout" renderContent={this._renderLoginButton}
-            position={{ targetVertical: "bottom", targetHorizontal: "right", disableAutoClose: true }}>
-            <div id="login">
-                <LoginPopup location={this.props.location} />
-            </div>
-        </FlyoutButton>
-    }
-
-    _renderLogoutButton() {
-        return <div className="gui-button">
-            <button href="#" onClick={this._logout}><span>Log out</span></button>
-        </div>;
-    }
-
-    _logout = () => {
-        backend.logout().then(() => this.goHome());
-    };
 
     canHandleActions() {
         return true;
@@ -134,33 +140,17 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
     //     </FlyoutButton>
     // }
 
+
+
     render() {
         return <div className="landing-page">
-            {/* <div><span style={{ color: "aqua", fontSize: 32 }}>Landing page</span></div>
-
-            {backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginFlyout()}
-
-            <div className="gui-button">
-                <Link to="/app"><FormattedMessage id="StartDesigning" defaultMessage="Start designing" /></Link>
-            </div> */}
-
             <div ref="background1" className="page-background green-section"></div>
             <div ref="background2" className="page-background blue-section"></div>
             <div ref="background3" className="page-background purple-section"></div>
             {/* <div ref="background4" className="page-background yellow-section"></div> */}
             {/* <div ref="background5" className="page-background red-section"></div> */}
             <section ref="heroContainer" className="hero-container">
-                <nav className="header-container">
-
-                    <a href="/" className="header-container__logo" title="carbonium.io"></a>
-
-                    <ul className="navigation-menu">
-                        <li className="navigation-menu__item"><CarbonLabel id="@nav.communitylibrary" /></li>
-                        <li className="navigation-menu__item"><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>
-                        <li className="navigation-menu__item"><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>
-                        <li className="navigation-menu__item navigation-menu__item_button">{backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginFlyout()}</li>
-                    </ul>
-                </nav>
+                <TopMenu location={this.props.location} />
 
                 {/* <canvas ref="backCanvas" className="hero-container__canvas"></canvas> */}
                 <div className="hero-container__canvas"></div>
@@ -176,11 +166,11 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                     </div>
                 </div>
 
-                <h3 className="hero-container__subheading">Create designs for iOS, Android, Web or any other platform</h3>
+                <h3 className="hero-container__subheading"><CarbonLabel id="@hero.subheading" /></h3>
             </section>
 
             <section className="subheader-container">
-                <h3 className="subheader-container__h">Companies of any size or individuals can draw logos like this in our app</h3>
+                <h3 className="subheader-container__h"><CarbonLabel id="@logos.header" /></h3>
             </section>
 
             <section className="hero-container__logos">
@@ -191,79 +181,46 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 <div className="hero-container__logo airbnb"></div>
             </section>
 
-            <section className="subscribe-container">
-                <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details" /></p>
-                <form className="subscribe-form">
-                    <input type="text" className="subscribe-form__email" placeholder="Your email address" />
-                    <button className="subscribe-form__button"><CarbonLabel id="@subscribe" /></button>
-                </form>
-            </section>
-            <section ref="section1" className="feature-section first-section">
-                <div className="feature-section__description">
-                    <div className="feature-section__index">01</div>
-                    <div className="feature-section__symbol">Li</div>
-                    <h1 className="feature-section__header">Community library</h1>
-                    <article>
-                        <div className="feature-section__details">
-                            Go from blank page to brilliant faster with the help of our community.
-                        </div>
-                        <ul className="feature-section__list">
-                            <li className="feature-section__list-item">Enjoy our shared gallery of free symbols, icons and much more...</li>
-                            <li className="feature-section__list-item">Build your team library in few clicks</li>
-                            <li className="feature-section__list-item">Help the world and share your work with the community</li>
-                        </ul>
-                    </article>
-                </div>
-                <div className="feature-section__image symbols-image"></div>
-            </section>
+            <SubscribeForm mainTextLabelId="@subscribe.details"/>
 
-            <section ref="section2" className="feature-section" >
-                <div className="feature-section__description">
-                    <div className="feature-section__index">02</div>
-                    <div className="feature-section__symbol">Da</div>
-                    <h1 className="feature-section__header">Data</h1>
-                    <article>
-                        <div className="feature-section__details">
-                            Design with data in mind. Fill your prototypes with meaningful content.
-                        </div>
-                        <ul className="feature-section__list">
-                            <li className="feature-section__list-item">Quickly populate designs with realistic text and images</li>
-                            <li className="feature-section__list-item">Draw once, repeat as needed</li>
-                            <li className="feature-section__list-item">Create your own datasets or connect to real-time REST API</li>
-                        </ul>
-                    </article>
-                </div>
-                <div className="feature-section__image">image</div>
-            </section>
+            <FeatureSection
+                className="first-section"
+                index="01"
+                symbol="Li"
+                headerLabel="@libsec.header"
+                detailsLabel="@libsec.details"
+                p1Label="@libsec.p1"
+                p2Label="@libsec.p2"
+                p3Label="@libsec.p3"
+                imageClass="symbols-image"
+            />
+            <FeatureSection
+                index="02"
+                symbol="Do"
+                headerLabel="@datasec.header"
+                detailsLabel="@datasec.details"
+                p1Label="@datasec.p1"
+                p2Label="@datasec.p2"
+                p3Label="@datasec.p3"
+                imageClass="data-image"
+            />
 
-            <section ref="section3" className="feature-section" >
-                <div className="feature-section__description">
-                    <div className="feature-section__index">03</div>
-                    <div className="feature-section__symbol">Pu</div>
-                    <h1 className="feature-section__header">Plugins</h1>
-                    <article>
-                        <div className="feature-section__details">
-                            Carbonium is the first design app on the web with plugins.
-                        </div>
-                        <ul className="feature-section__list">
-                            <li className="feature-section__list-item">Work faster with plugins from our amazing developer community</li>
-                            <li className="feature-section__list-item">Automate repetitive tasks</li>
-                            <li className="feature-section__list-item">Always stay safe. And happy ;)</li>
-                        </ul>
-                    </article>
-                </div>
-                <div className="feature-section__image">image</div>
-            </section>
+            <FeatureSection
+                index="03"
+                symbol="Pu"
+                headerLabel="@pusec.header"
+                detailsLabel="@pusec.details"
+                p1Label="@pusec.p1"
+                p2Label="@pusec.p2"
+                p3Label="@pusec.p3"
+                imageClass="plugins-image"
+            />
+
             <section className="quote-container">
-                <article> Carbonium is open source. Let's make it better ... together! Join us on <a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
+                <article><CarbonLabel id="@opensource.join" /><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
             </section>
-            <section className="subscribe-container">
-                <p className="subscribe-container__details"><CarbonLabel id="@subscribe.details2" /></p>
-                <form className="subscribe-form">
-                    <input type="text" className="subscribe-form__email" placeholder="Your email address" />
-                    <button className="subscribe-form__button"><CarbonLabel id="@subscribe" /></button>
-                </form>
-            </section>
+
+            <SubscribeForm mainTextLabelId="@subscribe.details2"/>
         </div>;
     }
 }

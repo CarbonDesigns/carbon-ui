@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
-import { InfiniteLoader, AutoSizer, Grid, Dimensions, InfiniteLoaderChildProps, SectionRenderedParams, Index, IndexRange, GridCellProps } from "react-virtualized";
+import { InfiniteLoader, List, WindowScroller, AutoSizer, Grid, Dimensions, InfiniteLoaderChildProps, SectionRenderedParams, Index, IndexRange, GridCellProps } from "react-virtualized";
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
@@ -10,6 +10,7 @@ interface InfiniteGridProps<T = any> extends ISimpleReactElementProps {
     cellWidth: number;
     cellHeight: number;
     cellRenderer: (item: T) => React.ReactNode;
+    windowScroll?:boolean;
     loadMore: (startIndex: number, stopIndex: number) => Promise<IPaginatedResult<T>>;
     noContentRenderer?: () => React.ReactNode;
 }
@@ -160,6 +161,41 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
         return Math.floor(dimensions.width / this.props.cellWidth);
     }
 
+    private infiniteLoaderChildFunctionWindowScroller = (loaderProps: InfiniteLoaderChildProps) => {
+        this.onRowsRendered = loaderProps.onRowsRendered;
+        this.registerChild = loaderProps.registerChild;
+
+        return <WindowScroller>
+            {(scrollerProps:any) =>
+            <AutoSizer disableHeight>
+            {dimensions => {
+                this.onNewDimensions(dimensions);
+
+                //cells with aspect ratio
+                let actualCellWidth = this.props.cellWidth;// / (this.state.columnCount || 1);
+                let actualCellHeight = this.props.cellHeight;// * actualCellWidth / this.props.cellWidth;
+
+                return <Grid
+                        style={{ overflowX: "hidden", display:"flex", "justifyContent":"center" }}
+                        autoHeight
+                        cellRenderer={this.cellRenderer}
+                        noContentRenderer={this.props.noContentRenderer}
+                        columnCount={this.state.columnCount}
+                        columnWidth={actualCellWidth}
+                        isScrolling={scrollerProps.isScrolling}
+                        onScroll={scrollerProps.onChildScroll}
+                        rowCount={this.state.rowCount}
+                        rowHeight={actualCellHeight}
+                        width={dimensions.width}
+                        height={scrollerProps.height}
+                        scrollTop={scrollerProps.scrollTop}
+                        onSectionRendered={params => this.onSectionRendered(params, this.state.columnCount)}
+                        ref={this.registerGrid}
+                    />
+            }}
+        </AutoSizer>}</WindowScroller>;
+    }
+
     private infiniteLoaderChildFunction = (loaderProps: InfiniteLoaderChildProps) => {
         this.onRowsRendered = loaderProps.onRowsRendered;
         this.registerChild = loaderProps.registerChild;
@@ -220,7 +256,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     render() {
         return <InfiniteLoader ref="loader" isRowLoaded={this.isRowLoaded} loadMoreRows={this.loadMoreRows}
             rowCount={this.state.totalCount}>
-            {this.infiniteLoaderChildFunction}
+            {this.props.windowScroll?this.infiniteLoaderChildFunctionWindowScroller:this.infiniteLoaderChildFunction}
         </InfiniteLoader>;
     }
 }

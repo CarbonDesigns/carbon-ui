@@ -14,6 +14,7 @@ export interface IRouteComponentProps{
 export default class RouteComponent<P extends IRouteComponentProps = IRouteComponentProps, S = {}> extends Component<P, S> {
     context: {
         router: Router.InjectedRouter
+        intl:any
     }
 
     goToDashboard(companyName: string, companyId: string){

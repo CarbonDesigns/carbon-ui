@@ -41,12 +41,12 @@ export default class UserBar extends Component<IUserBarProps, IUserBarState> {
                 return;
         }
     }
+
     _logout = () => {
         var saved = app.isDirty() ? app.actionManager.invoke("save") as Promise<void> : Promise.resolve();
         saved.then(() => backend.logout()
             .then(() => this.context.router.push("/")));
     };
-
 
     _renderUserAvatar(){
         return <UserAvatarButton extension_data={{avatar_url: '/img/i/user-avatar.jpg'}}>

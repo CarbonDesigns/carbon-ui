@@ -580,6 +580,8 @@ export default
 
         "@back": "back",
 
+        "@logout": "Log Out",
+
         "@requiredField": "This field is required",
 
         "@textAutoWidth.Fit": "Fit",
@@ -589,16 +591,47 @@ export default
         "@data.customName": "Dataset name",
         "@data.customBody": "Enter one item per line",
 
+        "@message.thankyou": "Thank you!",
+        "@message.wewillnotify": "We will update you with news about release date of the carbonium and give you an access as soon as possible.",
+
         "@nav.communitylibrary": "Community Library",
         "@nav.teamslack": "Team Slack",
         "@nav.github": "GitHub",
         "@nav.login": "LogIn",
 
         "@hero.title" : "Addictive design solution",
+        "@hero.subheading" : "Create designs for iOS, Android, Web or any other platform",
         "@hero.subtitle": "for prototypes, wireframes, high fidelity design and much more...",
         "@subscribe.details": "We are currently in private beta. For news, updates and first releases subscribe now and become an early adopter!",
         "@subscribe.details2": "Subscribe now and become a part of fast growing community of world's best designers and UX experts.",
         "@subscribe": "Subscribe",
+        "@logos.header": "Companies of any size or individuals can draw logos like this in our app",
+        "@libsec.header": "Community library",
+        "@libsec.details": "Go from blank page to brilliant faster with the help of our community.",
+        "@libsec.p1": "Enjoy our shared gallery of free symbols, icons and much more...",
+        "@libsec.p2": "Build your team library in few clicks",
+        "@libsec.p3": "Help the world and share your work with the community",
+
+        "@datasec.header": "Data",
+        "@datasec.details": "Design with data in mind. Fill your prototypes with meaningful content.",
+        "@datasec.p1": "Quickly populate designs with realistic text and images",
+        "@datasec.p2": "Draw once, repeat as needed",
+        "@datasec.p3": "Create your own datasets or connect to real-time REST API",
+
+        "@pusec.header": "Plugins",
+        "@pusec.details": "Carbonium is the first design app on the web with plugins.",
+        "@pusec.p1": "Work faster with plugins from our amazing developer community",
+        "@pusec.p2": "Automate repetitive tasks",
+        "@pusec.p3": "Always stay safe. And happy ;)",
+
+        "@gallery.noitems": "Your search did not match any result",
+
+        "@email.placeholder":"Your email address",
+        "@search.placeholder":"Search",
+
+        "@library.header": "Community library",
+
+        "@opensource.join":"Carbonium is open source. Let's make it better ... together! Join us on ",
 
         "": "", //
     };

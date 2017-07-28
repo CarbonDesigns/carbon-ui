@@ -4,13 +4,15 @@ import { Component } from "../CarbonFlux";
 
 interface EnterInputProps extends React.HTMLAttributes<HTMLInputElement> {
     value?: string | number;
-    onValueEntered?: (value) => void;
-    dataType?: "int";
+    onValueEntered?: (value, valid: boolean) => void;
+    dataType?: "int" | "float";
     changeOnBlur?: boolean;
+    divOnBlur?: boolean;
 }
 
 type EnterInputState = {
     value: string | number;
+    focused?: boolean;
 }
 
 export default class EnterInput extends Component<EnterInputProps, EnterInputState>{
@@ -29,62 +31,86 @@ export default class EnterInput extends Component<EnterInputProps, EnterInputSta
         }
     }
 
+    componentDidUpdate(prevProps: Readonly<EnterInputProps>, prevState: Readonly<EnterInputState>) {
+        if (this.state.focused && this.state.focused !== prevState.focused) {
+            this.refs.input.focus();
+        }
+    }
+
     focus() {
         this.refs.input.focus();
     }
-    getValue() {
+    private getResult() {
         if (this.props.dataType === "int") {
-            var value = this.state.value;
+            let value = this.state.value;
             if (!value) {
-                return 0;
+                return {value: this.props.value || 0, valid: false};
             }
-            return parseInt(value as string);
+            let parsed = parseInt(value as string);
+            if (isNaN(parsed)) {
+                return {value: this.props.value || 0, valid: false};
+            }
+            return {value: parsed, valid: true};
         }
-        return this.state.value;
+        if (this.props.dataType === "float") {
+            let value = this.state.value;
+            if (!value) {
+                return {value: this.props.value || 0, valid: false};
+            }
+            let parsed = parseFloat(value as string);
+            if (isNaN(parsed)) {
+                return {value: this.props.value || 0, valid: false};
+            }
+            return {value: parsed, valid: true};
+        }
+        return {value: this.state.value, valid: true};
     }
     setValue(value) {
         this.setState({ value });
     }
     onBlur = () => {
         if (this.props.changeOnBlur !== false) {
-            this._fireOnChange();
+            this.fireOnChange();
         }
+        this.setState({ focused: false });
     };
     onKeyDown = (e) => {
         if (e.key === "Enter") {
-            this._fireOnChange();
+            this.fireOnChange();
             e.currentTarget.select();
         }
         else if (this.props.onKeyDown) {
             this.props.onKeyDown(e);
         }
     };
+    private onActivated = () => {
+        this.setState({ focused: true });
+    }
     onFocus = e => {
         e.currentTarget.select();
-    };
+    }
     onChange = e => {
         this.setState({ value: e.currentTarget.value });
+        if (this.props.onChange) {
+            this.props.onChange(e);
+        }
     };
-    _fireOnChange() {
+    private fireOnChange() {
         if (this.props.onValueEntered) {
-            this.props.onValueEntered(this.getValue());
+            let result = this.getResult();
+            this.props.onValueEntered(result.value, result.valid);
         }
-    }
-    _validateValue(value) {
-        if (this.props.dataType === "int") {
-            if (value === undefined || value === "") {
-                return value;
-            }
-            var parsed = parseInt(value);
-            if (isNaN(parsed)) {
-                return this.state.value;
-            }
-            return parsed;
-        }
-        return value;
     }
     render() {
-        var { onValueEntered, value, dataType, changeOnBlur, onKeyDown, ...other } = this.props;
+        var { onValueEntered, divOnBlur, value, dataType, changeOnBlur, onKeyDown, ...other } = this.props;
+
+        if (divOnBlur && !this.state.focused) {
+            return <div className={this.props.className} tabIndex={this.props.tabIndex}
+                onClick={this.onActivated}
+                onFocus={this.onActivated}>
+                {value}
+            </div>;
+        }
 
         return <input ref="input"
             value={this.state.value}

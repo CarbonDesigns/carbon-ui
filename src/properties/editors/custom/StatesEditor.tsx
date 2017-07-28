@@ -25,7 +25,7 @@ class StateItem extends Component<any, any> {
     }
 }
 
-export default class CustomPropertiesEditor extends EditorComponent<any, any> {
+export default class CustomPropertiesEditor extends EditorComponent<any, any, any> {
     @listenTo(propertyStore)
     onChange(){
 
@@ -114,6 +114,7 @@ export default class CustomPropertiesEditor extends EditorComponent<any, any> {
                     onRename={this._onRename}
                     onDelete={this._onDelete}
                     canDelete={this._canDelete}
+                    scrolling={false}
                 />
                 {this._renderAddNewButton()}
             </div>

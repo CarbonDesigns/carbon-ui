@@ -1,9 +1,9 @@
 import React from 'react';
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from 'classnames';
 import {FormattedHTMLMessage} from "react-intl";
 
-export default class MultiToggleEditor extends EditorComponent<IEditorProps, IEditorState<any>> {
+export default class MultiToggleEditor extends EditorComponent<any, IEditorProps> {
     render(){
         var items = this.extractOption(this.props, "items");
         var wcn = this.widthClass(this.props.className || "prop_width-1-1");
@@ -17,7 +17,7 @@ export default class MultiToggleEditor extends EditorComponent<IEditorProps, IEd
     }
 
     renderItem(x, i){
-        var value = this.state.value[x.field];
+        var value = this.propertyValue()[x.field];
         var active = value;
         if (x.config){
             active = value === x.config.on;
@@ -35,7 +35,7 @@ export default class MultiToggleEditor extends EditorComponent<IEditorProps, IEd
         var items = this.extractOption(this.props, "items");
         var config = items[i].config;
 
-        var value = this.state.value[field];
+        var value = this.propertyValue()[field];
         var changes = {};
         if (config){
             var active = value === config.on;
@@ -47,7 +47,7 @@ export default class MultiToggleEditor extends EditorComponent<IEditorProps, IEd
         if (this.props.onSettingValue && this.props.onSettingValue(changes) === false){
             return;
         }
-        var newObject = extend({}, this.state.value, changes);
+        var newObject = extend({}, this.propertyValue(), changes);
         this.setValueByCommand(newObject);
     };
 }

@@ -8,7 +8,7 @@ import {richApp} from "../../../RichApp";
 export default class TextAlignEditor extends SwitchEditor {
     renderItem(x, i){
         var buttonClasses = cx("prop__pushbutton", {
-            "_active": x.value === this.state.value[x.prop],
+            "_active": x.value === this.propertyValue()[x.prop],
             "_shifted": x.value === TextAlign.top
         });
         var iconClasses = cx("ico ico-prop", x.icon);

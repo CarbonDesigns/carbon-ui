@@ -328,7 +328,7 @@ class ScreenTypeGroup extends React.Component<any, any> {
     }
 }
 
-export default class ArtboardSizes extends EditorComponent<any, any>{
+export default class ArtboardSizes extends EditorComponent<any, any, any>{
 
     constructor(props){
         super(props);

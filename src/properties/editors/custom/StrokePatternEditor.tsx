@@ -1,6 +1,6 @@
 import React from 'react';
 import DropDownEditor from "../DropdownEditor";
-import EditorComponent, {IEditorProps, IEditorState} from "../EditorComponent";
+import EditorComponent from "../EditorComponent";
 
 
 function formatValue(stroke_type) {
@@ -10,7 +10,7 @@ function formatValue(stroke_type) {
     return <hr key={'stroke-'+stroke_type} className={"prop__border-style  prop__border-style_" + stroke_type}/>
 }
 
-export default class StrokePatternEditor extends EditorComponent<IEditorProps, IEditorState<any>> {
+export default class StrokePatternEditor extends EditorComponent<any> {
     render() {
         return <DropDownEditor
             e={this.props.e}

@@ -224,7 +224,14 @@ export default class ZoomBar extends Component<any, any> {
             <div className="zoombar">
                 <div className="zoom">
                     <label htmlFor="zoom__input" className="zoom__input-container">
-                        <EnterInput dataType="int" size={4} value={~~(scale * 100)} ref="zoomInput" tabIndex={1} onValueEntered={this.onZoomTyped} onKeyDown={this.onKeyDown} className="zoom__input" /><span>%</span><div className="bg" />
+                        <EnterInput dataType="int" size={4} value={~~(scale * 100)} ref="zoomInput"
+                            divOnBlur={true}
+                            tabIndex={1}
+                            onValueEntered={this.onZoomTyped}
+                            onKeyDown={this.onKeyDown}
+                            className="zoom__input" />
+                        <span>%</span>
+                        <div className="bg" />
                     </label>
                     <ContiniouseAction className="zoom-out" action="zoomOut" tabIndex="0" />
                     <ContiniouseAction className="zoom-in" action="zoomIn" tabIndex="1" />

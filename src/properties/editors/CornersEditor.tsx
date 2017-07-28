@@ -1,5 +1,5 @@
 import React from 'react';
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from 'classnames';
 import {FormattedHTMLMessage} from "react-intl";
 import bem from '../../utils/commonUtils';
@@ -9,7 +9,11 @@ function b(elem, mods = null, mix = null) {
     return bem("prop_corners", elem, mods, mix)
 }
 
-export default class CornersEditor extends EditorComponent<IEditorProps, IEditorState<QuadAndLock>> {
+type CornersEditorState = {
+    value: QuadAndLock;
+}
+
+export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorProps, CornersEditorState> {
 
     constructor(props){
         super(props);

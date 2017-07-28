@@ -38,8 +38,10 @@ export class PropertyHeader extends Component<IPropertyHeaderProps, any> {
 
         return <div id="edit__selection">
             <section className="props-group">
-                <NameEditor e={this.props.e} p={this.props.nameProperty} className="prop_width-1-78"/>
-                <ToggleEditor e={this.props.e} p={this.props.lockedProperty} onSettingValue={this._onLocked}/>
+                <div className="props-group__list">
+                    <NameEditor e={this.props.e} p={this.props.nameProperty} className="prop_width-1-78"/>
+                    <ToggleEditor e={this.props.e} p={this.props.lockedProperty} onSettingValue={this._onLocked}/>
+                </div>
             </section>
         </div>
     }

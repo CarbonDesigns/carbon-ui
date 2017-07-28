@@ -145,7 +145,8 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
                     data={this.state.layers}
                     rowHeight={this.getRowHeight}
                     rowRenderer={this.renderLayer}
-                    scrollToRow={this.state.scrollToLayer} />
+                    scrollToRow={this.state.scrollToLayer}
+                    useTranslate3d={true} />
             </div>
         </Panel>;
     }

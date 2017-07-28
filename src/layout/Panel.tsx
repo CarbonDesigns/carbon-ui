@@ -101,7 +101,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
                     {this.props.children}
                 </div>
 
-                <div className="panel__settings">
+                {/* <div className="panel__settings">
                     <div className="panel__settings-heading">
                         <hgroup>
                             <i className="ico ico--settings"/>
@@ -112,7 +112,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
                         </div>
                     </div>
                     <div className="panel__settings-body"></div>
-                </div>
+                </div> */}
             </div>
         );
     }

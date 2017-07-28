@@ -2,13 +2,13 @@ import React from 'react';
 import cx from 'classnames';
 import Immutable from "immutable";
 
-import EditorComponent, {IEditorProps, IEditorState} from "../EditorComponent";
+import EditorComponent, {IEditorProps} from "../EditorComponent";
 import NumericEditor from "../NumericEditor";
 import {richApp} from "../../../RichApp";
 
 import {Box} from "carbon-core";
 
-export default class BoxEditor extends EditorComponent<IEditorProps, IEditorState<Box>> {
+export default class BoxEditor extends EditorComponent<Box, IEditorProps> {
     render(){
         var p = this.props.p;
         var box = p.get("value");
@@ -47,14 +47,14 @@ export default class BoxEditor extends EditorComponent<IEditorProps, IEditorStat
     changeBoxProperty = (value, p) => {
         var changes = {};
         changes[p.get("descriptor").name] = value;
-        var newBox = Object.assign({}, this.state.value, changes);
+        var newBox = Object.assign({}, this.propertyValue(), changes);
         this.setValueByCommand(newBox);
         return false;
     };
     previewBoxProperty(name, value){
         var changes = {};
         changes[this.props.p.get("descriptor").name] = value;
-        var newBox = Object.assign({}, this.state.value, changes);
+        var newBox = Object.assign({}, this.propertyValue(), changes);
         this.previewValue(newBox);
         return false;
     }

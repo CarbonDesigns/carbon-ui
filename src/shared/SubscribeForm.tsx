@@ -23,7 +23,7 @@ export default class SubscribeForm extends Component<TopMenuProps, any>{
     }
 
     _onSubmit=()=>{
-        var email = this.refs.input.value;
+        var email = (this.refs.input as any).value;
         backend.activityProxy.subscribeForBeta(email).then(()=>{
             this.context.router.push({
                 pathname:"/thankyou",

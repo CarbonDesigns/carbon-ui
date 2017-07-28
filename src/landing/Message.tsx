@@ -18,9 +18,10 @@ export default class MessagePage extends RouteComponent<IRouteComponentProps, an
     }
 
     render() {
-        if (this.context.router.location && this.context.router.location.state) {
-            var header = this.context.router.location.state.header;
-            var message = this.context.router.location.state.message;
+        var router:any = this.context.router;
+        if (router.location && router.location.state) {
+            var header = router.location.state.header;
+            var message = router.location.state.message;
         }
         return <div className="message-page">
             <TopMenu location={this.props.location} dark={true} />

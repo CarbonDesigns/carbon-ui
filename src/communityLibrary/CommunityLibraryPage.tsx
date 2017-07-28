@@ -103,8 +103,10 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
 
     componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate(prevProps, prevState);
-        if(this.props.location.query.s && this.props.location.query.s !== this.state.searchText && prevProps.location.query.s !== this.props.location.query.s) {
-            this.setState({searchText: this.props.location.query.s});
+        var query:any = this.props.location.query;
+
+        if(query.s && query.s !== this.state.searchText && prevProps.location.query.s !== query.s) {
+            this.setState({searchText: query.s});
             this._resetSearch()
         }
     }

@@ -1223,13 +1223,16 @@
 
 .gui-check {
     .f18;
+    line-height: 1.8rem;
+}
+
+.gui-radio {
+    line-height: 1.1;
 }
 
 .gui-check, .gui-radio {
     .nowrap;
     @bgc : rgb(212, 222, 212);
-
-    line-height: 1.1;
 
     &:before {
         .cont;
@@ -1611,7 +1614,7 @@
 
     &_link-hover {
         @c : @font_color;
-        .scale(1.00001);
+        //.scale(1.00001);
         > span {
             color:  fadeout(@c, 50%);
             border-bottom: 1px dotted fadeout(@c, 70%);
@@ -1808,9 +1811,8 @@
         padding: 0 @line_air;
     }
 
-    &__message,
     &__item {
-
+        display: flex;
     }
 
     &__message {
@@ -1819,13 +1821,16 @@
 
     &__item {
         margin: 1px 0;
-        .rel;
+        &:hover {
+            .wbg(6);
+        }
+
         &-body {
             //.bgc(white, 10);
             line-height: 1;
+            flex: auto;
         }
         &-controls {
-            .xyar();
             .flex();
             flex-wrap: nowrap;
             align-items: stretch;

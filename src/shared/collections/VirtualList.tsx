@@ -12,6 +12,7 @@ interface VirtualListProps<T> extends ISimpleReactElementProps {
     noContentRenderer?: () => React.ReactNode;
     scrollToRow?: number;
     scrollToAlignment?: Alignment;
+    useTranslate3d?: boolean;
 }
 
 export default class VirtualList<T> extends Component<VirtualListProps<T>> {
@@ -58,6 +59,12 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     private rowRenderer = (props: ListRowProps) => {
         let item = this.props.data[props.index];
         let child = item ? this.props.rowRenderer(item, props.index) : null;
+        let style = props.style;
+        if (this.props.useTranslate3d) {
+            style = {
+                transform: "translate3d(" + props.style.left + ","+ props.style.top + ",0)"
+            };
+        }
         return <div key={props.key} style={props.style}>{child}</div>
     }
 

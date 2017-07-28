@@ -1,38 +1,41 @@
 import React from 'react';
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from "classnames";
 import {FormattedMessage} from "react-intl";
+import EnterInput from "../../shared/EnterInput";
 
 interface INumericEditorProps extends IEditorProps{
     selectOnEnter?: boolean;
 }
 
-interface INumericEditorState extends IEditorState<string>{
-    error: boolean;
+interface INumericEditorState {
+    value: number | undefined;
 }
 
-export default class NumericEditor extends EditorComponent<INumericEditorProps, INumericEditorState> {
+export default class NumericEditor extends EditorComponent<number, INumericEditorProps, INumericEditorState> {
     private step: number;
     private miniStep: number;
     private timeoutId: number;
     private _holding: boolean;
+
+    constructor(props: INumericEditorProps) {
+        super(props);
+        this.state = { value: props.p.get("value") };
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<INumericEditorProps>){
+        super.componentWillReceiveProps(nextProps);
+        var nextValue = nextProps.p.get("value");
+        if (nextValue !== this.state.value) {
+            this.setState({ value: nextValue });
+        }
+    }
 
     init(props){
         super.init(props);
         this.step = this.extractOption(props, "step", 1);
         this.miniStep = this.extractOption(props, "miniStep", 0);
         this._holding = false;
-    }
-
-    parseState(): {error: boolean, value?: number}{
-        var value = parseFloat(this.state.value);
-        if(isNaN(value)) {
-            this.setState({error: true});
-            return {error: true};
-        }
-
-        this.setState({error: false});
-        return {error: false, value};
     }
 
     validateNewValue(value, roundToMajorStep = false){
@@ -60,11 +63,6 @@ export default class NumericEditor extends EditorComponent<INumericEditorProps, 
         return Math.round((value - 0) * m) / m;
     }
 
-
-    /** Used for multiple scenarios:
-     * - Round initial value, which could have many digits after comma
-     * - Display value entred by the user. Not sure if rounding here is good, e.g. typing 1.56 becomes 1.6
-     */
     formatValue(value){
         var parsed = parseFloat(value);
         if (isNaN(parsed) || (typeof value === "string" && value.endsWith("."))){
@@ -73,58 +71,36 @@ export default class NumericEditor extends EditorComponent<INumericEditorProps, 
         return this.round(value);
     }
 
-
     selectOnFocus(e){
         e.target.select();
     }
 
-    onChange = e => {
-        this.updateState(e.target.value);
-    };
-
-    onBlur = () => {
-        if (this.state.dirty){
-            var parsed = this.parseState();
-            if (parsed.error){
-                this.updateState(this.propertyValue());
-            }
-            else{
-                this.setValueByCommand(this.validateNewValue(parsed.value));
-            }
+    onValueEntered = (value: number, valid: boolean) => {
+        if (value !== this.propertyValue()){
+            let validatedValue = this.validateNewValue(value);
+            this.setValueByCommand(validatedValue);
+            this.setState({value: validatedValue});
+        }
+        else if (!valid) {
+            this.forceUpdate();
         }
     };
 
     onKeyDown = (event) => {
         if (event.keyCode === 38 || event.keyCode === 40){
-            var value: any = this.state.value;
-            if (!event.repeat){
-                let parsed = this.parseState();
-                if (parsed.error){
-                    return;
-                }
-                value = parsed.value;
-            }
+            var value: number = this.state.value || 0;
             var factor = event.keyCode === 38 ? 1 : -1;
             var newValue = value + this.getDelta(event) * factor;
             newValue = this.validateNewValue(newValue, !event.altKey);
-            this.updateState(newValue);
+            this.setState({value: newValue});
             this.previewValue(newValue);
 
             event.preventDefault();
         }
-        else if (event.keyCode === 13){
-            let parsed = this.parseState();
-            if (!parsed.error){
-                this.setValueByCommand(this.validateNewValue(parsed.value));
-            }
-            if (this.props.selectOnEnter !== false){
-                this.selectOnFocus(event);
-            }
-        }
     };
 
     onKeyUp = event => {
-        if (!this.state.error && (event.keyCode === 38 || event.keyCode === 40)){
+        if (event.keyCode === 38 || event.keyCode === 40) {
             this.setValueByCommand(this.state.value);
         }
     };
@@ -179,24 +155,23 @@ export default class NumericEditor extends EditorComponent<INumericEditorProps, 
 
     render(){
         var prop = this.props.p;
-        var classes = cx("prop prop_spinner textbox", this.widthClass(this.props.className || "prop_width-1-2"));
-        var value = this.state.value != null ? this.formatValue(this.state.value) : '' ;
+        var classes = cx("prop prop_spinner textbox prop_" + this.propertyName(), this.widthClass(this.props.className || "prop_width-1-2"));
+        var value = this.state.value;
+        value = value !== undefined ? this.formatValue(value) : '';
         return <div className={classes}>
+            <div className="prop__name"><FormattedMessage id={this.displayName()}/></div>
+            <EnterInput
+                className="prop__input"
+                dataType="float"
+                value={value}
+                divOnBlur={true}
+                onValueEntered={this.onValueEntered}
+                onKeyDown={this.onKeyDown}
+                onKeyUp={this.onKeyUp}
+                tabIndex={1}
+            />
 
-            <div className="wrap">
-                <input
-                    ref="textNode"
-                    type="text"
-                    value={value}
-                    onChange={ this.onChange}
-                    onKeyDown={this.onKeyDown}
-                    onFocus={  this.selectOnFocus}
-                    onBlur={   this.onBlur}
-                    onKeyUp={  this.onKeyUp}
-                />
-            </div>
-
-            <div className="spinner-buttons">
+            {/* <div className="spinner-buttons">
                 <div className="spinner-button__up"
                     onMouseDown={this.holdMouseValueUp}
                     onMouseUp={this.releaseMouseValueUp}
@@ -207,10 +182,7 @@ export default class NumericEditor extends EditorComponent<INumericEditorProps, 
                     onMouseUp={this.releaseMouseValueDown}
                     onMouseLeave={this.releaseMouseValueDown}>
                 </div>
-            </div>
-
-            <div className="prop__name"><FormattedMessage id={this.displayName()}/></div>
+            </div> */}
         </div>;
     }
-
 }

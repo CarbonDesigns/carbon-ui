@@ -4,7 +4,7 @@ import cx from 'classnames';
 import bem from '../../utils/commonUtils';
 import {CarbonLabel} from "CarbonFlux";
 
-import EditorComponent, { IEditorProps, IEditorState } from "./EditorComponent";
+import EditorComponent, { IEditorProps } from "./EditorComponent";
 import FlyoutButton from '../../shared/FlyoutButton';
 import ScrollContainer from '../../shared/ScrollContainer';
 import { FormattedMessage } from "react-intl";
@@ -17,7 +17,7 @@ export interface IDropdownEditorProps extends IEditorProps {
     disableAutoClose?: boolean;
 }
 
-export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends EditorComponent<TProps, IEditorState<any>> {
+export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends EditorComponent<T, TProps> {
     refs: {
         prop: HTMLElement
     }
@@ -88,14 +88,14 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
         // }
 
 
-        var validItem = this._getItemBy('value', this.state.value);
+        var validItem = this._getItemBy('value', this.propertyValue());
 
         if (validItem && validItem.selectedContent) {
             return validItem.selectedContent;
         }
         else {
             var validValue = !!validItem
-                ? this.state.value
+                ? this.propertyValue()
                 : null;
 
             var selectedItem = (typeof this.props.formatSelectedValue === 'function')
@@ -127,7 +127,7 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
             return <ScrollContainer className="flyout__content prop__options-container prop__drop" boxClassName="prop_selectbox__dropdown" insideFlyout={true}>
                 <div className={this.b("options")}>
                     {items.map(item => {
-                        var is_selected = this.state.value === item.value;
+                        var is_selected = this.propertyValue() === item.value;
                         return <section
                             key={item.name}
                             className={this.b("option", { selected: is_selected })}
@@ -169,5 +169,5 @@ export class BaseDropdownEditor<TProps extends IDropdownEditorProps> extends Edi
 }
 
 //quick fix for typescript error
-export default class DropdownEditor extends BaseDropdownEditor<IDropdownEditorProps>{
+export default class DropdownEditor extends BaseDropdownEditor<any, IDropdownEditorProps>{
 }

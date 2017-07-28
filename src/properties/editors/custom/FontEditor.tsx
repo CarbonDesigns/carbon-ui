@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from "immutable";
 
-import EditorComponent, { IEditorProps, IEditorState } from "../EditorComponent";
+import EditorComponent, { IEditorProps } from "../EditorComponent";
 import NumericEditor from "../NumericEditor";
 import DropDownEditor from "../DropdownEditor";
 import BrushEditor from "../BrushEditor";
@@ -24,7 +24,8 @@ var weights = [
     { name: "Heavy (900)", value: 900 }
 ];
 
-interface IFontEditorState extends IEditorState<Font> {
+interface IFontEditorState {
+    value: Font;
     family: Immutable.Map<string, any>;
     size: Immutable.Map<string, any>;
     weight: Immutable.Map<string, any>;
@@ -34,7 +35,7 @@ interface IFontEditorState extends IEditorState<Font> {
     color: Immutable.Map<string, any>;
 }
 
-export default class FontEditor extends EditorComponent<IEditorProps, IFontEditorState> {
+export default class FontEditor extends EditorComponent<Font, IEditorProps, IFontEditorState> {
     constructor(props) {
         super(props);
         var font = this.propertyValue();
@@ -78,7 +79,7 @@ export default class FontEditor extends EditorComponent<IEditorProps, IFontEdito
                 step: .1,
                 min: .1
             },
-            value: font.lineSpacing,
+            value: font.lineSpacing
         });
         var color = Immutable.Map({
             descriptor: {
@@ -197,7 +198,7 @@ export default class FontEditor extends EditorComponent<IEditorProps, IFontEdito
     }
 
     render() {
-        return <div>
+        return <div className="props-group__list">
             <NumericEditor e={this.props.e} p={this.state.size} selectOnEnter={false}
                 onSettingValue={this.changeFontSize}
                 onPreviewingValue={this.previewFontSize} />

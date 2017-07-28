@@ -1,10 +1,10 @@
 import React from 'react';
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent from "./EditorComponent";
 import cx from 'classnames';
 import {FormattedHTMLMessage} from "react-intl";
 import { GuiCheckbox}           from "../../shared/ui/GuiComponents";
 
-export default class CheckboxEditor extends EditorComponent<IEditorProps, IEditorState<boolean>> {
+export default class CheckboxEditor extends EditorComponent<boolean> {
     render(){
         var classes = cx("prop prop_checkbox", this.widthClass(this.props.className || "prop_width-1-1"));
         return <div className={classes}>
@@ -13,7 +13,7 @@ export default class CheckboxEditor extends EditorComponent<IEditorProps, IEdito
                     name={this.displayName()}
                     label={this.displayName()}
                     onChange={this.onChange}
-                    checked={this.state.value}
+                    checked={this.propertyValue()}
                     defaultMessage={this.displayName()}
                 />
             </div>

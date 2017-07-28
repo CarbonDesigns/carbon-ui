@@ -68,7 +68,7 @@ export default class TextStyleNameEditor extends StyleNameEditor {
         this.setState({editName: name});
     }
 
-    onCompleteEditing = (value, e)=> {
+    onCompleteEditing = (value)=> {
         if (this.state.editName) {
             var element = this.props.e.first();
             this.setState({editName: null});

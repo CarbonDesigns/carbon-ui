@@ -9,7 +9,7 @@ interface IArtboardSelectorProps extends IDropdownEditorProps{
     i: number;
 }
 
-export default class ArtboardSelector extends BaseDropdownEditor<IArtboardSelectorProps> {
+export default class ArtboardSelector extends BaseDropdownEditor<any, IArtboardSelectorProps> {
     onOptionSelected = e =>{
         var actions = this.props.actions.slice();
         var a = actions[this.props.i];

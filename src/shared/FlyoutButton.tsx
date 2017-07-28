@@ -6,15 +6,17 @@ import {Component, listenTo, dispatch, } from "../CarbonFlux";
 
 var idCounter = 0;
 
+export type FlyoutPosition = {
+    targetVertical?: "top" | "bottom",
+    targetHorizontal?: "left" | "right",
+    syncWidth?: boolean,
+    disableAutoClose?: boolean
+};
+
 interface IFlyoutButtonProps extends IReactElementProps{
     renderContent?:()=>ReactHTMLElement<any> | Element | React.ReactElement<any> | undefined | any;
     content?:any;
-    position?:{
-        targetVertical?: "top" | "bottom",
-        targetHorizontal?: "left" | "right",
-        syncWidth?: boolean,
-        disableAutoClose?: boolean
-    };
+    position?: FlyoutPosition;
     showAction?:any;
     onOpened?:any;
     onClosed?:any;

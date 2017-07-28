@@ -1,5 +1,5 @@
 import React from 'react';
-import EditorComponent, { IEditorProps, IEditorState } from "./EditorComponent";
+import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
 import bem from '../../utils/commonUtils';
@@ -48,23 +48,7 @@ function verticalLabel(c: VerticalConstraint) {
     assertNever(c);
 }
 
-function formatValue(val) {
-    return val
-}
-
-interface IConstrainsEditorState extends IEditorState<any> {
-    dropdownHorizontal: number;
-    dropdownVertical: number;
-}
-
-export default class ConstraintsEditor extends EditorComponent<IEditorProps, IConstrainsEditorState> {
-
-    constructor(props) {
-        super(props);
-
-        this.state = { dropdownHorizontal: 1, dropdownVertical: 1 };
-    }
-
+export default class ConstraintsEditor extends EditorComponent<IConstraints, IEditorProps> {
     verticalToggle(v) {
         var self = this;
         return function (event) {
@@ -131,18 +115,19 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
     }
 
     _onChangeHorizontal = (c: HorizontalConstraint) => {
-        //this.setState({dropdownHorizontal: optionIndex});
         var p = this.props.p.get("value");
         var newConstraint = Constraints.create(c, p.v)
         this.setValueByCommand(newConstraint);
     }
 
     _onChangeVertical = (c: VerticalConstraint) => {
-        //this.setState({dropdownVertical: optionIndex});
         var p = this.props.p.get("value");
         var newConstraint = Constraints.create(p.h, c)
         this.setValueByCommand(newConstraint);
     }
+
+    private static renderVerticalLabel = (item) => <FormattedMessage id={verticalLabel(item)} tagName="p" />;
+    private static renderHorizonalLabel = (item) => <FormattedMessage id={horizontalLabel(item)} tagName="p" />;
 
     render() {
         var classes = this.prop_cn(
@@ -151,28 +136,6 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
         );
 
         var c: IConstraints = this.props.p.get('value');
-        var dropdownHorizontal = 4;
-        if (c.h === HorizontalConstraint.LeftRight) {
-            dropdownHorizontal = 2;
-        } else if (c.h === HorizontalConstraint.Left) {
-            dropdownHorizontal = 0;
-        } else if (c.h === HorizontalConstraint.Right) {
-            dropdownHorizontal = 1;
-        } else if (c.h === HorizontalConstraint.Center) {
-            dropdownHorizontal = 3;
-        }
-
-        var dropdownVertical = 4;
-        if (c.v === VerticalConstraint.TopBottom) {
-            dropdownVertical = 2;
-        } else if (c.v === VerticalConstraint.Top) {
-            dropdownVertical = 0;
-        } else if (c.v === VerticalConstraint.Bottom) {
-            dropdownVertical = 1;
-        } else if (c.v === VerticalConstraint.Center) {
-            dropdownVertical = 3;
-        }
-
 
         return <div className={classes}>
             <div className={this.b('name')}><FormattedMessage id={this.displayName()} /></div>
@@ -253,8 +216,8 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
                             <VerticalConstraintSelect
                                 mods="small"
                                 selectedItem={c.v}
-                                items={[VerticalConstraint.Top, VerticalConstraint.Bottom, VerticalConstraint.TopBottom, VerticalConstraint.Center, VerticalConstraint.Scale]}
-                                renderItem={item => <FormattedMessage id={verticalLabel(item)} tagName="p" />}
+                                items={ConstraintsEditor.VerticalConstraints}
+                                renderItem={ConstraintsEditor.renderVerticalLabel}
                                 onSelect={this._onChangeVertical}>
                             </VerticalConstraintSelect>
                         </div>
@@ -267,8 +230,8 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
                                 mods="small"
                                 selectedItem={c.h}
                                 onSelect={this._onChangeHorizontal}
-                                items={[HorizontalConstraint.Left, HorizontalConstraint.Right, HorizontalConstraint.LeftRight, HorizontalConstraint.Center, HorizontalConstraint.Scale]}
-                                renderItem={item => <FormattedMessage id={horizontalLabel(item)} tagName="p" />}>
+                                items={ConstraintsEditor.HorizontalConstraints}
+                                renderItem={ConstraintsEditor.renderHorizonalLabel}>
                             </HorizontalConstraintSelect>
                         </div>
                     </div>
@@ -277,7 +240,6 @@ export default class ConstraintsEditor extends EditorComponent<IEditorProps, ICo
         </div>;
     }
 
-
-    onChange = (e) => {
-    };
+    static VerticalConstraints = [VerticalConstraint.Top, VerticalConstraint.Bottom, VerticalConstraint.TopBottom, VerticalConstraint.Center, VerticalConstraint.Scale];
+    static HorizontalConstraints = [HorizontalConstraint.Left, HorizontalConstraint.Right, HorizontalConstraint.LeftRight, HorizontalConstraint.Center, HorizontalConstraint.Scale];
 }

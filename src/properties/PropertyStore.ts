@@ -15,7 +15,6 @@ interface IPropertyStoreState {
     descriptorMap?:object;
     pathMap?:object;
     selection?:any;
-    origValues?:any[] | null;
 }
 
 class PropertyStore extends CarbonStore<IPropertyStoreState> {
@@ -104,42 +103,17 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
 
     @handles(PropertyActions.patched)
     onPatched({changeType, propertyName, value}){
-        for (var i = 0; i < this.state.selection.elements.length; i++){
-            var element = this.state.selection.elements[i];
-            //element.props might be changed by preview, but the command should have original values as oldProps
-            if(this.state.origValues && this.state.origValues.length) {
-                var origProps = this.state.origValues[i];
-                Object.assign(element.props, origProps);
-            }
-            element.patchProps(changeType, propertyName, value, ChangeMode.Model);
-        }
-        this.state.origValues = [];
+        this.state.selection.patchProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
     @handles(PropertyActions.cancelEdit)
     onCancelEdit(){
-        for (var i = 0; i < this.state.selection.elements.length; i++){
-            var element = this.state.selection.elements[i];
-            if(this.state.origValues.length) {
-                var origProps = this.state.origValues[i];
-                Object.assign(element.props, origProps);
-                element.invalidate();
-            }
-        }
-        this.state.origValues = [];
+        this.state.selection.cancelEdit(this.state.selection.elements);
     }
 
     @handles(PropertyActions.previewPatch)
     previewPatchProperty({changeType, propertyName, value}){
-        var count = this.state.selection.count();
-        for (var i = 0; i < count; i++){
-            var element = this.state.selection.elementAt(i);
-            if (!this.state.origValues[i]){
-                this.state.origValues[i] = {[propertyName]:element.props[propertyName]};
-            }
-
-            element.patchProps(changeType, propertyName, value, ChangeMode.Root);
-        }
+        this.state.selection.previewPatchProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
     @handles(PropertyActions.changedExternally)

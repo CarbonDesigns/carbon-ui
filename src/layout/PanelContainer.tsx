@@ -130,7 +130,8 @@ export default class PanelContainer extends Component<IPanelContainerProps> {
         style['width'] = container.width;
         style['left'] = container.x;
         style['top'] = container.y;
-        style['zIndex'] = this.props.zIndex;
+        //perf: Chrome seems to render layers better when z-index is not specified
+        //style['zIndex'] = this.props.zIndex;
 
         return style;
     }

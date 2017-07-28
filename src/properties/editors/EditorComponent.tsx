@@ -1,6 +1,5 @@
 import React from 'react';
-import {Component} from "../../CarbonFlux";
-import {richApp} from "../../RichApp";
+import {Component, dispatch} from "../../CarbonFlux";
 import PropertyActions from "../PropertyActions";
 import {FormattedHTMLMessage} from "react-intl";
 import {util, PatchType} from "carbon-core";
@@ -22,14 +21,7 @@ export interface IEditorProps{
     onCancelEdit?: (prop: IProperty) => boolean;
 }
 
-export interface IEditorState<TValue>{
-    value?: TValue;
-    dirty?: boolean;
-    focused?: boolean;
-}
-
-//replace with generic default in TS 2.3
-export default class EditorComponent<TProps extends IEditorProps, TState extends IEditorState<any>> extends Component<TProps, TState> {
+export default class EditorComponent<T, TProps extends IEditorProps = IEditorProps, TState = {}> extends Component<TProps, TState> {
     private _noPreview: boolean;
     private _setValueTimer: number;
 
@@ -41,33 +33,15 @@ export default class EditorComponent<TProps extends IEditorProps, TState extends
         this.previewValue = util.throttle(this.previewValue, 100);
     }
     init(props){
-        this.initState({value: this.propertyValue(props), dirty: false, focused: false});
         this._noPreview = this.extractOption(props, "noPreview", false);
     }
 
-    propertyValue(props = this.props){
+    propertyValue(props = this.props): T | undefined{
         return props.p.get("value");
     }
 
-    initState(state){
-        //update state if not first init
-        if (this.state){
-            this.setState(state);
-        }
-        else{
-            this.state = state;
-        }
-    }
     componentWillReceiveProps(nextProps){
         this.init(nextProps);
-    }
-
-    updateState(value, focused=false){
-        this.setState({value: value, dirty: true, focused: focused});
-    }
-
-    defocus(focused=false){
-        this.setState({focused: focused});
     }
 
     previewValue(value){
@@ -86,7 +60,7 @@ export default class EditorComponent<TProps extends IEditorProps, TState extends
         var changes = {};
         changes[this.propertyName()] = value;
 
-        richApp.dispatch(PropertyActions.preview(changes));
+        dispatch(PropertyActions.preview(changes));
     }
     setValueByCommand = (value, async = false) => {
         if (this._setValueTimer){
@@ -99,7 +73,7 @@ export default class EditorComponent<TProps extends IEditorProps, TState extends
         var changes = {};
         changes[this.propertyName()] = value;
 
-        richApp.dispatch(PropertyActions.changed(changes, async));
+        dispatch(PropertyActions.changed(changes, async));
     };
     patchValueByCommand = (changeType, value, async = false) => {
         if (this._setValueTimer){
@@ -111,7 +85,7 @@ export default class EditorComponent<TProps extends IEditorProps, TState extends
 
         var propertyName = this.propertyName();
 
-        richApp.dispatch(PropertyActions.patched(changeType, propertyName, value, async));
+        dispatch(PropertyActions.patched(changeType, propertyName, value, async));
     };
 
     previewPatchValue(changeType, value){
@@ -127,7 +101,7 @@ export default class EditorComponent<TProps extends IEditorProps, TState extends
             clearTimeout(this._setValueTimer);
         }
 
-        richApp.dispatch(PropertyActions.previewPatch(changeType, this.propertyName(), value));
+        dispatch(PropertyActions.previewPatch(changeType, this.propertyName(), value));
     }
 
     cancelEdit(){
@@ -139,15 +113,8 @@ export default class EditorComponent<TProps extends IEditorProps, TState extends
             clearTimeout(this._setValueTimer);
         }
 
-        richApp.dispatch(PropertyActions.cancelEdit());
+        dispatch(PropertyActions.cancelEdit());
     }
-
-    setValueByCommandDelayed = (value) => {
-        if (this._setValueTimer){
-            clearTimeout(this._setValueTimer);
-        }
-        this._setValueTimer = setTimeout(() => this.setValueByCommand(value), 500);
-    };
 
     _renderPropName(){
         return <div className={ this.b('name') }><FormattedHTMLMessage id={ this.displayName() }/></div>

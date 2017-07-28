@@ -761,8 +761,9 @@
             .inbl_middle;
 
             &:hover {
-                .zoom__input { .opacity1; }
-                .bg { .bgfade(10); }
+                //perf: disabling opacity to avoid re-rendering with canvas
+                //.zoom__input { .opacity1; }
+                //.bg { .bgfade(10); }
             }
 
             span {
@@ -793,7 +794,8 @@
 
         color: @font_color;
         .f14;
-        .opacity(70);
+        //perf: disabling opacity to avoid re-rendering with canvas
+        //.opacity(70);
 
         &:focus {
             .opacity1;

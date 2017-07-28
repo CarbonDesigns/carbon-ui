@@ -12,11 +12,12 @@ export default class NameEditor extends StringEditor{
         super(props);
     }
     getValue(){
+        let value = this.propertyValue();
         //undefined means name is different in multiselection
-        if (this.state.value === undefined || this.state.value === null){
+        if (value === undefined){
             return "";
         }
-        return this.state.value || this.props.e.displayName();
+        return value || this.props.e.displayName();
     }
     renderPropertyName(){
         let element = this.props.e.singleOrSelf();

@@ -166,7 +166,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
         this.registerChild = loaderProps.registerChild;
 
         return <WindowScroller>
-            {({ height, isScrolling, onChildScroll, scrollTop }) =>
+            {(scrollerProps:any) =>
             <AutoSizer disableHeight>
             {dimensions => {
                 this.onNewDimensions(dimensions);
@@ -182,13 +182,13 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
                         noContentRenderer={this.props.noContentRenderer}
                         columnCount={this.state.columnCount}
                         columnWidth={actualCellWidth}
-                        isScrolling={isScrolling}
-                        onScroll={onChildScroll}
+                        isScrolling={scrollerProps.isScrolling}
+                        onScroll={scrollerProps.onChildScroll}
                         rowCount={this.state.rowCount}
                         rowHeight={actualCellHeight}
                         width={dimensions.width}
-                        height={height}
-                        scrollTop={scrollTop}
+                        height={scrollerProps.height}
+                        scrollTop={scrollerProps.scrollTop}
                         onSectionRendered={params => this.onSectionRendered(params, this.state.columnCount)}
                         ref={this.registerGrid}
                     />

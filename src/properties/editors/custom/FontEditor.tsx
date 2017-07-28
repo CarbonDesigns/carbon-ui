@@ -190,9 +190,9 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
             { field: "underline", icon: "ico-prop_underline-solid", config: { on: UnderlineStyle.Solid, off: UnderlineStyle.None } },
             { field: "underline", icon: "ico-prop_underline-dotted", config: { on: UnderlineStyle.Dotted, off: UnderlineStyle.None } },
             { field: "underline", icon: "ico-prop_underline-dashed", config: { on: UnderlineStyle.Dashed, off: UnderlineStyle.None } },
-            { field: "strikeout", icon: "ico-prop_striked" },
-            { field: "script", icon: "ico-prop_striked", config: { on: FontScript.Super, off: FontScript.Normal } },
-            { field: "script", icon: "ico-prop_striked", config: { on: FontScript.Sub, off: FontScript.Normal } }
+            // { field: "strikeout", icon: "ico-prop_striked" },
+            // { field: "script", icon: "ico-prop_striked", config: { on: FontScript.Super, off: FontScript.Normal } },
+            // { field: "script", icon: "ico-prop_striked", config: { on: FontScript.Sub, off: FontScript.Normal } }
         );
         return options;
     }

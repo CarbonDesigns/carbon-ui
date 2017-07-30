@@ -1,7 +1,3 @@
-//boostrap requires jquery globally available
-require("expose?$!jquery/jquery.min");
-
-require("bootstrap-less");
 require("classnames");
 require("dropzone");
 require("flux");
@@ -13,7 +9,6 @@ require("mousetrap");
 require("react");
 require("react-addons-css-transition-group");
 require("react-addons-perf");
-require("react-bootstrap");
 require("react-color");
 require("react-dom");
 require("react-intl");

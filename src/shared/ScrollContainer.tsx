@@ -3,8 +3,7 @@ import ReactDom from "react-dom";
 import FlyoutActions from '../FlyoutActions';
 import { dispatch } from '../CarbonFlux';
 import cx from 'classnames';
-require("jquery/jquery.min");
-require("../external/antiscroll");
+import Antiscroll, { AntiscrollOptions } from "../external/antiscroll";
 
 interface ScrollContainerProps extends ISimpleReactElementProps {
     [name: string]: any;
@@ -13,6 +12,7 @@ interface ScrollContainerProps extends ISimpleReactElementProps {
 }
 
 export default class ScrollContainer extends React.Component<ScrollContainerProps, any>{
+    scroller: Antiscroll;
     private _endTimer: number;
     refs: {
         scrollContainer: HTMLElement,
@@ -20,26 +20,13 @@ export default class ScrollContainer extends React.Component<ScrollContainerProp
         scrollBox: HTMLElement
     }
 
-    static initScroller(element: HTMLElement, options?) {
-        //var inner = this.getScrollPaneNode();
-
-        //this is needed to support convenient max-height option on parent element,
-        //scrollbar will appear when content will be larger than max-height/max-width
-        //inner.style.height = wrap.offsetHeight + "px";
-        //inner.style.width = wrap.offsetWidth + "px";
-
-        $(element).antiscroll(Object.assign({
-            onlyOnWindows: false,
-            initialDisplay: false,
-            autoHideTimeout: 1500
-        }, options));
+    static defaultProps: Partial<ScrollContainerProps> = {
+        x: false,
+        y: true
     }
 
-    static destroyScroller(element: HTMLElement) {
-        var antiscroll = $(element).data('antiscroll');
-        if (antiscroll) {
-            antiscroll.destroy();
-        }
+    static initScroller(element: HTMLElement, options?: Partial<AntiscrollOptions>) {
+        return new Antiscroll(element, options);
     }
 
     onScroll = (e) => {
@@ -83,14 +70,14 @@ export default class ScrollContainer extends React.Component<ScrollContainerProp
 
     componentDidUpdate() {
         //bug in antiscroll, it does not clear the width/height from the previous content
-        ScrollContainer.initScroller(this.refs.scrollContainer, this.scrollOptions());
+        this.scroller = ScrollContainer.initScroller(this.refs.scrollContainer, this.scrollOptions());
         if (this.props.scrollEnd) {
             this.refs.scrollPane.scrollTop = Number.MAX_VALUE;
         }
     }
 
     componentWillUnmount() {
-        ScrollContainer.destroyScroller(this.refs.scrollContainer);
+        this.scroller.destroy();
     }
 
     private scrollOptions() {

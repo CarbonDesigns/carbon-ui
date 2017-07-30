@@ -13,7 +13,7 @@ import ScrollContainer from '../../../shared/ScrollContainer';
 import {richApp} from "../../../RichApp";
 import {FormattedMessage} from "react-intl";
 import Immutable from "immutable";
-import ManageStylesDialog from "../../dialogs/ManageStylesDialog";
+//import ManageStylesDialog from "../../dialogs/ManageStylesDialog";
 
 
 var Style = (props)=> {

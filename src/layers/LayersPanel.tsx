@@ -136,7 +136,8 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     }
 
     render() {
-        return <Panel ref="panel" header="Layers" id="layers_panel">
+        let {children, ...rest} = this.props;
+        return <Panel ref="panel" header="Layers" id="layers_panel" {...rest}>
             {this.renderBackButton()}
 
             <div className={bem("layers-panel", "layers-list", null, "panel__stretcher")} data-mode="airy">

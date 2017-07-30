@@ -4,6 +4,7 @@ import { InfiniteLoader, AutoSizer, Dimensions, InfiniteLoaderChildProps, Index,
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
+import Antiscroll from "../../external/antiscroll";
 
 interface VirtualListProps<T> extends ISimpleReactElementProps {
     data: T[];
@@ -16,6 +17,7 @@ interface VirtualListProps<T> extends ISimpleReactElementProps {
 }
 
 export default class VirtualList<T> extends Component<VirtualListProps<T>> {
+    private scroller: Antiscroll;
     private list: List = null;
 
     static defaultProps: Partial<VirtualListProps<any>> = {
@@ -35,13 +37,12 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     }
 
     componentWillUnmount(){
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
-        ScrollContainer.destroyScroller(gridNode.parentElement);
+        this.scroller.destroy();
     }
 
     private initScroller(){
         let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
-        ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
+        this.scroller = ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
     }
 
     private registerList = (list) => {

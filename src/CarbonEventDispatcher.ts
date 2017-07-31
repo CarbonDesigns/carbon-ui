@@ -26,15 +26,14 @@ export function registerEvents() {
         token = app.resourceDeleted.bindAsync((resourceType, resource, parent) => dispatchAction({type: "Carbon_ResourceDeleted", resourceType, resource, parent}));
         frequentAppTokens.push(token);
 
+        token = app.changed.bindAsync(events => dispatch((CarbonActions.appChanged(events))));
+        frequentAppTokens.push(token);
+
         dispatchAction({ type: "Carbon_AppUpdated" });
     });
 
     app.modeChanged.bindAsync(mode => {
         dispatch((CarbonActions.modeChanged(mode)));
-    });
-
-    app.changed.bindAsync(events => {
-        dispatch((CarbonActions.appChanged(events)));
     });
 
     app.currentToolChanged.bindAsync((tool) => {

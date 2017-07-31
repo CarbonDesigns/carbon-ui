@@ -184,7 +184,7 @@ export default class SpriteView extends Component<SpriteViewProps>{
         var width = spriteMap[2];
         var height = spriteMap[3];
 
-        var imageStyle: any = {
+        var imageStyle: React.CSSProperties = {
             backgroundImage: spriteUrl,
             width: width,
             height: height,

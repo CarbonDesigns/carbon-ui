@@ -1,6 +1,6 @@
 import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
-import CarbonActions from "../CarbonActions";
+import CarbonActions, { CarbonAction } from "../CarbonActions";
 import LayersActions, { LayerAction } from "./LayersActions";
 import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerTypes, IUIElement, IRepeatContainer } from "carbon-core";
 import { iconType } from "../utils/appUtils";
@@ -149,10 +149,13 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         return result;
     }
 
-    onAction(action: LayerAction) {
+    onAction(action: LayerAction | CarbonAction) {
         super.onAction(action);
 
         switch (action.type) {
+            case "Carbon_AppUpdated":
+                this.refreshLayersTree();
+                return;
             case "Layers_toggleExpand":
                 this.onToggleExpand(action.index);
                 return;
@@ -255,12 +258,6 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         if (refreshState) {
             this.setState({ version: this.state.version + 1 });
         }
-    }
-
-
-    @handles(CarbonActions.loaded)
-    onLoaded() {
-        this.refreshLayersTree();
     }
 
     @handles(CarbonActions.pageChanged)

@@ -54,7 +54,7 @@ export default
         "Find stencil (F3)...": "Find symbol (F3)...",
         "@choosePage": "Select a page",
         "@chooseArtboard": "Select an artboard",
-        "@noPagesWithSymbols": "No pages with symbols found",
+        "@noPages": "No pages found",
 
         "@search": "Search... (F3)",
 

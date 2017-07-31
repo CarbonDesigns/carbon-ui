@@ -58,7 +58,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
 
     componentDidMount() {
         super.componentDidMount();
-        let pages = app.pagesWithSymbols();
+        let pages = app.pages;
         if (pages.length === 1) {
             this.pageSelected(pages[0]);
         }
@@ -283,8 +283,8 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     }
 
     private renderPageSelect() {
-        let pages = app.pagesWithSymbols();
-        let caption = pages.length ? "@choosePage" : "@noPagesWithSymbols";
+        let pages = app.pages;
+        let caption = pages.length ? "@choosePage" : "@noPages";
 
         return <PageSelect
             className="drop_down"

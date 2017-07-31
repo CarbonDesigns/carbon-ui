@@ -82,7 +82,7 @@ export default class LoginForm extends RouteComponent<ILoginFormProps, IFormStat
         this.setState({ status: "error" });
     };
 
-    private validateEmail = (email: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    protected validateEmail = (email: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
         if (email && email.indexOf('@') < 0) {
             return state.set("status", "error").set("error", this.formatLabel("@account.badEmail"));
         }
@@ -94,14 +94,14 @@ export default class LoginForm extends RouteComponent<ILoginFormProps, IFormStat
         return state.set("status", "notReady");
     }
 
-    private validatePassword = (password: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    protected validatePassword = (password: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
         if (!password && force) {
             return state.set("status", "error").set("error", this.formatLabel("@account.noPassword"));
         }
         return state.set("status", "notReady").set("error", "");
     }
 
-    private forgotPasswordLink = e => {
+    protected forgotPasswordLink = e => {
         e.preventDefault();
 
         this.goTo("/account/forgotPassword", { email: this.refs.email.getValue() });
@@ -145,7 +145,7 @@ export default class LoginForm extends RouteComponent<ILoginFormProps, IFormStat
         </form>;
     }
 
-    private renderConnectionErrorIfAny() {
+    protected renderConnectionErrorIfAny() {
         if (this.state.status === "error") {
             //TODO: (design) we probably need some generic "Could not connect to the server notification"
             return <span>Could not connect to the server right now.</span>

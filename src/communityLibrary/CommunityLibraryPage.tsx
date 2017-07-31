@@ -128,7 +128,7 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
     }
 
     render() {
-        return <div className="library-page">
+        return <div className="library-page light-page">
             <TopMenu location={this.props.location} dark={true} />
 
             <section className="libraryheader-container smooth-header section-center">

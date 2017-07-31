@@ -860,16 +860,28 @@
 
 
 .ico-social {
-    .bgi('social-icons.svg');
+    //.bgi('social-icons.svg');
+     background-color: white;
+
+    -webkit-mask-image:  url(../../res/app/social-icons.svg);// no-repeat 50% 50%;
+    mask-image: url(../../res/app/social-icons.svg);
+
     @size: 4rem;
-    background-size: @size*5 @size;
+    //background-size: @size*5 @size;
+    -webkit-mask-size: @size*5 @size;
     .size(@size);
 
-    &_google   {background-position: @size * 0 0;}
-    &_microsoft{background-position: @size * 1 0;}
-    &_apple    {background-position: @size * 2 0;}
-    &_facebook {background-position: @size * 3 0;}
-    &_twitter  {background-position: @size * 4 0;}
+    &_google   {
+       // background-position: @size * 0 0;
+       -webkit-mask-position:@size * 0 0;
+
+    }
+    &_microsoft{
+        -webkit-mask-position: @size * 1 0;
+    }
+    &_apple    {-webkit-mask-position: @size * 2 0;}
+    &_facebook {-webkit-mask-position: @size * 3 0;}
+    &_twitter  {-webkit-mask-position: @size * 4 0;}
 
 }
 

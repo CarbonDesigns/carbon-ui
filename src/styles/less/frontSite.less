@@ -1,0 +1,369 @@
+.fs-input {
+    min-width: 50px;
+    @s: 1em;
+    position: relative;
+    display: flex;
+
+    &_slim &__label{
+        margin-bottom: inherit;
+    }
+    &_slim &__input{
+        color: inherit;
+        background: transparent;
+        padding: 0;
+    }
+    &_right &__input{
+        .tright;
+    }
+
+
+    &__input-ico {
+        //TODO: icons in labels are aligned relative to label
+        //.xyar(12px, 49%);
+        .abs;
+        right: 12px;
+        align-self: center;
+        .op0;
+        .trn1;
+        .size(@s);
+        .flexcenter();
+
+        &_valid { .bgc(yellowgreen); }
+        &_error { .bgc(tomato);      }
+    }
+
+    &__error-tooltip {
+        top: 50%;
+        .abs;
+        left: 2rem;
+        right: 2rem;
+        padding: .4rem .7rem;
+        color: white;
+        .f12;
+        .bgc(tomato, 95);
+        z-index: 3;
+        visibility: hidden;
+    }
+
+    &__input-ico_error:hover + &__error-tooltip{
+        visibility: visible;
+    }
+
+    &_valid &__input-ico_error,
+    &_error &__input-ico_error,
+    &_valid &__input-ico_valid
+    {
+        .op1;
+        transform: none;
+        .trn3;
+    }
+
+    &_valid,
+    &_error
+    {
+        input {
+            padding-right: 30px;
+        }
+    }
+
+    &&_fill {
+        flex: auto;
+        display: flex;
+        align-items: stretch;
+    }
+    &_resize-v textarea{
+        resize: vertical;
+    }
+
+    &&_small {
+        .f14;
+    }
+}
+
+.fs-input__input {
+    height:48px;
+    width:100%;
+    padding: 0 10px;
+    line-height: 48px;
+    border: 2px solid #CCCBD7;
+}
+
+.fs-input_error {
+    .fs-input__input {
+        border: 2px solid tomato;
+    }
+}
+
+
+.header-container {
+    width:100%;
+    min-height: 80px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 60;
+    padding: 30px 50px 0 50px;
+}
+
+.header-container__logo {
+    width:152px;
+    height:40px;
+    display: block;
+    background-image: url("../../res/app/logo_l.svg");
+    z-index: 61;
+
+    &&_dark{
+        background-image: url("../../res/app/logo_d.svg");
+    }
+}
+
+.login-form-container {
+    margin-bottom: 100px;
+}
+
+.login-form__heading {
+    text-align: center;
+
+    h3 {
+        font-family: Poppins;
+        font-size: 12px;
+        font-weight: 400;
+    }
+}
+
+.navigation-menu {
+    &, & a {
+        color: #E8E8F5;
+        font-family: Inconsolata;
+        font-size: @navigationMenuFontSize;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        line-height: 40px;
+        z-index: 62;
+        text-decoration: unset;
+    }
+}
+
+.smooth-header {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+.section-center {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.signuponform__social {
+    .ico-social {
+        background-color: #CCCBD7;
+    }
+
+    &:hover {
+        .ico-social {
+            background-color: white;
+        }
+    }
+}
+
+.fs-main-button {
+    height: 48px;
+    min-width: 50px;
+    border: 2px solid #8421BD;
+    background-color: white;
+    color: #8421BD;
+    font-family: Poppins;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: center;
+    cursor:pointer;
+
+    &:hover {
+        background-color: #eee;
+    }
+
+    &:active {
+        padding: 1px 0 0 1px
+    }
+}
+
+.navigation-menu__item {
+    margin-left: 30px;
+    cursor: pointer;
+
+    &&_dark {
+         &, & a {
+            color:black;
+         }
+    }
+
+    &:hover {
+         &, & a {
+            color:dimgray;
+         }
+    }
+
+    &&_button {
+        font-family: Poppins;
+        font-weight: 500;
+        text-align: center;
+        width:100px;
+        height: 40px;
+        border: 1px solid #E8E8F5;
+
+        & a{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    &:after {
+        content:"";
+        display: none;
+        position:absolute;
+        bottom:15px;
+        height:2px;
+        left:0;
+        right:0;
+        background: black;
+    }
+
+    &&_active {
+        position:relative;
+
+        &:after {
+            display: block;
+            background: #8421BD;
+        }
+        &&:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+.light-page {
+    background: white;
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+.login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.subscribe-container__details {
+    color: #2E2A31;
+    font-family: Poppins;
+    font-size: 16px;
+    line-height: 25px;
+    min-width: 250px;
+    max-width: 600px;
+}
+
+.subscribe-form {
+    width:350px;
+    margin-left: 50px;
+    margin-top:20px;
+    margin-bottom:20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.subscribe-form__button {
+    width: 180px;
+    margin-left: -4px;
+    z-index: 100;
+}
+
+.restore-pwd-btn {
+    width:100%;
+}
+
+.subscribe-form__email {
+    width: 300px;
+
+	color: #9E9DA8;
+	font-family: Inconsolata;
+	font-size: 16px;
+    line-height: 48px;
+
+    background-color: @subscribeContainerFill;
+}
+
+@media screen and (max-width:600px) {
+    .navigation-menu__item {
+        margin: 0;
+        &&_button {
+            width:50px;
+        }
+    }
+
+    .navigation-menu {
+        justify-content: space-around;
+
+        &, & a{
+            font-size: 14px;
+        }
+    }
+}
+
+@media screen and(max-width:740px) {
+    .navigation-menu {
+        justify-content: space-around;;
+    }
+
+    .header-container {
+        flex-direction: column;
+        align-content: center;
+        padding: 30px 10px 0 10px;
+    }
+
+    .header-container__logo {
+        margin: 0 0 30px 0;
+        align-self: center;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        min-height: 40px;
+    }
+
+    .navigation-menu__item {
+        &&_active {
+            &:after {
+                content:"";
+                bottom:8px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width:424px) {
+    .navigation-menu__item {
+        &&_button {
+            width:40px;
+        }
+    }
+
+    .header-container__logo {
+        margin: 0 0 10px 0;
+    }
+
+    .navigation-menu {
+        &, & a{
+            font-size: 12px;
+        }
+    }
+}

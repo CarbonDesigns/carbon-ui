@@ -598,6 +598,8 @@ export default
         "@nav.teamslack": "Team Slack",
         "@nav.github": "GitHub",
         "@nav.login": "LogIn",
+        "@login.header": "Sign In",
+        "@forgotPassword.header": "Restore password",
 
         "@hero.title" : "Addictive design solution",
         "@hero.subheading" : "Create designs for iOS, Android, Web or any other platform",

@@ -238,6 +238,8 @@ export function dispatchAction(action: AccountAction | BackendAction | DialogAct
 
 export interface CarbonLabelProps {
     id:string;
+    tagName?:string;
+    className?:string;
 }
 
 export class CarbonLabel extends Component<CarbonLabelProps, undefined> {
@@ -247,7 +249,7 @@ export class CarbonLabel extends Component<CarbonLabelProps, undefined> {
             return <span>{id}</span>;
         }
 
-        return <FormattedMessage id={id}/>;
+        return <FormattedMessage tagName={this.props.tagName} id={id}/>;
     }
 }
 

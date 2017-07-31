@@ -62,15 +62,11 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
             }
         }
 
-        if (this.activeSection) {
-            for (let j = 1; j < this.backgrounds.length; ++j) {
-                this.backgrounds[j].style.opacity = 0;
-            }
-        }
-
-
         if (!found) {
             if (this.activeSection) {
+                for (let j = 1; j < this.backgrounds.length; ++j) {
+                    this.backgrounds[j].style.opacity = 0;
+                }
                 this.backgrounds[0].style.opacity = 1;
             }
             this.activeSection = null;
@@ -93,13 +89,13 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
             if (ds < 0) {
                 opacity = (height + ds) / height;
             } else {
-                opacity = ds / height;
+                opacity = 1 - ds / height;
             }
 
             this.backgrounds[k].style.opacity = opacity;
         }
 
-        this.backgrounds[i].style.opacity = 1;
+        //this.backgrounds[i].style.opacity = 1;
     }
 
     componentDidMount() {

@@ -8,7 +8,6 @@ import { backend } from "carbon-api";
 import { AccountAction } from "./AccountActions";
 import TopMenu from "../shared/TopMenu";
 import bem from "../utils/commonUtils";
-import bem from "../utils/commonUtils";
 
 export default class ForgotPassword extends RouteComponent<IRouteComponentProps, IFormState>{
     refs: {

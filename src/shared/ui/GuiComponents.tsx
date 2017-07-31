@@ -94,8 +94,8 @@ export class GuiSlider extends Component<IGuiSliderProps, IGuiSliderState> {
 
         value = min + (max - min) * value / 100;
 
-        if (value > max) value = max;
-        else if (value < min) value = min;
+        if (value > max) { value = max; }
+        else if (value < min) { value = min; }
 
         if (typeof this.props.valueChanging === 'function') {
             value = this.props.valueChanging(value);
@@ -161,8 +161,8 @@ export class GuiSlider extends Component<IGuiSliderProps, IGuiSliderState> {
 
         value = (value - min) / (max - min) * 100;
 
-        if (value > 100) value = 100;
-        else if (value < 0) value = 0;
+        if (value > 100) { value = 100; }
+        else if (value < 0) { value = 0; }
 
         handleStyle[this.isVertical() ? 'top' : 'left'] = value + '%';
 
@@ -194,11 +194,12 @@ export class GuiSwitch extends Component<IGuiSwitchProps> {
             defaultChecked: false
         };
 
-        if (checked_is_set)
+        if (checked_is_set) {
             input_props.checked = checked;
-        else
+        }
+        else {
             input_props.defaultChecked = true;
-
+        }
         return <div className="gui-switch">
             <input {...input_props} />
             <FormattedMessage id="off" />
@@ -229,21 +230,23 @@ export class GuiRadio extends Component<IGuiRadioProps> {
         // If this.props.mod == 'line', then it will become gui-radio_line
         var cn = "gui-radio";
 
-        var mods = (this.props.mod != null) ? this.props.mod : (this.props.mods || []);
+        var mods = (this.props.mod) ? this.props.mod : (this.props.mods || []);
         if (mods) {
-            if (typeof mods === 'string')
+            if (typeof mods === 'string') {
                 mods = [mods];
+            }
             mods.map(function (mod) { cn += " gui-radio_" + mod });
         }
 
-        if (typeof this.props.className === 'string')
+        if (typeof this.props.className === 'string') {
             cn += " " + this.props.className;
+        }
 
         return <label className={cn}>
             <input type="radio" name={this.props.name} checked={this.props.checked} onChange={this.props.onChange} />
             <i />
             {
-                (this.props.children != null)
+                (this.props.children)
                     ? this.props.children
                     : <FormattedMessage tagName='span' id={this.props.label || "empty.label"} />
             }
@@ -272,24 +275,25 @@ export class GuiCheckbox extends Component<IGuiCheckboxProps> {
         // Compiling classname by mods/mod.
 
         // If this.props.mod == 'line', then it will become gui-check_line
-        var mods = (this.props.mod != null) ? this.props.mod : (this.props.mods || []);
+        var mods = (this.props.mod) ? this.props.mod : (this.props.mods || []);
         if (mods) {
-            if (typeof mods === 'string')
+            if (typeof mods === 'string') {
                 mods = [mods];
+            }
             //TODO: cn is not declared
             //mods.map(function(mod){cn += " gui-check_" + mod});
         }
 
         var mix = "";
-        if (this.props.inline != null && !!this.props.inline) {
+        if (this.props.inline && !!this.props.inline) {
             mix += " gui-inline-label"
         }
-        if (typeof this.props.className === 'string')
+        if (typeof this.props.className === 'string') {
             mix += " " + this.props.className;
-
+        }
         var children = this.props.labelless
             ? null
-            : (this.props.children != null)
+            : (this.props.children)
                 ? this.props.children
                 : (<FormattedMessage tagName='p' id={this.props.label || "empty.label"} defaultMessage={this.props.defaultMessage} />);
 
@@ -318,9 +322,9 @@ interface IGuiButtonProps extends IReactElementProps, IHasMods<
     "full" |
     "small" |
     "simple"
-> {
+    > {
     className?: string;
-    icon?: string|boolean;
+    icon?: string | boolean;
     caption?: string;
     defaultMessage?: string;
     bold?: boolean;
@@ -340,17 +344,17 @@ export class GuiButton extends Component<IGuiButtonProps>{
         var { className, icon, caption, defaultMessage, bold, mods, disabled, progressPercents, progressColor, onClick, children, ...rest } = this.props;
 
         var cn = bem('gui-btn', null, mods, className);
-        if (disabled)
+        if (disabled) {
             cn += ' gui-btn_disabled';
-
+        }
         if (!children) {
             var newChildren = [];
-            if (icon != null) {
+            if (icon) {
                 var ico_cn = (typeof icon === 'string') ? "ico--" + icon : null;
                 newChildren.push(<i key="icon" className={ico_cn} />);
             }
-            if (caption != null || defaultMessage != null) {
-                var caption_tagName = bold != null ? "b" : "span";
+            if (caption || defaultMessage) {
+                var caption_tagName = bold ? "b" : "span";
                 newChildren.push(<FormattedMessage key="caption" tagName={caption_tagName} id={caption} defaultMessage={defaultMessage} />)
             }
             if (newChildren.length) {
@@ -435,12 +439,13 @@ interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputEleme
     "valid" |
     "checking" |
     "error"
-> {
+    > {
     label?: any;
     caption?: string;
     defaultMessage?: string;
     suffix?: any;
     selectOnFocus?: boolean;
+    component?: string;
 }
 
 export class GuiInput extends Component<IGuiInputProps>{
@@ -449,7 +454,7 @@ export class GuiInput extends Component<IGuiInputProps>{
     }
 
     focus() {
-        var a: IGuiInputProps = { mods: {checking: true, valid: false, error: false}};
+        var a: IGuiInputProps = { mods: { checking: true, valid: false, error: false } };
         this.refs.input.focus();
     }
 
@@ -465,15 +470,15 @@ export class GuiInput extends Component<IGuiInputProps>{
 
     render() {
         // todo - borrow from edit input
-        var { className, label, caption, defaultMessage, placeholder, mods, suffix, selectOnFocus, ...rest } = this.props;
-        var cn = bem("gui-input", null, mods, className);
+        var { className, component, label, caption, defaultMessage, placeholder, mods, suffix, selectOnFocus, ...rest } = this.props;
+        var cn = bem(component || "gui-input", null, mods, className);
         var renderedLabel = null;
 
-        if (label != null) {
+        if (label) {
             renderedLabel = label;
         }
-        else if (caption != null || defaultMessage != null) {
-            renderedLabel = (<p className={bem("gui-input", "label")}>
+        else if (caption || defaultMessage) {
+            renderedLabel = (<p className={bem(component || "gui-input", "label")}>
                 <FormattedMessage id={caption} defaultMessage={defaultMessage} />
             </p>);
         }
@@ -484,7 +489,7 @@ export class GuiInput extends Component<IGuiInputProps>{
 
         var renderedInput = <input
             ref="input"
-            className={bem("gui-input", "input")}
+            className={bem(component || "gui-input", "input")}
             onFocus={this.selectOnFocus}
             type={this.props.type}
             placeholder={placeholder}
@@ -499,11 +504,12 @@ interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAre
     "resize-v" |
     "small" |
     "fill"
-> {
+    > {
     label?: any;
     caption?: string;
     defaultMessage?: string;
     suffix?: any;
+    component?: string;
 }
 
 export class GuiTextArea extends Component<IGuiTextAreaProps> {
@@ -525,15 +531,15 @@ export class GuiTextArea extends Component<IGuiTextAreaProps> {
 
     render() {
         // todo - borrow from edit input
-        var { className, label, caption, defaultMessage, mods, suffix, placeholder, ...rest } = this.props;
-        var cn = bem("gui-input", null, mods, className);
+        var { className, component, label, caption, defaultMessage, mods, suffix, placeholder, ...rest } = this.props;
+        var cn = bem(component || "gui-input", null, mods, className);
         var renderedLabel = null;
 
-        if (label != null) {
+        if (label) {
             renderedLabel = label;
         }
-        else if (caption != null || defaultMessage != null) {
-            renderedLabel = (<p className={bem("gui-input", "label")}>
+        else if (caption || defaultMessage) {
+            renderedLabel = (<p className={bem(component || "gui-input", "label")}>
                 <FormattedMessage id={caption} defaultMessage={defaultMessage} />
             </p>);
         }
@@ -544,7 +550,7 @@ export class GuiTextArea extends Component<IGuiTextAreaProps> {
 
         var renderedInput = <textarea
             ref="input"
-            className={bem("gui-input", "input")}
+            className={bem(component || "gui-input", "input")}
             placeholder={placeholder}
             {...rest}
         />;
@@ -563,7 +569,7 @@ export let FieldState = Immutable.Record<IFieldState>({
     error: ""
 });
 
-export const enum ValidationTrigger{
+export const enum ValidationTrigger {
     keyUp = 1,
     blur = 1 << 1,
     change = 1 << 2
@@ -578,7 +584,7 @@ interface IGuiValidatedInputProps extends IGuiInputProps {
     onValidate?: (newValue: string, state: ImmutableRecord<IFieldState>, force?: boolean) => ImmutableRecord<IFieldState> | null;
     trigger?: ValidationTrigger;
 }
-interface IGuiValidatedInputState{
+interface IGuiValidatedInputState {
     fieldState: ImmutableRecord<IFieldState>;
 }
 /**
@@ -593,7 +599,7 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
         input: GuiInput;
     }
 
-    constructor(props: IGuiValidatedInputProps){
+    constructor(props: IGuiValidatedInputProps) {
         super(props);
         this.state = {
             fieldState: new FieldState()
@@ -604,16 +610,16 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
         this.refs.input.focus()
     }
 
-    getValue(){
+    getValue() {
         return this.refs.input.getValue();
     }
 
-    validate(force?: boolean): boolean{
+    validate(force?: boolean): boolean {
         var value = this.refs.input.getValue();
         if (this.props.onValidate) {
             var newState = this.props.onValidate(value, this.state.fieldState, force);
-            if (newState){
-                this.setState({fieldState: newState});
+            if (newState) {
+                this.setState({ fieldState: newState });
                 var status = newState.get("status");
                 return status === "ok" || status === "notReady";
             }
@@ -621,47 +627,50 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
         return true;
     }
 
-    setOk(){
-        this.setState({fieldState: this.state.fieldState.set("status", "ok").set("error", "")});
+    setOk() {
+        this.setState({ fieldState: this.state.fieldState.set("status", "ok").set("error", "") });
     }
-    clearError(){
-        this.setState({fieldState: this.state.fieldState.set("status", "notReady").set("error", "")});
+    clearError() {
+        this.setState({ fieldState: this.state.fieldState.set("status", "notReady").set("error", "") });
     }
-    setError(message){
-        if (message){
-            this.setState({fieldState: this.state.fieldState.set("status", "error").set("error", message)});
+    setError(message) {
+        if (message) {
+            this.setState({ fieldState: this.state.fieldState.set("status", "error").set("error", message) });
         }
     }
-    setErrorLabel(message){
-        if (message){
-            this.setState({fieldState: this.state.fieldState
-                .set("status", "error")
-                .set("error", this.formatLabel(message))}
+    setErrorLabel(message) {
+        if (message) {
+            this.setState({
+                fieldState: this.state.fieldState
+                    .set("status", "error")
+                    .set("error", this.formatLabel(message))
+            }
             );
         }
     }
 
-    isOk(){
+    isOk() {
         return this.state.fieldState.get("status") === "ok";
     }
-    isError(){
+    isError() {
         return this.state.fieldState.get("status") === "error";
     }
 
-    private validateIf(trigger: ValidationTrigger){
+    private validateIf(trigger: ValidationTrigger) {
         var configuredTrigger = this.props.trigger || ValidationTrigger.blur;
-        if (trigger & configuredTrigger){
+        if (trigger & configuredTrigger) {
             this.validate();
         }
     }
 
-    render(){
-        var {onBlur, onKeyUp, onChange, onValidate, trigger, ...rest} = this.props;
+    render() {
+        var { onBlur, component, onKeyUp, onChange, onValidate, trigger, ...rest } = this.props;
         return <GuiInput ref="input" mods={this.renderFieldMods(this.state.fieldState)}
-            onBlur={e => {this.validateIf(ValidationTrigger.blur); onBlur && onBlur(e);}}
-            onKeyUp={e => {this.validateIf(ValidationTrigger.keyUp); onKeyUp && onKeyUp(e);}}
-            onChange={e => {this.validateIf(ValidationTrigger.change); onChange && onChange(e);}}
-            suffix={this.renderFieldSuffix(this.state.fieldState)}
+            component={component}
+            onBlur={e => { this.validateIf(ValidationTrigger.blur); onBlur && onBlur(e); }}
+            onKeyUp={e => { this.validateIf(ValidationTrigger.keyUp); onKeyUp && onKeyUp(e); }}
+            onChange={e => { this.validateIf(ValidationTrigger.change); onChange && onChange(e); }}
+            suffix={this.renderFieldSuffix(this.state.fieldState, component || "gui-input")}
             {...rest} />
     }
 
@@ -670,21 +679,21 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
         return { valid: status === 'ok', checking: status === "checking", error: status === "error" };
     }
 
-    private renderFieldSuffix(field: Immutable.Record.Instance<IFieldState>) {
+    private renderFieldSuffix(field: Immutable.Record.Instance<IFieldState>, component) {
         var status = field.get("status");
         if (status === "checking") {
             //TODO: (design) add icon (or animation) for checking field
-            return <div className="gui-input__input-ico gui-input__input-ico_checking" key="checking_ico"><i className="ico--checking"></i></div>;
+            return <div className={`${component}__input-ico ${component}__input-ico_checking`} key="checking_ico"><i className="ico--checking"></i></div>;
         }
         if (status === "ok") {
-            return <div className="gui-input__input-ico gui-input__input-ico_valid" key="valid_ico"><i className="ico--ok-white"></i></div>;
+            return <div className={`${component}__input-ico ${component}__input-ico_valid`} key="valid_ico"><i className="ico--ok-white"></i></div>;
         }
         if (status === "error") {
             return [
-                <div className="gui-input__input-ico gui-input__input-ico_error" key="error_ico">
+                <div className={`${component}__input-ico ${component}__input-ico_error`} key="error_ico">
                     <i className="ico-warning"></i>
                 </div>,
-                <span key='tooltip' className="gui-input__error-tooltip">{field.get("error")}</span>
+                <span key='tooltip' className={`${component}__error-tooltip`}>{field.get("error")}</span>
             ];
         }
         return null;
@@ -693,20 +702,20 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
 
 export class GuiRequiredInput extends GuiValidatedInput {
     private validateField = (value: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
-        if (value){
+        if (value) {
             return state.set("status", "ok");
         }
-        if (force){
+        if (force) {
             return state.set("status", "error").set("error", this.formatLabel("@requiredField"));
         }
         return state.set("status", "notReady");
     }
 
-    validate(force?: boolean): boolean{
+    validate(force?: boolean): boolean {
         var value = this.refs.input.getValue();
         var newState = this.validateField(value, this.state.fieldState, force);
-        if (newState){
-            this.setState({fieldState: newState});
+        if (newState) {
+            this.setState({ fieldState: newState });
             var status = newState.get("status");
             return status === "ok" || status === "notReady";
         }
@@ -718,7 +727,7 @@ export interface IFormState {
     status: "notReady" | "sending" | "error";
 }
 
-export function GuiSpinner(){
+export function GuiSpinner() {
     return <div className="loading-spinner">
         <div className="ball-pulse">
             <div className="ball-pulse__1"></div>

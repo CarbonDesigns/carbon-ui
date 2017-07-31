@@ -37,17 +37,17 @@ export default class TopMenu extends Component<TopMenuProps, any>{
     }
 
     _renderLoginButton() {
-        return <CarbonLabel id="@nav.login" />;
+        return <Link className="topmenu_login-button"  to="/login"><CarbonLabel id="@nav.login" /></Link>;
     }
 
-    _renderLoginFlyout() {
-        return <FlyoutButton className="login-flyout" renderContent={this._renderLoginButton}
-            position={{ targetVertical: "bottom", targetHorizontal: "right", disableAutoClose: true }}>
-            <div id="login">
-                <LoginPopup location={this.props.location} />
-            </div>
-        </FlyoutButton>
-    }
+    // _renderLoginFlyout() {
+    //     return <FlyoutButton className="login-flyout" renderContent={this._renderLoginButton}
+    //         position={{ targetVertical: "bottom", targetHorizontal: "right", disableAutoClose: true }}>
+    //         <div id="login">
+    //             <LoginPopup location={this.props.location} />
+    //         </div>
+    //     </FlyoutButton>
+    // }
 
     _renderLogoutButton() {
         return <div>
@@ -70,7 +70,7 @@ export default class TopMenu extends Component<TopMenuProps, any>{
                 <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>
                 <li className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>
                 <li className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>
-                <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginFlyout()}</li>
+                <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginButton()}</li>
             </ul>
         </nav>
     }

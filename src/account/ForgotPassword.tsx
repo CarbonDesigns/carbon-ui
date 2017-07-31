@@ -3,16 +3,18 @@ import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import { Url } from "../Constants";
 import { IFieldState, IFormState, GuiValidatedInput, ValidationTrigger } from "../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
-import { dispatchAction } from "../CarbonFlux";
+import { dispatchAction, CarbonLabel } from "../CarbonFlux";
 import { backend } from "carbon-api";
 import { AccountAction } from "./AccountActions";
+import TopMenu from "../shared/TopMenu";
+import bem from "../utils/commonUtils";
 
 export default class ForgotPassword extends RouteComponent<IRouteComponentProps, IFormState>{
     refs: {
         email: GuiValidatedInput
     }
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             status: "notReady"
@@ -26,8 +28,8 @@ export default class ForgotPassword extends RouteComponent<IRouteComponentProps,
         if (action.type === "Account_ForgotPasswordResponse") {
             this.refs.email.clearError();
 
-            if (action.response.ok === false){
-                if (action.response.errors.email){
+            if (action.response.ok === false) {
+                if (action.response.errors.email) {
                     this.refs.email.setErrorLabel(action.response.errors.email);
                 }
             }
@@ -38,13 +40,13 @@ export default class ForgotPassword extends RouteComponent<IRouteComponentProps,
     _onSubmit = e => {
         e.preventDefault();
 
-        if (this.state.status === "sending"){
+        if (this.state.status === "sending") {
             return;
         }
 
         var ok = this.refs.email.validate(true);
 
-        if (!ok){
+        if (!ok) {
             return;
         }
         this.setState({
@@ -53,9 +55,9 @@ export default class ForgotPassword extends RouteComponent<IRouteComponentProps,
 
         var email = this.refs.email.getValue();
 
-        backend.accountProxy.forgotPassword({email})
+        backend.accountProxy.forgotPassword({ email })
             .then(response => {
-                dispatchAction({type: "Account_ForgotPasswordResponse", response});
+                dispatchAction({ type: "Account_ForgotPasswordResponse", response });
                 this._onSuccess();
             })
             .catch(this._onFail);
@@ -74,7 +76,7 @@ export default class ForgotPassword extends RouteComponent<IRouteComponentProps,
             return state.set("status", "error").set("error", this.formatLabel("@account.badEmail"));
         }
 
-        if (force && !email){
+        if (force && !email) {
             return state.set("status", "error").set("error", this.formatLabel("@account.noEmail"));
         }
 
@@ -84,24 +86,37 @@ export default class ForgotPassword extends RouteComponent<IRouteComponentProps,
     render() {
         var form_status_classname = (this.state.status) ? (" form_" + this.state.status) : "";
 
-        return <form className={`signup flyout__content form form_spacy form__group${form_status_classname}`} onSubmit={this._onSubmit}>
-            <div className="form__heading">
-                <FormattedMessage tagName="h3" id="@account.forgotPasswordHint" />
-            </div>
+        return <div className="login-page light-page">
+            <TopMenu location={this.props.location} dark={true} />
 
-            <div className="form__line">
-                <GuiValidatedInput ref="email" id="email" autoFocus
-                    placeholder="Your e-mail address"
-                    defaultValue={this.props.location.state.email}
-                    onValidate={this.validateEmail}
-                    trigger={ValidationTrigger.blur} />
-            </div>
+            <div className="login-page_content">
+                <section className="loginheader-container smooth-header">
+                    <h1 className={bem("loginheader-container", "header")} >
+                        <CarbonLabel id={"@forgotPassword.header"} />
+                    </h1>
+                </section>
+                <section className="login-form-container">
+                    <form className={`login-form form__group${form_status_classname}`} onSubmit={this._onSubmit}>
+                        <div className="login-form__heading">
+                            <FormattedMessage tagName="h3" id="@account.forgotPasswordHint" />
+                        </div>
 
-            <div className="form__submit">
-                <section className="gui-button gui-button_yellow">
-                    <button type="submit" className="btn"><FormattedMessage id="@account.sendResetPasswordLink" /></button>
+                        <div className="form__line login_input login-input_email">
+                            <GuiValidatedInput ref="email" id="email" autoFocus
+                                type="email"
+                                component="fs-input"
+                                placeholder="Your e-mail address"
+                                defaultValue={this.props.location.state.email}
+                                onValidate={this.validateEmail}
+                                trigger={ValidationTrigger.blur} />
+                        </div>
+
+                        <div className="login-submit">
+                                <button className="fs-main-button restore-pwd-btn" type="submit"><FormattedMessage id="@account.sendResetPasswordLink" /></button>
+                        </div>
+                    </form>
                 </section>
             </div>
-        </form>;
+        </div>;
     }
 }

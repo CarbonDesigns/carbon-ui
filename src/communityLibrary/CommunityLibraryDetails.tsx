@@ -12,7 +12,6 @@ import bem from "../utils/commonUtils";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
 import cx from "classnames";
 
-
 function SearchTag(props) {
     return <div className="search-tag">
         {props.text}
@@ -108,7 +107,7 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
                     <div className={bem("resource-details", "designedby")}>{data.authorName||"carbonium"}</div>
 
                     <div className="resource-details__import-aligner">
-                        <button onClick={()=>{this._openSymbol(data.dataUrl)}} className={cx("form-main-button", bem("resource-details", "import"))}>Open symbol</button>
+                        <button onClick={()=>{this._openSymbol(data.dataUrl)}} className={cx("fs-main-button", bem("resource-details", "import"))}>Open symbol</button>
                         <div className={bem("resource-details", "downloads")}>{data.timesUsed} downloads</div>
                     </div>
                 </div>

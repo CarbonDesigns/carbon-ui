@@ -9,13 +9,11 @@
 
 @navigationMenuFontSize: 16px;
 
-
 .landing-page {
     min-height: 100%;
     width:100%;
     .allowselect();
 }
-
 
 .hero-container {
     width:100%;
@@ -46,6 +44,7 @@
     width:100%;
     max-width: 960px;
     position: relative;
+    min-height: 300px;
 
     z-index: 100;
     align-self: center;
@@ -130,6 +129,7 @@
     z-index: 65;
     position: relative;
     border-top: 1px solid #e3e8ec;
+    overflow: hidden;
 }
 
 .quote-container {
@@ -153,43 +153,6 @@
     a {
         color: #E8E8F5;
     }
-}
-
-.subscribe-container__details {
-    color: #2E2A31;
-    font-family: Poppins;
-    font-size: 16px;
-    line-height: 25px;
-    min-width: 250px;
-    max-width: 600px;
-}
-
-.subscribe-form {
-    width:350px;
-    margin-left: 50px;
-    margin-top:20px;
-    margin-bottom:20px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-}
-
-.subscribe-form__button {
-    width: 180px;
-    margin-left: -4px;
-}
-
-.subscribe-form__email {
-	height: 50px;
-    width: 300px;
-    padding: 0 10px;
-	border: 2px solid #CCCBD7;
-    background-color: @subscribeContainerFill;
-
-	color: #9E9DA8;
-	font-family: Inconsolata;
-	font-size: 16px;
-	line-height: 50px;
 }
 
 .message-page {

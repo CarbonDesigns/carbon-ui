@@ -51,11 +51,15 @@
     max-height: 100vh;
     max-width: 100vw;
     display: block;
-    .rel;
     .clip;
 
     &.autohide:not(.tmpVisible) {
-        opacity: 0.5;
+        //perf: not painting closed panels
+        & > .panel {
+            display: none;
+        }
+
+        //opacity: 0.5;
         //transition: opacity 0.25s ease-in;
         &.lbox_left {
             left:unset;
@@ -503,11 +507,11 @@ body.compact-mode , body.ninja-mode {
     flex-direction: column;
     //transition: opacity 0.2s linear;
 
-    .stretch();
+    .w100;
+    .h100;
     @icon_and_name_opacity: .7;
 
     &__body {
-        position: relative;
         .flex(column);
         flex: auto;
     }
@@ -552,15 +556,16 @@ body.compact-mode , body.ninja-mode {
         @rad : @rounding1 @rounding1 0 0;
         border-radius: @rad;
 
-        .clip;
+        //.clip;
 
         // .box-shadow("0 -1px 0 rgba(0, 0, 0, 0.10) inset, 0 -2px 0 rgba(0, 0, 0, 0.02) inset");
         // .box-shadow("0 -1px 0 rgba(0, 0, 0, 0.03) inset, 0 -2px 0 rgba(0, 0, 0, 0.01) inset");
-        .befrel;
+        //.befrel;
 
         //display: table;
         .flex();
-        align-items: center;
+        flex: 0 0 auto;
+        align-items: stretch;
         width: 100%;
         background-repeat: repeat;
 
@@ -594,8 +599,8 @@ body.compact-mode , body.ninja-mode {
 
 
         &__icon {
-            .abs;
-            .h100;
+            //.abs;
+            //.h100;
             width: @header_height;
 
             display: flex;
@@ -632,18 +637,19 @@ body.compact-mode , body.ninja-mode {
 
         &__name {
             .act;
-            padding-right: @line_air;
-            margin-right: @line;
 
-            padding-left: 1.5*@line;
-            .transition(padding .4s);
+            padding: 0 @line_air;
+            //.transition(padding .4s);
+            flex: auto;
+            display: flex;
+            align-items: center;
 
             h3 {
                 opacity: @icon_and_name_opacity;
                 .upp;
 
-                .inbl;
-                .clip;
+                //.inbl;
+                //.clip;
                 .nowrap;
                 text-overflow: ellipsis;
 
@@ -667,7 +673,7 @@ body.compact-mode , body.ninja-mode {
 
             &__name{
                 padding-left: @line_air * 1.4;
-                .transition(padding .4s  linear .3s);
+                //.transition(padding .4s  linear .3s);
             }
 
             &__icon {
@@ -675,7 +681,7 @@ body.compact-mode , body.ninja-mode {
                 i {
                     .op0;
                     height: 0;
-                    .transition(all .3s);
+                    //.transition(all .3s);
                 }
             }
         }
@@ -697,16 +703,16 @@ body.compact-mode , body.ninja-mode {
 
 
     &__body {
-
+        flex: auto;
         width: 100%;
         min-height: 50px;
         max-height: 100vh;
-        .transition(all .35s);
+        //.transition(all .35s);
         background-repeat: repeat;
         .rounded_full(0 0 @rounding1 @rounding1);
 
-        .stretch();
-        top: @header_height;
+        //.stretch();
+        //top: @header_height;
 
 
     }
@@ -726,7 +732,7 @@ body.compact-mode , body.ninja-mode {
 .panel__settings-pill {
     .linebutton();
     width: @header_height;
-    .abs;
+    //.abs;
 }
 
 //——————————————————————————————————————————————————————————————————————

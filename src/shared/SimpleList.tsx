@@ -24,6 +24,12 @@ export class SimpleListItem extends React.Component<any, any> {
         super(props);
     }
 
+    private onClick = e => {
+        if (this.props.onClick) {
+            this.props.onClick(this.props.item, e);
+        }
+    }
+
     render() {
         let {
             item,
@@ -57,7 +63,7 @@ export class SimpleListItem extends React.Component<any, any> {
 
         var body = (typeof renderItemBody === 'function')
             ? renderItemBody(item)
-            : <div className={bem_simple_list("item-body")} onClick={(event)=>onClick(item, event)}>{item.content}</div>;
+            : <div className={bem_simple_list("item-body")} onClick={this.onClick}>{item.content}</div>;
 
         // Rendering.
         return (
@@ -71,7 +77,8 @@ export class SimpleListItem extends React.Component<any, any> {
 
 export default class SimpleList extends Component<any, any> {
     static defaultProps = {
-        padding: true
+        padding: true,
+        scrolling: true
     }
 
     render() {
@@ -82,6 +89,7 @@ export default class SimpleList extends Component<any, any> {
             padding,
             emptyMessage,
             activeItem,
+            scrolling,
             ...itemProps} = this.props;
 
         var content = (items.length)
@@ -90,11 +98,16 @@ export default class SimpleList extends Component<any, any> {
                 ? <p className={bem_simple_list("message")}>{emptyMessage}</p>
                 : null;
 
-        return <ScrollContainer
+        if (this.props.scrolling) {
+            return <ScrollContainer
                 className={bem_simple_list('scroll-container', null, ["wrap thin", className] )}
                 boxClassName={bem_simple_list(null, {padding : padding }, boxClassName)}
                 insideFlyout={insideFlyout}>
             {content}
             </ScrollContainer>
+        }
+        return <div className={className}>
+            {content}
+        </div>;
     }
 }

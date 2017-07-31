@@ -37,9 +37,13 @@ class ShadowFlat extends Component<any, any> {
         this.props.onEnableChanged && this.props.onEnableChanged(newshadow);
     }
 
+    private openPopup = () => {
+        this.refs.modify.toggle();
+    }
+
     render() {
         var item = this.props.value;
-        return <div className={cn("shadow")} onClick={()=>{this.refs.modify.toggle()}}>
+        return <div className={cn("shadow")}>
             {item.enabled==null ? null : <GuiCheckbox
                 className={cn("shadow-checkbox")}
                 onChange={this._changeEnabled}
@@ -47,13 +51,13 @@ class ShadowFlat extends Component<any, any> {
                 labelless={true}
             />}
 
-            <span className={cn("params")}>
+            <span className={cn("params")} onClick={this.openPopup}>
                 {this._renderParam(item.x, 'x')}
                 {this._renderParam(item.y, 'y')}
                 {this._renderParam(item.blur, 'b')}
             </span>
-            <i title={item.inset ? "Inset shadow" : "Outset shadow"} className={cn("inset")}>{item.inset ? <i className="ico--inset"/> : <i className="ico--outset"/>}</i>
-            <i className={cn("color")} style={{backgroundColor: item.color}}>
+            <i title={item.inset ? "Inset shadow" : "Outset shadow"} className={cn("inset")} onClick={this.openPopup}>{item.inset ? <i className="ico--inset"/> : <i className="ico--outset"/>}</i>
+            <i className={cn("color")} style={{backgroundColor: item.color}} onClick={this.openPopup}>
                 <i className={cn("color-transparency")} style={{opacity: (1)}}/>
             </i>
             <FlyoutButton
@@ -74,11 +78,6 @@ class ShadowFlat extends Component<any, any> {
 
 
 export default class ShadowsList extends Component<any, any> {
-
-    _onDelete=()=>{
-
-    }
-
     render(){
         if(!(this.props.items instanceof Array)) {
             return <div></div>;
@@ -96,10 +95,10 @@ export default class ShadowsList extends Component<any, any> {
             insideFlyout : this.props.insideFlyout,
             // emptyMessage : null,
             items        : items,
-            onDelete     : this._onDelete,
+            onDelete     : this.props.onDeleted,
             // onEdit       : null
         };
 
-        return <SimpleList {...props}/>
+        return <SimpleList {...props} scrolling={false}/>
     }
 }

@@ -5,6 +5,7 @@ import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
 import { DimensionsZero } from "./CollectionDefs";
+import Antiscroll from "../../external/antiscroll";
 
 interface InfiniteListProps<T> extends ISimpleReactElementProps {
     rowHeight: number | ((item: T, index: number) => number);
@@ -28,6 +29,7 @@ type InfiniteListState<T> = {
 const InitialTotalCount = 1000;
 
 export default class InfiniteList<T> extends Component<InfiniteListProps<T>, InfiniteListState<T>> {
+    private scroller: Antiscroll;
     private onRowsRendered: (params: { startIndex: number, stopIndex: number }) => void = null;
     private list: List = null;
     private registerChild: (child: any) => void;
@@ -54,8 +56,7 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
     }
 
     componentWillUnmount(){
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
-        ScrollContainer.destroyScroller(gridNode.parentElement);
+        this.scroller.destroy();
     }
 
     componentDidUpdate(prevProps: InfiniteListProps<T>, prevState: InfiniteListState<T>) {
@@ -80,7 +81,7 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
 
     private initScroller(){
         let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
-        ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
+        this.scroller = ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
     }
 
     private registerList = (list) => {

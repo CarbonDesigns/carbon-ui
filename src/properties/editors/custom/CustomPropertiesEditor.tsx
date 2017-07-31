@@ -142,7 +142,7 @@ class CustomProperty extends Component<any, any> {
             <div style={{position:'relative'}}>
                 <DropdownEditor p={controlProp} onValueChanged={this._onControlChanged}/>
                 <DropdownEditor p={propertyNameProp} onValueChanged={this._onPropertyChanged}/>
-                <StringEditor p={nameProp} onChange={this._onNewNameChange}/>
+                {/* <StringEditor p={nameProp} onChange={this._onNewNameChange}/> */}
                 <div className="accept-changes">
                     <div className="bottom-right-controls">
                         <div className="button_accept" onClick={this._onAccept}></div>
@@ -154,7 +154,7 @@ class CustomProperty extends Component<any, any> {
     }
 }
 
-class CustomPropertiesEditor extends EditorComponent<any, any> {
+class CustomPropertiesEditor extends EditorComponent<any, any, any> {
     // @listenTo(propertyStore)
     // onChange(){
     //     this.setState({

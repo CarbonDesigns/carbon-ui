@@ -2,20 +2,20 @@ import React, {ReactHTMLElement} from 'react';
 import cx from "classnames";
 import FlyoutButton from '../../shared/FlyoutButton';
 
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent from "./EditorComponent";
 import BrushSelector from "./BrushSelector";
 
 import {Brush} from "carbon-core";
 import {FormattedHTMLMessage} from "react-intl";
 
-export default class BrushEditor extends EditorComponent<IEditorProps, IEditorState<Brush>> {
+export default class BrushEditor extends EditorComponent<Brush> {
     private _initialValue: Brush;
 
     renderSelectedValue: any = () => {
-        return <q style={Brush.toCss(this.state.value)}></q>;
+        return <q style={Brush.toCss(this.propertyValue())}></q>;
     };
     saveInitialBrush = () => {
-        this._initialValue = this.state.value;
+        this._initialValue = this.propertyValue();
     };
     onClosed = () => {
         //setting value from closed might not work, because selection may have been gone already
@@ -41,7 +41,7 @@ export default class BrushEditor extends EditorComponent<IEditorProps, IEditorSt
             >
                 <BrushSelector
                     className="flyout__content" ref="selector"
-                    brush={this.state.value}
+                    brush={this.propertyValue()}
                     onSelected={this.setValueByCommand}
                     onCancelled={this.revertChanges}
                 />

@@ -155,38 +155,24 @@ export default class EditableList extends Component<any, any> {
                 />)
         }
 
-        return (
-            <ScrollContainer
+        if (this.props.scrolling) {
+            return <ScrollContainer
                 className={bem(b, "scroll-wrap", null, "wrap thin")}
                 boxClassName={bem(b)}
                 insideFlyout={this.props.insideFlyout}
             >
                 {items}
             </ScrollContainer>
-        );
-        // return (
-        //     <div className={bem(b)}>
-        //         <ScrollContainer className={bem(b, "scroll-container", null, "wrap thin")} insideFlyout={this.props.insideFlyout}>
-        //             {
-        //                 this.props.items.map(item => <ListItem
-        //                     key={item.id}
-        //                     text={item.name}
-        //                     icon={item.icon}
-        //                     item={item}
-        //                     onClick={this.props.onClick}
-        //                     onRename={this.props.onRename}
-        //                     onDelete={this.props.onDelete}
-        //                     canDelete={this.props.canDelete}
-        //                 />
-        //                 )
-        //             }
-        //         </ScrollContainer>
-        //     </div>
-        // )
+        }
+
+        return <div>
+            {items}
+        </div>
     }
 
     static defaultProps = {
-        insideFlyout : false,
-        canDelete : true
+        insideFlyout: false,
+        canDelete: true,
+        scrolling: true
     }
 }

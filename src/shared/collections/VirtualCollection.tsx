@@ -5,6 +5,7 @@ import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
 import { CellSize, DimensionsZero, SizeZero } from "./CollectionDefs";
+import Antiscroll from "../../external/antiscroll";
 
 
 interface VirtualCollectionProps extends ISimpleReactElementProps {
@@ -17,6 +18,7 @@ interface VirtualCollectionProps extends ISimpleReactElementProps {
 }
 
 export default class VirtualCollection extends Component<VirtualCollectionProps> {
+    private scroller: Antiscroll;
     private collection: Collection = null;
     private measureCache: CellSize[] = [];
     private lastDimensions: Dimensions = DimensionsZero;
@@ -62,14 +64,12 @@ export default class VirtualCollection extends Component<VirtualCollectionProps>
     }
 
     componentWillUnmount() {
-        let listNode = ReactDom.findDOMNode<HTMLElement>(this.collection);
-        ScrollContainer.destroyScroller(listNode.parentElement);
+        this.scroller.destroy();
     }
 
     private initScroller() {
         let gridNode = ReactDom.findDOMNode<HTMLElement>(this.collection);
-        ScrollContainer.destroyScroller(gridNode.parentElement);
-        ScrollContainer.initScroller(gridNode.parentElement, { innerSelector: gridNode });
+        this.scroller = ScrollContainer.initScroller(gridNode.parentElement, { innerSelector: gridNode });
     }
 
     private registerCollection = (collection) => {

@@ -1,9 +1,9 @@
 import React from 'react';
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from 'classnames';
 import {FormattedHTMLMessage} from "react-intl";
 
-export default class SwitchEditor extends EditorComponent<IEditorProps, IEditorState<boolean>> {
+export default class SwitchEditor extends EditorComponent<boolean, IEditorProps> {
     render(){
         var items = this.extractOption(this.props, "items");
         var hasLabels = this.extractOption(this.props, "hasLabels");
@@ -21,7 +21,7 @@ export default class SwitchEditor extends EditorComponent<IEditorProps, IEditorS
         </div>;
     }
     renderItem(x, i){
-        var buttonClasses = cx("prop__pushbutton", {"_active": x.value === this.state.value});
+        var buttonClasses = cx("prop__pushbutton", {"_active": x.value === this.propertyValue()});
         var iconClasses = cx("ico type-icon inline-ico", x.icon);
         return <q className={buttonClasses} onClick={this.onChange.bind(this, x.value)} key={i}>
             <i className={iconClasses}></i>
@@ -29,7 +29,7 @@ export default class SwitchEditor extends EditorComponent<IEditorProps, IEditorS
     }
 
     renderItemWithLabel(x, i){
-        var buttonClasses = cx("prop__pushbutton prop__v", {"_active": x.value === this.state.value});
+        var buttonClasses = cx("prop__pushbutton prop__v", {"_active": x.value === this.propertyValue()});
         var iconClasses = cx("ico type-icon inline-ico", x.icon);
         return <b className={buttonClasses} onClick={this.onChange.bind(this, x.value)} key={i}>
             <i className={iconClasses}></i>

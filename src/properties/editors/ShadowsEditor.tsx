@@ -1,13 +1,13 @@
 import React from "react";
 import {Component} from "../../CarbonFlux";
-import EditorComponent, {IEditorProps, IEditorState} from "./EditorComponent";
+import EditorComponent, {IEditorProps} from "./EditorComponent";
 import ShadowPopup from "./ShadowPopup";
-import FlyoutButton from "../../shared/FlyoutButton";
+import FlyoutButton, { FlyoutPosition } from "../../shared/FlyoutButton";
 import AddButton from "./AddButton";
 import ShadowsList from "./ShadowsList";
 import {Shadow, PatchType, createUUID} from "carbon-core";
 
-interface IShadowEditorState extends IEditorState<Shadow>{
+interface IShadowEditorState {
     newShadow: Shadow;
 }
 
@@ -15,7 +15,7 @@ interface IShadowEditorProps extends IEditorProps{
     items: any[];
 }
 
-export default class ShadowsEditor extends EditorComponent<IShadowEditorProps, IShadowEditorState> {
+export default class ShadowsEditor extends EditorComponent<Shadow, IShadowEditorProps, IShadowEditorState> {
     private _lastShadow: Shadow;
 
     constructor(props) {
@@ -23,25 +23,21 @@ export default class ShadowsEditor extends EditorComponent<IShadowEditorProps, I
         this.state = {newShadow: Object.assign({id: createUUID()}, Shadow.Default)};
     }
 
+    private static FlyoutPosition: FlyoutPosition = {targetVertical: "bottom", disableAutoClose: true};
+
     render() {
-        // var items = this.option(this.props, "items", [
-        //     { id: '1', enabled: false,   inset: true,   color: "grey",   x:   0,  y: 2,  size: 0,  blur: 4  },
-        //     { id: '2', enabled: true ,   inset: false,  color: "red" ,   x: -80,  y: 2,  size: 2,  blur: 4  },
-        // ]);
-
         var items = this.props.p.get('value');
-
         var classes = this.prop_cn(null, this.widthClass(this.props.className || "prop_width-1-1"));
 
         return (<div className={classes} style={{height: "auto"}}>
-            {this._renderPropName()}
             <div className={ this.b('editor') }>
                 <ShadowsList items={items} onPreview={this.onPreview} onConfirmed={this.onConfirmed}
-                             onCancelled={this.onCancelled} onEnableChanged={this.onEnableChanged}/>
+                             onCancelled={this.onCancelled} onEnableChanged={this.onEnableChanged}
+                             onDeleted={this.onDeleted}/>
 
                 <FlyoutButton
-                    renderContent={this.renderSelectedValue}
-                    position={{targetVertical: "bottom", disableAutoClose: true}}
+                    renderContent={ShadowsEditor.renderSelectedValue}
+                    position={ShadowsEditor.FlyoutPosition}
                     onOpened={this.onOpened}
                     onClosed={this.onClosed}
                     ref="add">
@@ -57,7 +53,7 @@ export default class ShadowsEditor extends EditorComponent<IShadowEditorProps, I
         </div>);
     }
 
-    renderSelectedValue = () => {
+    static renderSelectedValue = () => {
         return <AddButton caption="@addshadow" defaultMessage="add shadow"/>;
     };
 
@@ -91,4 +87,8 @@ export default class ShadowsEditor extends EditorComponent<IShadowEditorProps, I
         this.cancelEdit();
         this._lastShadow = null;
     };
+
+    onDeleted = (shadow) => {
+        this.patchValueByCommand(PatchType.Remove, shadow, true);
+    }
 }

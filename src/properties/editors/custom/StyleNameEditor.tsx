@@ -13,7 +13,7 @@ import ScrollContainer from '../../../shared/ScrollContainer';
 import {richApp} from "../../../RichApp";
 import {FormattedMessage} from "react-intl";
 import Immutable from "immutable";
-import ManageStylesDialog from "../../dialogs/ManageStylesDialog";
+//import ManageStylesDialog from "../../dialogs/ManageStylesDialog";
 
 
 var Style = (props)=> {
@@ -28,7 +28,7 @@ var Style = (props)=> {
 }
 
 
-export default class StyleNameEditor extends EditorComponent<any, any> {
+export default class StyleNameEditor extends EditorComponent<any, any, any> {
     refs: any;
 
     constructor(props) {
@@ -107,7 +107,7 @@ export default class StyleNameEditor extends EditorComponent<any, any> {
         this.setValueByCommand(element.styleId());
     };
 
-    onCompleteEditing = (value, e)=> {
+    onCompleteEditing = (value)=> {
         if (this.state.editName) {
             var element = this.props.e.first();
             this.setState({editName: null});

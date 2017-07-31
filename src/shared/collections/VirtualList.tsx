@@ -4,6 +4,7 @@ import { InfiniteLoader, AutoSizer, Dimensions, InfiniteLoaderChildProps, Index,
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
+import Antiscroll from "../../external/antiscroll";
 
 interface VirtualListProps<T> extends ISimpleReactElementProps {
     data: T[];
@@ -12,9 +13,11 @@ interface VirtualListProps<T> extends ISimpleReactElementProps {
     noContentRenderer?: () => React.ReactNode;
     scrollToRow?: number;
     scrollToAlignment?: Alignment;
+    useTranslate3d?: boolean;
 }
 
 export default class VirtualList<T> extends Component<VirtualListProps<T>> {
+    private scroller: Antiscroll;
     private list: List = null;
 
     static defaultProps: Partial<VirtualListProps<any>> = {
@@ -34,13 +37,12 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     }
 
     componentWillUnmount(){
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
-        ScrollContainer.destroyScroller(gridNode.parentElement);
+        this.scroller.destroy();
     }
 
     private initScroller(){
         let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
-        ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
+        this.scroller = ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
     }
 
     private registerList = (list) => {
@@ -58,6 +60,12 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     private rowRenderer = (props: ListRowProps) => {
         let item = this.props.data[props.index];
         let child = item ? this.props.rowRenderer(item, props.index) : null;
+        let style = props.style;
+        if (this.props.useTranslate3d) {
+            style = {
+                transform: "translate3d(" + props.style.left + ","+ props.style.top + ",0)"
+            };
+        }
         return <div key={props.key} style={props.style}>{child}</div>
     }
 

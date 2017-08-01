@@ -151,7 +151,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
 
     private renderEditTab() {
         return <TabPage tabId="1" className="gui-page">
-            <MarkupLine>
+            <MarkupLine mods="stretch">
                 <CropEditor ref="cropEditor" image={this.state.image} dpr={this.props.dpr} />
             </MarkupLine>
 
@@ -176,7 +176,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
         var loading = this.state.loading;
 
         return <TabPage tabId="2" className={b('upload-page', { loading }, 'gui-page')}>
-            <MarkupLine className="edit-image__make-snapshot" onClick={this.hideAllErrors}>
+            <MarkupLine className="edit-image__make-snapshot" onClick={this.hideAllErrors} mods="stretch">
                 <p className="edit-image__message">
                     <FormattedMessage id="@imageEdit.artboardSnapshot" />
                 </p>
@@ -192,17 +192,17 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
                 </div>
             </MarkupLine>
 
-            <MarkupLine>{separatorOr("or")}</MarkupLine>
-            <MarkupLine>
+            <MarkupLine mods="stretch">{separatorOr("or")}</MarkupLine>
+            <MarkupLine mods="stretch">
                 <ImageDropzone
                     ref="dropzone"
                     onSuccess={this.onUploadSuccess}
                 />
             </MarkupLine>
 
-            <MarkupLine>{separatorOr("or")}</MarkupLine>
+            <MarkupLine mods="stretch">{separatorOr("or")}</MarkupLine>
 
-            <MarkupLine className="edit-image__paste-url" onClick={this.hideAllErrors}>
+            <MarkupLine mods="stretch" className="edit-image__paste-url" onClick={this.hideAllErrors}>
                 <p className="edit-image__message">
                     <FormattedMessage id="@imageEdit.pasteUrl" />
                 </p>

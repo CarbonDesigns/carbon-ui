@@ -298,7 +298,7 @@ export default
         "caption.sharebyemail": "Share project by email",
         "caption.resourceblade": "Resources",
         "caption.mirroringblade": "Device mirroring", //
-        "caption.publishpage": "Publish symbols",
+        "caption.publishpage": "Publish resources",
         "@caption.editCover": "Edit cover",
 
         "resources.static": "Published by carbonium.io",
@@ -311,7 +311,7 @@ export default
         "btn.disableMirroring": "Disable",
         "menu.mirroring": "Mirroring",
         "menu.sharing": "Sharing link", //
-        "menu.publish": "Publish symbols", //
+        "menu.publish": "Publish resources", //
         "mirroringblade.helptext": "Enable mirroring to view all changes immediately on the remote device.",
         "mirroringblade.scancodehelp": "Scan QR code on any mobile device using your favorite QR code scanner app to view currently active artboard on the device.",
         "mirroring.urllabel": "Or copy URL manually", //

@@ -546,6 +546,13 @@ export default
         "@unsplash.error": "Could not contact the Unsplash.com service. Please try again later.",
         "@userImages.error": "Could not connect to the server. Please try again later.",
 
+        "@status.saveFiled": "Could not save to the server. Please contact support.",
+        "@status.savingSoon": "Saving soon...",
+        "@status.connected": "Connected to server.",
+        "@status.connecting": "Connecting...",
+        "@status.reconnecting": "Connection to server lost. Retrying...",
+        "@status.willRetry": "Connection to server lost. Retrying in {seconds} seconds...",
+
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",
         "@textAutoWidth.Grow": "Grow",

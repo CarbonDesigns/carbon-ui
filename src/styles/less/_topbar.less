@@ -247,10 +247,37 @@
 
 //——————————————————————————————————————————————————————————————————————
 
-.userbar{
+.statusbar {
     flex: 1;
     display: flex;
     justify-content: flex-end;
+}
+
+.appstatus {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 40px;
+
+    &__icon_ok {
+        background: #9acd32;
+    }
+    &__icon_warning {
+        background: orange;
+    }
+    &__icon_error {
+        background: lightcoral;
+    }
+
+    &__flyout {
+        .bgc3();
+        .f11;
+        width: 300px;
+    }
+}
+
+.userbar{
+    display: flex;
 }
 
 #user-avatar {

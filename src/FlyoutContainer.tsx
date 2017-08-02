@@ -4,8 +4,6 @@ import { nodeOffset, ensureElementVisible } from "./utils/domUtil";
 import FlyoutActions from './FlyoutActions';
 import flyoutStore from "./FlyoutStore";
 
-var flyoutNumber = 0;
-
 // TODO: define propert interfaces
 class FlyoutHost extends Component<any, any> {
     render() {
@@ -151,7 +149,6 @@ export default class FlyoutContainer extends Component<IFlyoutContainerProps, IF
         return <FlyoutHost
             style={style}
             offset={_offset}
-            key={flyoutNumber++}
             targetSize={{ width: targetWidth, height: targetHeight }}
             onMouseDown={this.onFlyoutMouseDown}
             onClick={this.onFlyoutClick}

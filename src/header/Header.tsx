@@ -17,6 +17,7 @@ import PreviewActions from "../preview/PreviewActions";
 import PreviewStore from "../preview/PreviewStore";
 import {StoriesPopupList, StoriesListItem}  from "../stories/StoriesList";
 import StoriesStore from "../stories/StoriesStore";
+import AppStatus from "./AppStatus";
 
 //import {FormattedHTMLMessage} from 'react-intl';
 //import {Link} from 'react-router';
@@ -266,7 +267,10 @@ export default class Header extends ComponentWithImmutableState<IHeaderProps, an
 
 
                 { /*   Userbar / Signup   */ }
-                <UserBar/>
+                <div className="statusbar">
+                    <AppStatus/>
+                    <UserBar/>
+                </div>
 
                 { /* Help   */ }
                 {/*<DropButton key="helpbar" id="helpbar" caption="Help">

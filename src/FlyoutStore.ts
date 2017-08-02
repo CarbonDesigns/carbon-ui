@@ -39,6 +39,13 @@ export class FlyoutStore extends CarbonStore<IFlyoutStoreState> {
         });
     }
 
+    @handles(FlyoutActions.update)
+    onUpdatePopup({target, children}) {
+        if (this.state.target && target === this.state.target) {
+            this.setState({ children });
+        }
+    }
+
     @handles(FlyoutActions.hide)
     onHidePopup() {
         if (typeof this.state.onClose === 'function' ) {

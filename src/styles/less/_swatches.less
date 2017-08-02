@@ -14,6 +14,7 @@
     &__current {
         .flex();
         flex-wrap: nowrap;
+        flex: 0 0 auto;
     }
         &__slot-group {
             .flex();
@@ -130,8 +131,7 @@
     @swatch_height: @h;
 
     &__palette-wrap {
-        .stretch();
-        top: @cur_h;
+        flex: auto;
     }
     &__palette-scroll-container {
         height:100%;

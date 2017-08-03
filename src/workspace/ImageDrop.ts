@@ -20,38 +20,52 @@ dragImage.size({ width: Image.NewImageSize, height: Image.NewImageSize });
 dragImage.source(Image.EmptySource);
 
 function readFromSvgFile(f: File) {
-    var reader = new FileReader();
-    var name = f.name;
-    var extPos = name.lastIndexOf('.');
-    if (extPos !== -1) {
-        name = name.substr(0, extPos);
-    }
+    return new Promise((resolve, reject) => {
+        var reader = new FileReader();
+        var name = f.name;
+        var extPos = name.lastIndexOf('.');
+        if (extPos !== -1) {
+            name = name.substr(0, extPos);
+        }
 
-    reader.onload = (d: any) => {
-        var text = reader.result;
+        reader.onload = (d: any) => {
+            var text = reader.result;
 
-        SvgParser.loadSVGFromString(text).then((result) => {
-            var pos = (dragImage as any).position();
-            var artboard = app.activePage.getArtboardAtPoint(dragPosition);
-            var m = Matrix.createTranslationMatrix(dragPosition.x, dragPosition.y);
-            m = artboard.globalMatrixToLocal(m);
-            if (result.performArrange) {
-                result.performArrange();
-            }
-            var box = result.getBoundingBox()
-            result.name(name);
-            result.applyTranslation({ x: m.tx - box.x, y: m.ty - box.y });
-            artboard.add(result);
-        });
-    }
-    reader.readAsText(f);
+            SvgParser.loadSVGFromString(text).then((result) => {
+                var pos = (dragImage as any).position();
+                var artboard = app.activePage.getArtboardAtPoint(dragPosition);
+                var m = Matrix.createTranslationMatrix(dragPosition.x, dragPosition.y);
+                m = artboard.globalMatrixToLocal(m);
+                if (result.performArrange) {
+                    result.performArrange();
+                }
+                var box = result.getBoundingBox()
+                result.name(name);
+                result.applyTranslation({ x: m.tx - box.x, y: m.ty - box.y });
+                artboard.add(result);
+                resolve();
+            })
+            .catch(reject);
+        }
+        reader.readAsText(f);
+    });
 }
 function insertSvg(data: DataTransfer, e: MouseEvent) {
+    let promises = [];
+
+    if (data.items.length > 1) {
+        app.beginUpdate();
+    }
+
     for (var i = 0; i < data.items.length; ++i) {
         var item = data.items[i];
         if (item.type === SvgMimeType) {
-            readFromSvgFile(item.getAsFile());
+            promises.push(readFromSvgFile(item.getAsFile()));
         }
+    }
+
+    if (data.items.length > 1) {
+        Promise.all(promises).finally(() => app.endUpdate());
     }
 }
 

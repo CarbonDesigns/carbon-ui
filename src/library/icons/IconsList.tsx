@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
 import { Component, dispatch, handles, dispatchAction } from "../../CarbonFlux";
-import { IconsInfo } from "carbon-core";
 import StencilsActions from '../stencils/StencilsActions';
 import LessVars from "../../styles/LessVars";
 //import InfiniteGrid from "../../shared/InfiniteGrid";

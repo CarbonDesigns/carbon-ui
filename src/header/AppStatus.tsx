@@ -6,12 +6,14 @@ import FlyoutButton, { FlyoutPosition } from "../shared/FlyoutButton";
 import bem from "../utils/commonUtils";
 import { Markup, MarkupLine } from "../shared/ui/Markup";
 import AppStatusFlyout from "./AppStatusFlyout";
+import { CarbonAction } from "../CarbonActions";
 
 type AppStatusProps = {}
 type AppStatusState = {
     state: ConnectionState;
     status: "ok" | "warning" | "error";
     lastSaveResult: boolean;
+    lastSaveTime: Date;
 }
 
 export default class AppStatus extends Component<AppStatusProps, AppStatusState> {
@@ -20,9 +22,10 @@ export default class AppStatus extends Component<AppStatusProps, AppStatusState>
     constructor(props: AppStatusProps) {
         super(props);
         this.state = {
-            state: {type: "notStarted"},
+            state: { type: "notStarted" },
             status: "ok",
-            lastSaveResult: true
+            lastSaveResult: true,
+            lastSaveTime: new Date()
         };
     }
 
@@ -40,6 +43,15 @@ export default class AppStatus extends Component<AppStatusProps, AppStatusState>
     }
 
     //handlers
+    canHandleActions() {
+        return true;
+    }
+    onAction(action: CarbonAction) {
+        if (action.type === "Carbon_AppLoaded" && app.serverless()) {
+            this.setState({ status: "warning" });
+        }
+    }
+
     private onConnectionStateChanged = (state: ConnectionState) => {
         let status = this.state.status;
 
@@ -60,25 +72,29 @@ export default class AppStatus extends Component<AppStatusProps, AppStatusState>
         let status = this.state.status;
 
         if (result) {
-            status = "ok";
+            status = app.serverless() ? "warning" : "ok";
         }
         else {
             status = "error";
         }
 
-        this.setState({ status, lastSaveResult: result });
+        this.setState({ status, lastSaveResult: result, lastSaveTime: new Date() });
     }
 
     //render functions
     private renderIcon = () => {
-        return <i className={"ico ico--star appstatus__icon_" + this.state.status}/>
+        return <i className={"ico--status-" + this.state.status} />
     }
 
-    private static FlyoutPosition: FlyoutPosition = { targetVertical: "bottom", targetHorizontal: "right" };
+    private static FlyoutPosition: FlyoutPosition = { targetVertical: "bottom", targetHorizontal: "right", disableAutoClose: true };
 
     render() {
         return <FlyoutButton className="appstatus" renderContent={this.renderIcon} position={AppStatus.FlyoutPosition}>
-            <AppStatusFlyout lastSaveResult={this.state.lastSaveResult} state={this.state.state} status={this.state.status}/>
+            <AppStatusFlyout
+                lastSaveResult={this.state.lastSaveResult}
+                lastSaveTime={this.state.lastSaveTime}
+                state={this.state.state}
+                status={this.state.status} />
         </FlyoutButton>
     }
 }

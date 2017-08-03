@@ -257,22 +257,29 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-right: 40px;
+    padding: 0 @line_air;
+    .point;
 
-    &__icon_ok {
-        background: #9acd32;
-    }
-    &__icon_warning {
-        background: orange;
-    }
-    &__icon_error {
-        background: lightcoral;
+    &:hover, &.opened {
+        .bgfade(10);
     }
 
     &__flyout {
-        .bgc3();
-        .f11;
-        width: 300px;
+        background: @bg_panel_inner1;
+        .f12;
+        width: 250px;
+        .allowselect;
+
+        &&_ok {
+            border: 1px solid @success_color;
+        }
+        &&_warning, &&_error {
+            border: 1px solid @warning_color;
+        }
+    }
+
+    &__tryNow {
+        margin-left: @air_half;
     }
 }
 

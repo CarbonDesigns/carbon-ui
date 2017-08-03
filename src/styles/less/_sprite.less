@@ -110,6 +110,11 @@
     }
 
     .ico--popular { .sprite1(@x + @shift * 15, @y, @size, @size); }
+
+    @statusWidth: 22px;
+    .ico--status-ok { .sprite1(@x + @shift * 16 - @statusWidth/2 + @size/2, @y, @statusWidth, @size + 1); }
+    .ico--status-warning { .sprite1(@x + @shift * 17 - @statusWidth/2 + @size/2, @y, @statusWidth, @size + 1); }
+    .ico--status-error { .sprite1(@x + @shift * 18 - @statusWidth/2 + @size/2, @y, @statusWidth + 8, @size + 1); }
 }
 
 

@@ -3,15 +3,16 @@ import { FormattedMessage } from "react-intl";
 import { Component, dispatchAction } from "../CarbonFlux";
 import { Markup, MarkupLine } from "../shared/ui/Markup";
 import { ConnectionState, app, backend } from "carbon-core";
+import { GuiButton } from "../shared/ui/GuiComponents";
 
 type AppStatusFlyoutProps = {
     state: ConnectionState;
     lastSaveResult: boolean;
+    lastSaveTime: Date;
     status: string;
 }
 type AppStatusFlyoutState = {
     secondsToRetry: number;
-    message: string;
 }
 
 export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, AppStatusFlyoutState> {
@@ -20,18 +21,17 @@ export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, App
     constructor(props: AppStatusFlyoutProps) {
         super(props);
         this.state = {
-            secondsToRetry: AppStatusFlyout.getSecondsToRetry(props.state),
-            message: AppStatusFlyout.getMessage(props.state, props.lastSaveResult)
+            secondsToRetry: AppStatusFlyout.getSecondsToRetry(props.state)
         };
 
-        if (props.state.type === "waiting" && props.state.timeout) {
+        if (props.state.type === "waiting") {
             this.timer = setInterval(this.onTick, 1000);
         }
     }
 
     //lifecycle functions
     componentWillReceiveProps(nextProps: Readonly<AppStatusFlyoutProps>) {
-        if (nextProps.state.type === "waiting" && nextProps.state.timeout && !this.timer) {
+        if (nextProps.state.type === "waiting" && !this.timer) {
             this.timer = setInterval(this.onTick, 1000);
             this.setState({ secondsToRetry: AppStatusFlyout.getSecondsToRetry(nextProps.state) });
         }
@@ -40,9 +40,6 @@ export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, App
             this.setState({ secondsToRetry: -1 });
             this.timer = 0;
         }
-
-        let message = AppStatusFlyout.getMessage(nextProps.state, nextProps.lastSaveResult);
-        this.setState({ message });
     }
 
     componentWillUnmount() {
@@ -50,25 +47,6 @@ export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, App
             clearInterval(this.timer);
             this.timer = 0;
         }
-    }
-
-    private static getMessage(state: ConnectionState, lastSaveResult: boolean) {
-        let message = "@status.connected";
-
-        if (!lastSaveResult && state.type === "connected") {
-            message = "@status.saveFailed";
-        }
-        else if (state.type === "connected") {
-            message = app.isDirty() ? "@status.savingSoon" : "@status.connected";
-        }
-        else if (state.type === "reconnecting") {
-            message = "@status.reconnecting";
-        }
-        else if (state.type === "connecting") {
-            message = "@status.connecting";
-        }
-
-        return message;
     }
 
     private static getSecondsToRetry(state: ConnectionState) {
@@ -93,20 +71,80 @@ export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, App
     private renderContent() {
         if (this.props.state.type === "waiting") {
             if (this.state.secondsToRetry > 0) {
-                return [<FormattedMessage id="@status.willRetry" values={{ seconds: this.state.secondsToRetry }} />,
-                    <a href="#" onClick={this.onTryNow}>{this.formatLabel("@status.tryNow")}</a>]
+                return <div>
+                    <MarkupLine>
+                        <FormattedMessage id="@status.connectionLost" />
+                    </MarkupLine>
+                    <MarkupLine mods="horizontal">
+                        <FormattedMessage id="@status.willRetry" values={{ seconds: this.state.secondsToRetry }} />
+                        <GuiButton className="appstatus__tryNow" mods={["link-hover", "link"]} caption="@status.tryNow"
+                            onClick={this.onTryNow} />
+                    </MarkupLine>
+                </div>;
             }
-            return <FormattedMessage id="@status.reconnecting" />
+            return <MarkupLine>
+                <FormattedMessage id="@status.reconnecting" />
+            </MarkupLine>
         }
 
-        return <FormattedMessage id={this.state.message} />
+        if (app.serverless()) {
+            return <div>
+                <MarkupLine>
+                    <FormattedMessage id="@status.serverless" />
+                </MarkupLine>
+                <MarkupLine>
+                    <FormattedMessage id="@status.serverless2" />
+                </MarkupLine>
+            </div>
+        }
+
+        if (!this.props.lastSaveResult && this.props.state.type === "connected" && this.props.lastSaveTime > this.props.state.connectionTime) {
+            return <div>
+                <MarkupLine>
+                    <FormattedMessage id="@status.saveFailed" />
+                </MarkupLine>
+                <MarkupLine>
+                    <FormattedMessage id="@status.saveFailed2" />
+                </MarkupLine>
+            </div>
+        }
+
+        if (this.props.state.type === "connected") {
+            return <div>
+                <MarkupLine>
+                    <FormattedMessage id="@status.connected" />
+                </MarkupLine>
+                <MarkupLine>
+                    <FormattedMessage id="@status.connected2" values={{ time: this.props.lastSaveTime.toLocaleTimeString() }} />
+                </MarkupLine>
+            </div>
+        }
+
+        if (this.props.state.type === "reconnecting") {
+            return <div>
+                <MarkupLine>
+                    <FormattedMessage id="@status.reconnecting" />
+                </MarkupLine>
+                <MarkupLine>
+                    <FormattedMessage id="@status.reconnecting2" />
+                </MarkupLine>
+            </div>
+        }
+
+        if (this.props.state.type === "connecting") {
+            return <div>
+                <MarkupLine>
+                    <FormattedMessage id="@status.connecting" />
+                </MarkupLine>
+            </div>
+        }
+
+        return null;
     }
 
     render() {
-        return <Markup className="flyout__content appstatus__flyout">
-            <MarkupLine>
-                {this.renderContent()}
-            </MarkupLine>
+        return <Markup className={"flyout__content appstatus__flyout appstatus__flyout_" + this.props.status} mods="space">
+            {this.renderContent()}
         </Markup>
     }
 }

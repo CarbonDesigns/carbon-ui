@@ -1,4 +1,3 @@
-import {IconsInfo} from "carbon-core";
 import {handles, CarbonStore} from '../../CarbonFlux';
 import IconsActions from "./IconsActions";
 
@@ -16,15 +15,15 @@ export default class SearchIconsStore extends CarbonStore{
         var result = {groups: []};
         var r = new RegExp(q, "gi");
 
-        var icons = IconsInfo.fonts[IconsInfo.defaultFontFamily];
-        for (var i = 0; i < icons.length; i++) {
-            var icon = icons[i];
-            r.lastIndex = 0;
-            if (r.test(icon.name)){
-                var searchGroup = this._findOrCreateGroup(result, "Library icons");
-                searchGroup.items.push(icon);
-            }
-        }
+        // var icons = IconsInfo.fonts[IconsInfo.defaultFontFamily];
+        // for (var i = 0; i < icons.length; i++) {
+        //     var icon = icons[i];
+        //     r.lastIndex = 0;
+        //     if (r.test(icon.name)){
+        //         var searchGroup = this._findOrCreateGroup(result, "Library icons");
+        //         searchGroup.items.push(icon);
+        //     }
+        // }
 
         this.setState({searchConfig: result});
     }

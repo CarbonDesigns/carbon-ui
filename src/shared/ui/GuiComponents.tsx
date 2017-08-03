@@ -321,6 +321,8 @@ interface IGuiButtonProps extends IReactElementProps, IHasMods<
     "spinning" |
     "full" |
     "small" |
+    "link" |
+    "link-hover" |
     "simple"
     > {
     className?: string;

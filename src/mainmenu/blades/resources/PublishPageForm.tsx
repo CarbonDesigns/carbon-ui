@@ -211,7 +211,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
 
     render() {
         return <div>
-            <MarkupLine mods={["space", "stretch"]}>
+            <MarkupLine mods="stretch">
                 <GuiValidatedInput ref="name" caption="@publish.name" placeholder={this.formatLabel("@publish.nameHint")}
                     value={this.state.name} onChange={this.onNameChanged}
                     onValidate={this.validateName}

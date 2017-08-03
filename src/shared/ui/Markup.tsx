@@ -15,6 +15,7 @@ export class MarkupSubmit extends Component<IReactElementProps> {
 
 export class MarkupLine extends Component<IReactElementProps & IHasMods<
     "space" |
+    "fill" |
     "slim" |
     "center" |
     "stretch" |
@@ -28,10 +29,10 @@ export class MarkupLine extends Component<IReactElementProps & IHasMods<
     }
 }
 
-export class Markup extends Component<IReactElementProps> {
+export class Markup extends Component<IReactElementProps & IHasMods<"space">> {
     render() {
-        var { className, children, ...rest } = this.props;
-        var cn = cx("markup", className);
+        var { className, mods, children, ...rest } = this.props;
+        var cn = bem("markup", null, mods, className);
         return <div {...rest} className={cn}>{children}</div>
     }
 }

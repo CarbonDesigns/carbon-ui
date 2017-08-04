@@ -218,6 +218,7 @@ export default
         "Rendering": "Rendering", //
         "@show.pixels": "Show pixels", //
         "@show.frames": "Show artboard frames", //
+        "@settings.clipArtboards": "Clip artboards", //
         "@toggleFrame": "Toggle frame",
         "line": "line", // on the line
         "grid": "grid", //

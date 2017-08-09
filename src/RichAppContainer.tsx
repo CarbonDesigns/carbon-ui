@@ -1,10 +1,11 @@
 import React from "react";
-import { Component } from "./CarbonFlux";
+import { Component, dispatch } from "./CarbonFlux";
 import LayoutContainer from "./layout/Layout";
 // import Header from './header/Header';
 import RichAppRoot from './RichAppRoot';
 import AppLoaderComponent from './AppLoaderComponent';
 import { app, backend } from "carbon-core";
+import AppActions from "./RichAppActions";
 
 import Workspace from './workspace/DesignerWorkspace';
 import MainMenu from './mainmenu/MainMenu';
@@ -18,6 +19,7 @@ import PropertiesPanel from './properties/PropertiesPanel';
 import SwatchesPanel from './properties/SwatchesPanel';
 
 import Perf from "react-addons-perf";
+import FullScreenApi from "./shared/FullScreenApi";
 window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent {

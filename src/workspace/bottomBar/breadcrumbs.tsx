@@ -211,11 +211,11 @@ export default class Breadcrumbs extends Component<any, any> {
         return (<div className="breadcrumbs">
             {renderedBreadcrumbs}
             <div className="breadcrumbs__actions">
-                <div className={"breadcrumbs__action"} title="Select all" onClick={this._selectAll}><i className="ico--select-all"/></div>
+                <div className={"breadcrumbs__action"} title="Select all" onClick={this._selectAll}><i className="ico-select-all"/></div>
                 { selectedAmount > 0 &&
-                    <div className={"breadcrumbs__action"} title="Deselect" onClick={this._selectNone}><i className="ico--select-none"/></div> }
+                    <div className={"breadcrumbs__action"} title="Deselect" onClick={this._selectNone}><i className="ico-select-none"/></div> }
                 {//fixme - translate titles
-                    /*<div className="breadcrumbs__action"><i className="ico--select-all"/>Isolate</div> */}
+                    /*<div className="breadcrumbs__action"><i className="ico-select-all"/>Isolate</div> */}
             </div>
         </div>)
     }

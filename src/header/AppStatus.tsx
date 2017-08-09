@@ -83,7 +83,7 @@ export default class AppStatus extends Component<AppStatusProps, AppStatusState>
 
     //render functions
     private renderIcon = () => {
-        return <i className={"ico--status-" + this.state.status} />
+        return <i className={"ico-status-" + this.state.status} />
     }
 
     private static FlyoutPosition: FlyoutPosition = { targetVertical: "bottom", targetHorizontal: "right", disableAutoClose: true };

@@ -47,6 +47,7 @@ function dropToCatcherPoint(x, y, left, top) {
 }
 
 interface ILayoutContainerProps extends IReactElementProps {
+    panels: any;
 }
 
 interface ILayoutContainerState {

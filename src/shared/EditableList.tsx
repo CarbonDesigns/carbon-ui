@@ -104,18 +104,18 @@ export class ListItem extends React.Component<any, any> {
                 { /* Board controls */ }
                 <div className={bem(b, "item-controls")}>
                     <div className={bem(b, "item-button", "closer")} onClick={this._onCancel}>
-                        <div className={bem(b, "item-button-icon")}><i className="ico--cancel"/></div>
+                        <div className={bem(b, "item-button-icon")}><i className="ico-cancel"/></div>
                     </div>
                     {
                         !this.state.editing && (!this.props.canDelete || this.props.canDelete(this.props.item))
                             ? <div className={bem(b, "item-button", "delete")} onClick={this._onDelete}>
-                                <div className={bem(b, "item-button-icon")}><i className="ico--trash"/></div>
+                                <div className={bem(b, "item-button-icon")}><i className="ico-trash"/></div>
                               </div>
                             : null
                     }
                     <div className={bem(b, "item-button")} onClick={this._onRename}>
                         <div className={bem(b, "item-button-icon")}>
-                            <i className={this.state.editing ? "ico--ok" : "ico--edit"}/>
+                            <i className={this.state.editing ? "ico-ok" : "ico-edit"}/>
                         </div>
                     </div>
                 </div>

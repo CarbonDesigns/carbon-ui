@@ -42,10 +42,10 @@ export default class DataPanel extends Component<{}, DataPanelState> {
         return <TabContainer className="gui-page__content data" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("data", tabId))}>
             <TabTabs
                 items={[
-                    <i className="ico--library" />,
-                    <i className="ico--users" />,
-                    <i className="ico--earth" />,
-                    <i className="ico--search" />
+                    <i className="ico-library" />,
+                    <i className="ico-users" />,
+                    <i className="ico-earth" />,
+                    <i className="ico-search" />
                 ]}
                 tabMods="level2"
             />

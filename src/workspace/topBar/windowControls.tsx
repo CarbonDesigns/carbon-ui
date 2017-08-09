@@ -1,90 +1,106 @@
 import React from 'react';
 import cx from 'classnames';
-import {richApp} from '../../RichApp'
+import { richApp } from '../../RichApp'
 //import {app} from "carbon-core";
-import {listenTo, Component} from "../../CarbonFlux";
+import { listenTo, Component } from "../../CarbonFlux";
 import AppActions from "../../RichAppActions";
-
 import ViewSettingsButton from "./ViewSettingsButton";
+import appStore from "../../AppStore";
+import FullScreenApi from "../../shared/FullScreenApi";
+import { util } from "carbon-core";
 
 export default class WindowControls extends Component<any, any> {
-
     constructor(props) {
-      super(props);
-      this.state={
-        open:false,
-        frameVisible:richApp.appStore.state.frameVisible,
-        resizing: richApp.layoutStore.resizing
-      }
+        super(props);
+        this.state = {
+            open: false,
+            frameVisible: appStore.state.frameVisible,
+            resizing: richApp.layoutStore.resizing,
+            fullscreen: FullScreenApi.isFullScreen()
+        }
+
+        this.onResize = util.debounce(this.onResize, 100);
     }
 
-    @listenTo(richApp.appStore, richApp.layoutStore)
-    onChange(){
-      this.setState({
-        frameVisible:richApp.appStore.state.frameVisible,
-        resizing: richApp.layoutStore.resizing,
-        fullscreen: richApp.appStore.state.fullscreen
-      })
+    componentDidMount() {
+        super.componentDidMount();
+
+        window.addEventListener("resize", this.onResize);
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+
+        window.removeEventListener("resize", this.onResize);
+    }
+
+    @listenTo(appStore, richApp.layoutStore)
+    onChange() {
+        this.setState({
+            frameVisible: appStore.state.frameVisible,
+            resizing: richApp.layoutStore.resizing
+        })
     }
 
     open = () => {
-        if (!this.state.open){
+        if (!this.state.open) {
             this.toggle();
         }
     };
     close = () => {
-        if (this.state.open){
+        if (this.state.open) {
             this.toggle();
         }
     };
     toggle = () => {
-        this.setState({open: !this.state.open});
+        this.setState({ open: !this.state.open });
     };
 
     onKeyDown = (e) => {
         //TODO: handle ESC
     };
 
-    _closeGroup=()=>{
-      // data-mode-target="#window-controls" data-remove-class="expanded"
+    onResize = () => {
+        this.setState({ fullscreen: FullScreenApi.isFullScreen() });
     }
 
-    _openGroup=()=>{
-      //data-mode-target="#window-controls" data-turn-class="expanded"
+    _closeGroup = () => {
+        // data-mode-target="#window-controls" data-remove-class="expanded"
+    }
+
+    _openGroup = () => {
+        //data-mode-target="#window-controls" data-turn-class="expanded"
     }
 
     _windowControlButton(id, title, active, tabindex, action) {
-      var className = cx("button window-control-button", {_active: active});
-      return (
-        <div className={className} title={title} id={id} tabIndex={tabindex} onClick={action}>
-          <i />
-        </div>
-      );
+        var className = cx("button window-control-button", { _active: active });
+        return (
+            <div className={className} title={title} id={id} tabIndex={tabindex} onClick={action}>
+                <i />
+            </div>
+        );
     }
 
-    _toggleFullscreen=()=>{
-      var that = this;
-      if (!window) {
-        return;
-      }
+    _toggleFullscreen = () => {
+        var that = this;
 
-      var fApi = window['fullScreenApi'];
-      if (!fApi.supportsFullScreen) {
-        return;
-      }
+        if (!FullScreenApi.supportsFullScreen) {
+            return;
+        }
 
-      if (!this.state.fullscreen) {
-        fApi.requestFullScreen(document.body);
-      } else {
-        fApi.cancelFullScreen();
-      }
+        if (!FullScreenApi.isFullScreen()) {
+            FullScreenApi.requestFullScreen(document.body);
+        }
+        else {
+            FullScreenApi.cancelFullScreen();
+        }
     }
 
     render() {
-        var dropClassName = cx("window-control-button drop drop-down", {_active:this.state.open});
-        return(
-          <div id="window-controls">
-          {/*
+        var dropClassName = cx("window-control-button drop drop-down", { _active: this.state.open });
+        return (
+            <div id="window-controls">
+                {/*
             <div className="window-control-group-closer" onClick={this._closeGroup}>
               <i />
             </div>
@@ -104,10 +120,10 @@ export default class WindowControls extends Component<any, any> {
 
 
             */}
-            {/*this._windowControlButton("compact-mode", this.props.compactMode)*/}
-            <ViewSettingsButton className="window-control-button"/>
-            {this._windowControlButton("fullscreen", '', this.state.fullscreen, 2, this._toggleFullscreen)}
-          </div>
+                {/*this._windowControlButton("compact-mode", this.props.compactMode)*/}
+                <ViewSettingsButton className="window-control-button" />
+                {FullScreenApi.supportsFullScreen ? this._windowControlButton("fullscreen", '', this.state.fullscreen, 2, this._toggleFullscreen) : null}
+            </div>
         );
     }
 }

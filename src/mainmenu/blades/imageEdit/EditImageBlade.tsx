@@ -27,7 +27,7 @@ interface IEditImageBladeProps {
     allowCropping?: boolean;
     defaultTab?: "crop" | "choose";
     page?: IPage;
-    onComplete: (result: EditImageResult) => void;
+    onComplete: (result?: string) => void;
 }
 
 interface IEditImageBladeState {
@@ -81,12 +81,12 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
 
     private saveImageOption(result: EditImageResult) {
         //todo - also cancel current dropzone upload
+        let image = this.getImageUrl(result);
         if (this.props.allowCropping) {
-            let image = this.getImageUrl(result);
             this.setState({ tabId: "1", image: image || this.state.image });
         }
         else {
-            this.props.onComplete(result);
+            this.props.onComplete(image);
         }
     }
 
@@ -109,7 +109,9 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
     //——————————————————————————————————————————————————————————————————————
 
     private saveCropped = () => {
-        this.props.onComplete({ type: "dataUrl", dataUrl: this.refs.cropEditor.toDataUrl() })
+        let dataUrl = this.refs.cropEditor.toDataUrl();
+        backend.fileProxy.uploadPublicImage({content: dataUrl})
+            .then(response => this.props.onComplete(response.url));
     };
     private changeImage = (ev) => {
         this.setState({ "tabId": "2" });
@@ -152,7 +154,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
     private renderEditTab() {
         return <TabPage tabId="1" className="gui-page">
             <MarkupLine mods="stretch">
-                <CropEditor ref="cropEditor" image={this.state.image} dpr={this.props.dpr} />
+                <CropEditor ref="cropEditor" image={this.state.image} dpr={this.props.dpr} size={this.props.previewSize} />
             </MarkupLine>
 
             <MarkupSubmit>

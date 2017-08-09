@@ -50,15 +50,15 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
         return <div className="font-options__filter-switches">
             {/* <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Favorites })} title="Show favourites fonts"
                 onClick={() => this.onCategoryToggle(FontCategory.Favorites)}>
-                <i className="ico--star" />
+                <i className="ico-star" />
             </div> */}
             <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Popular })} title="Show popular fonts"
                 onClick={() => this.onCategoryToggle(FontCategory.Popular)}>
-                <i className="ico--popular" />
+                <i className="ico-popular" />
             </div>
             <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Recent })} title="Show recent fonts"
                 onClick={() => this.onCategoryToggle(FontCategory.Recent)}>
-                <i className="ico--recent" />
+                <i className="ico-recent" />
             </div>
         </div>
     }
@@ -81,7 +81,7 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
             onClick={this.onClick}
         >
             {/* <div className={bem("font-options", "typeface-star", { faved: true })}>
-                <i className="ico--star" />
+                <i className="ico-star" />
             </div> */}
 
             <div className="font-options__typeface-meta">

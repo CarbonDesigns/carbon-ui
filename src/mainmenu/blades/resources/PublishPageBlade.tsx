@@ -195,31 +195,11 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             });
     };
 
-    private imageEditCompleted = (res: EditImageResult) => {
+    private imageEditCompleted = (coverUrl?: string) => {
         this.context.bladeContainer.close(2);
-        if (res) {
-            let coverUrl;
-            switch (res.type) {
-                case "dataUrl":
-                    coverUrl = res.dataUrl;
-                    break;
-                case "element":
-                    coverUrl = this.renderPreview(res.element);
-                    break;
-                case "url":
-                    coverUrl = res.url;
-                    break;
-                case "none":
-                    coverUrl = null;
-                    break;
-                default:
-                    assertNever(res);
-                    break;
-            }
-            if (coverUrl) {
-                this.setState({ coverUrl });
-                dispatchAction({ type: "Publish_CoverSelected", coverUrl });
-            }
+        if (coverUrl) {
+            this.setState({ coverUrl });
+            dispatchAction({ type: "Publish_CoverSelected", coverUrl });
         }
     }
 

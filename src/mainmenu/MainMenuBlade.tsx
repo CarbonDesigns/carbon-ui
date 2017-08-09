@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from "prop-types";
 import {app} from "carbon-core";
 import {richApp}    from '../RichApp';
-import {handles, ComponentWithImmutableState} from '../CarbonFlux';
+import { handles, ComponentWithImmutableState, Component, listenTo } from '../CarbonFlux';
 import {FormattedHTMLMessage, FormattedMessage} from "react-intl"
 import electronEndpoint from "electronEndpoint";
 
 import MainMenuButton from './MainMenuButton';
-
+import appStore from "../AppStore";
 
 import PdfExportBlade       from './blades/export/PdfExportBlade';
 import PngExportBlade       from './blades/export/PngExportBlade';
@@ -24,8 +24,6 @@ import RecentProjectsBlade  from './blades/recentProjects/RecentProjectsBlade';
 // import SelectPagesBlade from './blades/selectPages/SelectPagesBlade';
 
 import bem from 'bem';
-
-var AVATAR_URL = '/target/res/avas/project-ava.jpg';
 
 function _heading(text) {
     return (<div className="main-menu__heading">
@@ -46,7 +44,27 @@ function _recentProject(project) {
 type BladeId = "project-settings" | "export-pdf" | "export-png" | "export-html" | "export-zip"
     | "share-link" | "mirroring" | "share-email" | "publish" | "project-avatar" | "recent-projects";
 
-export default class MainMenuBlade extends React.Component<any, any> {
+type MainMenuBladeState = {
+    appName: string;
+    appAvatar: string;
+}
+
+export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            appName: appStore.state.appName,
+            appAvatar: appStore.state.appAvatar
+        }
+    }
+
+    @listenTo(appStore)
+    onAppStoreChanged() {
+        this.setState({
+            appName: appStore.state.appName,
+            appAvatar: appStore.state.appAvatar
+        });
+    }
 
     setBladePage(id, type, caption?) {
         this.context.bladeContainer.close(1);
@@ -55,7 +73,7 @@ export default class MainMenuBlade extends React.Component<any, any> {
 
     _resolveSetBladePage = (page: BladeId)=> {
         switch (page) {
-            case 'project-settings' : return (()=>this.setBladePage(`blade_${page}`, ProjectSettingsBlade ,"Project Settings")) ;
+            case 'project-settings' : return (()=>this.setBladePage(`blade_${page}`, ProjectSettingsBlade ,"@project.settings")) ;
             case 'export-pdf'       : return (()=>this.setBladePage(`blade_${page}`, PdfExportBlade       ,"caption.export2pdf")     ) ;
             case 'export-png'       : return (()=>this.setBladePage(`blade_${page}`, PngExportBlade       ,"caption.export2png")     ) ;
             case 'export-html'      : return (()=>this.setBladePage(`blade_${page}`, HtmlExportBlade      ,"caption.export2html")    ) ;
@@ -115,23 +133,20 @@ export default class MainMenuBlade extends React.Component<any, any> {
     }
 
     render() {
-        var project_name = "Test carbonium project";//fixme change to real
-        var comment = 'Freestyle';
-
         return <div id="main-menu__content" className="main-menu">
             <div className="project-meta" onClick={this._clickOnProjectSettings}>
-                <div className="project-meta__bg-avatar" style={{ backgroundImage: "url('" + AVATAR_URL + "')" }}></div>
+                <div className="project-meta__bg-avatar" style={{ backgroundImage: "url('" + this.state.appAvatar + "')" }}></div>
                 <div className="project-meta__text-info">
-                    <div className={bem("project-meta", "project-name", {'big': project_name.length > 20})}>
-                        <h2>{project_name}</h2>
+                    <div className={bem("project-meta", "project-name", {'big': this.state.appName.length > 20})}>
+                        <h2>{this.state.appName}</h2>
                     </div>
                     <div className="project-meta__device-info">
-                        <i/><span>{comment}</span>
+                        <FormattedMessage id="@project.comment" values={{num: app.getAllArtboards().length}}/>
                     </div>
                 </div>
                 <div className="project-meta__fg-avatar">
-                    <figure style={{ backgroundImage: "url('" + AVATAR_URL + "')" }} />
-                    <div className="project-meta__edit-avatar-button"><i className="ico--big-pencil"/></div>
+                    <figure style={{ backgroundImage: "url('" + this.state.appAvatar + "')" }} />
+                    <div className="project-meta__edit-avatar-button"><i className="ico-big-pencil"/></div>
                 </div>
             </div>
 
@@ -175,7 +190,7 @@ export default class MainMenuBlade extends React.Component<any, any> {
 
             <div className="main-menu__section" id="project-recents">
                 {_heading('Recent projects')}
-                {(this.props.recentProjects || []).map(_recentProject)}
+                {/* {(this.props.recentProjects || []).map(_recentProject)} */}
 
                 <section className="main-menu__line">
                     <MainMenuButton  blade="#blade1" onClick={this._resolveSetBladePage("recent-projects")} >
@@ -199,6 +214,7 @@ export default class MainMenuBlade extends React.Component<any, any> {
     }
 
     static contextTypes = {
+        intl: PropTypes.any,
         bladeContainer: PropTypes.any
     };
 }

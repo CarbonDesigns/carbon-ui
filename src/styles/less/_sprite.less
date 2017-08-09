@@ -62,24 +62,24 @@
 &{
 
     //.ico-library-tab ,
-    //.ico--search   { .size(@module2); }
+    //.ico-search   { .size(@module2); }
 
     @size : @module2;
     @shift: 32;
     @x: 8;
     @y: 55;
 
-    .ico-library-tab_library , .ico--library { .sprite1(@x + @shift * 0, @y, @size, @size);}
-    .ico-library-tab_users   , .ico--users   { .sprite1(@x + @shift * 1, @y, @size, @size);}
-    .ico-library-tab_recent  , .ico--recent  { .sprite1(@x + @shift * 2, @y, @size, @size);}
-    .ico-library-tab_search  , .ico--search  { .sprite1(@x + @shift * 3, @y, @size, @size);}
+    .ico-library-tab_library , .ico-library { .sprite1(@x + @shift * 0, @y, @size, @size);}
+    .ico-library-tab_users   , .ico-users   { .sprite1(@x + @shift * 1, @y, @size, @size);}
+    .ico-library-tab_recent  , .ico-recent  { .sprite1(@x + @shift * 2, @y, @size, @size);}
+    .ico-library-tab_search  , .ico-search  { .sprite1(@x + @shift * 3, @y, @size, @size);}
 
-    .ico--star,
-    .ico-library-tab_favs    , .ico--favs    { .sprite1(@x + @shift * 4, @y, @size, @size);}
+    .ico-star,
+    .ico-library-tab_favs    , .ico-favs    { .sprite1(@x + @shift * 4, @y, @size, @size);}
 
-    .ico-library-tab_earth   , .ico--earth   { .sprite1(@x + @shift * 5, @y, @size, @size);}
+    .ico-library-tab_earth   , .ico-earth   { .sprite1(@x + @shift * 5, @y, @size, @size);}
 
-    .ico--search_dark {
+    .ico-search_dark {
         @s: @module2;
         .size(@s);
 
@@ -109,12 +109,12 @@
         }
     }
 
-    .ico--popular { .sprite1(@x + @shift * 15, @y, @size, @size); }
+    .ico-popular { .sprite1(@x + @shift * 15, @y, @size, @size); }
 
     @statusWidth: 22px;
-    .ico--status-ok { .sprite1(@x + @shift * 16 - @statusWidth/2 + @size/2, @y, @statusWidth, @size + 1); }
-    .ico--status-warning { .sprite1(@x + @shift * 17 - @statusWidth/2 + @size/2, @y, @statusWidth, @size + 1); }
-    .ico--status-error { .sprite1(@x + @shift * 18 - @statusWidth/2 + @size/2, @y, @statusWidth + 8, @size + 1); }
+    .ico-status-ok { .sprite1(@x + @shift * 16 - @statusWidth/2 + @size/2, @y, @statusWidth, @size + 1); }
+    .ico-status-warning { .sprite1(@x + @shift * 17 - @statusWidth/2 + @size/2, @y, @statusWidth, @size + 1); }
+    .ico-status-error { .sprite1(@x + @shift * 18 - @statusWidth/2 + @size/2, @y, @statusWidth + 8, @size + 1); }
 }
 
 
@@ -186,47 +186,47 @@
 }
 
 
-.ico--add-comment {.sprite1(596, 4);}
+.ico-add-comment {.sprite1(596, 4);}
 
 & {
     .comment__action i{ .size(12); }
     @shift: 16;
     @x: 306;
     @y: 2;
-    .ico--resolve    { .sprite1(@x , @y); }
-    .ico--edit       { .sprite1(@x + @shift * 1, @y); }
-    .ico--trash     { .sprite1(@x + @shift * 2, @y); }
+    .ico-resolve    { .sprite1(@x , @y); }
+    .ico-edit       { .sprite1(@x + @shift * 1, @y); }
+    .ico-trash     { .sprite1(@x + @shift * 2, @y); }
 
     //.action-ok       i,
-                        .ico--ok           { .sprite1(@x + @shift * 4, @y); }
-                        .ico--ok-white     { .sprite1(@x + @shift * 4, @y + @shift);}
+                        .ico-ok           { .sprite1(@x + @shift * 4, @y); }
+                        .ico-ok-white     { .sprite1(@x + @shift * 4, @y + @shift);}
     //.action-cancel   i                    { .sprite1(@x + @shift * 5, @y); }
-                        .ico--cancel       { .sprite1(387, 18) } //@todo this is white cross, but need red
-                        //.ico--cancel-white { .sprite1(@x + @shift * 5, @y + @shift); }
-                        .ico--cancel-white { .sprite1(387, 18)}
+                        .ico-cancel       { .sprite1(387, 18) } //@todo this is white cross, but need red
+                        //.ico-cancel-white { .sprite1(@x + @shift * 5, @y + @shift); }
+                        .ico-cancel-white { .sprite1(387, 18)}
                         .ico-warning      { .sprite1(466, 2)}
 
     .ico-warning,
-    .ico--ok-white,
-    .ico--cancel-white,
-    .ico--resolve,
-    .ico--edit,
-    .ico--trash,
-    .ico--ok,
-    .ico--cancel {.size(12)}
+    .ico-ok-white,
+    .ico-cancel-white,
+    .ico-resolve,
+    .ico-edit,
+    .ico-trash,
+    .ico-ok,
+    .ico-cancel {.size(12)}
 
-    //.ico--send {.sprite1(360, 89, 15, 15)}
-    .ico--send {.sprite1(392, 89, 15, 15)}
-    //.ico--send-big {.sprite1(324, 84, 24, 24)}
-    .ico--send-big {.sprite1(292, 84, 24, 24)}
+    //.ico-send {.sprite1(360, 89, 15, 15)}
+    .ico-send {.sprite1(392, 89, 15, 15)}
+    //.ico-send-big {.sprite1(324, 84, 24, 24)}
+    .ico-send-big {.sprite1(292, 84, 24, 24)}
 
 
     //.sprite(387, 18, 12, 12)
 
 }
 
-.ico--outset,
-.ico--inset {
+.ico-outset,
+.ico-inset {
     .size(12);
     .rel;
     &:before, &:after {
@@ -243,7 +243,7 @@
     }
 }
 
-.ico--inset {
+.ico-inset {
     &:before {
         .size(11);
     }
@@ -256,7 +256,7 @@
 
 }
 
-.ico--outset {
+.ico-outset {
     &:before {
         .size(10);
     }
@@ -268,9 +268,9 @@
     }
 }
 
-.ico--refresh { .sprite1(449, 17, 14, 14); }
+.ico-refresh { .sprite1(449, 17, 14, 14); }
 
-.ico--plus {
+.ico-plus {
     .inbl;
     .size(.8em);
     margin-right: .3em;
@@ -278,7 +278,7 @@
     .pseudocross(2, @font_color);
 }
 
-.ico--add-reply {
+.ico-add-reply {
     .sprite1(338, 19, 12, 11);
     .opacity(50);
     margin-bottom: -2px;
@@ -288,7 +288,7 @@
 &{
 //    #new-page i {.sprite1(40, 87, 16, 18);} //bigger new page
     #new-page i {.sprite1(171, 90, 12, 14);}
-    .ico--new-page {.sprite1(171, 90, 12, 14);}
+    .ico-new-page {.sprite1(171, 90, 12, 14);}
 }
 
 //.replies__amount i {.sprite1(502, 7, 21, 19); .tcenter; span {.f10}}
@@ -300,37 +300,37 @@
     .tool_ico(@shift_y, @shift_x){
         .sprite1(@x + @shift * @shift_x, @y + @shift * @shift_y);
     }
-    .ico--tool_pointerTool        {.tool_ico(  0 ; 0  )}
-    .ico--tool_pointerDirectTool  {.tool_ico(  0 ; 1  )}
+    .ico-tool_pointerTool        {.tool_ico(  0 ; 0  )}
+    .ico-tool_pointerDirectTool  {.tool_ico(  0 ; 1  )}
 
-    .ico--tool_textTool           {.tool_ico(  1 ; 0  )}
-    .ico--tool_imageTool          {.tool_ico(  1 ; 1  )}
+    .ico-tool_textTool           {.tool_ico(  1 ; 0  )}
+    .ico-tool_imageTool          {.tool_ico(  1 ; 1  )}
 
-    .ico--tool_rectangleTool      {.tool_ico(  2 ; 0  )}
-    .ico--tool_circleTool         {.tool_ico(  2 ; 1  )}
-    .ico--tool_triangleTool       {.tool_ico(  2 ; 2  )}
-    .ico--tool_polygonTool        {.tool_ico(  2 ; 3  )}
-    .ico--tool_starTool           {.tool_ico(  2 ; 4  )}
+    .ico-tool_rectangleTool      {.tool_ico(  2 ; 0  )}
+    .ico-tool_circleTool         {.tool_ico(  2 ; 1  )}
+    .ico-tool_triangleTool       {.tool_ico(  2 ; 2  )}
+    .ico-tool_polygonTool        {.tool_ico(  2 ; 3  )}
+    .ico-tool_starTool           {.tool_ico(  2 ; 4  )}
 
-    .ico--tool_pencilTool         {.tool_ico(  3 ; 0  )}
-    .ico--tool_lineTool           {.tool_ico(  3 ; 1  )}
-    .ico--tool_poly               {.tool_ico(  3 ; 2  )}
+    .ico-tool_pencilTool         {.tool_ico(  3 ; 0  )}
+    .ico-tool_lineTool           {.tool_ico(  3 ; 1  )}
+    .ico-tool_poly               {.tool_ico(  3 ; 2  )}
 
-    .ico--tool_pathTool           {.tool_ico(  4 ; 0  )}
-    .ico--tool_editMode           {.tool_ico(  4 ; 1  )}
+    .ico-tool_pathTool           {.tool_ico(  4 ; 0  )}
+    .ico-tool_editMode           {.tool_ico(  4 ; 1  )}
 
-    .ico--tool_note               {.tool_ico(  5 ; 0  )}
-    .ico--tool_comment            {.tool_ico(  5 ; 1  )}
-    .ico--tool_callout            {.tool_ico(  5 ; 2  )}
-    .ico--tool_memo               {.tool_ico(  5 ; 3  )}
-    .ico--tool_marker             {.tool_ico(  5 ; 4  )}
-    .ico--tool_like               {.tool_ico(  5 ; 5  )}
+    .ico-tool_note               {.tool_ico(  5 ; 0  )}
+    .ico-tool_comment            {.tool_ico(  5 ; 1  )}
+    .ico-tool_callout            {.tool_ico(  5 ; 2  )}
+    .ico-tool_memo               {.tool_ico(  5 ; 3  )}
+    .ico-tool_marker             {.tool_ico(  5 ; 4  )}
+    .ico-tool_like               {.tool_ico(  5 ; 5  )}
 
-    .ico--tool_handTool          {.tool_ico(  6 ; 0  )}
-    .ico--tool_artboardTool       {.tool_ico(  6 ; 1  )}
-    .ico--tool_artboardViewerTool {.tool_ico(  6 ; 1  )}
-    .ico--tool_sectionTool        {.tool_ico(  6 ; 2  )}
-    .ico--tool_protoTool          {.tool_ico(  6 ; 3  )}
+    .ico-tool_handTool          {.tool_ico(  6 ; 0  )}
+    .ico-tool_artboardTool       {.tool_ico(  6 ; 1  )}
+    .ico-tool_artboardViewerTool {.tool_ico(  6 ; 1  )}
+    .ico-tool_sectionTool        {.tool_ico(  6 ; 2  )}
+    .ico-tool_protoTool          {.tool_ico(  6 ; 3  )}
 }
 
 
@@ -385,7 +385,7 @@
     .vmiddle;
 }
 
-.ico--folder {
+.ico-folder {
     .sprite1(233, 123, 14, 12);
     top: 0;
     position: relative;
@@ -410,7 +410,7 @@
 
 
 
-.ico--settings {
+.ico-settings {
     .sprite1(257, 16, 16, 16);
     margin-right: 5px;
     margin-top: -2px;
@@ -701,7 +701,7 @@
 }
 
 
-.ico--big-pencil{.sprite1(256, 48,32,32);}
+.ico-big-pencil{.sprite1(256, 48,32,32);}
 #main-menu__project-url .button:after{.sprite1(585 , 615);}
 
 
@@ -790,15 +790,15 @@
     .ico-small-equalize-vert-spaces  { .size(14);}
 }
 
-.ico--upload-alt {
+.ico-upload-alt {
     .sprite1(227, 82, 30, 30);
 }
 
-.ico--upload {
+.ico-upload {
     .sprite1(257, 82, 30, 30);
 }
 
-.ico--download {
+.ico-download {
     .sprite1(459, 61, 10, 11);
 }
 
@@ -895,8 +895,8 @@
     @sw: 4px;
     @sh: 3px;
 
-    .ico--horizontal-double-arrow,
-    .ico--vertical-double-arrow {
+    .ico-horizontal-double-arrow,
+    .ico-vertical-double-arrow {
         .wbg;
         .xyal(50%);
 
@@ -910,7 +910,7 @@
         }
 
     }
-    .ico--vertical-double-arrow {
+    .ico-vertical-double-arrow {
 
         .size(@h,@w);
         margin: -@w/2 0 0 -@h/2;
@@ -933,7 +933,7 @@
     }
 
 
-    .ico--horizontal-double-arrow {
+    .ico-horizontal-double-arrow {
 
         .size(@w,@h);
         margin: -@h/2 0 0 -@w/2;
@@ -959,9 +959,9 @@
 }
 
 
-.ico--select-all  {.sprite1(369   , 561, 14, 14);}
-.ico--select-none {.sprite1(369+16, 561, 14, 14);}
+.ico-select-all  {.sprite1(369   , 561, 14, 14);}
+.ico-select-none {.sprite1(369+16, 561, 14, 14);}
 
-.ico--repeater {.sprite1(369+16*4, 561, 14, 14);}
-.ico--clipping-mask {.sprite1(369+16*5, 561, 14, 14);}
-.ico--new-repeater {.sprite1(369+16*6, 561, 14, 14);}
+.ico-repeater {.sprite1(369+16*4, 561, 14, 14);}
+.ico-clipping-mask {.sprite1(369+16*5, 561, 14, 14);}
+.ico-new-repeater {.sprite1(369+16*6, 561, 14, 14);}

@@ -13,7 +13,7 @@ export function say(defaultMessage, id="translateme", tag="span"){
 }
 
 export function ico(ico){
-    return <i className={"ico--"+ico}/>
+    return <i className={"ico-"+ico}/>
 }
 
 export function nodeOffset(elem, parentElem){

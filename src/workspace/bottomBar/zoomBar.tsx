@@ -8,6 +8,7 @@ import { richApp } from "../../RichApp";
 import { listenTo, Component } from '../../CarbonFlux';
 import AppActions from '../../RichAppActions';
 import { default as bem, join_bem_mods } from '../../utils/commonUtils';
+import appStore from "../../AppStore";
 
 class ContiniouseAction extends Component<any> {
     stopExecution = true;
@@ -148,12 +149,12 @@ export default class ZoomBar extends Component<any, any> {
         super(props);
         this._minZoom = .01;
         this._maxZoom = 16;
-        this.state = { scale: richApp.appStore.state.scale, selectionCount: 0 };
+        this.state = { scale: appStore.state.scale, selectionCount: 0 };
     }
 
-    @listenTo(richApp.appStore)
+    @listenTo(appStore)
     onChange() {
-        this.setState({ scale: richApp.appStore.state.scale, selectionCount: richApp.appStore.state.selectionCount });
+        this.setState({ scale: appStore.state.scale, selectionCount: appStore.state.selectionCount });
     }
 
     _onValueChanged = (value) => {
@@ -168,7 +169,6 @@ export default class ZoomBar extends Component<any, any> {
             v = (this._maxZoom - 1) * v + 1
         }
 
-        richApp.Dispatcher.dispatch(AppActions.changeCurrentPageScale(v));
         Environment.view.zoom(v);
     }
 

@@ -28,6 +28,7 @@ function onKeyEvent(e, hotkey){
 function bindPasteContent(){
     Mousetrap.bind(["meta+shift+v", "ctrl+shift+v"], () => Clipboard.pastingContent = true);
 }
+
 function bindFallbackClipboard(){
     Mousetrap.bind(["mod+c"], () => Clipboard.onCopy());
     Mousetrap.bind(["mod+v"], () => Clipboard.onPaste());

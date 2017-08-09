@@ -14,6 +14,8 @@ export default
         "@send backward": "Send backward",
         "@undo": "Undo",
         "@redo": "Redo",
+        "@save": "Save",
+
         "@action.done": "Done",
         "@path.union": "Union",
         "@path.join": "Join",
@@ -357,6 +359,12 @@ export default
         "@imageEdit.pasteUrl": "paste an image URL",
         "@imageEdit.uploadImage": "Upload a new image",
         "@imageEdit.urlError": "Could not download the image",
+
+        "@project.name": "Project name",
+        "@project.avatar": "Create your project avatar",
+        "@project.comment": "{num} {num, plural, one {artboard} other {artboards}}",
+        "@project.editAvatar": "Edit project avatar",
+        "@project.settings": "Project settings",
 
         "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //

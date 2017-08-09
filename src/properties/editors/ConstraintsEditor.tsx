@@ -211,7 +211,7 @@ export default class ConstraintsEditor extends EditorComponent<IConstraints, IEd
                     <div className="prop_constraints__dropdowns">
                         <div className="prop_constraints__dropdown">
                             <div className="prop_constraints__dropdown-icon">
-                                <i className="ico--vertical-double-arrow" />
+                                <i className="ico-vertical-double-arrow" />
                             </div>
                             <VerticalConstraintSelect
                                 mods="small"
@@ -224,7 +224,7 @@ export default class ConstraintsEditor extends EditorComponent<IConstraints, IEd
 
                         <div className="prop_constraints__dropdown">
                             <div className="prop_constraints__dropdown-icon">
-                                <i className="ico--horizontal-double-arrow" />
+                                <i className="ico-horizontal-double-arrow" />
                             </div>
                             <HorizontalConstraintSelect
                                 mods="small"

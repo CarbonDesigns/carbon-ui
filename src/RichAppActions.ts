@@ -22,12 +22,6 @@ var RichAppActions = {
             type: 'RichAppActions_switchPreviewMode'
         }
     },
-    selectionChanged: (selection)=> {
-        return {
-            type: 'RichAppActions_selectionChanged',
-            selection
-        }
-    },
     hideMainMenu: ()=> {
         return {
             type: 'RichAppActions_hideMainMenu'
@@ -44,19 +38,6 @@ var RichAppActions = {
             type: 'RichAppActions_changeTool',
             async: true,
             action
-        }
-    },
-    changeCurrentPageScale: (scale)=> {
-        return {
-            type: 'RichAppActions_changeCurrentPageScale',
-            scale,
-            async:true
-        }
-    },
-    fullscreenEvent: (fullscreen) => {
-        return {
-            type: 'RichAppActions_fullscreenEvent',
-            fullscreen
         }
     }
 };

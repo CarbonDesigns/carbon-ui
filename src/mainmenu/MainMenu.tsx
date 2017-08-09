@@ -5,6 +5,7 @@ import AppActions   from '../RichAppActions';
 import {handles, ComponentWithImmutableState} from '../CarbonFlux';
 import {FormattedHTMLMessage, FormattedMessage} from "react-intl"
 import {Record} from "immutable";
+import appStore from "../AppStore";
 
 import BladeContainer from "./blades/BladeContainer";
 
@@ -24,7 +25,7 @@ export default class MainMenu extends ComponentWithImmutableState<any, any> {
         super(props);
         this.state = {
             data: new State({
-                mainMenuVisible: richApp.appStore.state.mainMenuVisible,
+                mainMenuVisible: appStore.state.mainMenuVisible,
                 recentProjects: [
                     {name: 'Project 1', url: 'http://#1'},
                     {name: 'Project 2', url: 'http://#2'}

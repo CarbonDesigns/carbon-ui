@@ -108,14 +108,14 @@ import {default as EditableList, ListItem} from "../../shared/EditableList";
 //                 { /* Page controls */ }
 //                 <div className="editable-list__item-controls">
 //                     <div className={bem("editable-list", "item-button", "closer")} onClick={this._onCancel}>
-//                         <div className="editable-list__item-button-icon"><i className="ico--cancel"/></div>
+//                         <div className="editable-list__item-button-icon"><i className="ico-cancel"/></div>
 //                     </div>
 //
 //                     {
 //                         !this.state.editing ?
 //                             <div className={bem("editable-list", "item-button", "delete")} onClick={this._onDelete}>
 //                                 <div className="editable-list__item-button-icon">
-//                                     <i className="ico--trash"/>
+//                                     <i className="ico-trash"/>
 //                                 </div>
 //                             </div>
 //                             :
@@ -124,7 +124,7 @@ import {default as EditableList, ListItem} from "../../shared/EditableList";
 //
 //                     <div className={bem("editable-list", "item-button")} onClick={this._onRename}>
 //                         <div className="editable-list__item-button-icon">
-//                             <i className={this.state.editing ? "ico--ok" : "ico--edit"} />
+//                             <i className={this.state.editing ? "ico-ok" : "ico-edit"} />
 //                         </div>
 //                     </div>
 //                 </div>

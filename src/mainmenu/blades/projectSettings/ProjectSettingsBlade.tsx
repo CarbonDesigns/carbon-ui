@@ -31,8 +31,15 @@ export default class ProjectSettingsBlade extends Component<{}, ProjectSettingsB
     }
 
     private onRandomizeAvatar = () => {
-        app.setProps({ avatar: appStore.getRandomAvatarUrl() });
-        this.setState({ avatarUrl: app.props.avatar });
+        let newUrl;
+        for (var i = 0; i < 10; ++i) {
+            newUrl = appStore.getRandomAvatarUrl();
+            if (newUrl !== app.props.avatar) {
+                break;
+            }
+        }
+        app.setProps({ avatar: newUrl });
+        this.setState({ avatarUrl: newUrl });
     }
 
     private onEditAvatar = () => {

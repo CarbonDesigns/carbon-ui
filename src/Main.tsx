@@ -211,7 +211,7 @@ backend.loginNeeded.bind(isGuest => {
 ReactDom.render((
     <IntlProvider locale={currentLocale} messages={messages}>
         <Root>
-            <Router history={browserHistory} routes={rootRoute}/>
+            <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory} routes={rootRoute}/>
         </Root>
     </IntlProvider>
 ), document.getElementById("reactContainer"));

@@ -1,114 +1,116 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {app, backend} from "carbon-core";
-import {Component} from "../../../CarbonFlux";
-import {FormattedMessage} from "react-intl"
-import {GuiButton, GuiButtonStack, GuiInput, GuiTextArea} from "../../../shared/ui/GuiComponents";
-import {FormHeading, FormLine, FormGroup}                 from "../../../shared/FormComponents"
-import {MarkupLine}  from "../../../shared/ui/Markup";
-import {BladeBody}  from "../BladePage";
-import EditImageBlade  from "../imageEdit/EditImageBlade";
+import { app, backend, Invalidate, Rect } from "carbon-core";
+import { Component, listenTo } from "../../../CarbonFlux";
+import { FormattedMessage } from "react-intl"
+import { GuiButton, GuiButtonStack, GuiInput, GuiTextArea } from "../../../shared/ui/GuiComponents";
+import { FormHeading, FormLine, FormGroup } from "../../../shared/FormComponents"
+import { MarkupLine } from "../../../shared/ui/Markup";
+import { BladeBody } from "../BladePage";
+import EditImageBlade from "../imageEdit/EditImageBlade";
 import Dropdown from "../../../shared/Dropdown";
 import bem from '../../../utils/commonUtils';
+import appStore from "../../../AppStore";
+import { ProjectAvatarSize } from "../../../Constants";
 
-var AVATAR_URL = '/target/res/avas/project-ava.jpg';
+type ProjectSettingsBladeState = {
+    avatarUrl: string;
+}
 
-export default class ProjectSettingsBlade extends Component<any, any> {
+export default class ProjectSettingsBlade extends Component<{}, ProjectSettingsBladeState> {
+    refs: {
+        name: GuiInput;
+    }
+
     constructor(props) {
         super(props);
+
         this.state = {
-            projectName : "Test Carbo Project"
+            avatarUrl: appStore.state.appAvatar
         }
     }
 
-    // onKeyDown=(e)=>{
-    //     if(e.keyCode === 13) {
-    //         this.props.onComplete && this.props.onComplete(this.getValue(), e);
-    //     }
-    // }
-    // onBlur=(e)=>{
-    //     this.props.onComplete && this.props.onComplete(this.getValue(), e);
-    // }
-    // onChange = e => {
-    //     var value = e.target.value;
-    //     if(this.props.onChange){
-    //         this.props.onChange(value);
-    //         return;
-    //     }
-    //
-    //     this.updateState(value);
-    //     this.previewValue(value);
-    //     this.setValueByCommandDelayed(value);
-    // };
+    private onRandomizeAvatar = () => {
+        let newUrl;
+        for (var i = 0; i < 10; ++i) {
+            newUrl = appStore.getRandomAvatarUrl();
+            if (newUrl !== app.props.avatar) {
+                break;
+            }
+        }
+        app.setProps({ avatar: newUrl });
+        this.setState({ avatarUrl: newUrl });
+    }
 
-    _onChange = (ev) => {
-        var value = ev.target.value;
-        this.setState({projectName: value})
-    };
+    private onEditAvatar = () => {
+        this.context.bladeContainer.addChildBlade("blade_edit-project-avatar", EditImageBlade, "@project.editAvatar", {
+            dpr: 2,
+            onComplete: this.onImageEditCompleted,
+            allowCropping: true,
+            image: this.state.avatarUrl,
+            previewSize: Rect.fromSize(ProjectAvatarSize, ProjectAvatarSize)
+        });
+    }
 
-    _save = () => {
-        console.log('save', this.context.bladeContainer);
+    private onAvatarDeleted = () => {
+        app.setProps({ avatar: "" });
+        this.setState({ avatarUrl: "" });
+    }
+
+    private onImageEditCompleted = (url?: string) => {
+        this.context.bladeContainer.close(2);
+        if (url) {
+            this.setState({ avatarUrl: url });
+        }
+    }
+
+    private onSave = (e: React.FormEvent<HTMLFormElement>) => {
+        app.setProps({
+            name: this.refs.name.getValue(),
+            avatar: this.state.avatarUrl
+        });
         this.context.bladeContainer.close(1);
-    };
-
-
-    _openAvatarEditor = (ev) => {
-        console.log('_openAvatarEditor', this.context.bladeContainer);
-        // this.context.bladeContainer.close(1);
-        this.context.bladeContainer.addChildBlade(`blade_edit-project-avatar`, EditImageBlade, "Edit project avatar", {foo: 'bar'});
-    };
-
-    _clearAvatar = (ev) => {
-        console.log('_clearAvatar', this.context.bladeContainer);
-    };
-
-    _renderSelected(ind) {
-        return <p className={bem("publish", "pages-list-item", {selected: false})}>{ app.pages[ind].name() }</p>
-    };
-
-    _renderList() {
-        return
-    };
+        e.preventDefault();
+    }
 
     render() {
         return <BladeBody>
+            <form onSubmit={this.onSave}>
+                <MarkupLine mods={["space", "stretch"]}>
+                    <GuiInput defaultValue={app.props.name} caption="@project.name" ref="name" autoFocus selectOnFocus />
+                </MarkupLine>
 
+                <MarkupLine>
+                    <FormattedMessage id="@project.avatar" tagName="label" />
+                </MarkupLine>
 
-            <MarkupLine mods="space">
-                <GuiInput value={this.state.projectName} onChange={this._onChange} caption="Project name" defaultMessage="Project name"/>
-            </MarkupLine>
+                <MarkupLine className="project__avatar" mods={["stretch", "horizontal"]}>
+                    <figure className="project__avatar-image"
+                        style={{ backgroundImage: "url('" + this.state.avatarUrl + "')" }}
+                    />
+                    <GuiButtonStack className="project__avatar-controls">
+                        <GuiButton
+                            mods="hover-white"
+                            icon="refresh"
+                            onClick={this.onRandomizeAvatar}
+                        />
+                        <GuiButton
+                            mods="hover-success"
+                            icon="edit"
+                            onClick={this.onEditAvatar}
+                        />
+                        <GuiButton
+                            mods="hover-success"
+                            icon="small-delete"
+                            onClick={this.onAvatarDeleted}
+                        />
+                    </GuiButtonStack>
+                </MarkupLine>
 
-            <MarkupLine>
-                <GuiTextArea value={this.state.projectName} onChange={this._onChange} caption="Resource description" defaultMessage="Resource description"/>
-            </MarkupLine>
-            <MarkupLine>
-                <GuiInput value={this.state.projectName} onChange={this._onChange} caption="Tags" defaultMessage="Tags"/>
-            </MarkupLine>
-
-            <MarkupLine>
-                <div className="gui-input">
-                    <p className={"gui-input__label"}>
-                        <FormattedMessage id="translateme!" defaultMessage={"Тип все дела"} />
-                    </p>
-
-                    <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={true} onChange={console.log} data-option="activeArtboard"/>
-                        <i />
-                        <span><FormattedMessage id="translateme!" defaultMessage="Public"/></span>
-                    </label>
-
-                    <label className="gui-radio gui-radio_line">
-                        <input type="radio" checked={false} onChange={console.log} data-option="activePage"/>
-                        <i />
-                        <FormattedMessage id="translateme!" defaultMessage="Private"/>
-                    </label>
-
-                </div>
-            </MarkupLine>
-
-            <MarkupLine mods="space">
-                <GuiButton mods="submit" onClick={this._save} caption="@save" icon={true} />
-            </MarkupLine>
+                <MarkupLine mods="space">
+                    <GuiButton mods="submit" onClick={this.onSave} caption="@save" />
+                </MarkupLine>
+            </form>
         </BladeBody>
     }
 

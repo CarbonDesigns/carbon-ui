@@ -29,9 +29,9 @@ export default class StencilsPage extends Component<any, any> {
         return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("stencils", tabId))}>
             <TabTabs
                 items={[
-                    <i className="ico--library"/>,
-                    <i className="ico--recent"/>,
-                    <i className="ico--search"/>
+                    <i className="ico-library"/>,
+                    <i className="ico-recent"/>,
+                    <i className="ico-search"/>
                 ]}
                 tabMods="level2"
             />

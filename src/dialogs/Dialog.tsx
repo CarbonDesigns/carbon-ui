@@ -51,7 +51,7 @@ export default class Dialog<P = {}, S = {}> extends Component<P, S>{
         if (this.canClose()) {
             return <div className="dialog__buttons">
                 <div className="dialog__button" onClick={this.closeDialog}>
-                    <i className="ico--close" />
+                    <i className="ico-close" />
                 </div>
             </div>
         }

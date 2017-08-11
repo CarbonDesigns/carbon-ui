@@ -21,6 +21,7 @@ import cx from 'classnames';
 import AnimationSettings from "../animation/AnimationSetting";
 
 import {AltContext}    from './topBar/contextbar';
+import appStore from "../AppStore";
 
 require("./IdleDialog");
 
@@ -44,14 +45,14 @@ class Workspace extends ComponentWithImmutableState<any, any> {
         super(props);
         this.state = {
             data: new State({
-                activeTool: richApp.appStore.state.activeTool
+                activeTool: appStore.state.activeTool
             })
         };
     }
 
-    @listenTo(richApp.workspaceStore, richApp.appStore)
+    @listenTo(richApp.workspaceStore, appStore)
     onChange() {
-        this.mergeStateData({activeTool:richApp.appStore.state.activeTool});
+        this.mergeStateData({activeTool: appStore.state.activeTool});
         this.attachToView();
 
         if (app.isLoaded && !this._imageDrop.active() && this._renderLoop.isAttached()){

@@ -52,7 +52,7 @@ export class SimpleListItem extends React.Component<any, any> {
             controls.push(<div
                 key="delete"
                 className={bem_simple_list("item-control", "delete")}
-                onClick={()=>onDelete(item, event)}><i className="ico--trash"/></div>)
+                onClick={()=>onDelete(item, event)}><i className="ico-trash"/></div>)
         }
         if (typeof onEdit === 'function') {
             controls.push(<div

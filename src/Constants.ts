@@ -6,6 +6,9 @@ export const LoginProviders: LoginProvider[] = ["Google", "Facebook", "Twitter",
 
 export const MinPasswordLength = 6;
 
+export const ProjectAvatarSize = 300;
+export const ProjectAvatars = 32;
+
 export type ErrorCode =
     "unknownCompany" |
     "appRunError" |

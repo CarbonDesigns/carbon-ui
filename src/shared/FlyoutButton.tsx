@@ -112,12 +112,11 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, any> {
         this._mounted = false;
     }
 
-    // When flyout button is re-rendered, probably popup should not be updated, but this is arguable
-    // componentDidUpdate(){
-    //     if (this.state.open){
-    //         dispatch(FlyoutActions.show(this.refs.host, this.drawContent(), this.position));
-    //     }
-    // }
+    componentDidUpdate(){
+        if (this.state.open){
+            dispatch(FlyoutActions.update(this.refs.host, this.drawContent()));
+        }
+    }
     renderContent() {
         if (this.props.content) {
             return this.props.content;

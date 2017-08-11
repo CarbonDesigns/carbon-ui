@@ -1,7 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
 import {app, domUtil, Selection, ViewTool} from "carbon-core";
-import AppStore from "../../RichAppStore";
+import AppStore from "../../AppStore";
 import AppActions from "../../RichAppActions";
 import {listenTo, Component, ComponentWithImmutableState, dispatch} from "../../CarbonFlux";
 import HotKeyListener from "../../HotkeyListener";
@@ -34,7 +34,7 @@ class ToolButton extends Component<any, any> {
                 className={className}
                 onMouseEnter={()=>this.setState({hover: true})}
                 onMouseLeave={()=>this.setState({hover: false})}
-            ><i className={"ico--tool_"+type} /></div>
+            ><i className={"ico-tool_"+type} /></div>
         )
     }
 }
@@ -346,7 +346,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     _onMouseDownOnBody = (event)=> {
         var className = event.target.className;
 
-        if(this.state.data.activeGroup && className.indexOf('ico--tool_') == -1 && className.indexOf('tool-button') == -1 ){
+        if(this.state.data.activeGroup && className.indexOf('ico-tool_') == -1 && className.indexOf('tool-button') == -1 ){
             this.mergeStateData({activeGroup:null});
             return _preventDefault(event);
         }

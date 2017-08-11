@@ -184,9 +184,9 @@ function CommentAva({author, className}){
 function CommentAction ({actionName, onClick}){
     let ico;
     switch (actionName) {
-        case 'resolve' : ico = 'ico--resolve'; break;
-        case 'edit'    : ico = 'ico--edit'   ; break;
-        case 'delete'  : ico = 'ico--trash'  ;
+        case 'resolve' : ico = 'ico-resolve'; break;
+        case 'edit'    : ico = 'ico-edit'   ; break;
+        case 'delete'  : ico = 'ico-trash'  ;
     }
     //fixme todo translate title
     return <div
@@ -203,7 +203,7 @@ function CommentAction ({actionName, onClick}){
 
 function CommentOverlay ({isOpen, onEdit, onDelete, onResolve}) {
     //fixme todo translate title
-    //{/*<div className={bem('comment', 'overlay-action', 'resolve')} onClick={onResolve}><i className='ico--resolve'/></div>*/}
+    //{/*<div className={bem('comment', 'overlay-action', 'resolve')} onClick={onResolve}><i className='ico-resolve'/></div>*/}
     return <div className={bem('comment', 'overlay', {open: isOpen})}>
         {
             typeof onResolve==='function' &&
@@ -212,8 +212,8 @@ function CommentOverlay ({isOpen, onEdit, onDelete, onResolve}) {
         <GuiButton className={bem('comment', 'overlay-action')} onClick={onEdit  } mods={['square', 'hover-white']} icon="edit"/>
         <GuiButton className={bem('comment', 'overlay-action')} onClick={onDelete  } mods={['square', 'hover-delete']} icon="trash"/>
     </div>
-    //{/*<GuiButton className={bem('comment', 'overlay-action', 'delete')} onClick={onDelete}><i className='ico--trash'  /></GuiButton>*/}
-    //<GuiButton className={bem('comment', 'overlay-action', 'delete')} onClick={onDelete}><i className='ico--trash'  /></GuiButton>
+    //{/*<GuiButton className={bem('comment', 'overlay-action', 'delete')} onClick={onDelete}><i className='ico-trash'  /></GuiButton>*/}
+    //<GuiButton className={bem('comment', 'overlay-action', 'delete')} onClick={onDelete}><i className='ico-trash'  /></GuiButton>
 }
 
 class Reply extends Component {
@@ -340,7 +340,7 @@ class Comment extends Component {
             replies_content = [
                 (<section  className="replies__actions"  key="replies__actions">
                     <div className="replies__add-reply  comment__inline-action  txt" onClick={this._toggleRepliesList}>
-                        <i className="ico--add-reply"/><FormattedHTMLMessage defaultMessage="Add a reply" tagName="span" id="translateme!" />
+                        <i className="ico-add-reply"/><FormattedHTMLMessage defaultMessage="Add a reply" tagName="span" id="translateme!" />
                     </div>
                 </section>)
             ];
@@ -372,7 +372,7 @@ class Comment extends Component {
                     <MyReplyAvatar/>
                     <textarea placeholder={input_placeholder} rows={1}/>
                     <button type="submit" className="reply__answer-submit">
-                        <i className="ico--send"/>
+                        <i className="ico-send"/>
                     </button>
                 </form>
             </div>
@@ -444,10 +444,10 @@ class CommentsPanel extends Component {
                         <label>
                             <textarea className="create-comment__input"/>
                             <div className="create-comment__submit">
-                                <i className="ico--send-big"/>
+                                <i className="ico-send-big"/>
                             </div>
                             <div className="create-comment__opener">
-                                <i className="ico--add-comment"/>
+                                <i className="ico-add-comment"/>
                                 <div className="cap">{<FormattedHTMLMessage defaultMessage="Add comment" tagName="span" id="translateme!"/>}</div>
                             </div>
                         </label>

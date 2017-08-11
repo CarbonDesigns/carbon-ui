@@ -225,8 +225,8 @@ class ShadowEditor extends Component<any, any> {
                     </div>
 
                     <div className={b("pushbuttons")}>
-                        <div className={b("pushbutton", {active: !this.state.inset})} onClick={()=>this._setInset(false)}><i className="ico--outset" /></div>
-                        <div className={b("pushbutton", {active: this.state.inset})} onClick={()=>this._setInset(true)}><i className="ico--inset"/></div>
+                        <div className={b("pushbutton", {active: !this.state.inset})} onClick={()=>this._setInset(false)}><i className="ico-outset" /></div>
+                        <div className={b("pushbutton", {active: this.state.inset})} onClick={()=>this._setInset(true)}><i className="ico-inset"/></div>
                     </div>
                 </div>
             </div>

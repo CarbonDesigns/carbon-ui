@@ -104,11 +104,11 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
                 {/* <div className="panel__settings">
                     <div className="panel__settings-heading">
                         <hgroup>
-                            <i className="ico ico--settings"/>
+                            <i className="ico ico-settings"/>
                             <FormattedHTMLMessage id={"Settings"} tagName="h4" defaultMessage={"Settings"}/>
                         </hgroup>
                         <div className="panel__settings-closer">
-                            <i className="icon ico--close"/>
+                            <i className="icon ico-close"/>
                         </div>
                     </div>
                     <div className="panel__settings-body"></div>

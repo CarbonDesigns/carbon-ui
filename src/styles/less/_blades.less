@@ -38,7 +38,6 @@
     height: 100%;
     //.inbl;
     overflow: visible;
-    min-width:250px;
     width:auto;
     //.nowrap;
 
@@ -157,6 +156,10 @@
         //.not-ready-feature {
         //    max-width: 25vw;
         //}
+
+        &_avatar {
+            width: @main_menu_width;
+        }
     }
 }
 
@@ -194,6 +197,35 @@
 
         .wbg(5);
         margin-right: auto;
+    }
+
+    &__avatar-controls {
+        padding-left: @air_half;
+        .flex(column);
+    }
+
+    &__avatar-image {
+        flex-shrink: 0;
+    }
+}
+
+.project {
+    &__avatar {
+        .flex;
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+    }
+    &__avatar-image {
+        .rel;
+        .befratio();
+        .bgcontain();
+        background-position: center center;
+        background-repeat: no-repeat;
+        width: 15rem;
+        max-width: 15rem;
+        .clip;
+        .wbg(5);
     }
 
     &__avatar-controls {

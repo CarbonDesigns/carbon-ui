@@ -258,7 +258,7 @@ export default class ToolboxConfiguration {
             spriteUrlPromise = spriteUrlPromise.then(sprite => {
                 return backend.fileProxy.uploadPublicImage({ content: sprite.imageData })
                     .then((data) => {
-                        group.spriteUrl = data.url;
+                        group.spriteUrl = "url('" + data.url + "')";
                         group.size = sprite.size;
                     })
             });
@@ -266,7 +266,7 @@ export default class ToolboxConfiguration {
             spriteUrl2xPromise = spriteUrl2xPromise.then(sprite => {
                 return backend.fileProxy.uploadPublicImage({ content: sprite.imageData })
                     .then((data) => {
-                        group.spriteUrl2x = data.url;
+                        group.spriteUrl2x = "url('" + data.url + "')";
                     })
             });
 

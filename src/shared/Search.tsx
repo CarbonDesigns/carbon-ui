@@ -68,7 +68,7 @@ export default class Search extends Component<SearchProps, SearchState>{
                 autoFocus={autoFocus}
                 ref="input"/>
             <div className="search-field__ico">
-                <i className="ico--search"/>
+                <i className="ico-search"/>
             </div>
         </div>;
     }

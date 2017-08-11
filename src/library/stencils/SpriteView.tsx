@@ -184,7 +184,7 @@ export default class SpriteView extends Component<SpriteViewProps>{
         var width = spriteMap[2];
         var height = spriteMap[3];
 
-        var imageStyle: any = {
+        var imageStyle: React.CSSProperties = {
             backgroundImage: spriteUrl,
             width: width,
             height: height,
@@ -199,7 +199,7 @@ export default class SpriteView extends Component<SpriteViewProps>{
         }
 
         var modified = x.id === this.props.changedId;
-        var modification_badge = modified ? <div className="stencil__modification-indicator"><i className="ico--refresh" /></div> : null;
+        var modification_badge = modified ? <div className="stencil__modification-indicator"><i className="ico-refresh" /></div> : null;
 
         var cn = bem("stencil", null, {
             modified: modified,

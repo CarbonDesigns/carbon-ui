@@ -148,8 +148,6 @@ export class Toolbox extends CarbonStore<IToolboxState>{
 
     imageSourceToString(source: ImageSource) {
         switch (source.type) {
-            case ImageSourceType.Font:
-                return "font " + source.icon;
             case ImageSourceType.Url:
                 return "url " + source.url;
             case ImageSourceType.Element:

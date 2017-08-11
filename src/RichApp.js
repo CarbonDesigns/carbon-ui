@@ -1,5 +1,4 @@
 import {Dispatcher} from './CarbonFlux';
-import RichAppStore from './RichAppStore';
 
 import LayoutStore from './layout/LayoutStore';
 
@@ -28,7 +27,6 @@ export class Application {
         this.Dispatcher = Dispatcher;
         window.richApp = this;
 
-        this.appStore = RichAppStore;//new RichAppStore(this.Dispatcher);
         this.layoutStore = LayoutStore;
 
         this.libraryProgressStore = new LibraryProgressStore(this.Dispatcher);

@@ -56,7 +56,7 @@ export default class ScrollContainer extends React.Component<ScrollContainerProp
     }
 
     componentDidMount() {
-        ScrollContainer.initScroller(this.refs.scrollContainer, this.scrollOptions());
+        this.scroller = ScrollContainer.initScroller(this.refs.scrollContainer, this.scrollOptions());
 
         if (this.props.scrollEnd) {
             this.refs.scrollPane.scrollTop = Number.MAX_VALUE;

@@ -1,4 +1,4 @@
-import {app, FrameSource, ObjectFactory, Brush, IconsInfo, Frame, Platform} from "carbon-core";
+import {app, FrameSource, ObjectFactory, Brush, Frame, Platform} from "carbon-core";
 import AbstractStore from "../AbstractRecentStore";
 import Toolbox from "../Toolbox";
 import LessVars from "../../styles/LessVars";

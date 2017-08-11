@@ -1,5 +1,4 @@
 import {app, Brush, Image} from "carbon-core";
-import {IconsInfo} from "carbon-core";
 import AbstractStore from "../AbstractRecentStore";
 import Toolbox from "../Toolbox";
 import { ImageSource, ImageSourceType, IImage } from "carbon-model";

@@ -1,7 +1,8 @@
 import CarbonActions from './CarbonActions';
+import AppActions from "./RichAppActions";
 import IdleDialog from "./workspace/IdleDialog";
 import { dispatch, dispatchAction } from "./CarbonFlux";
-import { app, backend, PropertyTracker, Selection, Environment, IDisposable, IPage } from "carbon-core";
+import { app, backend, PropertyTracker, Selection, Environment, IDisposable, IPage, CommandManager } from "carbon-core";
 
 let workspaceTokens: IDisposable[] = [];
 let frequentAppTokens: IDisposable[] = [];
@@ -26,19 +27,20 @@ export function registerEvents() {
         token = app.resourceDeleted.bindAsync((resourceType, resource, parent) => dispatchAction({type: "Carbon_ResourceDeleted", resourceType, resource, parent}));
         frequentAppTokens.push(token);
 
+        token = app.changed.bindAsync(events => dispatch((CarbonActions.appChanged(events))));
+        frequentAppTokens.push(token);
+
         dispatchAction({ type: "Carbon_AppUpdated" });
     });
 
     app.modeChanged.bindAsync(mode => {
         dispatch((CarbonActions.modeChanged(mode)));
     });
-
-    app.changed.bindAsync(events => {
-        dispatch((CarbonActions.appChanged(events)));
-    });
-
     app.currentToolChanged.bindAsync((tool) => {
         dispatch(CarbonActions.toolChanged(tool));
+    });
+    app.settingsChanged.bindAsync(settings => {
+        dispatchAction({ type: "Carbon_AppSettingsChanged", settings });
     });
 
     PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => dispatch(CarbonActions.propsChanged(e, props, oldProps)));
@@ -65,6 +67,11 @@ export function registerEvents() {
         let token = controller.onArtboardChanged.bindAsync((newArtboard, oldArtboard) =>
             dispatch(CarbonActions.activeArtboardChanged(oldArtboard, newArtboard)));
         workspaceTokens.push(token);
+
+        if (view.scaleChanged) {
+            let token = view.scaleChanged.bindAsync(scale => dispatchAction({ type: "Carbon_ScaleChanged", scale }));
+            workspaceTokens.push(token);
+        }
     });
 
     app.pageChanged.bindAsync((oldPage, newPage) => dispatch(CarbonActions.pageChanged(oldPage, newPage)));
@@ -80,6 +87,10 @@ export function registerEvents() {
         if (state.type === "stopped" && state.idle){
             dispatchAction({type: "Dialog_Show", dialogType: "IdleDialog"});
         }
+    });
+
+    CommandManager.stateChanged.bind(this, (e)=> {
+        dispatch(AppActions.canUndoRedo(e.canUndo, e.canRedo));
     });
 }
 

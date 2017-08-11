@@ -321,6 +321,8 @@ interface IGuiButtonProps extends IReactElementProps, IHasMods<
     "spinning" |
     "full" |
     "small" |
+    "link" |
+    "link-hover" |
     "simple"
     > {
     className?: string;
@@ -350,7 +352,7 @@ export class GuiButton extends Component<IGuiButtonProps>{
         if (!children) {
             var newChildren = [];
             if (icon) {
-                var ico_cn = (typeof icon === 'string') ? "ico--" + icon : null;
+                var ico_cn = (typeof icon === 'string') ? "ico-" + icon : null;
                 newChildren.push(<i key="icon" className={ico_cn} />);
             }
             if (caption || defaultMessage) {
@@ -683,10 +685,10 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
         var status = field.get("status");
         if (status === "checking") {
             //TODO: (design) add icon (or animation) for checking field
-            return <div className={`${component}__input-ico ${component}__input-ico_checking`} key="checking_ico"><i className="ico--checking"></i></div>;
+            return <div className={`${component}__input-ico ${component}__input-ico_checking`} key="checking_ico"><i className="ico-checking"></i></div>;
         }
         if (status === "ok") {
-            return <div className={`${component}__input-ico ${component}__input-ico_valid`} key="valid_ico"><i className="ico--ok-white"></i></div>;
+            return <div className={`${component}__input-ico ${component}__input-ico_valid`} key="valid_ico"><i className="ico-ok-white"></i></div>;
         }
         if (status === "error") {
             return [

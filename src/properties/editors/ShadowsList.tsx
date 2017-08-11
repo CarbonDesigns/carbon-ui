@@ -56,7 +56,7 @@ class ShadowFlat extends Component<any, any> {
                 {this._renderParam(item.y, 'y')}
                 {this._renderParam(item.blur, 'b')}
             </span>
-            <i title={item.inset ? "Inset shadow" : "Outset shadow"} className={cn("inset")} onClick={this.openPopup}>{item.inset ? <i className="ico--inset"/> : <i className="ico--outset"/>}</i>
+            <i title={item.inset ? "Inset shadow" : "Outset shadow"} className={cn("inset")} onClick={this.openPopup}>{item.inset ? <i className="ico-inset"/> : <i className="ico-outset"/>}</i>
             <i className={cn("color")} style={{backgroundColor: item.color}} onClick={this.openPopup}>
                 <i className={cn("color-transparency")} style={{opacity: (1)}}/>
             </i>

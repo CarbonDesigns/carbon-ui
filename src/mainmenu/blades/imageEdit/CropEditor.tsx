@@ -9,6 +9,7 @@ function b(a, b?, c?) { return bem("edit-image", a, b, c) }
 interface ICropEditorProps {
     image: string;
     dpr: number;
+    size: IRect;
 }
 
 interface ICropEditorState {
@@ -167,6 +168,7 @@ export default class CropEditor extends Component<ICropEditorProps, ICropEditorS
         var zoom = this.easing(this.state.sliderPos);
 
         return <div className={b('crop-editor')} ref="box"
+            style={{width: this.props.size.width/this.props.dpr, height: this.props.size.height/this.props.dpr}}
             onWheel={this.onWheel}
             onMouseDown={this.onMouseDown}>
             <div className={b('crop-area')}>

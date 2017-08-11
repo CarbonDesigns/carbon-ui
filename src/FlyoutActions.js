@@ -6,6 +6,14 @@ var FlyoutActions = {
             async: true
         }
     },
+    update:(target, children)=> {
+        return {
+            type: 'FlyoutActions_update',
+            target,
+            children,
+            async: true
+        }
+    },
     hide:(target, children, position, onClose)=> {
         return {
             type: 'FlyoutActions_hide',

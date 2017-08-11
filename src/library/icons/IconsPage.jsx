@@ -28,10 +28,10 @@ export default class IconsPage extends Component {
         return <TabContainer id="icons-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("icons", tabId))}>
             <TabTabs
                 items={[
-                    <i className="ico--library"/>,
-                    <i className="ico--recent"/>,
-                    <i className="ico--earth"/>,
-                    <i className="ico--search"/>
+                    <i className="ico-library"/>,
+                    <i className="ico-recent"/>,
+                    <i className="ico-earth"/>,
+                    <i className="ico-search"/>
                 ]}
                 tabMods="level2"
             />

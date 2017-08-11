@@ -412,7 +412,7 @@ export default class UserImages extends Component<any, any>{
 
                     <div className="zone__upload-block">
                         <div className="zone__upload">
-                            <div className="image-upload__ico"><i className="ico--upload" /></div>
+                            <div className="image-upload__ico"><i className="ico-upload" /></div>
                             <p className={upload_classnames.message + " dz-message"}>
                                 <FormattedMessage id="translateme!" defaultMessage="Click here to upload files" />
                             </p>

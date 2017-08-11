@@ -14,6 +14,8 @@ export default
         "@send backward": "Send backward",
         "@undo": "Undo",
         "@redo": "Redo",
+        "@save": "Save",
+
         "@action.done": "Done",
         "@path.union": "Union",
         "@path.join": "Join",
@@ -54,7 +56,7 @@ export default
         "Find stencil (F3)...": "Find symbol (F3)...",
         "@choosePage": "Select a page",
         "@chooseArtboard": "Select an artboard",
-        "@noPagesWithSymbols": "No pages with symbols found",
+        "@noPages": "No pages found",
 
         "@search": "Search... (F3)",
 
@@ -218,6 +220,7 @@ export default
         "Rendering": "Rendering", //
         "@show.pixels": "Show pixels", //
         "@show.frames": "Show artboard frames", //
+        "@settings.clipArtboards": "Clip artboards", //
         "@toggleFrame": "Toggle frame",
         "line": "line", // on the line
         "grid": "grid", //
@@ -298,7 +301,7 @@ export default
         "caption.sharebyemail": "Share project by email",
         "caption.resourceblade": "Resources",
         "caption.mirroringblade": "Device mirroring", //
-        "caption.publishpage": "Publish symbols",
+        "caption.publishpage": "Publish resources",
         "@caption.editCover": "Edit cover",
 
         "resources.static": "Published by carbonium.io",
@@ -311,7 +314,7 @@ export default
         "btn.disableMirroring": "Disable",
         "menu.mirroring": "Mirroring",
         "menu.sharing": "Sharing link", //
-        "menu.publish": "Publish symbols", //
+        "menu.publish": "Publish resources", //
         "mirroringblade.helptext": "Enable mirroring to view all changes immediately on the remote device.",
         "mirroringblade.scancodehelp": "Scan QR code on any mobile device using your favorite QR code scanner app to view currently active artboard on the device.",
         "mirroring.urllabel": "Or copy URL manually", //
@@ -356,6 +359,12 @@ export default
         "@imageEdit.pasteUrl": "paste an image URL",
         "@imageEdit.uploadImage": "Upload a new image",
         "@imageEdit.urlError": "Could not download the image",
+
+        "@project.name": "Project name",
+        "@project.avatar": "Create your project avatar",
+        "@project.comment": "{num} {num, plural, one {artboard} other {artboards}}",
+        "@project.editAvatar": "Edit project avatar",
+        "@project.settings": "Project settings",
 
         "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //
@@ -545,6 +554,19 @@ export default
         "@images.find": "Find image...",
         "@unsplash.error": "Could not contact the Unsplash.com service. Please try again later.",
         "@userImages.error": "Could not connect to the server. Please try again later.",
+
+        "@status.saveFailed": "Could not save to the server.",
+        "@status.saveFailed2": "We are already notified of this problem. Please contact us at team@carbonium.io.",
+        "@status.connected": "Everything looks great!",
+        "@status.connected2": "You are connected to the server. Your work was last saved at {time}.",
+        "@status.connecting": "Attempting to connect to the server...",
+        "@status.reconnecting": "Connection to server lost. Retrying...",
+        "@status.reconnecting2": "This could happen if you have bad internet connection.",
+        "@status.connectionLost": "Connection to server lost.",
+        "@status.willRetry": "Retrying in {seconds} seconds...",
+        "@status.tryNow": "Try now",
+        "@status.serverless": "Nothing will be saved on the server.",
+        "@status.serverless2": "The app is started in the serverless mode. This is used for development.",
 
         "@textAutoWidth.Fit": "Fit",
         "@textAutoWidth.Wrap": "Wrap",

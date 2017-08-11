@@ -29,10 +29,10 @@ export default class ImagesPage extends Component<any, any> {
         return <TabContainer id="images-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("images", tabId))}>
             <TabTabs
                 items={[
-                    <i className="ico--users"/>,
-                    <i className="ico--recent"/>,
-                    <i className="ico--earth"/>,
-                    <i className="ico--search"/>
+                    <i className="ico-users"/>,
+                    <i className="ico-recent"/>,
+                    <i className="ico-earth"/>,
+                    <i className="ico-search"/>
                 ]}
                 tabMods="level2"
             />

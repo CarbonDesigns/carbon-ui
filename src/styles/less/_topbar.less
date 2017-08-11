@@ -24,8 +24,6 @@
 .projectbar {
     .rel;
 
-    .act();
-
     .flexstretch();
 
     //border-right: 1px solid @divider_color;
@@ -44,6 +42,7 @@
         &__project-avatar {
             .stretch;
             .bgpic();
+            .point;
         }
 
         &__main-logo {
@@ -63,6 +62,7 @@
         .ellip;
         .flex();
         align-items: center;
+        .point;
 
         .transition();
 
@@ -247,10 +247,44 @@
 
 //——————————————————————————————————————————————————————————————————————
 
-.userbar{
+.statusbar {
     flex: 1;
     display: flex;
     justify-content: flex-end;
+}
+
+.appstatus {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 @line_air;
+    .point;
+
+    &:hover, &.opened {
+        .bgfade(10);
+    }
+
+    &__flyout {
+        background: @bg_panel_inner1;
+        .f12;
+        width: 250px;
+        .allowselect;
+
+        &&_ok {
+            border: 1px solid @success_color;
+        }
+        &&_warning, &&_error {
+            border: 1px solid @warning_color;
+        }
+    }
+
+    &__tryNow {
+        margin-left: @air_half;
+    }
+}
+
+.userbar{
+    display: flex;
 }
 
 #user-avatar {

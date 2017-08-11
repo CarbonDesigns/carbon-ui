@@ -37,7 +37,7 @@
 }
 
 
-.ico--close {
+.ico-close {
     ._icon_close(@font_color);
 }
 
@@ -601,6 +601,10 @@
     flex-direction: column;
     flex: auto;
 
+    &&_space {
+        padding: @r 0;
+    }
+
     &-header {
         padding-top: @r;
         margin-bottom: @r;
@@ -627,7 +631,8 @@
         flex-direction: column;
 
         &&_space {
-            margin-top   : 3*@r;
+            margin-top: 1.5*@r;
+            margin-bottom: 1.5*@r;
         }
         &&_slim {
             margin-top: 0;
@@ -771,6 +776,7 @@
     label {
         .bl;
         .cursor_pointer;
+        .f14;
     }
 
     label.inline {
@@ -1607,9 +1613,8 @@
     }
 
     &_link {
-        font-size: 1rem;
-        padding-left : 0;
-        padding-right: 0;
+        padding : 0;
+        padding: 0;
     }
 
     &_link-hover {

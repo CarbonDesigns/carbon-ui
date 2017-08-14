@@ -240,7 +240,7 @@ function getLoaders(settings) {
             exclude: excludes
         },
         {
-            test: /\.(png|gif|jpeg|jpg|cur|woff|woff2|eot|ttf|svg)$/,
+            test: /\.(png|gif|jpeg|jpg|cur|woff|woff2|eot|ttf|svg|gif)$/,
             loaders: [util.format("file?name=[path][name]%s.[ext]", settings.hashPattern)],
             exclude: excludes
         }
@@ -306,7 +306,7 @@ module.exports = function (settings) {
                         }
                     },
                     {
-                        from: /^((?!\.(png|cur|js|ts|tsx|woff|ttf|eot|svg|json)).)*$/g,
+                        from: /^((?!\.(png|cur|js|ts|tsx|woff|ttf|eot|svg|json|gif)).)*$/g,
                         to: settings.publicPath + '/index.html'
                     }
                 ]

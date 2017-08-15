@@ -1587,7 +1587,7 @@
     z-index: @z_prop3;
 
     border: 2px solid @sel_color;
-    height: 330px;
+    min-height: 350px;
     width: 280px;
     overflow: hidden;
 
@@ -1699,4 +1699,41 @@
     .panel[data-mode="widest"] & {
         max-width: 25%;
     }
+}
+
+.linear-gradient-picker {
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+
+.linear-gradient {
+    position: relative;
+    top:5px;
+    width:255px;
+    left:10px;
+    height: 20px;
+    background-color:red;
+    overflow: hidden;
+}
+
+.linear-gradient__point {
+    width:20px;
+    height: 20px;
+    margin-left: -10px;
+    border: 2px solid white;
+    position:absolute;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.linear-gradient__canvas {
+    z-index: 9;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
 }

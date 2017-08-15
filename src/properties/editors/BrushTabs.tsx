@@ -1,12 +1,13 @@
 import React from "react";
 import ColorPicker from "./ColorPicker";
-import {default as TabContainer, TabTabs, TabHeader, TabPage, TabArea} from "../../shared/TabContainer";
-import {BrushGammaSelector, Gammas} from "./BrushGammaSelector";
-import {richApp} from '../../RichApp';
-import {Component} from '../../CarbonFlux';
-import {Brush} from "carbon-core";
+import { default as TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../../shared/TabContainer";
+import { BrushGammaSelector, Gammas } from "./BrushGammaSelector";
+import { richApp } from '../../RichApp';
+import { Component } from '../../CarbonFlux';
+import { Brush } from "carbon-core";
+import LinearGradientPicker from "./LinearGradientPicker";
 
-import {FormattedHTMLMessage} from "react-intl";
+import { FormattedHTMLMessage } from "react-intl";
 
 var basicColors = [
     "white",
@@ -20,7 +21,7 @@ var basicColors = [
 
 
 export default class BrushTabs extends Component<any, any> {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             activeGamma: 0,
@@ -31,7 +32,7 @@ export default class BrushTabs extends Component<any, any> {
     selectSwatch = e => {
         var value = e.currentTarget.dataset.value;
         var brush;
-        if (value === "none"){
+        if (value === "none") {
             brush = Brush.Empty;
         }
         else {
@@ -40,11 +41,11 @@ export default class BrushTabs extends Component<any, any> {
         this.selectBrush(brush);
     };
     viewGamma = i => {
-        this.setState({activeGamma: i});
+        this.setState({ activeGamma: i });
     };
 
     onColorPickerChange = color => {
-        if(color.rgb.a && color.rgb.a != 1){
+        if (color.rgb.a && color.rgb.a != 1) {
             var rgba = color.rgb;
             color = `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`;
             var brush = Brush.createFromColor(color);
@@ -54,31 +55,34 @@ export default class BrushTabs extends Component<any, any> {
             brush = Brush.createFromColor(color.hex);
             color = color.hex;
         }
-        this.setState({color: color});
+        this.setState({ color: color });
         this.selectBrush(brush);
 
     };
 
-    selectBrush(brush){
+    selectBrush(brush) {
         this.props.onSelected(brush);
     }
 
-    render(){
+    render() {
 
 
- {/*[<i key="ico" className="ico-colorpicker-gradient"/>, <FormattedHTMLMessage key="text" id="Gradient"/>],
+        {/*[<i key="ico" className="ico-colorpicker-gradient"/>, <FormattedHTMLMessage key="text" id="Gradient"/>],
                     [<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedHTMLMessage key="text" id="Swatches"/>],*/}
         return <TabContainer>
             <TabTabs
                 items={[
-                    [<i key="ico" className="ico-colorpicker-solid"   />, <FormattedHTMLMessage key="text" id="Solid"/>],
-
+                    [<i key="ico" className="ico-colorpicker-solid" />, <FormattedHTMLMessage key="text" id="Solid" />],
+                    [<i key="ico" className="ico-colorpicker-gradient" />, <FormattedHTMLMessage key="text" id="Gradient" />]
                 ]}
             />
 
             <TabArea className="gui-pages">
                 <TabPage className="gui-page" tabId="1">
-                    <ColorPicker display={true} color={this.state.color} positionCSS={{position:"absolute", left: 0}} onChangeComplete={this.onColorPickerChange} presetColors={[]}/>
+                    <ColorPicker display={true} color={this.state.color} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
+                </TabPage>
+                <TabPage className="gui-page" tabId="2">
+                    <LinearGradientPicker color={this.state.color} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} />
                 </TabPage>
                 {/*<TabPage className="gui-page swatches" tabId="2">
                     <div className="swatches__basic-colors">
@@ -87,7 +91,7 @@ export default class BrushTabs extends Component<any, any> {
                             return <div className="swatch" onClick={this.selectSwatch} style={{backgroundColor: x}} data-value={x} key={x}></div>
                         })}
                     </div>*/}
-                    {/*<div className="swatches__recent-colors">
+                {/*<div className="swatches__recent-colors">
                         <div className="swatch" style1="background-color: #C5A">
                             <i className="swatch__transparenter" style1="opacity: 0"></i>
                         </div>
@@ -110,7 +114,7 @@ export default class BrushTabs extends Component<any, any> {
                             <i className="swatch__transparenter" style1="opacity: 0"></i>
                         </div>
                     </div>*/}
-                    {/*<div className="swatches__gamma-select">
+                {/*<div className="swatches__gamma-select">
                         <BrushGammaSelector selectedItem={this.state.activeGamma} onSelect={this.viewGamma}/>
                     </div>
                     <div className="swatches__gamma-preview">

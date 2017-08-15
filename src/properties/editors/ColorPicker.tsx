@@ -147,8 +147,8 @@ class SketchPicker extends React.Component<any, any> {
       presetColors, renderers } = this.props;
 
     var activeColor = { background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})` }
-    var className = cx("colorpicker", { disableAlpha: disableAlpha });
-    return <div className="colorpicker">
+    var className = cx("colorpicker", this.props.className, { disableAlpha: disableAlpha });
+    return <div className={className} style={this.props.style}>
       <div className="colorpicker__saturation">
         <Saturation
           className="colorpicker__Saturation"
@@ -194,55 +194,5 @@ class SketchPicker extends React.Component<any, any> {
     </div>
   }
 }
-// const Sketch = ({ width, rgb, hex, hsv, hsl, onChange, disableAlpha,
-//   presetColors, renderers }) => {
-//   var activeColor = { background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})` }
-//   var className = cx("colorpicker", { disableAlpha: disableAlpha });
-//   return (
-//     <div className="colorpicker">
-//       <div className="colorpicker__saturation">
-//         <Saturation
-//           className="colorpicker__Saturation"
-//           hsl={hsl}
-//           hsv={hsv}
-//           onChange={onChange}
-//         />
-//       </div>
-//       <div className="colorpicker__controls flexbox-fix">
-//         <div className="colorpicker__sliders">
-//           <div className="colorpicker__hue">
-//             <Hue
-//               className="colorpicker__Hue"
-//               hsl={hsl}
-//               onChange={onChange}
-//             />
-//           </div>
-//           <div className="colorpicker__alpha">
-//             <Alpha
-//               className="colorpicker__Alpha"
-//               rgb={rgb}
-//               hsl={hsl}
-//               renderers={renderers}
-//               onChange={onChange}
-//             />
-//           </div>
-//         </div>
-//         <div className="colorpicker__color">
-//           <Checkboard />
-//           <div className="colorpicker__activeColor" style={activeColor} />
-//         </div>
-//       </div>
-
-//       <SketchFields
-//         rgb={rgb}
-//         hsl={hsl}
-//         hex={hex}
-//         onChange={onChange}
-//         disableAlpha={disableAlpha}
-//       />
-//       <SketchPresetColors colors={presetColors} onClick={onChange} />
-//     </div>
-//   )
-// }
 
 export default CustomPicker(SketchPicker)

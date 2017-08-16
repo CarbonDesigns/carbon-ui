@@ -568,9 +568,10 @@ export default
         "@status.serverless": "Nothing will be saved on the server.",
         "@status.serverless2": "The app is started in the serverless mode. This is used for development.",
 
-        "@textAutoWidth.Fit": "Fit",
-        "@textAutoWidth.Wrap": "Wrap",
-        "@textAutoWidth.Grow": "Grow",
+        "@textMode": "Text mode",
+        "@textMode.block": "Block",
+        "@textMode.label": "Label",
+        "@wrap": "wrap",
         "@saveImage": "Save image",
         "@changeImage": "Change image",
 
@@ -605,10 +606,6 @@ export default
         "@logout": "Log Out",
 
         "@requiredField": "This field is required",
-
-        "@textAutoWidth.Fit": "Fit",
-        "@textAutoWidth.Wrap": "Wrap",
-        "@textAutoWidth.Grow": "Grow",
 
         "@data.customName": "Dataset name",
         "@data.customBody": "Enter one item per line",

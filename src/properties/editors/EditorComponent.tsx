@@ -116,10 +116,6 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         dispatch(PropertyActions.cancelEdit());
     }
 
-    _renderPropName(){
-        return <div className={ this.b('name') }><FormattedHTMLMessage id={ this.displayName() }/></div>
-    }
-
     propertyDescriptor(){
         return this.props.p.get("descriptor");
     }

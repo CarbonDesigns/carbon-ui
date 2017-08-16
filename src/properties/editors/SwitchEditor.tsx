@@ -1,7 +1,7 @@
 import React from 'react';
 import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from 'classnames';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 
 export default class SwitchEditor extends EditorComponent<boolean, IEditorProps> {
     render(){
@@ -9,7 +9,7 @@ export default class SwitchEditor extends EditorComponent<boolean, IEditorProps>
         var hasLabels = this.extractOption(this.props, "hasLabels");
         var classes = cx("prop prop_pushbuttons", this.widthClass(this.props.className || "prop_width-1-1"));
         return <div className={classes}>
-            <div className="prop__name"><FormattedHTMLMessage id={this.displayName()}/></div>
+            <div className="prop__name"><FormattedMessage id={this.displayName()}/></div>
             <div className="prop__value">
                 {items.map((x, i) => {
                     if (hasLabels){
@@ -33,7 +33,7 @@ export default class SwitchEditor extends EditorComponent<boolean, IEditorProps>
         var iconClasses = cx("ico type-icon inline-ico", x.icon);
         return <b className={buttonClasses} onClick={this.onChange.bind(this, x.value)} key={i}>
             <i className={iconClasses}></i>
-            <span>{x.label}</span>
+            <FormattedMessage id={x.label}/>
         </b>
     }
 

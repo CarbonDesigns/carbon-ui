@@ -5,14 +5,16 @@ import { Component } from "../../CarbonFlux";
 import { util } from "carbon-api";
 
 function LinearGradientPoint(props) {
-    let style:any = { left: (props.p * 100) + '%' };
+    let style:any = { left: (props.value[0] * 100) + '%' };
     if(props.active) {
-        style.backgroundColor = props.c;
+        style.backgroundColor = props.value[1];
     }
     return <div className={cx("linear-gradient__point", {active:props.active})} style={style}>
 
     </div>
 }
+
+const LineSize = 16;
 
 class LinearGradient extends React.Component<any, any> {
     refs: {
@@ -46,8 +48,8 @@ class LinearGradient extends React.Component<any, any> {
         let clickExisting = false;
         for (let i = 0; i < stops.length; ++i) {
             let stop = stops[i];
-            let stopCenter = stop.p * size;
-            if (x >= stopCenter - 10 && x <= stopCenter + 10) {
+            let stopCenter = stop[0] * size;
+            if (x >= stopCenter - LineSize/2 && x <= stopCenter + LineSize/2) {
                 this.setActivePoint(i);
                 clickExisting = true;
                 break;
@@ -58,10 +60,10 @@ class LinearGradient extends React.Component<any, any> {
         if (!clickExisting) {
             let newGradient = clone(this.state.gradient);
             for (let i = newGradient.stops.length - 1; i > 0; --i) {
-                if (newGradient.stops[i - 1].p < pcnt) {
+                if (newGradient.stops[i - 1][0] < pcnt) {
                     var imageData = this.ctx.getImageData(0, 0, size, 1);
                     var color = util.imageDataPointToCssColor(imageData.data, x);
-                    newGradient.stops.splice(i, 0, { p: pcnt, c: color});
+                    newGradient.stops.splice(i, 0, [pcnt, color]);
                     this.setState({ gradient: newGradient});
                     this.setActivePoint(i);
                     break;
@@ -78,7 +80,7 @@ class LinearGradient extends React.Component<any, any> {
         window.document.addEventListener("mouseup", this.onMouseUp);
         this._startX = event.screenX;
         this._size = size;
-        this._originalX = g.stops[this._activePoint].p * size;
+        this._originalX = g.stops[this._activePoint][0] * size;
     }
 
     onMouseMove = (event) => {
@@ -86,7 +88,7 @@ class LinearGradient extends React.Component<any, any> {
             let dx = event.screenX - this._startX;
             let g = clone(this.state.gradient);
             let stopPoint = g.stops[this._activePoint];
-            g.stops[this._activePoint] = { p: (this._originalX + dx) / this._size, c: stopPoint.c };
+            g.stops[this._activePoint] = [(this._originalX + dx) / this._size,  stopPoint[1] ];
             this.setState({ gradient: g });
             this._refreshCanvas();
         }
@@ -117,30 +119,21 @@ class LinearGradient extends React.Component<any, any> {
         if(!ctx) {
             return;
         }
-        let grd = ctx.createLinearGradient(0, 0, width, 20);
+        let grd = ctx.createLinearGradient(0, 0, width, LineSize);
         for(var s of this.state.gradient.stops) {
-            grd.addColorStop(s.p, s.c);
+            grd.addColorStop(s[0], s[1]);
         }
 
         ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, width, 20);
+        ctx.fillRect(0, 0, width, LineSize);
     }
 
     render() {
         var g = this.state.gradient;
-        let stops = "";
-        for (var s of g.stops) {
-            if (stops) {
-                stops += ", "
-            }
-
-            stops += s.c + ' ' + (s.p * 100) + '%';
-        }
-        let gradientFunction = `linear-gradient(90deg, ${stops})`;
 
         return <div ref="line" onMouseDown={this.onMouseDown} className="linear-gradient" >
             <canvas ref="canvas"  className="linear-gradient__canvas"></canvas>
-            {g.stops.map((s, idx) => <LinearGradientPoint {...s} active={idx === this.state.activePoint} />)}
+            {g.stops.map((s, idx) => <LinearGradientPoint value={s} active={idx === this.state.activePoint} />)}
         </div>
     }
 }
@@ -150,13 +143,13 @@ export default class LinearGradientPicker extends Component<any, any> {
     constructor(props) {
         super(props);
 
-        var gradient = { angle: 0, stops: [{ c: 'red', p: 0 }, { c: 'green', p: 1 }] };
-        this.state = {gradient:gradient, color:gradient.stops[0].c, activePoint:0};
+        var gradient = { x1:0.5, y1:0, x2:0.5, y2:1, stops: [[0, 'red'], [1, 'green']] };
+        this.state = {gradient:gradient, color:gradient.stops[0][1], activePoint:0};
     }
 
     onColorPickerChange = color => {
         let cssColor;
-        if (color.rgb.a && color.rgb.a != 1) {
+        if (color.rgb.a && color.rgb.a !== 1) {
             var rgba = color.rgb;
             cssColor = `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`;
         }
@@ -165,14 +158,14 @@ export default class LinearGradientPicker extends Component<any, any> {
             cssColor = color.hex;
         }
         var gradient = clone(this.state.gradient);
-        gradient.stops[this.state.activePoint].c = cssColor;
+        gradient.stops[this.state.activePoint][1] = cssColor;
         this.setState({ color: cssColor, gradient:gradient });
         // this.selectBrush(brush);
-
+        this.props.onChangeComplete(gradient);
     };
 
     _onActivePointChanged = (index) => {
-        this.setState({activePoint:index, color:this.state.gradient.stops[index].c});
+        this.setState({activePoint:index, color:this.state.gradient.stops[index][1]});
     }
 
     render() {

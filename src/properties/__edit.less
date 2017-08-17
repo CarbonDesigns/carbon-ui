@@ -1709,21 +1709,23 @@
     bottom:0;
 }
 
+@lineGradientLineHeight:16px;
+
 .linear-gradient {
     position: relative;
     top:5px;
     width:255px;
     left:10px;
-    height: 20px;
+    height: @lineGradientLineHeight;
     background-color:red;
     overflow: hidden;
 }
 
 .linear-gradient__point {
-    width:20px;
-    border-radius:10px;
-    height: 20px;
-    margin-left: -10px;
+    width:@lineGradientLineHeight;
+    border-radius:@lineGradientLineHeight/2;
+    height: @lineGradientLineHeight;
+    margin-left: -@lineGradientLineHeight/2;
     border: 2px solid white;
     position:absolute;
     pointer-events: none;

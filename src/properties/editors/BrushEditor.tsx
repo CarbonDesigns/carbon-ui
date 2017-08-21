@@ -43,6 +43,7 @@ export default class BrushEditor extends EditorComponent<Brush> {
                     className="flyout__content" ref="selector"
                     brush={this.propertyValue()}
                     onSelected={this.setValueByCommand}
+                    onPreview={this.previewValue.bind(this)}
                     onCancelled={this.revertChanges}
                 />
             </FlyoutButton>

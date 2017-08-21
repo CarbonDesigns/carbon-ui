@@ -31,6 +31,14 @@ export default class BrushTabs extends Component<any, any> {
         };
     }
 
+
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+        if(this.props.brush !== prevProps.brush) {
+            this.setState({brush:this.props.brush});
+        }
+    }
+
     selectSwatch = e => {
         var value = e.currentTarget.dataset.value;
         var brush;
@@ -103,7 +111,7 @@ export default class BrushTabs extends Component<any, any> {
                     <ColorPicker display={true} color={this.state.brush.value || "rgba(0,0,0,0)"} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
                 </TabPage>
                 <TabPage className="gui-page" tabId="2">
-                    <LinearGradientPicker brush={this.state.brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} />
+                    <LinearGradientPicker brush={this.state.brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} onPreview={this.props.onPreview} />
                 </TabPage>
                 {/*<TabPage className="gui-page swatches" tabId="2">
                     <div className="swatches__basic-colors">

@@ -20,6 +20,19 @@ function b(elem, mods?, mix?) {
     return bem("swatches-panel", elem, mods, mix)
 }
 
+function colorToBrush(color) {
+    let brush;
+
+    if(color === 'transparent') {
+        brush = Brush.Empty;
+    } else if(color.stops) {
+        brush = Brush.createFromLinearGradientObject(color);
+    } else {
+        brush = Brush.createFromColor(color);
+    }
+    return brush;
+}
+
 class SwatchesSlot extends Component<any, any> {
     [name: string]: any;
 
@@ -44,6 +57,11 @@ class SwatchesSlot extends Component<any, any> {
                     this.props.colorSelected(brush.value, true);
                     this._lastValue = brush.value;
                 }}
+                onPreview={
+                    ()=>{
+
+                    }
+                }
                 onCancelled={() => {
                     this.props.colorSelected(this._initialValue.value, true);
                     delete this._lastValue;
@@ -173,7 +191,8 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     }
 
     _colorSelected(color, norecent) {
-        var brush = color === 'transparent' ? Brush.Empty : Brush.createFromColor(color);
+        var brush = colorToBrush(color);
+
 
         if (this.state.active === 'fill') {
             app.defaultFill(brush);
@@ -204,7 +223,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     }
 
     _renderPaletteItem(color, ind, mods, norecent?) {
-        var style = { backgroundColor: color };
+        var style = Brush.toCss(colorToBrush(color));
         return <div key={`${ind}_${color}`} title={color} className={b("swatch", mods)} onClick={() => this._colorSelected(color, norecent)}>
             <div className={b("swatch-color")} style={style}></div>
         </div>

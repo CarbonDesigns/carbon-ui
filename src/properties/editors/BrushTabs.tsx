@@ -98,7 +98,7 @@ export default class BrushTabs extends Component<any, any> {
             tabId = "2";
         }
         {/*[<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedHTMLMessage key="text" id="Swatches"/>],*/}
-        return <TabContainer defaultTabId={tabId} onTabChanged={this.onTabChanged}>
+        return <TabContainer currentTabId={tabId} onTabChanged={this.onTabChanged}>
             <TabTabs
                 items={[
                     [<i key="ico" className="ico-colorpicker-solid" />, <FormattedHTMLMessage key="text" id="Solid" />],

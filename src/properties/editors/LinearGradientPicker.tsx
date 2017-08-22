@@ -114,6 +114,7 @@ class LinearGradient extends React.Component<any, any> {
                 let stopPoint = g.stops[this._activePoint];
                 var p = (this._originalX + dx) / this._size;
                 p = Math.max(0,  Math.min(1, p));
+                g.stops = g.stops.slice();
                 g.stops[this._activePoint] = [p, stopPoint[1]];
             }
 
@@ -175,6 +176,7 @@ class LinearGradient extends React.Component<any, any> {
 export default class LinearGradientPicker extends Component<any, any> {
     private _elements: IUIElement[];
     private _decorator: LinearGradientDecorator;
+    private _mouseButtonPressed:boolean;
 
     constructor(props) {
         super(props);
@@ -197,7 +199,7 @@ export default class LinearGradientPicker extends Component<any, any> {
         }
     }
 
-    onColorPickerChange = color => {
+    onColorPickerChange = (color, event) => {
         let cssColor;
         if (color.rgb.a && color.rgb.a !== 1) {
             var rgba = color.rgb;
@@ -207,11 +209,15 @@ export default class LinearGradientPicker extends Component<any, any> {
             // brush = Brush.createFromColor(color.hex);
             cssColor = color.hex;
         }
-        var gradient = clone(this.state.gradient);
+        var gradient = clone(this.props.brush.value);
         gradient.stops = gradient.stops.slice();
-        gradient.stops[this.state.activePoint][1] = cssColor;
+        gradient.stops[this.state.activePoint] = [gradient.stops[this.state.activePoint][0], cssColor];
         this.setState({ color: cssColor, gradient: gradient });
-        this.props.onChangeComplete(gradient);
+        if(this._mouseButtonPressed) {
+            this.props.onPreview(Brush.createFromLinearGradientObject(gradient));
+        } else {
+            this.props.onChangeComplete(gradient);
+        }
         Invalidate.requestInteractionOnly();
     };
 
@@ -234,9 +240,14 @@ export default class LinearGradientPicker extends Component<any, any> {
         }
     }
 
-    onGradientChangedExternaly = (value) => {
+    onGradientChangedExternaly = (value, preview) => {
+        if(preview) {
+            this.props.onPreview(Brush.createFromLinearGradientObject(value));
+        } else {
+            this.props.onChangeComplete(value);
+        }
+
         this.setState({gradient:value});
-        this.props.onChangeComplete(value);
     }
 
     onGradientChanged = (value) => {
@@ -250,15 +261,26 @@ export default class LinearGradientPicker extends Component<any, any> {
     }
 
     _onActivePointChanged = (index) => {
-        this.setState({ activePoint: index, color: this.state.gradient.stops[index][1] });
+        this.setState({ activePoint: index, color: this.props.brush.value.stops[index][1] });
         this._decorator.updateActivePoint(index);
     }
 
+    _onMouseDown = () => {
+        this._mouseButtonPressed = true;
+        window.addEventListener("mouseup", this._onMouseUp);
+    }
+
+    _onMouseUp = () => {
+        this._mouseButtonPressed = false;
+        window.removeEventListener("mouseup", this._onMouseUp);
+        this.props.onChangeComplete(this.state.gradient);
+    }
+
+
     render() {
         return <div className="linear-gradient-picker" style={this.props.style}>
-            <LinearGradient ref="line" gradient={this.state.gradient} onActivePointChanged={this._onActivePointChanged} onChange={this.onGradientChanged} onPreview={this.onGradientPreview}/>
-            <ColorPicker display={true} color={this.state.color} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
-
+            <LinearGradient ref="line" gradient={this.props.brush.value} onActivePointChanged={this._onActivePointChanged} onChange={this.onGradientChanged} onPreview={this.onGradientPreview}/>
+            <ColorPicker display={true} color={this.state.color} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} onMouseDown={this._onMouseDown} presetColors={[]} />
         </div>;
     }
 }

@@ -133,10 +133,10 @@ function SketchFields({ onChange, rgb, hsl, hex, disableAlpha, refCallback }) {
 
 
 class SketchPicker extends React.Component<any, any> {
-  _hexInput:any;
+  _hexInput: any;
   componentDidMount() {
     setTimeout(() => {
-      if(this._hexInput) {
+      if (this._hexInput) {
         this._hexInput.input.select();
       }
     }, 0)
@@ -148,7 +148,7 @@ class SketchPicker extends React.Component<any, any> {
 
     var activeColor = { background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})` }
     var className = cx("colorpicker", this.props.className, { disableAlpha: disableAlpha });
-    return <div className={className} style={this.props.style}>
+    return <div className={className} style={this.props.style} onMouseDown={this.props.onMouseDown} onMouseUp={this.props.onMouseUp}>
       <div className="colorpicker__saturation">
         <Saturation
           className="colorpicker__Saturation"
@@ -176,10 +176,10 @@ class SketchPicker extends React.Component<any, any> {
             />
           </div>
         </div>
-        <div className="colorpicker__color">
+        {/* <div className="colorpicker__color">
           <Checkboard />
           <div className="colorpicker__activeColor" style={activeColor} />
-        </div>
+        </div> */}
       </div>
 
       <SketchFields
@@ -188,7 +188,7 @@ class SketchPicker extends React.Component<any, any> {
         hex={hex}
         onChange={onChange}
         disableAlpha={disableAlpha}
-        refCallback={(e)=>this._hexInput = e}
+        refCallback={(e) => this._hexInput = e}
       />
       <SketchPresetColors colors={presetColors} onClick={onChange} />
     </div>

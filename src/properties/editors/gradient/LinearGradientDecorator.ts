@@ -15,6 +15,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
     _originalStopCopy: any[];
     _originalBrush: any;
     _contextScale:number = 1;
+    _lastGradient:any;
     _refreshCallback:(value:any)=>void;
 
     constructor(refreshCallback) {
@@ -134,7 +135,8 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
 
             //let brush = Brush.createFromLinearGradientObject(gClone);
             //this.element.setProps({ fill: brush }, ChangeMode.Self);
-            this._refreshCallback(gClone);
+            this._refreshCallback(gClone, true);
+            this._lastGradient = gClone;
             Invalidate.requestInteractionOnly();
         }
     }
@@ -143,6 +145,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         if(this._movePoint !== null) {
             this._movePoint = null;
             var brush = this.element.props.fill;
+            this._refreshCallback(this._lastGradient, false);
             // this.element.setProps({fill:this._originalBrush}, ChangeMode.Self);
             // this.element.setProps({fill:brush});
         }

@@ -26,18 +26,18 @@ export default class BrushTabs extends Component<any, any> {
     constructor(props) {
         super(props);
         this.state = {
-            activeGamma: 0,
-            brush:props.brush
+            activeGamma: 0
+            // brush:props.brush
         };
     }
 
 
-    componentDidUpdate(prevProps, prevState) {
-        super.componentDidUpdate(prevProps, prevState);
-        if(this.props.brush !== prevProps.brush) {
-            this.setState({brush:this.props.brush});
-        }
-    }
+    // componentDidUpdate(prevProps, prevState) {
+    //     super.componentDidUpdate(prevProps, prevState);
+    //     if(this.props.brush !== prevProps.brush) {
+    //         this.setState({brush:this.props.brush});
+    //     }
+    // }
 
     selectSwatch = e => {
         var value = e.currentTarget.dataset.value;
@@ -66,7 +66,7 @@ export default class BrushTabs extends Component<any, any> {
             brush = Brush.createFromColor(color.hex);
             color = color.hex;
         }
-        this.setState({ color: color });
+       // this.setState({ color: color });
         this.selectBrush(brush);
     };
 
@@ -77,14 +77,14 @@ export default class BrushTabs extends Component<any, any> {
 
     selectBrush(brush) {
         this.props.onSelected(brush);
-        this.setState({brush:brush});
+        //this.setState({brush:brush});
     }
 
     onTabChanged = (index) => {
         if(index === "1") {
-            this.selectBrush(Brush.createFromColor(this.state.brush.value.stops[0][1]));
+            this.selectBrush(Brush.createFromColor(this.props.brush.value.stops[0][1]));
         } else {
-            var color1 = this.state.brush.value;
+            var color1 = this.props.brush.value;
             var color2 = tinycolor(color1).darken(30).toString();
             let gradient = { x1: 0.5, y1: 0, x2: 0.5, y2: 1, stops: [[0, color1], [1, color2]] };
             this.selectBrush(Brush.createFromLinearGradientObject(gradient));
@@ -94,7 +94,7 @@ export default class BrushTabs extends Component<any, any> {
     render() {
         let tabId = "1";
 
-        if(this.state.brush.type === BrushType.lineargradient) {
+        if(this.props.brush.type === BrushType.lineargradient) {
             tabId = "2";
         }
         {/*[<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedHTMLMessage key="text" id="Swatches"/>],*/}
@@ -108,10 +108,10 @@ export default class BrushTabs extends Component<any, any> {
 
             <TabArea className="gui-pages">
                 <TabPage className="gui-page" tabId="1">
-                    <ColorPicker display={true} color={this.state.brush.value || "rgba(0,0,0,0)"} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
+                    <ColorPicker display={true} color={this.props.brush.value || "rgba(0,0,0,0)"} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
                 </TabPage>
                 <TabPage className="gui-page" tabId="2">
-                    <LinearGradientPicker brush={this.state.brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} onPreview={this.props.onPreview} />
+                    <LinearGradientPicker brush={this.props.brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} onPreview={this.props.onPreview} />
                 </TabPage>
                 {/*<TabPage className="gui-page swatches" tabId="2">
                     <div className="swatches__basic-colors">

@@ -17,7 +17,9 @@ import bem from '../utils/commonUtils';
 var b = "editable-list";
 
 export class ListItem extends React.Component<any, any> {
-    refs: any;
+    refs: {
+        input: EnterInput;
+    }
 
     constructor(props) {
         super(props);

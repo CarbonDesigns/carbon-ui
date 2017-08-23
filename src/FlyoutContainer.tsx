@@ -27,6 +27,10 @@ class FlyoutHost extends Component<any, any> {
         this.ensurePosition();
     }
 
+    componentDidUpdate() {
+        this.ensurePosition();
+    }
+
     componentWillUnmount() {
         super.componentWillUnmount();
     }

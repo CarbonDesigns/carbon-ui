@@ -37,9 +37,9 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     private _emptySelection:any;
     private _timerId:any;
 
-    hasProperty(propertyName){
+    hasProperty(propertyName, mustBeVisible: boolean){
         var exists = this.state.valueMap.hasOwnProperty(propertyName);
-        if (exists && this.state.visibilityMap[propertyName] === false){
+        if (exists && mustBeVisible && this.state.visibilityMap[propertyName] === false){
             exists = false;
         }
         return exists;

@@ -5,10 +5,10 @@ var SwatchesActions = {
             active:slot
         }
     },
-    changeActiveColors:(fill, stroke, font) =>{
+    changeActiveColors:(fill, stroke) =>{
         return {
             type: "SwatchesActions_changeActiveColors",
-            fill, stroke, font,
+            fill, stroke,
             async:true
         }
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Component, listenTo } from "../CarbonFlux";
+import { Component, listenTo, dispatch } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'
 import { Brush, Font, app, ChangeMode, Shape, Selection } from "carbon-core";
@@ -47,23 +47,23 @@ class SwatchesSlot extends Component<any, any> {
             onClosed={() => {
                 delete this._initialValue;
                 if (this._lastValue) {
-                    this.props.colorSelected(this._lastValue);
+                    this.props.colorSelected(this._lastValue, false, false);
                     delete this._lastValue;
                 }
             }}>
             <BrushSelector className="flyout__content" ref="selector"
                 brush={this.props.slot.brush}
                 onSelected={(brush) => {
-                    this.props.colorSelected(brush.value, true);
+                    this.props.colorSelected(brush.value, true, false);
                     this._lastValue = brush.value;
                 }}
                 onPreview={
-                    ()=>{
-
+                    (brush)=>{
+                        this.props.colorSelected(brush.value, true, true);
                     }
                 }
                 onCancelled={() => {
-                    this.props.colorSelected(this._initialValue.value, true);
+                    this.props.colorSelected(this._initialValue.value, true, false);
                     delete this._lastValue;
                 }} />
         </FlyoutButton>
@@ -89,7 +89,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
             recentColors: { name: '', colors: [] },
             palettes: []
         };
-        if (this.refs.panel != null) {
+        if (this.refs.panel) {
             var node = ReactDom.findDOMNode(this.refs.panel);
             state.swatch_width = this._getSwatchWidth(node);
         }
@@ -190,7 +190,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         this._updateSwatchWidth();
     }
 
-    _colorSelected(color, norecent) {
+    _colorSelected(color, norecent, preview) {
         var brush = colorToBrush(color);
 
 
@@ -214,7 +214,12 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
 
         var selection = Selection.selectComposite();
         if (selection.elements.length) {
-            selection.updateDisplayProps(changes);
+            // selection.updateDisplayProps(changes);
+            if(preview) {
+                dispatch(PropertyActions.preview(changes));
+            } else {
+                dispatch(PropertyActions.changed(changes));
+            }
         }
         else {
             //since properties are not updated, trigger manual update
@@ -224,7 +229,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
 
     _renderPaletteItem(color, ind, mods, norecent?) {
         var style = Brush.toCss(colorToBrush(color));
-        return <div key={`${ind}_${color}`} title={color} className={b("swatch", mods)} onClick={() => this._colorSelected(color, norecent)}>
+        return <div key={`${ind}_${color}`} title={color} className={b("swatch", mods)} onClick={() => this._colorSelected(color, norecent, false)}>
             <div className={b("swatch-color")} style={style}></div>
         </div>
     }

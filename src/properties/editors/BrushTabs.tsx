@@ -94,7 +94,12 @@ export default class BrushTabs extends Component<any, any> {
     render() {
         let tabId = "1";
 
-        if(this.props.brush.type === BrushType.lineargradient) {
+        var brush = this.props.brush;
+        if(!Brush.isValid(brush)) {
+            brush = Brush.Empty;
+        }
+
+        if(brush.type === BrushType.lineargradient) {
             tabId = "2";
         }
         {/*[<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedHTMLMessage key="text" id="Swatches"/>],*/}
@@ -108,10 +113,10 @@ export default class BrushTabs extends Component<any, any> {
 
             <TabArea className="gui-pages">
                 <TabPage className="gui-page" tabId="1">
-                    <ColorPicker display={true} color={this.props.brush.value || "rgba(0,0,0,0)"} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
+                    <ColorPicker display={true} color={brush.value || "rgba(0,0,0,0)"} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
                 </TabPage>
                 <TabPage className="gui-page" tabId="2">
-                    <LinearGradientPicker brush={this.props.brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} onPreview={this.props.onPreview} />
+                    <LinearGradientPicker brush={brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} onPreview={this.props.onPreview} />
                 </TabPage>
                 {/*<TabPage className="gui-page swatches" tabId="2">
                     <div className="swatches__basic-colors">

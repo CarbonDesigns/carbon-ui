@@ -1,12 +1,12 @@
 import { IMouseEventHandler, IKeyboardState, IMouseEventData, IDisposable, AngleAdjuster } from "carbon-core";
 import { UIElementDecorator, Environment, ILayer, IContext, IEnvironment, Invalidate, Brush, ChangeMode } from "carbon-core";
-import { LayerTypes, ILayerDrawHandlerOject} from "carbon-app";
+import { LayerTypes, ILayerDrawHandlerObject} from "carbon-app";
 import { BrushType } from "carbon-basics";
 
 const PointRadius = 6;
 const PointBorder = 1;
 
-export default class LinearGradientDecorator extends UIElementDecorator implements IMouseEventHandler, ILayerDrawHandlerOject {
+export default class LinearGradientDecorator extends UIElementDecorator implements IMouseEventHandler, ILayerDrawHandlerObject {
     _activePoint: number;
     _startX: number;
     _startY: number;
@@ -16,7 +16,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
     _originalBrush: any;
     _contextScale:number = 1;
     _lastGradient:any;
-    _refreshCallback:(value:any)=>void;
+    _refreshCallback:(value:any, preview:boolean)=>void;
 
     constructor(refreshCallback) {
         super();

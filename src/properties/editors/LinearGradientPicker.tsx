@@ -11,7 +11,7 @@ function LinearGradientPoint(props) {
     if (props.active) {
         style.backgroundColor = props.value[1];
     }
-    return <div key={"p"+props.value[0]} className={cx("linear-gradient__point", { active: props.active })} style={style}>
+    return <div key={"p" + props.value[0]} className={cx("linear-gradient__point", { active: props.active })} style={style}>
 
     </div>
 }
@@ -31,7 +31,7 @@ class LinearGradient extends React.Component<any, any> {
     private _activePoint: number;
     private ctx: any;
     private _removedPoint: any;
-    private _removedPointIndex:number;
+    private _removedPointIndex: number;
 
     constructor(props, context) {
         super(props, context);
@@ -95,8 +95,8 @@ class LinearGradient extends React.Component<any, any> {
             let dx = event.screenX - this._startX;
             let dy = event.screenY - this._startY;
             let g = clone(this.state.gradient);
-            if(Math.abs(dy) > 30) {
-                if(this._removedPoint)  {
+            if (Math.abs(dy) > 30) {
+                if (this._removedPoint) {
                     return;
                 }
                 this._removedPoint = g.stops[this._activePoint];
@@ -105,7 +105,7 @@ class LinearGradient extends React.Component<any, any> {
                 g.stops.splice(this._activePoint, 1);
                 this._activePoint = null;
             } else {
-                if(this._removedPoint) {
+                if (this._removedPoint) {
                     this._activePoint = this._removedPointIndex;
                     g.stops.splice(this._activePoint, 0, this._removedPoint);
                     this._removedPoint = null;
@@ -113,7 +113,7 @@ class LinearGradient extends React.Component<any, any> {
 
                 let stopPoint = g.stops[this._activePoint];
                 var p = (this._originalX + dx) / this._size;
-                p = Math.max(0,  Math.min(1, p));
+                p = Math.max(0, Math.min(1, p));
                 g.stops = g.stops.slice();
                 g.stops[this._activePoint] = [p, stopPoint[1]];
             }
@@ -134,8 +134,8 @@ class LinearGradient extends React.Component<any, any> {
 
     componentDidUpdate(prevProps) {
         this._refreshCanvas();
-        if(this.props.gradient !== prevProps.gradient) {
-            this.setState({  gradient: this.props.gradient });
+        if (this.props.gradient !== prevProps.gradient) {
+            this.setState({ gradient: this.props.gradient });
         }
     }
 
@@ -168,7 +168,7 @@ class LinearGradient extends React.Component<any, any> {
 
         return <div ref="line" onMouseDown={this.onMouseDown} className="linear-gradient" >
             <canvas ref="canvas" className="linear-gradient__canvas"></canvas>
-            {g.stops.map((s, idx) => <LinearGradientPoint value={s} active={idx === this.state.activePoint} />)}
+            {g.stops.map((s, idx) => <LinearGradientPoint key={"p"+s[0]} value={s} active={idx === this.state.activePoint} />)}
         </div>
     }
 }
@@ -176,7 +176,7 @@ class LinearGradient extends React.Component<any, any> {
 export default class LinearGradientPicker extends Component<any, any> {
     private _elements: IUIElement[];
     private _decorator: LinearGradientDecorator;
-    private _mouseButtonPressed:boolean;
+    private _mouseButtonPressed: boolean;
 
     constructor(props) {
         super(props);
@@ -192,10 +192,10 @@ export default class LinearGradientPicker extends Component<any, any> {
     }
 
     componentDidUpdate(prevProps) {
-        if(this.props.gradient !== prevProps.gradient) {
+        if (this.props.gradient !== prevProps.gradient) {
             let count = this.props.gradient.stops.length;
             let activePoint = Math.max(this.state.activePoint, count - 1);
-            this.setState({  gradient: this.props.gradient, activePoint, color:this.props.gradient.stops[activePoint][1] });
+            this.setState({ gradient: this.props.gradient, activePoint, color: this.props.gradient.stops[activePoint][1] });
         }
     }
 
@@ -213,7 +213,7 @@ export default class LinearGradientPicker extends Component<any, any> {
         gradient.stops = gradient.stops.slice();
         gradient.stops[this.state.activePoint] = [gradient.stops[this.state.activePoint][0], cssColor];
         this.setState({ color: cssColor, gradient: gradient });
-        if(this._mouseButtonPressed) {
+        if (this._mouseButtonPressed) {
             this.props.onPreview(Brush.createFromLinearGradientObject(gradient));
         } else {
             this.props.onChangeComplete(gradient);
@@ -223,31 +223,31 @@ export default class LinearGradientPicker extends Component<any, any> {
 
     componentDidMount() {
         super.componentDidMount();
-        if(Selection.elements.length > 0) {
+        if (Selection.elements.length > 0) {
             this._elements = Selection.elements.slice();
             this._decorator = new LinearGradientDecorator(this.onGradientChangedExternaly);
             this._elements[0].addDecorator(this._decorator);
-            this._elements.forEach(e=>e.selectFrameVisible(false));
+            this._elements.forEach(e => e.selectFrameVisible(false));
             Selection.refreshSelection();
         }
     }
 
     componentWillUnmount() {
-        if(this._elements) {
+        if (this._elements) {
             this._elements[0].removeDecoratorByType(LinearGradientDecorator);
-            this._elements.forEach(e=>e.selectFrameVisible(true));
+            this._elements.forEach(e => e.selectFrameVisible(true));
             Selection.refreshSelection();
         }
     }
 
     onGradientChangedExternaly = (value, preview) => {
-        if(preview) {
+        if (preview) {
             this.props.onPreview(Brush.createFromLinearGradientObject(value));
         } else {
             this.props.onChangeComplete(value);
         }
 
-        this.setState({gradient:value});
+        this.setState({ gradient: value });
     }
 
     onGradientChanged = (value) => {
@@ -262,7 +262,9 @@ export default class LinearGradientPicker extends Component<any, any> {
 
     _onActivePointChanged = (index) => {
         this.setState({ activePoint: index, color: this.props.brush.value.stops[index][1] });
-        this._decorator.updateActivePoint(index);
+        if (this._decorator) {
+            this._decorator.updateActivePoint(index);
+        }
     }
 
     _onMouseDown = () => {
@@ -279,7 +281,7 @@ export default class LinearGradientPicker extends Component<any, any> {
 
     render() {
         return <div className="linear-gradient-picker" style={this.props.style}>
-            <LinearGradient ref="line" gradient={this.props.brush.value} onActivePointChanged={this._onActivePointChanged} onChange={this.onGradientChanged} onPreview={this.onGradientPreview}/>
+            <LinearGradient ref="line" gradient={this.props.brush.value} onActivePointChanged={this._onActivePointChanged} onChange={this.onGradientChanged} onPreview={this.onGradientPreview} />
             <ColorPicker display={true} color={this.state.color} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} onMouseDown={this._onMouseDown} presetColors={[]} />
         </div>;
     }

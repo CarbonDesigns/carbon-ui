@@ -8,9 +8,10 @@ import BrushEditor from "../BrushEditor";
 import MultiToggleEditor from "../MultiToggleEditor";
 import TextAlignEditor from "../custom/TextAlignEditor";
 import FontFamilyList from './FontFamilyList';
-import { richApp } from "../../../RichApp";
+import PropertyActions from "../../PropertyActions";
 
-import { app, Font, TextAlign, FontScript, FontWeight, FontStyle, UnderlineStyle, Brush } from "carbon-core";
+import { app, Font, Text, TextAlign, FontScript, FontWeight, FontStyle, UnderlineStyle, Brush } from "carbon-core";
+import { dispatch } from "../../../CarbonFlux";
 
 var weights = [
     { name: "Thin (100)", value: 100 },
@@ -160,13 +161,15 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
         }
 
         if (oldFont.family !== newFont.family || oldFont.weight !== newFont.weight || oldFont.style !== newFont.style) {
-            var metadata = app.getFontMetadata(newFont.family);
 
             newState.weight = newState.weight || oldState.weight;
-            newState.weight = newState.weight.set("options", this._createWeightOptions(metadata, newFont));
-
             newState.style = newState.style || oldState.style;
-            newState.style = newState.style.set("options", this._createStyleOptions(metadata, newFont));
+
+            if (newFont.family) {
+                var metadata = app.getFontMetadata(newFont.family);
+                newState.weight = newState.weight.set("options", this._createWeightOptions(metadata, newFont));
+                newState.style = newState.style.set("options", this._createStyleOptions(metadata, newFont));
+            }
         }
 
         this.setState(newState);
@@ -175,13 +178,13 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
     _createWeightOptions(metadata, font) {
         return {
             size: 3 / 4,
-            items: weights.filter(w => metadata.fonts.some(f => f.weight === w.value && f.style === font.style))
+            items: metadata ? weights.filter(w => metadata.fonts.some(f => f.weight === w.value && f.style === font.style)) : []
         }
     }
     _createStyleOptions(metadata, font) {
         var options = { items: [] };
 
-        if (metadata.fonts.some(f => f.style === FontStyle.Italic && f.weight === font.weight)) {
+        if (metadata && metadata.fonts.some(f => f.style === FontStyle.Italic && f.weight === font.weight)) {
             options.items.push(
                 { field: "style", icon: "ico-prop_italic", config: { on: FontStyle.Italic, off: FontStyle.Normal } }
             );

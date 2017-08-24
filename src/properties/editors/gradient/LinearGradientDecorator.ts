@@ -18,11 +18,13 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
     _dx: number;
     _dy: number;
     _refreshCallback: (value: any, preview: boolean) => void;
+    _setActivePointCallback: (value: number) => void;
 
-    constructor(refreshCallback) {
+    constructor(refreshCallback, setActivePointCallback) {
         super();
         this._activePoint = 0;
         this._refreshCallback = refreshCallback;
+        this._setActivePointCallback = setActivePointCallback;
     }
 
     attach(element: any) {
@@ -97,6 +99,27 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         }
     }
 
+    _snapToBorderX(newX, box, scale) {
+        if (Math.abs(newX - box.x) < 5 / scale) {
+            newX = box.x;
+        }
+        if (Math.abs(newX - box.x - box.width) < 5 / scale) {
+            newX = box.x + box.width;
+        }
+
+        return newX;
+    }
+
+    _snapToBorderY(newY, box, scale) {
+        if (Math.abs(newY - box.y) < 5 / scale) {
+            newY = box.y;
+        }
+        if (Math.abs(newY - box.y - box.height) < 5 / scale) {
+            newY = box.y + box.height;
+        }
+        return newY;
+    }
+
     mousemove(event: IMouseEventData, keys: IKeyboardState) {
         if (this._movePoint !== null) {
             let g = this._gradient;
@@ -104,6 +127,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
             let dy = this._startY - event.y;
 
             let box = this.element.getBoundingBoxGlobal();
+            let scale = Environment.view.scale();
 
             let gClone = clone(g);
             if (this._movePoint === 0) {
@@ -113,7 +137,11 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
                     let p = AngleAdjuster.adjust({ x: g.x2 * box.width, y: g.y2 * box.height }, { x: newX, y: newY });
                     newX = p.x;
                     newY = p.y;
+                } else if (!event.event.ctrlKey) {
+                    newX = this._snapToBorderX(newX, { x: 0, y: 0, width: box.width }, scale);
+                    newY = this._snapToBorderX(newY, { x: 0, y: 0, width: box.width }, scale);
                 }
+
                 gClone.x1 = newX / box.width;
                 gClone.y1 = newY / box.height;
             } else if (this._movePoint === g.stops.length - 1) {
@@ -124,6 +152,9 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
                     let p = AngleAdjuster.adjust({ x: g.x1 * box.width, y: g.y1 * box.height }, { x: newX, y: newY });
                     newX = p.x;
                     newY = p.y;
+                } else if (!event.event.ctrlKey) {
+                    newX = this._snapToBorderX(newX, {x:0, y:0, width:box.width}, scale);
+                    newY = this._snapToBorderX(newY, {x:0, y:0, width:box.width}, scale);
                 }
 
                 gClone.x2 = newX / box.width;
@@ -193,6 +224,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
                 this._dx = dx;
                 this._dy = dy;
                 this._movePoint = i;
+                this._setActivePointCallback(i);
                 this._gradient = g;
                 event.handled = true;
                 event.event.preventDefault();

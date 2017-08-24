@@ -1,7 +1,8 @@
-import { IMouseEventHandler, IKeyboardState, IMouseEventData, IDisposable, AngleAdjuster } from "carbon-core";
+import { IMouseEventHandler, IKeyboardState, IMouseEventData, IDisposable, AngleAdjuster, NearestPoint } from "carbon-core";
 import { UIElementDecorator, Environment, ILayer, IContext, IEnvironment, Invalidate, Brush, ChangeMode } from "carbon-core";
-import { LayerTypes, ILayerDrawHandlerObject} from "carbon-app";
+import { LayerTypes, ILayerDrawHandlerObject } from "carbon-app";
 import { BrushType } from "carbon-basics";
+
 
 const PointRadius = 6;
 const PointBorder = 1;
@@ -12,11 +13,11 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
     _startY: number;
     _movePoint: number = null;
     _gradient: any;
-    _originalStopCopy: any[];
-    _originalBrush: any;
-    _contextScale:number = 1;
-    _lastGradient:any;
-    _refreshCallback:(value:any, preview:boolean)=>void;
+    _contextScale: number = 1;
+    _lastGradient: any;
+    _dx: number;
+    _dy: number;
+    _refreshCallback: (value: any, preview: boolean) => void;
 
     constructor(refreshCallback) {
         super();
@@ -50,7 +51,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         context.scale(environment.contextScale, environment.contextScale);
         this._contextScale = environment.contextScale;
 
-        context.lineWidth = 5 ;
+        context.lineWidth = 5;
         context.strokeStyle = 'rgba(0,0,0,0.3)';
         let x1 = box.x + box.width * g.x1;
         let y1 = box.y + box.height * g.y1;
@@ -108,8 +109,8 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
             if (this._movePoint === 0) {
                 let newX = g.x1 * box.width - dx;
                 let newY = g.y1 * box.height - dy;
-                if(event.event.shiftKey) {
-                    let p = AngleAdjuster.adjust({x:g.x2 * box.width, y:g.y2 * box.height}, {x:newX, y:newY});
+                if (event.event.shiftKey) {
+                    let p = AngleAdjuster.adjust({ x: g.x2 * box.width, y: g.y2 * box.height }, { x: newX, y: newY });
                     newX = p.x;
                     newY = p.y;
                 }
@@ -119,8 +120,8 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
                 let newX = g.x2 * box.width - dx;
                 let newY = g.y2 * box.height - dy;
 
-                if(event.event.shiftKey) {
-                    let p = AngleAdjuster.adjust({x:g.x1 * box.width, y:g.y1 * box.height}, {x:newX, y:newY});
+                if (event.event.shiftKey) {
+                    let p = AngleAdjuster.adjust({ x: g.x1 * box.width, y: g.y1 * box.height }, { x: newX, y: newY });
                     newX = p.x;
                     newY = p.y;
                 }
@@ -128,13 +129,24 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
                 gClone.x2 = newX / box.width;
                 gClone.y2 = newY / box.height;
             } else {
-                let newX = this._originalStopCopy[0] * box.width + box.x - dx;
-                let newY = this._originalStopCopy[0] * box.height + box.y - dy;
+                let x1 = g.x1 * box.width + box.x;
+                let y1 = g.y1 * box.height + box.y;
+                let x2 = g.x2 * box.width + box.x;
+                let y2 = g.y2 * box.height + box.y;
+                let outPoint = { x: 0, y: 0 };
+                NearestPoint.onLine({ x: x1, y: y1 }, { x: x2, y: y2 }, { x: event.x - this._dx, y: event.y - this._dy }, outPoint);
+
+                var p = 0;
+                if (x2 !== x1) {
+                    p = (outPoint.x - x1) / (x2 - x1);
+                } else if (y2 !== y1) {
+                    p = (outPoint.y - y1) / (y2 - y1);
+                }
+
                 gClone.stops = gClone.stops.slice();
+                gClone.stops[this._movePoint] = [p, gClone.stops[this._movePoint][1]];
             }
 
-            //let brush = Brush.createFromLinearGradientObject(gClone);
-            //this.element.setProps({ fill: brush }, ChangeMode.Self);
             this._refreshCallback(gClone, true);
             this._lastGradient = gClone;
             Invalidate.requestInteractionOnly();
@@ -142,12 +154,13 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
     }
 
     mouseup(event: IMouseEventData, keys: IKeyboardState) {
-        if(this._movePoint !== null) {
+        if (this._movePoint !== null) {
             this._movePoint = null;
-            var brush = this.element.props.fill;
-            this._refreshCallback(this._lastGradient, false);
-            // this.element.setProps({fill:this._originalBrush}, ChangeMode.Self);
-            // this.element.setProps({fill:brush});
+            if (this._lastGradient) {
+                this._refreshCallback(this._lastGradient, false);
+                this._lastGradient = null;
+                Invalidate.requestInteractionOnly();
+            }
         }
     }
 
@@ -157,8 +170,6 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
             return;
         }
 
-        this._originalBrush = brush;
-
         var g = brush.value;
         var box = this.element.getBoundingBoxGlobal();
 
@@ -167,22 +178,26 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         let x2 = box.x + box.width * g.x2;
         let y2 = box.y + box.height * g.y2;
 
-        let r = (PointRadius+3)*this._contextScale;
+        let r = (PointRadius + 3) * this._contextScale / Environment.view.scale();
 
-        for (let i of [0, g.stops.length - 1]) {
+        for (let i = 0; i < g.stops.length; ++i) {
             var s = g.stops[i];
             var x = x1 * (1 - s[0]) + s[0] * x2;
             var y = y1 * (1 - s[0]) + s[0] * y2;
+            var dx = event.x - x;
+            var dy = event.y - y;
 
-            if ((event.x - x) * (event.x - x) + (event.y - y) * (event.y - y) < r * r) {
+            if (dx * dx + dy * dy < r * r) {
                 this._startX = event.x;
                 this._startY = event.y;
+                this._dx = dx;
+                this._dy = dy;
                 this._movePoint = i;
-                this._originalStopCopy = s.slice();
                 this._gradient = g;
                 event.handled = true;
                 event.event.preventDefault();
                 event.event.stopImmediatePropagation();
+                break;
             }
         }
     }

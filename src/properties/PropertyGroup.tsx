@@ -146,17 +146,6 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                     }))
                 });
                 return <DropDownEditor e={elem} p={prop.set('options', options)} key={key}/>;
-
-            case "state":
-                options = {
-                    items: elem.first().getStates().map(state=> {
-                        return {
-                            name  : state.name,
-                            value : state.id
-                        }
-                    })
-                };
-                return <DropDownEditor e={elem} p={prop.set('options', options)} key={key}/>;
         }
 
         return null;

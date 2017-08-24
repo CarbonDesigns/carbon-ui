@@ -1,10 +1,11 @@
 import React from "react";
+import ReactDom from "react-dom";
 import PropTypes from "prop-types";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
 import cx from "classnames";
 
-import { backend } from "carbon-api";
+import { backend, util } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
 import FlyoutButton from "../shared/FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
@@ -13,44 +14,81 @@ import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
 import SubscribeForm from "../shared/SubscribeForm";
 
+const GifActivationThreshold = .5;
+const PreloadedResources = ["features_data.gif", "features_data.png"];
 
-function FeatureSection(props) {
-    var cn = cx("feature-section", props.className);
-    return <section className={cn}>
-        <div className="feature-section__description">
-            <div className="feature-section__index">{props.index}</div>
-            <div className="feature-section__symbol">{props.symbol}</div>
-            <h1 className="feature-section__header"><CarbonLabel id={props.headerLabel} /></h1>
-            <article>
-                <div className="feature-section__details">
-                    <CarbonLabel id={props.detailsLabel} />
-                </div>
-                <ul className="feature-section__list">
-                    <li className="feature-section__list-item"><CarbonLabel id={props.p1Label} /></li>
-                    <li className="feature-section__list-item"><CarbonLabel id={props.p2Label} /></li>
-                    <li className="feature-section__list-item"><CarbonLabel id={props.p3Label} /></li>
-                </ul>
-            </article>
-        </div>
-        <div className={cx("feature-section__image", props.imageClass)}></div>
-    </section>;
+type LandingPageState = {
+    activeGifs: number;
 }
 
-export default class LandingPage extends RouteComponent<IRouteComponentProps>{
-    lastTimestamp: number = 0;
-
+export default class LandingPage extends RouteComponent<IRouteComponentProps, LandingPageState>{
     sections: any;
     backgrounds: any[];
     activeSection: any;
     currentSectionClass: any;
+    gifs: HTMLElement[] = [];
 
     static contextTypes = {
         router: PropTypes.any,
         intl: PropTypes.object
     }
 
+    constructor(props) {
+        super(props);
 
-    _onScroll = (event) => {
+        this.state = {
+            activeGifs: 0
+        };
+
+        this.onScrollComplete = util.debounce(this.onScrollComplete, 50);
+    }
+
+    componentWillMount() {
+        this.gifs.length = 0;
+
+        for (var i = 0; i < PreloadedResources.length; i++) {
+            let link = document.createElement("link");
+            link.rel = "preload";
+            link.href = backend.cdnEndpoint + "/target/res/landing/" + PreloadedResources[i];
+            link["as"] = "image";
+            document.head.appendChild(link);
+        }
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        window.addEventListener("scroll", this.onScroll)
+        this.sections = document.querySelectorAll(".feature-section");
+        this.backgrounds = [this.refs.background1, this.refs.background2, this.refs.background3];
+        for (let j = 0; j < this.backgrounds.length; ++j) {
+            this.backgrounds[j].style.opacity = 0;
+            this.backgrounds[j].style.zIndex = 10 + j;
+        }
+        this.backgrounds[0].style.opacity = 1;
+
+        this.setActiveGifs();
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.onScroll)
+    }
+
+    canHandleActions() {
+        return true;
+    }
+
+    onAction(action: AccountAction) {
+        if (action.type === "Account_LoginResponse" && action.response.ok === true) {
+            this.goToDashboard(action.response.result.companyName, action.response.result.userId);
+            return;
+        }
+    }
+
+    private registerGif = (gif: React.ReactInstance) => {
+        this.gifs.push(ReactDom.findDOMNode<HTMLElement>(gif));
+    }
+
+    private onScroll = (event) => {
         var scrollTop = document.body.scrollTop
 
         var found = false;
@@ -97,29 +135,40 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
         }
 
         //this.backgrounds[i].style.opacity = 1;
+        this.onScrollComplete();
     }
 
-    componentDidMount() {
-        super.componentDidMount();
-        window.addEventListener("scroll", this._onScroll)
-        this.sections = document.querySelectorAll(".feature-section");
-        this.backgrounds = [this.refs.background1, this.refs.background2, this.refs.background3];
-        for (let j = 0; j < this.backgrounds.length; ++j) {
-            this.backgrounds[j].style.opacity = 0;
-            this.backgrounds[j].style.zIndex = 10 + j;
+    private onScrollComplete() {
+        this.setActiveGifs();
+    }
+
+    /**
+     * Activates gifs which are visible enough. If the gif has been activated already,
+     * there is no need to reset it since it's already cached by the browser and will not "stop".
+     */
+    private setActiveGifs() {
+        let windowHeight = window.innerHeight;
+        let activeGifs = 0;
+
+        for (let i = 0; i < this.gifs.length; i++) {
+            if (this.isGifActive(i)) {
+                activeGifs = activeGifs | (1 << i);
+                continue;
+            }
+            let gif = this.gifs[i];
+            let rect = gif.getBoundingClientRect();
+            let visibleHeight = Math.min(windowHeight, rect.bottom) - Math.max(0, rect.top);
+            if (visibleHeight / (rect.bottom - rect.top) > GifActivationThreshold) {
+                activeGifs = activeGifs | (1 << i);
+            }
         }
-        this.backgrounds[0].style.opacity = 1;
+
+        this.setState({ activeGifs });
     }
 
-    canHandleActions() {
-        return true;
-    }
-
-    onAction(action: AccountAction) {
-        if (action.type === "Account_LoginResponse" && action.response.ok === true) {
-            this.goToDashboard(action.response.result.companyName, action.response.result.userId);
-            return;
-        }
+    private isGifActive(i: number) {
+        let mask = 1 << i;
+        return (this.state.activeGifs & mask) === mask;
     }
 
     // _renderSignup(){
@@ -137,7 +186,28 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
     //     </FlyoutButton>
     // }
 
-
+    private renderFeaturesSection(props) {
+        let cn = cx("feature-section", props.className);
+        let gifActive = this.isGifActive(props.index);
+        return <section className={cn}>
+            <div className="feature-section__description">
+                <div className="feature-section__index">{"0" + (props.index + 1)}</div>
+                <div className="feature-section__symbol">{props.symbol}</div>
+                <h1 className="feature-section__header"><CarbonLabel id={props.headerLabel} /></h1>
+                <article>
+                    <div className="feature-section__details">
+                        <CarbonLabel id={props.detailsLabel} />
+                    </div>
+                    <ul className="feature-section__list">
+                        <li className="feature-section__list-item"><CarbonLabel id={props.p1Label} /></li>
+                        <li className="feature-section__list-item"><CarbonLabel id={props.p2Label} /></li>
+                        <li className="feature-section__list-item"><CarbonLabel id={props.p3Label} /></li>
+                    </ul>
+                </article>
+            </div>
+            <div ref={this.registerGif} className={cx("feature-section__image", props.imageClass, { "active": gifActive })}></div>
+        </section>;
+    }
 
     render() {
         return <div className="landing-page">
@@ -178,46 +248,46 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 <div className="hero-container__logo airbnb"></div>
             </section>
 
-            <SubscribeForm mainTextLabelId="@subscribe.details"/>
+            <SubscribeForm mainTextLabelId="@subscribe.details" />
 
-            <FeatureSection
-                className="first-section"
-                index="01"
-                symbol="Li"
-                headerLabel="@libsec.header"
-                detailsLabel="@libsec.details"
-                p1Label="@libsec.p1"
-                p2Label="@libsec.p2"
-                p3Label="@libsec.p3"
-                imageClass="symbols-image"
-            />
-            <FeatureSection
-                index="02"
-                symbol="Do"
-                headerLabel="@datasec.header"
-                detailsLabel="@datasec.details"
-                p1Label="@datasec.p1"
-                p2Label="@datasec.p2"
-                p3Label="@datasec.p3"
-                imageClass="data-image"
-            />
+            {this.renderFeaturesSection({
+                className: "first-section",
+                index: 0,
+                symbol: "Li",
+                headerLabel: "@libsec.header",
+                detailsLabel: "@libsec.details",
+                p1Label: "@libsec.p1",
+                p2Label: "@libsec.p2",
+                p3Label: "@libsec.p3",
+                imageClass: "symbols-image"
+            })}
+            {this.renderFeaturesSection({
+                index: 1,
+                symbol: "Do",
+                headerLabel: "@datasec.header",
+                detailsLabel: "@datasec.details",
+                p1Label: "@datasec.p1",
+                p2Label: "@datasec.p2",
+                p3Label: "@datasec.p3",
+                imageClass: "data-image"
+            })}
 
-            <FeatureSection
-                index="03"
-                symbol="Pu"
-                headerLabel="@pusec.header"
-                detailsLabel="@pusec.details"
-                p1Label="@pusec.p1"
-                p2Label="@pusec.p2"
-                p3Label="@pusec.p3"
-                imageClass="plugins-image"
-            />
+            {this.renderFeaturesSection({
+                index: 2,
+                symbol: "Pu",
+                headerLabel: "@pusec.header",
+                detailsLabel: "@pusec.details",
+                p1Label: "@pusec.p1",
+                p2Label: "@pusec.p2",
+                p3Label: "@pusec.p3",
+                imageClass: "plugins-image"
+            })}
 
             <section className="quote-container">
                 <article><CarbonLabel id="@opensource.join" /><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
             </section>
 
-            <SubscribeForm mainTextLabelId="@subscribe.details2"/>
+            <SubscribeForm mainTextLabelId="@subscribe.details2" />
         </div>;
     }
 }

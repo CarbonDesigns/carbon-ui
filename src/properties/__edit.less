@@ -407,6 +407,7 @@
             }
             span {
                 text-transform: lowercase;
+                .f12;
             }
             &:hover, &._active {
                 i {
@@ -517,8 +518,14 @@
 
 
     .prop_checkbox {
-        padding: @prop_vpadd/2 0 @prop_vpadd 0;
         height: auto;
+
+        .prop__body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 2px 0;
+        }
 
         .panel[data-mode="widest"] & { min-height: @tile_height;}
     }

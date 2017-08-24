@@ -2,7 +2,7 @@ import React from 'react';
 import { Component, listenTo, dispatch } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'
-import { Brush, Font, app, ChangeMode, Shape, Selection } from "carbon-core";
+import { Brush, app, ChangeMode, Shape, Selection } from "carbon-core";
 import bem from '../utils/commonUtils';
 import ScrollContainer from "../shared/ScrollContainer";
 import { Gammas } from "../properties/editors/BrushGammaSelector";
@@ -77,7 +77,6 @@ interface ISwatchesPanelState {
     palettes?: any[];
     fill?: any;
     stroke?: any;
-    font?: any;
 }
 
 export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
@@ -123,8 +122,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
             palettes: swatchesStore.state.palettes,
             active: swatchesStore.state.active,
             fill: swatchesStore.state.fill,
-            stroke:  swatchesStore.state.stroke,
-            font:  swatchesStore.state.font
+            stroke:  swatchesStore.state.stroke
         });
     }
 
@@ -132,18 +130,18 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     onPropertiesUpdated() {
         //check the real selection since property store shows artboard properties when nothing is selected
         var selection = Selection.selectComposite();
-        var fillBrush, strokeBrush, font;
+        var fillBrush, strokeBrush;
 
         if (selection.elements.length) {
             var isShape = selection.elements.every(x => x instanceof Shape);
 
-            if (propertyStore.hasProperty('fill')) {
+            if (propertyStore.hasProperty('fill', false)) {
                 fillBrush = propertyStore.getPropertyValue('fill');
                 if (isShape) {
                     app.defaultFill(fillBrush, ChangeMode.Root);
                 }
             }
-            if (propertyStore.hasProperty('stroke')) {
+            if (propertyStore.hasProperty('stroke', true)) {
                 strokeBrush = propertyStore.getPropertyValue('stroke');
                 if (isShape) {
                     app.defaultStroke(strokeBrush, ChangeMode.Root);
@@ -156,15 +154,6 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         }
 
         var active = this.state.active;
-        if (propertyStore.hasProperty('font')) {
-            font = propertyStore.getPropertyValue('font');
-            if (fillBrush === Brush.Empty && strokeBrush === Brush.Empty) {
-                active = 'font';
-            }
-        }
-        else if (active === 'font') {
-            active = 'fill';
-        }
 
         var newState: ISwatchesPanelState = {
         };
@@ -177,7 +166,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         }
 
         this.setState(newState);
-        richApp.dispatch(SwatchesActions.changeActiveColors(fillBrush, strokeBrush, font));
+        richApp.dispatch(SwatchesActions.changeActiveColors(fillBrush, strokeBrush));
     };
 
 
@@ -206,11 +195,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         }
 
         var changes = {};
-        var newValue: any = brush;
-        if (this.state.active === 'font') {
-            newValue = { color: brush.value };
-        }
-        changes[this.state.active] = newValue;
+        changes[this.state.active] = brush;
 
         var selection = Selection.selectComposite();
         if (selection.elements.length) {
@@ -302,14 +287,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     }
 
     _renderCurrent() {
-        var slot_groups = {
-            main: [],
-            font: [],
-        };
-
-        ['fill', 'stroke', 'font'].map((slot_name) => {
-            var group = slot_name === 'font' ? 'font' : 'main';
-
+        var slots = ['fill', 'stroke'].map((slot_name) => {
             let slot = {
                 name: slot_name,
                 caption: null,
@@ -319,42 +297,21 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
                 active: null
             };
 
-            if (slot_name === 'font') {
-                if (!this.state.font) {
-                    return null;
-                }
-                slot.caption = (<i className={b("slot-icon", slot_name)} />);
-                var fontBrush = Brush.createFromColor(this.state.font.color);
-                slot.title = fontBrush.value;
-                slot.brush = fontBrush;
+            if ((this.state[slot_name])) {
+                slot.brush = this.state[slot_name];
                 slot.style = Brush.toCss(slot.brush);
-            }
-            else {
-                if ((this.state[slot_name])) {
-                    slot.brush = this.state[slot_name];
-                    slot.style = Brush.toCss(slot.brush);
-                    slot.title = slot.brush.value;
-                }
-                else {
-                    slot.style = { backgroundColor: 'transparent' };
-                    slot.title = '';
-                    slot.brush = Brush.Empty;
-                }
+                slot.title = slot.brush.value;
+                slot.active = this.state.active === slot_name;
+                return this._renderFlyoutSlot(slot);
             }
 
-            slot.active = this.state.active === slot_name;
-            slot_groups[group].push(slot);
+            return null;
         });
 
-
-        var main_rendered = slot_groups.main.map(this._renderFlyoutSlot);
-        var text_rendered = slot_groups.font.map(this._renderFlyoutSlot);
-
         return <div key='current' className={b("current")}>
-            <div key="main" className={b("slot-group", "main")}>
-                {main_rendered}
+            <div className={b("slot-group", "main")}>
+                {slots}
             </div>
-            <div key="text" className={b("slot-group", "text")}>{text_rendered}</div>
         </div>
     }
 

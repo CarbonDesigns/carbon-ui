@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDom from "react-dom";
 import FlyoutActions from '../FlyoutActions';
+import flyoutStore from '../FlyoutStore';
 import { dispatch } from '../CarbonFlux';
 import cx from 'classnames';
 import Antiscroll, { AntiscrollOptions } from "../external/antiscroll";
@@ -33,7 +34,7 @@ export default class ScrollContainer extends React.Component<ScrollContainerProp
         if (this._endTimer) {
             clearTimeout(this._endTimer);
         }
-        else if (!this.props.insideFlyout) {
+        else if (!this.props.insideFlyout && !flyoutStore.state.target) {
             dispatch(FlyoutActions.hide());
         }
         this._endTimer = setTimeout(this.onScrollEnded, 500);

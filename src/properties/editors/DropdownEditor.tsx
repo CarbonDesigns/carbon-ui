@@ -26,7 +26,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
         var items = this.extractOption(this.props, "items");
 
         if (typeof items === "function") {
-            items = items();
+            items = items(this.props.e);
         }
 
         if (items) {
@@ -120,7 +120,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
         var items = this.extractOption(this.props, "items");
 
         if (typeof items === "function") {
-            items = items();
+            items = items(this.props.e);
         }
 
         if (items) {

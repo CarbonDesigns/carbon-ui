@@ -1,5 +1,5 @@
 import FlyoutActions from "./FlyoutActions"
-import {handles, CarbonStore, Dispatcher} from './CarbonFlux';
+import { handles, CarbonStore, Dispatcher, dispatch } from './CarbonFlux';
 
 interface IFlyoutStoreState {
     children?:any;
@@ -26,6 +26,19 @@ export class FlyoutStore extends CarbonStore<IFlyoutStoreState> {
         // }
 
         // NOTE: target can be null, if position is specified.
+
+        if(target && this.state.target) {
+            this.setState({
+                children : null,
+                target   : null,
+                position : null,
+                onClose  : null
+            });
+
+            dispatch(FlyoutActions.show(target, children, position, onClose));
+
+            return;
+        }
 
         if (!target  &&  typeof this.state.onClose === 'function' ) {
             this.state.onClose();

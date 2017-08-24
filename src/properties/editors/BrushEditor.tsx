@@ -29,6 +29,7 @@ export default class BrushEditor extends EditorComponent<Brush> {
     render(){
         var p = this.props.p;
         var classes = cx("prop prop_colorpicker", this.widthClass(this.props.className || "prop_width-1-2"));
+        var showGradient = this.extractOption(this.props, "gradient", false);
         return <div className={classes}>
             <div className="prop__name"><FormattedHTMLMessage id={this.displayName()}/></div>
             <FlyoutButton
@@ -42,6 +43,7 @@ export default class BrushEditor extends EditorComponent<Brush> {
                 <BrushSelector
                     className="flyout__content" ref="selector"
                     brush={this.propertyValue()}
+                    hasGradient={showGradient}
                     onSelected={this.setValueByCommand}
                     onPreview={this.previewValue.bind(this)}
                     onCancelled={this.revertChanges}

@@ -53,6 +53,7 @@ class SwatchesSlot extends Component<any, any> {
             }}>
             <BrushSelector className="flyout__content" ref="selector"
                 brush={this.props.slot.brush}
+                hasGradient={this.props.hasGradient}
                 onSelected={(brush) => {
                     this.props.colorSelected(brush.value, true, false);
                     this._lastValue = brush.value;
@@ -77,6 +78,7 @@ interface ISwatchesPanelState {
     palettes?: any[];
     fill?: any;
     stroke?: any;
+    hasGradient?:boolean;
 }
 
 export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
@@ -131,12 +133,15 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         //check the real selection since property store shows artboard properties when nothing is selected
         var selection = Selection.selectComposite();
         var fillBrush, strokeBrush;
-
+        let hasGradient = false;
         if (selection.elements.length) {
             var isShape = selection.elements.every(x => x instanceof Shape);
 
+            hasGradient = propertyStore.getPropertyOptions('fill').gradient || false;
+
             if (propertyStore.hasProperty('fill', false)) {
                 fillBrush = propertyStore.getPropertyValue('fill');
+
                 if (isShape) {
                     app.defaultFill(fillBrush, ChangeMode.Root);
                 }
@@ -156,6 +161,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         var active = this.state.active;
 
         var newState: ISwatchesPanelState = {
+            hasGradient:hasGradient
         };
 
         if (!this.state.recentColors || this.state.recentColors.colors !== app.recentColors()) {
@@ -201,9 +207,9 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         if (selection.elements.length) {
             // selection.updateDisplayProps(changes);
             if(preview) {
-                dispatch(PropertyActions.preview(changes));
+                richApp.Dispatcher.dispatchAsync(PropertyActions.preview(changes));
             } else {
-                dispatch(PropertyActions.changed(changes));
+                richApp.Dispatcher.dispatchAsync(PropertyActions.changed(changes));
             }
         }
         else {
@@ -261,7 +267,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     };
 
     _renderSlot = (slot) => {
-        var caption = slot.caption == null
+        var caption = !slot.caption
             ? null
             : (<div className={b("slot-caption")}>{slot.caption}</div>);
 
@@ -280,6 +286,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     _renderFlyoutSlot = (slot) => {
         return <SwatchesSlot
             key={slot.name}
+            hasGradient={slot.name === 'fill' && this.state.hasGradient}
             renderContent={this._renderSlot.bind(this, slot)}
             slot={slot}
             colorSelected={this._colorSelected.bind(this)}
@@ -316,7 +323,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     }
 
     onKeyPress = (event) => {
-        if (event.keyCode == 120) {
+        if (event.keyCode === 120) {
             if (this.state.active === 'fill') {
                 richApp.dispatch(SwatchesActions.changeActiveSlot('stroke'));
             } else {
@@ -338,7 +345,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     render() {
         return (
             <Panel ref="panel" {...this.props} header="Swatches" id="swatches-panel">
-                {(this.state != null) ?
+                {(this.state) ?
                     <style key='style'>{`.swatches-panel__swatch {width: ${this.state.swatch_width};}`}</style> : null}
                 {this._renderCurrent()}
                 {this._renderPalette()}

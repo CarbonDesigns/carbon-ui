@@ -66,7 +66,7 @@ export default class BrushTabs extends Component<any, any> {
             brush = Brush.createFromColor(color.hex);
             color = color.hex;
         }
-       // this.setState({ color: color });
+        // this.setState({ color: color });
         this.selectBrush(brush);
     };
 
@@ -81,7 +81,7 @@ export default class BrushTabs extends Component<any, any> {
     }
 
     onTabChanged = (index) => {
-        if(index === "1") {
+        if (index === "1") {
             this.selectBrush(Brush.createFromColor(this.props.brush.value.stops[0][1]));
         } else {
             var color1 = this.props.brush.value;
@@ -95,20 +95,23 @@ export default class BrushTabs extends Component<any, any> {
         let tabId = "1";
 
         var brush = this.props.brush;
-        if(!Brush.isValid(brush)) {
+        if (!Brush.isValid(brush)) {
             brush = Brush.Empty;
         }
-
-        if(brush.type === BrushType.lineargradient) {
-            tabId = "2";
+        let tabs =[
+            [<i key="ico" className="ico-colorpicker-solid" />, <FormattedHTMLMessage key="text" id="Solid" />]
+        ]
+        if (this.props.hasGradient) {
+            if (brush.type === BrushType.lineargradient) {
+                tabId = "2";
+            }
+            tabs.push( [<i key="ico" className="ico-colorpicker-gradient" />, <FormattedHTMLMessage key="text" id="Gradient" />]);
         }
-        {/*[<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedHTMLMessage key="text" id="Swatches"/>],*/}
+
+        {/*[<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedHTMLMessage key="text" id="Swatches"/>],*/ }
         return <TabContainer currentTabId={tabId} onTabChanged={this.onTabChanged}>
             <TabTabs
-                items={[
-                    [<i key="ico" className="ico-colorpicker-solid" />, <FormattedHTMLMessage key="text" id="Solid" />],
-                    [<i key="ico" className="ico-colorpicker-gradient" />, <FormattedHTMLMessage key="text" id="Gradient" />]
-                ]}
+                items={tabs}
             />
 
             <TabArea className="gui-pages">

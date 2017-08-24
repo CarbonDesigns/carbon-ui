@@ -42,7 +42,7 @@ export default class BrushSelector extends Component<any, any> {
     render(){
         var classes = cx("colorpicker-popup", this.props.className);
         return <div className={classes} onKeyDown={this.onKeyDown} tabIndex={1}>
-            <BrushTabs brush={this.props.brush} onSelected={this.selectBrush} onPreview={this.props.onPreview}/>
+            <BrushTabs brush={this.props.brush} onSelected={this.selectBrush} hasGradient={this.props.hasGradient} onPreview={this.props.onPreview}/>
             <footer>
                 <div className="swatches__color-input">
                     <i style={this.state.initialStyle}></i>

@@ -110,6 +110,9 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
     componentWillUnmount() {
         super.componentWillUnmount();
         this._mounted = false;
+        if(this.state.open) {
+            this.setState({open:false});
+        }
     }
 
     componentDidUpdate(prevProps, prevState: Readonly<FlyoutButtonState>){
@@ -124,6 +127,7 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
             this.props.onClosed && this.props.onClosed();
         }
     }
+
     renderContent() {
         if (this.props.content) {
             return this.props.content;

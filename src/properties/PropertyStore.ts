@@ -1,29 +1,29 @@
-import {handles, CarbonStore, dispatch} from "../CarbonFlux";
+import { handles, CarbonStore, dispatch } from "../CarbonFlux";
 import Immutable from "immutable";
 import CarbonActions from "../CarbonActions";
 import PropertyActions, { PropertyAction, PropertiesTab } from "./PropertyActions";
 
-import {PropertyTracker, app, NullPage, Selection, CompositeElement, PropertyMetadata, ChangeMode} from "carbon-core";
+import { PropertyTracker, app, NullPage, Selection, CompositeElement, PropertyMetadata, ChangeMode } from "carbon-core";
 
 interface IPropertyStoreState {
     groups?: Immutable.List<any>;
-    initialized?:boolean;
-    nameProperty?:any;
-    lockedProperty?:any;
-    valueMap?:object;
-    visibilityMap: {[name: string]: boolean};
-    descriptorMap?:object;
-    pathMap?:object;
-    selection?:any;
+    initialized?: boolean;
+    nameProperty?: any;
+    lockedProperty?: any;
+    valueMap?: object;
+    visibilityMap: { [name: string]: boolean };
+    descriptorMap?: object;
+    pathMap?: object;
+    selection?: any;
     tabId: PropertiesTab;
 }
 
 class PropertyStore extends CarbonStore<IPropertyStoreState> {
-    constructor(dispatcher){
+    constructor(dispatcher) {
         super(dispatcher);
-        this.state={
+        this.state = {
             groups: Immutable.List(),
-            initialized:false,
+            initialized: false,
             nameProperty: null,
             lockedProperty: null,
             valueMap: {},
@@ -35,19 +35,19 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         };
     }
 
-    private app:any;
-    private _emptySelection:any;
-    private _timerId:any;
+    private app: any;
+    private _emptySelection: any;
+    private _timerId: any;
 
-    hasProperty(propertyName, mustBeVisible: boolean){
+    hasProperty(propertyName, mustBeVisible: boolean) {
         var exists = this.state.valueMap.hasOwnProperty(propertyName);
-        if (exists && mustBeVisible && this.state.visibilityMap[propertyName] === false){
+        if (exists && mustBeVisible && this.state.visibilityMap[propertyName] === false) {
             exists = false;
         }
         return exists;
     }
 
-    getPropertyValue(propertyName){
+    getPropertyValue(propertyName) {
         return this.state.valueMap[propertyName];
     }
 
@@ -61,24 +61,36 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         }
     }
 
+    getPropertyOptions(propertyName) {
+        let descriptor = this.state.descriptorMap[propertyName];
+        if (!descriptor) {
+            return {}
+        }
+        let options = descriptor.options;
+        if (options) {
+            return options;
+        }
+        return {};
+    }
+
     @handles(CarbonActions.loaded)
-    onLoaded({app}){
+    onLoaded({ app }) {
         this.app = app;
         this._initEmptySelection(app.activePage.getActiveArtboard());
         PropertyTracker.propertyChanged.bind(this, this._onPropsChanged);
-        this.onElementSelected({selection: this._emptySelection});
+        this.onElementSelected({ selection: this._emptySelection });
     }
 
     @handles(CarbonActions.pageChanged)
-    onPageChanged({newPage}){
-        if (!(newPage === NullPage)){
+    onPageChanged({ newPage }) {
+        if (!(newPage === NullPage)) {
             this._initEmptySelection(newPage.getActiveArtboard());
-            this.onElementSelected({selection: this._emptySelection});
+            this.onElementSelected({ selection: this._emptySelection });
         }
     }
 
     @handles(CarbonActions.activeArtboardChanged)
-    onActiveArtboardChanged({newArtboard}){
+    onActiveArtboardChanged({ newArtboard }) {
         this._initEmptySelection(newArtboard);
 
         //two events can happen one after another - artboard changed and new selection made on the new artboard
@@ -87,19 +99,19 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     }
 
     @handles(CarbonActions.elementSelected)
-    onElementSelected({selection}){
-        if (this._timerId){
+    onElementSelected({ selection }) {
+        if (this._timerId) {
             clearTimeout(this._timerId);
             this._timerId = 0;
         }
 
-        if (selection.count() === 0){
+        if (selection.count() === 0) {
             selection = this._emptySelection;
         }
 
         var groups = selection.createPropertyGroups();
 
-        var newState: Partial<IPropertyStoreState> = {selection: selection, initialized:true, descriptorMap: {}, valueMap: {}, pathMap: {}, visibilityMap: {}, tabId: "1"};
+        var newState: Partial<IPropertyStoreState> = { selection: selection, initialized: true, descriptorMap: {}, valueMap: {}, pathMap: {}, visibilityMap: {}, tabId: "1" };
         newState.nameProperty = this._createPropertyMetadata(newState, "name");
         newState.lockedProperty = this._createPropertyMetadata(newState, "locked");
         this._setGroups(newState, groups);
@@ -109,72 +121,72 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     }
 
     @handles(PropertyActions.changed)
-    onChanged({changes}){
+    onChanged({ changes }) {
         this.state.selection.updateDisplayProps(changes);
     }
 
     @handles(PropertyActions.patched)
-    onPatched({changeType, propertyName, value}){
+    onPatched({ changeType, propertyName, value }) {
         this.state.selection.patchDisplayProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
     @handles(PropertyActions.cancelEdit)
-    onCancelEdit(){
+    onCancelEdit() {
         this.state.selection.cancelEdit(this.state.selection.elements);
     }
 
     @handles(PropertyActions.previewPatch)
-    previewPatchProperty({changeType, propertyName, value}){
+    previewPatchProperty({ changeType, propertyName, value }) {
         this.state.selection.previewPatchDisplayProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
     @handles(PropertyActions.changedExternally)
-    onChangedExternally({changes}){
+    onChangedExternally({ changes }) {
         this._updateState(changes);
     }
 
     @handles(PropertyActions.preview)
-    previewProperty({changes}){
+    previewProperty({ changes }) {
         this.state.selection.previewDisplayProps(changes);
     }
 
-    _onPropsChanged(element, newProps){
-        if (element === this.state.selection){
+    _onPropsChanged(element, newProps) {
+        if (element === this.state.selection) {
             var dispatcher = this.getDispatcher();
-            if (dispatcher.isDispatching()){
+            if (dispatcher.isDispatching()) {
                 this._updateState(newProps);
             }
-            else{
+            else {
                 dispatch(PropertyActions.changedExternally(newProps))
             }
         }
     }
 
-    _updateState(newProps){
+    _updateState(newProps) {
         var groups = this._updateValues(newProps, this.state);
         this.state.groups = groups;
         groups = this._updateVisibility(this.state);
 
-        var newState: Partial<IPropertyStoreState> = {groups: groups};
-        if (newProps.hasOwnProperty("name")){
+        var newState: Partial<IPropertyStoreState> = { groups: groups };
+        if (newProps.hasOwnProperty("name")) {
             newState.nameProperty = this.state.nameProperty.set("value", newProps.name);
         }
-        if (newProps.hasOwnProperty("locked")){
+        if (newProps.hasOwnProperty("locked")) {
             newState.lockedProperty = this.state.lockedProperty.set("value", newProps.locked);
         }
         this.setState(newState);
     }
 
-    _updateValues(changes, state = this.state){
+    _updateValues(changes, state = this.state) {
         var groups = state.groups;
         var affectedProperties = this.state.selection.getAffectedDisplayProperties(changes);
 
         var mutators = [];
-        for (let i = 0; i < affectedProperties.length; ++i){
+        for (let i = 0; i < affectedProperties.length; ++i) {
             let propertyName = affectedProperties[i]
             var path = state.pathMap[propertyName];
             var descriptor = state.descriptorMap[propertyName];
-            if (path && descriptor){
+            if (path && descriptor) {
                 var value = this.state.selection.getDisplayPropValue(propertyName, descriptor);
                 mutators.push(path, value);
 
@@ -182,11 +194,11 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
             }
         }
 
-        if (mutators.length){
+        if (mutators.length) {
             groups = state.groups.withMutations(groups => {
-                for (let i = 0; i < mutators.length; i+=2){
+                for (let i = 0; i < mutators.length; i += 2) {
                     var path = mutators[i];
-                    var value = mutators[i+1];
+                    var value = mutators[i + 1];
                     groups.updateIn(path, p => p.set("value", value));
                 }
             });
@@ -195,25 +207,25 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         return groups;
     }
 
-    _updateVisibility(state){
+    _updateVisibility(state) {
         var mutators = null;
         var groups = state.groups;
         state.visibilityMap = state.selection && state.selection.prepareDisplayPropsVisibility();
-        if (state.visibilityMap){
-            for (let propertyName in state.visibilityMap){
+        if (state.visibilityMap) {
+            for (let propertyName in state.visibilityMap) {
                 var path = state.pathMap[propertyName];
-                if (path){
+                if (path) {
                     mutators = mutators || [];
                     mutators.push(path, state.visibilityMap[propertyName]);
                 }
             }
         }
 
-        if (mutators){
+        if (mutators) {
             groups = state.groups.withMutations(groups => {
-                for (let i = 0; i < mutators.length; i+=2){
+                for (let i = 0; i < mutators.length; i += 2) {
                     var path = mutators[i];
-                    var value = mutators[i+1];
+                    var value = mutators[i + 1];
                     groups.updateIn(path, p => p.set("visible", value));
                 }
             });
@@ -222,31 +234,31 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         return groups;
     }
 
-    _setGroups(state, groupDefinitions){
+    _setGroups(state, groupDefinitions) {
         state.groups = Immutable.List().withMutations(groups => {
-            for (var i = 0; i < groupDefinitions.length; i++){
+            for (var i = 0; i < groupDefinitions.length; i++) {
                 var definition = groupDefinitions[i];
                 var properties = Immutable.List().withMutations(props => {
                     for (var j = 0; j < definition.properties.length; j++) {
                         var propertyName = definition.properties[j];
                         var property = this._createPropertyMetadata(state, propertyName, i, j);
-                        if(property) {
+                        if (property) {
                             props.push(property);
                         }
                     }
                 });
 
-                var group = Immutable.Map(Object.assign({}, definition, {properties}));
+                var group = Immutable.Map(Object.assign({}, definition, { properties }));
                 groups.push(group);
             }
         });
     }
 
-    _createPropertyMetadata(state, propertyName, groupIndex?, propIndex?) : object | null {
+    _createPropertyMetadata(state, propertyName, groupIndex?, propIndex?): object | null {
         var descriptor = state.selection.findPropertyDescriptor(propertyName);
         var metadata = null;
 
-        if (descriptor){
+        if (descriptor) {
             var value = state.selection.getDisplayPropValue(propertyName, descriptor);
 
             metadata = Immutable.Map({
@@ -263,12 +275,12 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         return metadata;
     }
 
-    _initEmptySelection(artboard) : void {
-        if (this._emptySelection){
+    _initEmptySelection(artboard): void {
+        if (this._emptySelection) {
             this._emptySelection.dispose();
         }
         this._emptySelection = new CompositeElement();
-        if (artboard){
+        if (artboard) {
             this._emptySelection.register(artboard);
         }
     }

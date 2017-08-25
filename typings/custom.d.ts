@@ -50,6 +50,11 @@ declare module "react-color/lib/components/common/Alpha"{
     export = Alpha;
 }
 declare module "react-color/lib/components/common/Saturation"{
+    // class SaturationType extends React.Component<any, any> {
+    //     new(props);
+    //     protected handleMouseDown:any;
+    //     protected handleMouseUp:any;
+    // }
     var Saturation: any;
     export = Saturation;
 }

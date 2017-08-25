@@ -205,7 +205,6 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
 
         var selection = Selection.selectComposite();
         if (selection.elements.length) {
-            // selection.updateDisplayProps(changes);
             if(preview) {
                 richApp.Dispatcher.dispatchAsync(PropertyActions.preview(changes));
             } else {

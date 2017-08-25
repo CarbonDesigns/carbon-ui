@@ -1594,7 +1594,7 @@
     z-index: @z_prop3;
 
     border: 2px solid @sel_color;
-    height: 330px;
+    min-height: 350px;
     width: 280px;
     overflow: hidden;
 
@@ -1706,4 +1706,48 @@
     .panel[data-mode="widest"] & {
         max-width: 25%;
     }
+}
+
+.linear-gradient-picker {
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+
+@lineGradientLineHeight:16px;
+
+.linear-gradient {
+    position: relative;
+    top:5px;
+    width:255px;
+    left:10px;
+    height: @lineGradientLineHeight;
+    background-color:red;
+    overflow: hidden;
+}
+
+.linear-gradient__point {
+    width:@lineGradientLineHeight;
+    border-radius:@lineGradientLineHeight/2;
+    height: @lineGradientLineHeight;
+    margin-left: -@lineGradientLineHeight/2;
+    border: 2px solid white;
+    position:absolute;
+    pointer-events: none;
+    z-index: 10;
+    background-color:white;
+    &:not(.active) {
+        border: 2px solid rgba(10,10,10, 0.4)
+    }
+}
+
+.linear-gradient__canvas {
+    z-index: 9;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Component, listenTo } from "../CarbonFlux";
+import { Component, listenTo, dispatch } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'
 import { Brush, app, ChangeMode, Shape, Selection } from "carbon-core";
@@ -20,6 +20,19 @@ function b(elem, mods?, mix?) {
     return bem("swatches-panel", elem, mods, mix)
 }
 
+function colorToBrush(color) {
+    let brush;
+
+    if(color === 'transparent') {
+        brush = Brush.Empty;
+    } else if(color.stops) {
+        brush = Brush.createFromLinearGradientObject(color);
+    } else {
+        brush = Brush.createFromColor(color);
+    }
+    return brush;
+}
+
 class SwatchesSlot extends Component<any, any> {
     [name: string]: any;
 
@@ -34,18 +47,24 @@ class SwatchesSlot extends Component<any, any> {
             onClosed={() => {
                 delete this._initialValue;
                 if (this._lastValue) {
-                    this.props.colorSelected(this._lastValue);
+                    this.props.colorSelected(this._lastValue, false, false);
                     delete this._lastValue;
                 }
             }}>
             <BrushSelector className="flyout__content" ref="selector"
                 brush={this.props.slot.brush}
+                hasGradient={this.props.hasGradient}
                 onSelected={(brush) => {
-                    this.props.colorSelected(brush.value, true);
+                    this.props.colorSelected(brush.value, true, false);
                     this._lastValue = brush.value;
                 }}
+                onPreview={
+                    (brush)=>{
+                        this.props.colorSelected(brush.value, true, true);
+                    }
+                }
                 onCancelled={() => {
-                    this.props.colorSelected(this._initialValue.value, true);
+                    this.props.colorSelected(this._initialValue.value, true, false);
                     delete this._lastValue;
                 }} />
         </FlyoutButton>
@@ -59,6 +78,7 @@ interface ISwatchesPanelState {
     palettes?: any[];
     fill?: any;
     stroke?: any;
+    hasGradient?:boolean;
 }
 
 export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
@@ -70,7 +90,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
             recentColors: { name: '', colors: [] },
             palettes: []
         };
-        if (this.refs.panel != null) {
+        if (this.refs.panel) {
             var node = ReactDom.findDOMNode(this.refs.panel);
             state.swatch_width = this._getSwatchWidth(node);
         }
@@ -113,12 +133,15 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         //check the real selection since property store shows artboard properties when nothing is selected
         var selection = Selection.selectComposite();
         var fillBrush, strokeBrush;
-
+        let hasGradient = false;
         if (selection.elements.length) {
             var isShape = selection.elements.every(x => x instanceof Shape);
 
+            hasGradient = propertyStore.getPropertyOptions('fill').gradient || false;
+
             if (propertyStore.hasProperty('fill', false)) {
                 fillBrush = propertyStore.getPropertyValue('fill');
+
                 if (isShape) {
                     app.defaultFill(fillBrush, ChangeMode.Root);
                 }
@@ -138,6 +161,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         var active = this.state.active;
 
         var newState: ISwatchesPanelState = {
+            hasGradient:hasGradient
         };
 
         if (!this.state.recentColors || this.state.recentColors.colors !== app.recentColors()) {
@@ -161,8 +185,9 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         this._updateSwatchWidth();
     }
 
-    _colorSelected(color, norecent) {
-        var brush = color === 'transparent' ? Brush.Empty : Brush.createFromColor(color);
+    _colorSelected(color, norecent, preview) {
+        var brush = colorToBrush(color);
+
 
         if (this.state.active === 'fill') {
             app.defaultFill(brush);
@@ -180,7 +205,11 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
 
         var selection = Selection.selectComposite();
         if (selection.elements.length) {
-            selection.updateDisplayProps(changes);
+            if(preview) {
+                richApp.Dispatcher.dispatchAsync(PropertyActions.preview(changes));
+            } else {
+                richApp.Dispatcher.dispatchAsync(PropertyActions.changed(changes));
+            }
         }
         else {
             //since properties are not updated, trigger manual update
@@ -189,8 +218,8 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     }
 
     _renderPaletteItem(color, ind, mods, norecent?) {
-        var style = { backgroundColor: color };
-        return <div key={`${ind}_${color}`} title={color} className={b("swatch", mods)} onClick={() => this._colorSelected(color, norecent)}>
+        var style = Brush.toCss(colorToBrush(color));
+        return <div key={`${ind}_${color}`} title={color} className={b("swatch", mods)} onClick={() => this._colorSelected(color, norecent, false)}>
             <div className={b("swatch-color")} style={style}></div>
         </div>
     }
@@ -237,7 +266,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     };
 
     _renderSlot = (slot) => {
-        var caption = slot.caption == null
+        var caption = !slot.caption
             ? null
             : (<div className={b("slot-caption")}>{slot.caption}</div>);
 
@@ -256,6 +285,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     _renderFlyoutSlot = (slot) => {
         return <SwatchesSlot
             key={slot.name}
+            hasGradient={slot.name === 'fill' && this.state.hasGradient}
             renderContent={this._renderSlot.bind(this, slot)}
             slot={slot}
             colorSelected={this._colorSelected.bind(this)}
@@ -292,7 +322,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     }
 
     onKeyPress = (event) => {
-        if (event.keyCode == 120) {
+        if (event.keyCode === 120) {
             if (this.state.active === 'fill') {
                 richApp.dispatch(SwatchesActions.changeActiveSlot('stroke'));
             } else {
@@ -314,7 +344,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     render() {
         return (
             <Panel ref="panel" {...this.props} header="Swatches" id="swatches-panel">
-                {(this.state != null) ?
+                {(this.state) ?
                     <style key='style'>{`.swatches-panel__swatch {width: ${this.state.swatch_width};}`}</style> : null}
                 {this._renderCurrent()}
                 {this._renderPalette()}

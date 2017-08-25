@@ -5,7 +5,7 @@ import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./stencils/StencilsActions";
 import { app, Symbol, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
-import { ImageSource, ImageSourceType, IPage, ILayer } from "carbon-core";
+import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection } from "carbon-core";
 import { IToolboxStore, StencilInfo } from "./LibraryDefs";
 
 interface IInteraction {
@@ -105,10 +105,14 @@ export class Toolbox extends CarbonStore<IToolboxState>{
     };
     onDragEnter = (event, interaction: IInteraction) => {
         event.dragEnter.classList.add("dragover"); //#viewport
+        app.activePage.add(interaction.placeholder, ChangeMode.Self);
+        Selection.makeSelection([interaction.placeholder]);
         Environment.controller.beginDragElement(event, interaction.placeholder, interaction.dropPromise);
     };
     onDragLeave = (event, interaction: IInteraction) => {
         event.dragLeave.classList.remove("dragover"); //#viewport
+        app.activePage.remove(interaction.placeholder, ChangeMode.Self);
+        (interaction.placeholder as any).runtimeProps.ctxl = 2;
         interaction.rejectDrop(event);
         interaction.dropPromise = new Promise((resolve, reject) => {
             interaction.resolveDrop = resolve;
@@ -117,6 +121,7 @@ export class Toolbox extends CarbonStore<IToolboxState>{
         //analytics.event("Toolbox", "Drag-out", interaction.templateType + "/" + interaction.templateId);
     };
     onDrop = (event: MouseEvent, interaction: IInteraction) => {
+        app.activePage.remove(interaction.placeholder, ChangeMode.Self);
         interaction.dropElement.classList.remove("dragover"); //#viewport
 
         interaction.dropPromise.then(() => this._onElementAdded(interaction.templateType));

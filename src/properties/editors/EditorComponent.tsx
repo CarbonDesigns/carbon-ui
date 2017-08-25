@@ -30,7 +30,7 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
 
         this.init(props);
 
-        this.previewValue = util.throttle(this.previewValue, 100);
+        this.previewValue = util.debounce(this.previewValue, 100);
     }
     init(props){
         this._noPreview = this.extractOption(props, "noPreview", false);

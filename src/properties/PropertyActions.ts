@@ -1,3 +1,10 @@
+export type PropertiesTab =
+	"1" | //properties
+	"2"; //toolbox groups
+
+export type PropertyAction =
+	{ type: "Properties_ChangeTab", tabId: PropertiesTab };
+
 export default {
 	changed: (changes, async = false) => {
 		return {

@@ -25,8 +25,8 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
     private _noPreview: boolean;
     private _setValueTimer: number;
 
-    constructor(props){
-        super(props);
+    constructor(props, context?){
+        super(props, context);
 
         this.init(props);
 
@@ -40,7 +40,7 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         return props.p.get("value");
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps, nextContext?){
         this.init(nextProps);
     }
 

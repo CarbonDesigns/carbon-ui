@@ -5,15 +5,17 @@ import {richApp} from "../../../RichApp";
 import {FormattedMessage} from "react-intl";
 import StringEditor from "../StringEditor";
 import DropdownEditor from "../DropdownEditor";
-import {PropertyMetadata, Symbol, Artboard, StateBoard} from "carbon-core";
+import { PropertyMetadata, Symbol, Artboard, StateBoard, ArtboardState } from "carbon-core";
 import Immutable from "immutable";
 import EditorComponent from "../EditorComponent";
 import propertyStore from "../../PropertyStore";
-import AddButton from '../AddButton';
 
 import {GuiInlineLabel, GuiDropDown, GuiButton} from "../../../shared/ui/GuiComponents";
+import AddButton from "../../../shared/ui/AddButton";
 // import bem from '../../../utils/commonUtils';
 
+type StateList = new (props) => EditableList<ArtboardState>;
+const StateList = EditableList as StateList;
 
 class StateItem extends Component<any, any> {
     _selectState = ()=>{
@@ -85,18 +87,26 @@ export default class CustomPropertiesEditor extends EditorComponent<any, any, an
         }
     }
 
-    _onRename=(newName, item)=>{
-        this.state.artboard._recorder.renameState(item.id, newName);
+    _onRename=(newName, state: ArtboardState)=>{
+        this.state.artboard._recorder.renameState(state.id, newName);
         this.setState({version:this.state.version +1});
     }
 
-    _onDelete=(item)=>{
-        this.state.artboard._recorder.removeStateById(item.id);
+    _onDelete=(state: ArtboardState)=>{
+        this.state.artboard._recorder.removeStateById(state.id);
         this.setState({version:this.state.version +1});
     }
 
-    _canDelete(item){
-        return item.id !== 'default';
+    _canDelete(state: ArtboardState){
+        return state.id !== 'default';
+    }
+
+    private stateId(state: ArtboardState) {
+        return state.id;
+    }
+
+    private stateName(state: ArtboardState) {
+        return state.name;
     }
 
     render() {
@@ -109,8 +119,7 @@ export default class CustomPropertiesEditor extends EditorComponent<any, any, an
         }
         return (
             <div key={"state_editor_"+this.state.artboard.id()} className="state-editor">
-                <EditableList
-                    items={states.slice()}
+                <StateList data={states} idGetter={this.stateId} nameGetter={this.stateName}
                     onRename={this._onRename}
                     onDelete={this._onDelete}
                     canDelete={this._canDelete}

@@ -16,6 +16,7 @@ import { MarkupLine } from "../shared/ui/Markup";
 import LayerItem from "./LayerItem";
 import layersStore, { LayerNode, LayersStoreState } from "./LayersStore";
 import dragController from "./LayersDragController";
+import BackButton from "../shared/ui/BackButton";
 
 type VirtualLayersList = new (props) => VirtualList<LayerNode>;
 const VirtualLayersList = VirtualList as VirtualLayersList;
@@ -131,7 +132,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         }
 
         return <MarkupLine className="layers-back__button">
-            <div onClick={this.goBack}><u>← {artboard.name()} </u></div>
+            <BackButton onClick={this.goBack} caption={artboard.name()} translate={false}/>
         </MarkupLine>;
     }
 

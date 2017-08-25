@@ -81,6 +81,12 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                     action.parent.setProps({ toolboxConfigId: null });
                 }
                 return;
+            case "Carbon_ResourcePageChanged":
+                if (action.page === this.state.currentPage) {
+                    this.setState({ dirtyConfig: true, changedId: null });
+                    action.page.setProps({ toolboxConfigId: null });
+                }
+                return;
             case "Carbon_AppUpdated":
                 this.loadInitialConfig();
                 return;

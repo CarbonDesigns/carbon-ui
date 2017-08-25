@@ -263,6 +263,11 @@ export default
         "@repeater.copiesX": "H copies", //
         "@repeater.copiesY": "V copies", //
 
+        "@page.defaultToolboxGroup": "My Symbols",
+        "@page.newToolboxGroup": "Add group",
+        "@page.toolboxGroup": "Group",
+        "@page.manageGroups": "Edit groups...",
+
         "New board": "New board", //
         "New page": "New page", //
         "States": "States",
@@ -601,7 +606,7 @@ export default
         "@send.backward": "Send Backward",
         "@flatten": "Flatten",
 
-        "@back": "back",
+        "@back": "Go back",
 
         "@logout": "Log Out",
 

@@ -1,5 +1,5 @@
 import { app, IApp } from "carbon-core";
-import CarbonActions from '../../CarbonActions';
+import CarbonActions, { CarbonAction } from '../../CarbonActions';
 import { handles, CarbonStore } from "../../CarbonFlux";
 import Toolbox from "../Toolbox";
 import { IToolboxStore, StencilInfo } from "../LibraryDefs";
@@ -34,7 +34,7 @@ class CustomCatalogStore extends CarbonStore<CustomCatalogStoreState> implements
         app.dataManager.generateForSelection();
     }
 
-    onAction(action: DataAction) {
+    onAction(action: DataAction | CarbonAction) {
         super.onAction(action);
 
         switch (action.type) {
@@ -47,6 +47,11 @@ class CustomCatalogStore extends CarbonStore<CustomCatalogStoreState> implements
             case "Data_CancelCatalog":
                 this.onCancel();
                 return;
+            case "Carbon_PropsChanged":
+                if (action.element === this._app && action.props.dataProviders !== undefined) {
+                    this._updateState();
+                }
+                return;
         }
     }
 
@@ -56,13 +61,6 @@ class CustomCatalogStore extends CarbonStore<CustomCatalogStoreState> implements
         this._app.enablePropsTracking();
 
         this._updateState();
-    }
-
-    @handles(CarbonActions.propsChanged)
-    _onPropsChanged({ element, props }) {
-        if (element === this._app && props.dataProviders !== undefined) {
-            this._updateState();
-        }
     }
 
     private onAddNew() {

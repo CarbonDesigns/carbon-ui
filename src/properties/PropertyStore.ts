@@ -1,7 +1,7 @@
 import { handles, CarbonStore, dispatch } from "../CarbonFlux";
 import Immutable from "immutable";
 import CarbonActions from "../CarbonActions";
-import PropertyActions from "./PropertyActions";
+import PropertyActions, { PropertyAction, PropertiesTab } from "./PropertyActions";
 
 import { PropertyTracker, app, NullPage, Selection, CompositeElement, PropertyMetadata, ChangeMode } from "carbon-core";
 
@@ -15,6 +15,7 @@ interface IPropertyStoreState {
     descriptorMap?: object;
     pathMap?: object;
     selection?: any;
+    tabId: PropertiesTab;
 }
 
 class PropertyStore extends CarbonStore<IPropertyStoreState> {
@@ -29,7 +30,8 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
             visibilityMap: {},
             descriptorMap: {},
             pathMap: {},
-            selection: null
+            selection: null,
+            tabId: "1"
         };
     }
 
@@ -47,6 +49,16 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
 
     getPropertyValue(propertyName) {
         return this.state.valueMap[propertyName];
+    }
+
+    onAction(action: PropertyAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Properties_ChangeTab":
+                this.setState({ tabId: action.tabId });
+                return;
+        }
     }
 
     getPropertyOptions(propertyName) {
@@ -99,7 +111,7 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
 
         var groups = selection.createPropertyGroups();
 
-        var newState: IPropertyStoreState = { selection: selection, initialized: true, descriptorMap: {}, valueMap: {}, pathMap: {}, visibilityMap: {} };
+        var newState: Partial<IPropertyStoreState> = { selection: selection, initialized: true, descriptorMap: {}, valueMap: {}, pathMap: {}, visibilityMap: {}, tabId: "1" };
         newState.nameProperty = this._createPropertyMetadata(newState, "name");
         newState.lockedProperty = this._createPropertyMetadata(newState, "locked");
         this._setGroups(newState, groups);

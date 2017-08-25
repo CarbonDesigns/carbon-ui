@@ -17,6 +17,7 @@ import { LayoutAction } from "./layout/LayoutActions";
 import { DataAction } from "./library/data/DataActions";
 import { FontAction } from "./properties/editors/custom/FontActions";
 import { LayerAction } from "./layers/LayersActions";
+import { PropertyAction } from "./properties/PropertyActions";
 
 // import diff from 'immutablediff';
 
@@ -51,8 +52,8 @@ export class Component<P = {}, S = {}> extends React.Component<P,S> {
         return shouldUpdate;
     }
 
-    constructor(props) {
-        super(props);
+    constructor(props, context?) {
+        super(props, context);
     }
 
     __storeListeners: any[];
@@ -232,7 +233,7 @@ export function dispatch(action) {
 
 //just a strongly typed wrapper while not all actions are union types
 export function dispatchAction(action: AccountAction | BackendAction | DialogAction | PublishAction |
-    StencilsAction | CarbonAction | IconsAction | LayoutAction | DataAction | FontAction | LayerAction) {
+    StencilsAction | CarbonAction | IconsAction | LayoutAction | DataAction | FontAction | LayerAction | PropertyAction) {
     dispatch(action);
 }
 

@@ -1,4 +1,4 @@
-import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize } from "carbon-core";
+import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, ToolboxGroup } from "carbon-core";
 
 let PADDING = 5;
 let _configCache = {};
@@ -218,63 +218,50 @@ export default class ToolboxConfiguration {
     }
 
     static buildToolboxConfig(page) {
-        let elements = page.getAllArtboards().filter(x => x.props.type === ArtboardType.Symbol);
+        let elements = page.getAllResourceArtboards(ArtboardType.Symbol) as IArtboard[];
 
         if (!elements.length) {
             page.setProps({ toolboxConfigUrl: null });
             return Promise.resolve({ groups: [] });
         }
 
+        elements.sort((a, b) => {
+            let rect1 = a.getBoundingBox();
+            let rect2 = b.getBoundingBox();
+
+            if (rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y) {
+                return rect2.x - rect1.x;
+            }
+            return rect2.y - rect1.y;
+        });
+
         let configId = createUUID();
-
-        let groupedElements = {};
-        for (let i = 0; i < elements.length; ++i) {
-            let e = elements[i];
-            let group = groupedElements[e.props.toolboxGroup] || [];
-            group.push(e);
-            groupedElements[e.props.toolboxGroup] = group;
-        }
         let groups = [];
-        function makeGroup(groupName, elements): Promise<any> {
-            let config = [];
-            let spriteUrlPromise = ToolboxConfiguration.renderElementsToSprite(elements, config);
+        let promises = [];
+        let toolboxGroups = page.props.toolboxGroups as ToolboxGroup[];
 
-            let spriteUrl2xPromise = ToolboxConfiguration.renderElementsToSprite(elements, null, 2);
-            let group: any = {
-                name: groupName,
-                items: config
-            };
-            groups.push(group);
-
-            if (app.serverless()) {
-                return Promise.all([spriteUrlPromise, spriteUrl2xPromise])
-                    .then(sprites => {
-                        group.spriteUrl = sprites[0].backgroundUrl;
-                        group.spriteUrl2x = sprites[1].backgroundUrl;
-                        group.size = sprites[0].size;
-                    });
+        for (let i = 0; i < toolboxGroups.length; ++i) {
+            let group = toolboxGroups[i];
+            let groupElements = [];
+            for (let j = 0; j < elements.length; ++j) {
+                let e = elements[j];
+                if (e.props.toolboxGroup === group.id) {
+                    groupElements.push(e);
+                }
             }
 
-            spriteUrlPromise = spriteUrlPromise.then(sprite => {
-                return backend.fileProxy.uploadPublicImage({ content: sprite.imageData })
-                    .then((data) => {
-                        group.spriteUrl = "url('" + data.url + "')";
-                        group.size = sprite.size;
-                    })
-            });
+            if (group.id === "default") {
+                for (let k = 0; k < elements.length; ++k) {
+                    let e = elements[k];
+                    if (!toolboxGroups.find(x => x.id === e.props.toolboxGroup)) {
+                        groupElements.push(e);
+                    }
+                }
+            }
 
-            spriteUrl2xPromise = spriteUrl2xPromise.then(sprite => {
-                return backend.fileProxy.uploadPublicImage({ content: sprite.imageData })
-                    .then((data) => {
-                        group.spriteUrl2x = "url('" + data.url + "')";
-                    })
-            });
-
-            return Promise.all([spriteUrlPromise, spriteUrl2xPromise]);
-        }
-        let promises = [];
-        for (let group in groupedElements) {
-            promises.push(makeGroup(group, groupedElements[group]));
+            if (groupElements.length) {
+                promises.push(ToolboxConfiguration.makeGroup(groups, group.name, groupElements));
+            }
         }
 
         let config = { groups: groups, id: configId };
@@ -289,5 +276,43 @@ export default class ToolboxConfiguration {
                 page.setProps({ toolboxConfigUrl: data.url, toolboxConfigId: configId });
                 return config;
             })
+    }
+
+    private static makeGroup(groups, groupName, elements): Promise<any> {
+        let config = [];
+        let spriteUrlPromise = ToolboxConfiguration.renderElementsToSprite(elements, config);
+
+        let spriteUrl2xPromise = ToolboxConfiguration.renderElementsToSprite(elements, null, 2);
+        let group: any = {
+            name: groupName,
+            items: config
+        };
+        groups.push(group);
+
+        if (app.serverless()) {
+            return Promise.all([spriteUrlPromise, spriteUrl2xPromise])
+                .then(sprites => {
+                    group.spriteUrl = sprites[0].backgroundUrl;
+                    group.spriteUrl2x = sprites[1].backgroundUrl;
+                    group.size = sprites[0].size;
+                });
+        }
+
+        spriteUrlPromise = spriteUrlPromise.then(sprite => {
+            return backend.fileProxy.uploadPublicImage({ content: sprite.imageData })
+                .then((data) => {
+                    group.spriteUrl = "url('" + data.url + "')";
+                    group.size = sprite.size;
+                })
+        });
+
+        spriteUrl2xPromise = spriteUrl2xPromise.then(sprite => {
+            return backend.fileProxy.uploadPublicImage({ content: sprite.imageData })
+                .then((data) => {
+                    group.spriteUrl2x = "url('" + data.url + "')";
+                })
+        });
+
+        return Promise.all([spriteUrlPromise, spriteUrl2xPromise]);
     }
 }

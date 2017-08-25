@@ -43,10 +43,10 @@ export default class CustomProviders extends StoreComponent<{}, CustomCatalogSto
 
     _renderEdit() {
         return <Markup>
-            <MarkupLine>
+            <MarkupLine mods="stretch">
                 <GuiInput ref="name" type="text" placeholder="@data.customName" mods="small" autoFocus />
             </MarkupLine>
-            <MarkupLine mods={["fill", "slim"]}>
+            <MarkupLine mods={["fill", "slim", "stretch"]}>
                 <GuiTextArea ref="text" placeholder="@data.customBody" mods={["small", "fill"]} />
             </MarkupLine>
 

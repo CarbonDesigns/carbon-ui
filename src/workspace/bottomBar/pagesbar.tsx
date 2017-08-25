@@ -14,11 +14,14 @@ import {
 }                             from "../../CarbonFlux";
 import CarbonActions          from "../../CarbonActions";
 import {richApp}              from "../../RichApp";
-import {PropertyTracker, Page, app} from "carbon-core";
+import { PropertyTracker, Page, app, IPage } from "carbon-core";
 import bem from '../../utils/commonUtils';
 import {GuiButton} from "../../shared/ui/GuiComponents";
 
-import {default as EditableList, ListItem} from "../../shared/EditableList";
+import EditableList from "../../shared/EditableList";
+
+type PageList = new (props) => EditableList<IPage>;
+const PageList = EditableList as PageList;
 
 // export class EditableListItem extends React.Component {
 //
@@ -144,18 +147,18 @@ class PagesList extends React.Component<any, any> {
         this.state = {version:0};
     }
 
-    _pageClicked = page => {
+    _pageClicked = (page: IPage) => {
         var pageId = page.id();
         app.setActivePageById(pageId);
         this.setState({version: this.state.version + 1});
     };
 
-    _pageRenamed = (newName, page) => {
+    _pageRenamed = (newName: string, page: IPage) => {
         page.setProps({name:newName});
         this.setState({version: this.state.version + 1});
     };
 
-    _pageDeleted = (page) => {
+    _pageDeleted = (page: IPage) => {
         app.removePage(page);
         this.setState({version: this.state.version + 1});
     };
@@ -165,32 +168,28 @@ class PagesList extends React.Component<any, any> {
         richApp.dispatch(FlyoutActions.hide());
     };
 
+    private pageId(page: IPage) {
+        return page.props.id;
+    }
 
+    private pageName(page: IPage) {
+        return page.props.name;
+    }
 
     render(){
-        var items_list = app.pages.map(page =>{
-            var item_props = {
-                "data-page-id" : page.id(),
-                key            : page.id(),
-                text           : page.name(),
-                item           : page,
-                selected       : app.activePage.id() === page.id(),
-                onClick        : this._pageClicked,
-                onRename       : this._pageRenamed,
-                onDelete       : this._pageDeleted
-            };
-            return React.createElement(ListItem, item_props);
-      });
-
         return <div className="pagesbar__panel flyout__content">
             <div className="pagesbar__panel-controls">
                 <div className="pagesbar__new-board">
                     <GuiButton mods={["full", "hover-success"]} onClick={this._newPageClicked} caption="New page" bold icon="new-page"/>
                 </div>
             </div>
-            <EditableList insideFlyout={true}>
-                { items_list }
-            </EditableList>
+            <PageList data={app.pages} idGetter={this.pageId} nameGetter={this.pageName}
+                onClick={this._pageClicked}
+                onRename={this._pageRenamed}
+                onDelete={this._pageDeleted}
+                selectedItem={app.activePage}
+                insideFlyout={true}>
+            </PageList>
         </div>
     }
 }

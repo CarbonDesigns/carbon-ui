@@ -311,7 +311,7 @@ export class GuiCheckbox extends Component<IGuiCheckboxProps> {
     }
 }
 
-interface IGuiButtonProps extends IReactElementProps, IHasMods<
+export interface IGuiButtonProps extends IReactElementProps, IHasMods<
     "hover-white" |
     "hover-success" |
     "hover-cancel" |
@@ -333,7 +333,7 @@ interface IGuiButtonProps extends IReactElementProps, IHasMods<
     disabled?: boolean;
     progressPercents?: number;
     progressColor?: string;
-    onClick: (e?) => void;
+    onClick?: (e?) => void;
 }
 export class GuiButton extends Component<IGuiButtonProps>{
     private onClick = e => {

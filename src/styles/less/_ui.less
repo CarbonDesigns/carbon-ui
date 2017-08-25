@@ -1859,7 +1859,7 @@
 //——————————————————————————————————————————————————————————————————————
 
 .editable-list {
-    padding: @air_half @air_half 0 0;
+    padding: @air_half;
     margin-bottom: @air_half;
 }
 
@@ -1871,10 +1871,10 @@
 
     & {
         .rel;
+        color: white;
 
 
-
-        margin: 0 0 1px @air_half;
+        margin: 0 0 1px 0;
         .clip;
 
         @button_width : @line_air*2 + @fsize;
@@ -1982,6 +1982,10 @@
                 .f12;
                 padding-left: @line_air;
             }
+        }
+
+        &.dragging &-body {
+            cursor: move;
         }
 
         i{

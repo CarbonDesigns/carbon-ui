@@ -9,7 +9,7 @@ import Immutable from "immutable";
 import EditorComponent from "../EditorComponent";
 import propertyStore from "../../PropertyStore";
 import {GuiButton} from "../../../shared/ui/GuiComponents";
-import AddButton from '../AddButton';
+import AddButton from "../../../shared/ui/AddButton";
 
 class CustomProperty extends Component<any, any> {
     constructor(props) {

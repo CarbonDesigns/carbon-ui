@@ -72,7 +72,6 @@ class SwatchesSlot extends Component<any, any> {
 }
 
 interface ISwatchesPanelState {
-    swatch_width?: any;
     active?: string;
     recentColors?: { name: string; colors: string[] };
     palettes?: any[];
@@ -90,32 +89,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
             recentColors: { name: '', colors: [] },
             palettes: []
         };
-        if (this.refs.panel) {
-            var node = ReactDom.findDOMNode(this.refs.panel);
-            state.swatch_width = this._getSwatchWidth(node);
-        }
         this.state = state;
-    }
-
-    _updateSwatchWidth() {
-        var node = ReactDom.findDOMNode(this.refs.panel);
-        if (node) {
-            this.setState({
-                swatch_width: this._getSwatchWidth(node)
-            });
-        }
-    }
-
-    _getSwatchWidth(panelNode) {
-        var panelWidth = parseInt(panelNode.offsetWidth);
-        var target_width = 24;
-        var width = 10;
-        if (!Number.isNaN(panelWidth)) {
-            var n_in_row = Math.round(panelWidth / target_width);
-            //protect division by zero
-            width = (n_in_row !== 0) ? (100 / n_in_row) : 100;
-        }
-        return width + '%';
     }
 
     @listenTo(swatchesStore)
@@ -182,7 +156,6 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
             return; // can be called when panel is hidden
         }
         (this.refs['panel'] as Panel).updateSizeClasses();
-        this._updateSwatchWidth();
     }
 
     _colorSelected(color, norecent, preview) {
@@ -344,8 +317,6 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     render() {
         return (
             <Panel ref="panel" {...this.props} header="Swatches" id="swatches-panel">
-                {(this.state) ?
-                    <style key='style'>{`.swatches-panel__swatch {width: ${this.state.swatch_width};}`}</style> : null}
                 {this._renderCurrent()}
                 {this._renderPalette()}
             </Panel>

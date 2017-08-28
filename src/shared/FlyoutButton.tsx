@@ -22,7 +22,11 @@ interface IFlyoutButtonProps extends IReactElementProps{
     onClosed?:any;
 }
 
-export default class FlyoutButton extends Component<IFlyoutButtonProps, any> {
+type FlyoutButtonState = {
+    open: boolean;
+}
+
+export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutButtonState> {
     private position: any;
     private _mounted: boolean;
 
@@ -81,13 +85,9 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, any> {
     @listenTo(flyoutStore)
     storeChanged() {
         var target = flyoutStore.state.target;
-        if (target === this.refs.host) {
-            this.props.onOpened && this.props.onOpened();
-        }
-        else if (!target && this.state.open) {
+        if (!target && this.state.open) {
             if (this._mounted) {
                 this.setState({open: !this.state.open});
-                this.props.onClosed && this.props.onClosed();
             }
         }
     }
@@ -110,13 +110,24 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, any> {
     componentWillUnmount() {
         super.componentWillUnmount();
         this._mounted = false;
-    }
-
-    componentDidUpdate(){
-        if (this.state.open){
-            dispatch(FlyoutActions.update(this.refs.host, this.drawContent()));
+        if(this.state.open) {
+            this.setState({open:false});
         }
     }
+
+    componentDidUpdate(prevProps, prevState: Readonly<FlyoutButtonState>){
+        if (this.state.open){
+            if (!prevState.open) {
+                this.props.onOpened && this.props.onOpened();
+            }
+
+            dispatch(FlyoutActions.update(this.refs.host, this.drawContent()));
+        }
+        else if (prevState.open) {
+            this.props.onClosed && this.props.onClosed();
+        }
+    }
+
     renderContent() {
         if (this.props.content) {
             return this.props.content;

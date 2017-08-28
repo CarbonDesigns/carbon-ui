@@ -3,9 +3,9 @@ import {Component} from "../../CarbonFlux";
 import EditorComponent, {IEditorProps} from "./EditorComponent";
 import ShadowPopup from "./ShadowPopup";
 import FlyoutButton, { FlyoutPosition } from "../../shared/FlyoutButton";
-import AddButton from "./AddButton";
 import ShadowsList from "./ShadowsList";
 import {Shadow, PatchType, createUUID} from "carbon-core";
+import AddButton from "../../shared/ui/AddButton";
 
 interface IShadowEditorState {
     newShadow: Shadow;
@@ -54,7 +54,7 @@ export default class ShadowsEditor extends EditorComponent<Shadow, IShadowEditor
     }
 
     static renderSelectedValue = () => {
-        return <AddButton caption="@addshadow" defaultMessage="add shadow"/>;
+        return <AddButton caption="@addshadow" />;
     };
 
     onOpened = () => {

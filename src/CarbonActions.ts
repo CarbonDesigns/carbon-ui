@@ -1,10 +1,12 @@
-import { ILayer, IApp, ArtboardType, IArtboard, IPage, AppSettings } from "carbon-core";
+import { ILayer, IApp, ArtboardType, IArtboard, IPage, AppSettings, IUIElement, IDataNode } from "carbon-core";
 
 export type CarbonAction =
     { type: "Carbon_AppLoaded" } |
     { type: "Carbon_AppUpdated" } |
     { type: "Carbon_AppSettingsChanged", settings: AppSettings } |
     { type: "Carbon_ScaleChanged", scale: number } |
+    { type: "Carbon_PropsChanged", element: IDataNode, props: any, oldProps: any } |
+    { type: "Carbon_ResourcePageChanged", page: IPage } |
     { type: "Carbon_ResourceAdded", resourceType: ArtboardType, resource: IArtboard } |
     { type: "Carbon_ResourceChanged", resourceType: ArtboardType, resource: IArtboard } |
     { type: "Carbon_ResourceDeleted", resourceType: ArtboardType, resource: IArtboard, parent: IPage };
@@ -77,14 +79,6 @@ var CarbonActions = {
         return {
             type:"CARBON_APP_CHANGED",
             primitives
-        }
-    },
-    propsChanged:(element, props, oldProps)=>{
-        return {
-            type:"CARBON_PROPS_CHANGED",
-            element,
-            props,
-            oldProps
         }
     },
     inlineEditModeChanged: mode => {

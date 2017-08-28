@@ -31,6 +31,7 @@ import StatesEditor from "./editors/custom/StatesEditor";
 import {app, TileSize, Types} from "carbon-core";
 
 import {FormattedHTMLMessage} from "react-intl";
+import ToolboxGroupEditor from "./editors/custom/ToolboxGroupEditor";
 
 interface IPropertyGroupProps {
     e: any, // page element
@@ -116,6 +117,8 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <CustomPropertiesEditor e={elem} p={prop} key={key}/>;
             case "states":
                 return <StatesEditor e={elem} p={prop} key={key}/>;
+            case "toolboxGroup":
+                return <ToolboxGroupEditor e={elem} p={prop} key={key}/>;
             case "artboard":
                 //TODO: move all dynamic options to core project, introduce something like getOptions()
                 options = {
@@ -145,17 +148,6 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                         }
                     }))
                 });
-                return <DropDownEditor e={elem} p={prop.set('options', options)} key={key}/>;
-
-            case "state":
-                options = {
-                    items: elem.first().getStates().map(state=> {
-                        return {
-                            name  : state.name,
-                            value : state.id
-                        }
-                    })
-                };
                 return <DropDownEditor e={elem} p={prop.set('options', options)} key={key}/>;
         }
 

@@ -65,6 +65,9 @@ export default class EnterInput extends Component<EnterInputProps, EnterInputSta
         }
         return {value: this.state.value, valid: true};
     }
+    getValue() {
+        return this.state.value;
+    }
     setValue(value) {
         this.setState({ value });
     }

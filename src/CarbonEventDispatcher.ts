@@ -24,6 +24,9 @@ export function registerEvents() {
         token = app.resourceChanged.bindAsync((resourceType, resource) => dispatchAction({type: "Carbon_ResourceChanged", resourceType, resource}));
         frequentAppTokens.push(token);
 
+        token = app.resourcePageChanged.bindAsync((page) => dispatchAction({type: "Carbon_ResourcePageChanged", page}));
+        frequentAppTokens.push(token);
+
         token = app.resourceDeleted.bindAsync((resourceType, resource, parent) => dispatchAction({type: "Carbon_ResourceDeleted", resourceType, resource, parent}));
         frequentAppTokens.push(token);
 
@@ -43,7 +46,7 @@ export function registerEvents() {
         dispatchAction({ type: "Carbon_AppSettingsChanged", settings });
     });
 
-    PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => dispatch(CarbonActions.propsChanged(e, props, oldProps)));
+    PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => dispatchAction({ type: "Carbon_PropsChanged", element: e, props, oldProps }));
 
     Selection.onElementSelected.bindAsync((e, prevSelectedElements) =>
         dispatch(CarbonActions.elementSelected(e, prevSelectedElements)));

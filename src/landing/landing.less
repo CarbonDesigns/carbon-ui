@@ -381,21 +381,22 @@
 }
 
 .feature-section__image {
-    background-color: rgba(255, 255, 255, .2);
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center center;
     width: 100%;
     height: 100vh;
-    max-height: 800px;
+    max-height: 640px;
     will-change: transform;
 }
 
-.symbols-image {
-   // background-image: url("../res/app/library.gif");
+//don't forget to preload on LangingPage.tsx
+.data-image, .symbols-image, .plugins-image {
+    background-image: url("../res/landing/features_data.png");
+    &.active {
+        background-image: url("../res/landing/features_data.gif");
+    }
 }
-
-
 
 .play-button {
     width: 80px;

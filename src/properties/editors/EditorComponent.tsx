@@ -25,12 +25,12 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
     private _noPreview: boolean;
     private _setValueTimer: number;
 
-    constructor(props){
-        super(props);
+    constructor(props, context?){
+        super(props, context);
 
         this.init(props);
 
-        this.previewValue = util.throttle(this.previewValue, 100);
+        this.previewValue = util.debounce(this.previewValue, 100);
     }
     init(props){
         this._noPreview = this.extractOption(props, "noPreview", false);
@@ -40,7 +40,7 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         return props.p.get("value");
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps, nextContext?){
         this.init(nextProps);
     }
 
@@ -114,10 +114,6 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         }
 
         dispatch(PropertyActions.cancelEdit());
-    }
-
-    _renderPropName(){
-        return <div className={ this.b('name') }><FormattedHTMLMessage id={ this.displayName() }/></div>
     }
 
     propertyDescriptor(){

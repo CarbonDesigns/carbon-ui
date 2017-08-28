@@ -14,8 +14,7 @@ interface ISwatchesState {
     palettes: IPalette[],
     active?: string,
     fill?: any,
-    stroke?: any,
-    font?: any
+    stroke?: any
 }
 
 export class SwatchesStore extends CarbonStore<ISwatchesState> {
@@ -33,18 +32,18 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
 
             if (this.state.active === 'fill') {
                 app.defaultFill(Brush.Empty);
-                dispatch(SwatchesActions.changeActiveColors(Brush.Empty, this.state.stroke, this.state.font));
+                dispatch(SwatchesActions.changeActiveColors(Brush.Empty, this.state.stroke));
             }
             else if (this.state.active === 'stroke') {
                 app.defaultStroke(Brush.Empty);
-                dispatch(SwatchesActions.changeActiveColors(this.state.fill, Brush.Empty, this.state.font));
+                dispatch(SwatchesActions.changeActiveColors(this.state.fill, Brush.Empty));
             }
         });
     }
 
     @handles(SwatchesActions.changeActiveColors)
-    onActiveColorsChanged({ fill, stroke, font }) {
-        this.setState({ fill, stroke, font })
+    onActiveColorsChanged({ fill, stroke}) {
+        this.setState({ fill, stroke })
     }
 
     onAppUpdated() {

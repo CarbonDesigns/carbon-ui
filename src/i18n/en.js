@@ -263,6 +263,11 @@ export default
         "@repeater.copiesX": "H copies", //
         "@repeater.copiesY": "V copies", //
 
+        "@page.defaultToolboxGroup": "My Symbols",
+        "@page.newToolboxGroup": "Add group",
+        "@page.toolboxGroup": "Group",
+        "@page.manageGroups": "Edit groups...",
+
         "New board": "New board", //
         "New page": "New page", //
         "States": "States",
@@ -568,9 +573,10 @@ export default
         "@status.serverless": "Nothing will be saved on the server.",
         "@status.serverless2": "The app is started in the serverless mode. This is used for development.",
 
-        "@textAutoWidth.Fit": "Fit",
-        "@textAutoWidth.Wrap": "Wrap",
-        "@textAutoWidth.Grow": "Grow",
+        "@textMode": "Text mode",
+        "@textMode.block": "Block",
+        "@textMode.label": "Label",
+        "@wrap": "wrap",
         "@saveImage": "Save image",
         "@changeImage": "Change image",
 
@@ -600,15 +606,11 @@ export default
         "@send.backward": "Send Backward",
         "@flatten": "Flatten",
 
-        "@back": "back",
+        "@back": "Go back",
 
         "@logout": "Log Out",
 
         "@requiredField": "This field is required",
-
-        "@textAutoWidth.Fit": "Fit",
-        "@textAutoWidth.Wrap": "Wrap",
-        "@textAutoWidth.Grow": "Grow",
 
         "@data.customName": "Dataset name",
         "@data.customBody": "Enter one item per line",

@@ -1,159 +1,108 @@
-import React                  from 'react';
-import {FormattedHTMLMessage} from "react-intl";
-import cx                     from 'classnames';
-import Dots                   from "./dots";
-import ScrollContainer        from "./ScrollContainer";
-import EnterInput             from "./EnterInput";
-import {
-    Component,
-    handles,
-    Dispatcher
-}                             from "../CarbonFlux";
-import {richApp}              from "../RichApp";
-import {PropertyTracker, Page} from "carbon-core";
+import React from 'react';
+import { FormattedHTMLMessage } from "react-intl";
+import cx from 'classnames';
+import Dots from "./dots";
+import ScrollContainer from "./ScrollContainer";
+import EnterInput from "./EnterInput";
+import { Component, handles, Dispatcher } from "../CarbonFlux";
+import { richApp } from "../RichApp";
+import { PropertyTracker, Page } from "carbon-core";
 import bem from '../utils/commonUtils';
 
+const b = "editable-list";
 
-var b = "editable-list";
+interface EditableListProps<T> extends ISimpleReactElementProps {
+    data: T[];
+    idGetter: (item: T) => string;
+    nameGetter: (item: T) => string;
+    selectedItem?: T;
+    editingItem?: T;
 
-export class ListItem extends React.Component<any, any> {
-    refs: any;
+    onClick?: (item: T) => void;
+    onRename?: (name: string, item: T) => void;
+    onDelete?: (item: T) => void;
+    canDelete?: boolean | ((item: T) => boolean);
 
-    constructor(props) {
+    scrolling?: boolean;
+    insideFlyout?: boolean;
+}
+
+type EditableListState<T> = {
+    controlsOpenItem?: T;
+    editingItem?: T;
+}
+
+export default class EditableList<T = any> extends Component<EditableListProps<T>, EditableListState<T>> {
+    refs: {
+        input: EnterInput;
+    }
+
+    constructor(props: EditableListProps<T>) {
         super(props);
         this.state = {
-            controls_open: false,
-            editing: false
+            controlsOpenItem: props.editingItem,
+            editingItem: props.editingItem
         };
     }
 
-    _onOpen = (e) => {
+    componentWillReceiveProps(nextProps: Readonly<EditableListProps<T>>) {
         this.setState({
-            controls_open: true//!this.state.controls_open
+            controlsOpenItem: nextProps.editingItem,
+            editingItem: nextProps.editingItem
         });
-        e.stopPropagation();
-    };
+    }
 
-    _onRename = (e?) => {
-        if (!this.state.editing) {
-            this.setState({
-                editing: true
-            });
-        }
-        else {
-            this.setState({
-                editing: false,
-                controls_open: false
-            });
-            this.props.onRename(this.refs.input.getValue(), this.props.item);
-        }
-        e && e.stopPropagation();
-    };
+    private onClick = (e: React.MouseEvent<HTMLElement>) => {
+        this.props.onClick && this.props.onClick(this.getItemFromEvent(e));
+    }
 
-    _onDelete = (e) => {
-        this.props.onDelete(this.props.item);
-        e.stopPropagation()
-    };
-
-    _onCancel = (e) => {
+    private onOpenControls = (e: React.MouseEvent<HTMLElement>) => {
         this.setState({
-            controls_open: false,
-            editing: false
+            controlsOpenItem: this.getItemFromEvent(e)
         });
-        e.stopPropagation();
-    };
+    }
 
-    componentDidUpdate() {
-        if (this.state.editing) {
-            this.refs["input"].focus();
-        }
+    private onBeginEditName = (e: React.MouseEvent<HTMLElement>) => {
+        let item = this.getItemFromEvent(e);
+        this.setState({
+            editingItem: item,
+            controlsOpenItem: item
+        });
+    }
+
+    private onConfirmRename = () => {
+        this.onRename(this.refs.input.getValue() as string);
+    }
+
+    private onRename = (name: string) => {
+        let item = this.state.editingItem;
+
+        this.setState({
+            editingItem: null,
+            controlsOpenItem: null
+        });
+
+        this.props.onRename(name, item);
+    }
+
+    private onDelete = (e: React.MouseEvent<HTMLElement>) => {
+        this.props.onDelete(this.getItemFromEvent(e));
+    }
+
+    private onCancel = () => {
+        this.setState({
+            controlsOpenItem: null,
+            editingItem: null
+        });
+    }
+
+    private getItemFromEvent(e: React.MouseEvent<HTMLElement>) {
+        let index = parseInt(e.currentTarget.dataset.index);
+        return this.props.data[index];
     }
 
     render() {
-        var cn = bem(b, "item", {
-            "controls-open" : this.state.controls_open,
-            editing         : this.state.editing,
-            selected        : this.props.selected
-        });
-        var {text, onClick, icon, ...rest} = this.props;
-
-        return (
-            <div className={cn}>
-
-                { /* Body */ }
-                <div className={bem(b, "item-body")} onClick={()=>onClick&&onClick(this.props.item)}>
-                    {
-                        this.state.editing
-                            ? <div className="inputWrap">
-                                <EnterInput
-                                    ref="input"
-                                    value={text}
-                                    changeOnBlur={false}
-                                    onValueEntered={() => this._onRename()}
-                                />
-                              </div>
-                            : this._renderContent(text, icon)
-                    }
-                </div>
-
-                { /* Opener */ }
-                <div className={bem(b, "item-button", "opener")} onClick={this._onOpen}>
-                    <div className={bem(b, "item-button-icon")}><Dots/></div>
-                </div>
-
-                { /* Board controls */ }
-                <div className={bem(b, "item-controls")}>
-                    <div className={bem(b, "item-button", "closer")} onClick={this._onCancel}>
-                        <div className={bem(b, "item-button-icon")}><i className="ico-cancel"/></div>
-                    </div>
-                    {
-                        !this.state.editing && (!this.props.canDelete || this.props.canDelete(this.props.item))
-                            ? <div className={bem(b, "item-button", "delete")} onClick={this._onDelete}>
-                                <div className={bem(b, "item-button-icon")}><i className="ico-trash"/></div>
-                              </div>
-                            : null
-                    }
-                    <div className={bem(b, "item-button")} onClick={this._onRename}>
-                        <div className={bem(b, "item-button-icon")}>
-                            <i className={this.state.editing ? "ico-ok" : "ico-edit"}/>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        )
-    }
-
-    _renderContent(text, icon){
-        var content = [];
-        if (icon){
-            content.push(<i key="icon" className={icon}/>);
-        }
-        content.push(<p key="name" className={bem(b, "item-name")}>{text}</p>);
-        return content;
-    }
-}
-
-export default class EditableList extends Component<any, any> {
-    render() {
-        var items;
-        if (this.props.children != null) {
-            items = this.props.children;
-        }
-        else if (this.props.items != null) {
-            items = this.props.items.map(item =>
-                <ListItem
-                    key={item.id}
-                    text={item.name}
-                    icon={item.icon}
-                    item={item}
-                    selected={item.selected || false}
-                    onClick={this.props.onClick}
-                    onRename={this.props.onRename}
-                    onDelete={this.props.onDelete}
-                    canDelete={this.props.canDelete}
-                />)
-        }
+        let items = this.props.data.map((item, i) => this.renderItem(item, i));
 
         if (this.props.scrolling) {
             return <ScrollContainer
@@ -167,6 +116,93 @@ export default class EditableList extends Component<any, any> {
 
         return <div>
             {items}
+        </div>
+    }
+
+    private renderItem(item: T, index: number) {
+        let id = this.props.idGetter(item);
+        let name = this.props.nameGetter(item);
+        let editing = this.state.editingItem === item;
+
+        let cn = bem(b, "item", {
+            "controls-open": this.state.controlsOpenItem === item,
+            editing,
+            selected: this.props.selectedItem === item
+        }, "sortable-item");
+
+        return (
+            <div className={cn} key={id}>
+
+                { /* Body */}
+                <div className={bem(b, "item-body")} onClick={this.onClick} onDoubleClick={this.onBeginEditName} data-index={index}>
+                    {
+                        editing ? this.renderInput(name) : this.renderName(name)
+                    }
+                </div>
+
+                { /* Opener */}
+                <div className={bem(b, "item-button", "opener")} onClick={this.onOpenControls} data-index={index}>
+                    <div className={bem(b, "item-button-icon")}><Dots /></div>
+                </div>
+
+                { /* Board controls */}
+                <div className={bem(b, "item-controls")}>
+                    <div className={bem(b, "item-button", "closer")} onClick={this.onCancel} data-index={index}>
+                        <div className={bem(b, "item-button-icon")}><i className="ico-cancel" /></div>
+                    </div>
+                    {
+                        !editing && this.renderDeleteButton(item, index)
+                    }
+                    {
+                        editing ? this.renderOkButton(index) : this.renderEditButton(index)
+                    }
+                </div>
+
+            </div>
+        )
+    }
+
+    private renderInput(name: string) {
+        return <div className="inputWrap">
+            <EnterInput
+                ref="input"
+                value={name}
+                autoFocus
+                changeOnBlur={false}
+                onValueEntered={this.onConfirmRename}
+            />
+        </div>
+    }
+
+    private renderName(name: string) {
+        return <p className={bem(b, "item-name")}>{name}</p>;
+    }
+
+    private renderDeleteButton(item: T, index: number) {
+        if (this.props.canDelete === false) {
+            return null;
+        }
+        if (!(this.props.canDelete === true || this.props.canDelete(item))) {
+            return null;
+        }
+        return <div className={bem(b, "item-button", "delete")} onClick={this.onDelete} data-index={index}>
+            <div className={bem(b, "item-button-icon")}><i className="ico-trash" /></div>
+        </div>
+    }
+
+    private renderOkButton(index: number) {
+        return <div className={bem(b, "item-button")} onClick={this.onConfirmRename} data-index={index}>
+            <div className={bem(b, "item-button-icon")}>
+                <i className={"ico-ok"} />
+            </div>
+        </div>
+    }
+
+    private renderEditButton(index: number) {
+        return <div className={bem(b, "item-button")} onClick={this.onBeginEditName} data-index={index}>
+            <div className={bem(b, "item-button-icon")}>
+                <i className={"ico-edit"} />
+            </div>
         </div>
     }
 

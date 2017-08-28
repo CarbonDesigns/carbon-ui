@@ -76,7 +76,9 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
         }
 
         var height = window.innerHeight;
-
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            height = screen.height;
+        }
 
         for (var k = 0; k < this.sections.length; ++k) {
             let section: any = this.sections[k];
@@ -178,7 +180,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 <div className="hero-container__logo airbnb"></div>
             </section>
 
-            <SubscribeForm mainTextLabelId="@subscribe.details"/>
+            <SubscribeForm mainTextLabelId="@subscribe.details" />
 
             <FeatureSection
                 className="first-section"
@@ -217,7 +219,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps>{
                 <article><CarbonLabel id="@opensource.join" /><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
             </section>
 
-            <SubscribeForm mainTextLabelId="@subscribe.details2"/>
+            <SubscribeForm mainTextLabelId="@subscribe.details2" />
         </div>;
     }
 }

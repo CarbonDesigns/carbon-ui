@@ -114,7 +114,9 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps, La
         }
 
         var height = window.innerHeight;
-
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            height = screen.height;
+        }
 
         for (var k = 0; k < this.sections.length; ++k) {
             let section: any = this.sections[k];

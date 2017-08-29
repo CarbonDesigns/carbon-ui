@@ -545,7 +545,10 @@ export default
         "@symbols.detach": "Detach instance",
         "@symbols.add": "Add more symbols...",
         "@symbols.noneFound": "We did not find any symbols in this project",
+        "@symbols.noneFoundSearch": "No symbols match your search criteria",
         "@symbols.import": "Import from gallery",
+        "@symbols.searchOnline": "Search in gallery",
+        "@symbols.find": "Find symbols...",
 
         "@resources.markAsPaletteItem": "Use background in swatches",
         "@resources.removeFromPalette": "Remove from swatches",

@@ -17,3 +17,6 @@ export interface IToolboxStore {
     createElement(info: StencilInfo): IUIElement;
     elementAdded();
 }
+
+export const StencilsOverscanCount = 10;
+export const StencilsColumnWidth = 128;

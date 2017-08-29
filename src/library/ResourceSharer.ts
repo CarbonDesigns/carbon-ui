@@ -6,7 +6,7 @@ export class ResourceSharer {
         var clone = page.mirrorClone();
 
         var promise;
-        if(!page.props.toolboxConfigId || page.isToolboxConfigDirty){
+        if(!page.props.toolboxConfigId) {
             promise = ToolboxConfiguration.buildToolboxConfig(page);
         } else {
             promise = Promise.resolve();

@@ -151,10 +151,7 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
     }
 
     private refreshLibrary() {
-        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage)
-            .then(config => {
-                dispatchAction({ type: "Stencils_Loaded", config: config, page: this.state.currentPage, async: true });
-            });
+        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage);
     }
 
     private onCategoryClicked(category) {

@@ -3,7 +3,7 @@ import IconsActions from "./IconsActions";
 import {handles, CarbonStore, dispatch} from '../../CarbonFlux';
 import { Image, Brush, ContentSizing, IPaginatedResult } from "carbon-core";
 import Toolbox from "../Toolbox";
-import { IToolboxStore } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo } from "../LibraryDefs";
 
 export type IconFinderStoreState = {
     error: boolean;
@@ -30,8 +30,11 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
         };
     }
 
-    createElement({templateId}){
-        var icon = this.state.results.find(x => x.id === templateId);
+    findStencil(info: StencilInfo) {
+        return this.state.results.find(x => x.id === info.stencilId);
+    }
+    createElement(info: StencilInfo){
+        var icon = this.findStencil(info);
         var element = new Image();
         element.setProps({
             width: icon.realWidth, height: icon.realHeight,

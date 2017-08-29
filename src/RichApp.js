@@ -4,9 +4,6 @@ import LayoutStore from './layout/LayoutStore';
 
 import RichPanelConfig from "./RichPanelConfig";
 import LibraryProgressStore from './library/LibraryProgressStore';
-import RecentStencilsStore from './library/stencils/RecentStencilsStore';
-
-
 import SearchIconsStore from './library/icons/SearchIconsStore';
 
 import RecentImagesStore from './library/images/RecentImagesStore';
@@ -29,8 +26,6 @@ export class Application {
         this.layoutStore = LayoutStore;
 
         this.libraryProgressStore = new LibraryProgressStore(this.Dispatcher);
-
-        this.recentStencilsStore = new RecentStencilsStore(this.Dispatcher);
 
         this.searchIconsStore = new SearchIconsStore(this.Dispatcher);
 

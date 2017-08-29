@@ -4,7 +4,7 @@ import CarbonActions, { CarbonAction } from "../../CarbonActions";
 import { CarbonStore, dispatchAction } from '../../CarbonFlux';
 import { Image, Brush, ContentSizing, ArtboardType, UIElementFlags, IconSetSpriteManager, PatchType, app } from "carbon-core";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, ToolboxConfig, IconSpriteStencil } from "../LibraryDefs";
 
 var key = 0;
 
@@ -16,7 +16,7 @@ interface InternalIconInfo {
 
 export type InternalIconsStoreState = {
     iconSets: any[],
-    config: any,
+    config: ToolboxConfig<IconSpriteStencil>,
     configVersion: number,
     dirtyConfig: boolean,
     changedId: string | null,
@@ -43,13 +43,26 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         };
     }
 
+    findStencil(info: StencilInfo) {
+        for (let i = 0; i < this.state.config.groups.length; ++i) {
+            for (let j = 0; j < this.state.config.groups[i].items.length; ++j) {
+                let stencil = this.state.config.groups[i].items[j];
+                if (stencil.id === info.stencilId) {
+                    return stencil;
+                }
+            }
+        }
+        return null;
+    }
+
     createElement(info: StencilInfo) {
-        var element = new Image();
+        let element = new Image();
+        let stencil = this.findStencil(info);
 
         element.setProps({
-            width: info.templateWidth ? parseFloat(info.templateWidth) : 46,
-            height: info.templateHeight ? parseFloat(info.templateHeight) : 46,
-            source: Image.createElementSource(info.templatePid, info.templateAid, info.templateId)
+            width: stencil.realWidth || 46,
+            height: stencil.realHeight || 46,
+            source: Image.createElementSource(stencil.id, stencil.artboardId, stencil.pageId)
         });
 
         return element;

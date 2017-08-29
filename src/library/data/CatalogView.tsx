@@ -23,15 +23,13 @@ export default class CatalogView extends Component<CatalogViewProps> {
         if (prevProps.scrollToCategory !== this.props.scrollToCategory) {
             let i = this.props.config.groups.indexOf(this.props.scrollToCategory);
             if (i >= 0 && i < this.categoryNodes.length) {
-                this.categoryNodes[i].scrollIntoView({block: "start"});
+                this.categoryNodes[i].scrollIntoView({ block: "start" });
             }
         }
     }
 
     private onClicked = (e) => {
-        var templateId = e.currentTarget.dataset.templateId;
-        var templateType = e.currentTarget.dataset.templateType;
-        dispatchAction({ type: "Stencils_Clicked", e, templateId, templateType });
+        dispatchAction({ type: "Stencils_Clicked", e: {ctrlKey: e.ctrlKey, metaKey: e.metaKey, currentTarget: e.currentTarget}, stencil: { ...e.currentTarget.dataset } });
     }
 
     private onScroll = (e: React.ChangeEvent<HTMLElement>) => {
@@ -71,8 +69,8 @@ export default class CatalogView extends Component<CatalogViewProps> {
                     </div>
                     <div className="data__fields">
                         {g.children.map(x => <div key={x.name} className="stencil stencil_data stencil_bordered"
-                            data-template-type={this.props.templateType || x.templateType}
-                            data-template-id={x.templateId}
+                            data-stencil-type={this.props.templateType || x.templateType}
+                            data-stencil-id={x.templateId}
                             onClick={this.onClicked}>
                             <div className="data__field">
                                 <span className="data__title">{x.name}</span>

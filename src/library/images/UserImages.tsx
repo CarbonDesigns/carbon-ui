@@ -224,8 +224,7 @@ export default class UserImages extends Component<any, any>{
     }
 
     private onClicked = (e) => {
-        var templateId = e.currentTarget.dataset.templateId;
-        dispatchAction({ type: "Stencils_Clicked", e, templateType: UserImagesStore.storeType, templateId });
+        dispatchAction({ type: "Stencils_Clicked", e: {ctrlKey: e.ctrlKey, metaKey: e.metaKey, currentTarget: e.currentTarget}, stencil: { ...e.currentTarget.dataset } });
     }
 
     componentDidMount() {
@@ -330,8 +329,8 @@ export default class UserImages extends Component<any, any>{
             key={stencil.id}
             className="stencil stencil_userImage"
             title={stencil.title}
-            data-template-type={UserImagesStore.storeType}
-            data-template-id={stencil.id}
+            data-stencil-type={UserImagesStore.storeType}
+            data-stencil-id={stencil.id}
             onClick={this.onClicked}
         >
             <i style={imageStyle} />
@@ -354,7 +353,7 @@ export default class UserImages extends Component<any, any>{
             return this.renderError();
         }
         return <div className="user-images__list">
-            <VirtualList ref="list" data={this.state.images} rowHeight={this.getItemHeight} rowRenderer={this.renderItem}/>
+            <VirtualList ref="list" data={this.state.images} rowHeight={this.getItemHeight} rowRenderer={this.renderItem} />
         </div>;
     }
 

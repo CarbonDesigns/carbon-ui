@@ -6,13 +6,13 @@ import Search from "../../shared/Search";
 import { domUtil } from "carbon-core";
 import ImagesActions from './ImagesActions';
 import LayoutActions from '../../layout/LayoutActions';
-import unsplashStore, { UnsplashStoreState, UnsplashStore, IUnsplashStencil } from "./UnsplashStore";
+import unsplashStore, { UnsplashStoreState, UnsplashStore, UnsplashStencil } from "./UnsplashStore";
 import InfiniteList from "../../shared/collections/InfiniteList";
 import { PortraitHeight, LandscapeHeight } from "./ImageDefs";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
 
-type UnsplashList = new (props) => InfiniteList<IUnsplashStencil>;
+type UnsplashList = new (props) => InfiniteList<UnsplashStencil>;
 const UnsplashList = InfiniteList as UnsplashList;
 
 export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
@@ -44,12 +44,10 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
     }
 
     private onClicked = (e) => {
-        var templateType = e.currentTarget.dataset.templateType;
-        var templateId = e.currentTarget.dataset.templateId;
-        dispatchAction({ type: "Stencils_Clicked", e, templateType, templateId });
+        dispatchAction({ type: "Stencils_Clicked", e: {ctrlKey: e.ctrlKey, metaKey: e.metaKey, currentTarget: e.currentTarget}, stencil: { ...e.currentTarget.dataset } });
     }
 
-    private getItemHeight(i: IUnsplashStencil) {
+    private getItemHeight(i: UnsplashStencil) {
         if (i.thumbHeight) {
             return i.thumbHeight;
         }
@@ -84,7 +82,7 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
         </Markup>;
     }
 
-    private renderItem = (stencil: IUnsplashStencil) => {
+    private renderItem = (stencil: UnsplashStencil) => {
         var imageStyle: any = {
             backgroundImage: 'url(' + stencil.thumbUrl + ')'
         };
@@ -94,8 +92,8 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
             key={stencil.id}
             className={cx("stencil unsplash__holder", { "unsplash__holder_portrait": stencil.portrait })}
             title={stencil.title}
-            data-template-type={unsplashStore.storeType}
-            data-template-id={stencil.id}
+            data-stencil-type={unsplashStore.storeType}
+            data-stencil-id={stencil.id}
             onClick={this.onClicked}
         >
             {image}

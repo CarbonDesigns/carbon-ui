@@ -117,7 +117,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             .then(response => response.json())
             .then(data => ResourceSharer.importPage(data))
             .then(page => {
-                dispatchAction({ type: "Stencils_ChangePage", page });
+                dispatchAction({ type: "Symbols_ChangePage", page });
                 super.close();
             });
     }

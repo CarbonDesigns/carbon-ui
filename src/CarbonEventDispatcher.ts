@@ -40,7 +40,7 @@ export function registerEvents() {
             if (e instanceof Page && props.toolboxConfigId) {
                 ToolboxConfiguration.getConfigForPage(e)
                     .then(config => {
-                        dispatchAction({ type: "Stencils_Loaded", page: e, config, async: true });
+                        dispatchAction({ type: "Symbols_Loaded", page: e, config, async: true });
                     });
             }
         });

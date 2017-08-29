@@ -1,4 +1,5 @@
 import { CellSize } from "../shared/collections/CollectionDefs";
+import { ToolboxConfig, ToolboxStencil } from "./LibraryDefs";
 
 export default class ToolboxMasonry {
     private columns: number[] = [];
@@ -7,7 +8,7 @@ export default class ToolboxMasonry {
     constructor(private categoryHeight: number, private widthAccessor: (item) => number, private heightAccessor: (item) => number) {
     }
 
-    measure(config, collectionWidth: number, columnWidth: number, keepAspectRatio?: boolean): CellSize[] {
+    measure(config: ToolboxConfig<ToolboxStencil>, collectionWidth: number, columnWidth: number, keepAspectRatio?: boolean, reverse?: boolean): CellSize[] {
         let colCount = Math.floor(collectionWidth / columnWidth);
         colCount = Math.max(colCount, 1);
         this.columns.length = 0;
@@ -24,16 +25,28 @@ export default class ToolboxMasonry {
             let group = groups[i];
             result.push(this.placeItem(columnWidth * this.columns.length, this.categoryHeight, columnWidth, flexShare, true));
 
-            for (let j = 0; j < group.items.length; j++) {
-                let item = group.items[j];
-                let width = this.widthAccessor(item);
-                let height = this.heightAccessor(item);
-
-                result.push(this.placeItem(width, height, columnWidth, flexShare, false, keepAspectRatio));
+            if (reverse) {
+                for (let j = group.items.length - 1; j >= 0 ; --j) {
+                    let item = group.items[j];
+                    result.push(this.processItem(item, columnWidth, flexShare, keepAspectRatio));
+                }
+            }
+            else {
+                for (let j = 0; j < group.items.length; j++) {
+                    let item = group.items[j];
+                    result.push(this.processItem(item, columnWidth, flexShare, keepAspectRatio));
+                }
             }
         }
 
         return result;
+    }
+
+    private processItem(item: ToolboxStencil, columnWidth: number, flexShare: number, keepAspectRatio: boolean) {
+        let width = this.widthAccessor(item);
+        let height = this.heightAccessor(item);
+
+        return this.placeItem(width, height, columnWidth, flexShare, false, keepAspectRatio);
     }
 
     private placeItem(width: number, height: number, columnWidth: number, flexShare: number, header?: boolean, keepAspectRatio?: boolean): CellSize {

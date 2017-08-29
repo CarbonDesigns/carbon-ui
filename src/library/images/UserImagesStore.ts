@@ -17,12 +17,12 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
             .catch(() => dispatch(ImagesActions.userImagesError()));
     }
 
-    findById(id) {
-        return this.state.images.find(img => img.id === id);
+    findStencil(info: StencilInfo) {
+        return this.state.images.find(img => img.id === info.stencilId);
     }
 
     createElement(info: StencilInfo) {
-        var image = this.findById(info.templateId);
+        var image = this.findStencil(info);
         var element = new Image();
         element.setProps({
             width: image.realWidth,

@@ -1,5 +1,5 @@
 import React from "react";
-import SpriteView from "../stencils/SpriteView";
+import SpriteView from "../symbols/SpriteView";
 import Dropdown from "../../shared/Dropdown";
 import Navigatable from "../../shared/Navigatable";
 import { Component, listenTo, Dispatcher, StoreComponent, dispatchAction } from "../../CarbonFlux";

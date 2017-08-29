@@ -5,24 +5,24 @@ import Search from "../../shared/Search";
 import ScrollContainer from "../../shared/ScrollContainer";
 import SpriteView from "./SpriteView";
 import { domUtil } from "carbon-core";
-import searchStencilsStore, { SearchStencilsStoreState } from "./SearchStencilsStore";
+import searchSymbolsStore, { SearchSymbolsStoreState } from "./SearchSymbolsStore";
 import symbolsStore from "./SymbolsStore";
 import Navigatable from "../../shared/Navigatable";
 import bem from "../../utils/commonUtils";
-import { StencilsOverscanCount, StencilsColumnWidth } from "../LibraryDefs";
+import { SymbolsOverscanCount, SymbolsColumnWidth } from "../LibraryDefs";
 import LessVars from "../../styles/LessVars";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
 import { GuiButton } from "../../shared/ui/GuiComponents";
 
-export default class SearchStencils extends StoreComponent<{}, SearchStencilsStoreState>{
+export default class SearchSymbols extends StoreComponent<{}, SearchSymbolsStoreState>{
     refs: {
         page: HTMLElement;
         search: Search;
     }
 
     constructor(props) {
-        super(props, searchStencilsStore);
+        super(props, searchSymbolsStore);
     }
 
     componentDidMount() {
@@ -35,7 +35,7 @@ export default class SearchStencils extends StoreComponent<{}, SearchStencilsSto
     }
 
     private onSearch = (q) => {
-        dispatchAction({ type: "Stencils_Search", q });
+        dispatchAction({ type: "Symbols_Search", q });
     }
 
     private onAddMore = () => {
@@ -43,10 +43,10 @@ export default class SearchStencils extends StoreComponent<{}, SearchStencilsSto
     }
 
     private onCategoryChanged = category => {
-        dispatchAction({ "type": "StencilsSearch_ClickedCategory", category });
+        dispatchAction({ "type": "SymbolsSearch_ClickedCategory", category });
     }
     private onScrolledToCategory = category => {
-        dispatchAction({ "type": "StencilsSearch_ScrolledToCategory", category });
+        dispatchAction({ "type": "SymbolsSearch_ScrolledToCategory", category });
     }
 
     render() {
@@ -54,7 +54,7 @@ export default class SearchStencils extends StoreComponent<{}, SearchStencilsSto
 
         return <div ref="page">
             <div className="library-page__header">
-                <Search query={this.state.query} onQuery={this.onSearch} placeholder={this.formatLabel("@symbols.find")} ref="search" />
+                <Search query={this.state.query} onQuery={this.onSearch} placeholder="@symbols.find" ref="search" />
             </div>
 
             {noResults ? this.renderNoResults() : this.renderResults()}
@@ -83,10 +83,10 @@ export default class SearchStencils extends StoreComponent<{}, SearchStencilsSto
                 configVersion={this.state.configVersion}
                 scrollToCategory={this.state.lastScrolledCategory}
                 onScrolledToCategory={this.onScrolledToCategory}
-                overscanCount={StencilsOverscanCount}
-                columnWidth={StencilsColumnWidth}
+                overscanCount={SymbolsOverscanCount}
+                columnWidth={SymbolsColumnWidth}
                 borders={true}
-                templateType={symbolsStore.storeType} />
+                templateType={searchSymbolsStore.storeType} />
         </Navigatable>;
     }
 }

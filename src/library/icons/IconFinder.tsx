@@ -42,9 +42,7 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
     }
 
     private onClicked = (e) => {
-        var templateType = e.currentTarget.dataset.templateType;
-        var templateId = e.currentTarget.dataset.templateId;
-        dispatchAction({ type: "Stencils_Clicked", e, templateType, templateId });
+        dispatchAction({ type: "Stencils_Clicked", e: {ctrlKey: e.ctrlKey, metaKey: e.metaKey, currentTarget: e.currentTarget}, stencil: { ...e.currentTarget.dataset } });
     }
 
     private renderError() {
@@ -75,8 +73,8 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
         return <div className="stencil stencil_icon"
             title={i.name}
             key={i.name}
-            data-template-type={iconFinderStore.storeType}
-            data-template-id={i.id}
+            data-stencil-type={iconFinderStore.storeType}
+            data-stencil-id={i.id}
             onClick={this.onClicked}>
             <i className="stencil_icon__holder" style={iconStyle} />
             {this.renderPrice(i)}

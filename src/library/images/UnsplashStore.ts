@@ -3,16 +3,14 @@ import ImagesActions from "./ImagesActions";
 import {handles, CarbonStore, dispatch} from "../../CarbonFlux";
 import { Image, IPaginatedResult, util } from "carbon-core";
 import Toolbox from "../Toolbox";
-import { IStencil } from "../ToolboxConfiguration";
-import { IToolboxStore } from "../LibraryDefs";
+import { IToolboxStore, ToolboxStencil, StencilInfo } from "../LibraryDefs";
 
 const PageSize = 15;
 
-export interface IUnsplashStencil extends IStencil {
+export interface UnsplashStencil extends ToolboxStencil {
     type: string;
     url: string;
     portrait: boolean;
-    cover?: boolean;
     thumbUrl: string;
     thumbHeight: number;
     credits: {
@@ -48,8 +46,12 @@ export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IT
         };
     }
 
-    createElement({templateId}){
-        var image = this.state.results.find(x => x.id === templateId);
+    findStencil(info: StencilInfo) {
+        return this.state.results.find(x => x.id === info.stencilId);
+    }
+
+    createElement(info: StencilInfo){
+        var image = this.findStencil(info);
         var element = new Image();
         element.setProps({
             width: image.realWidth, height: image.realHeight,

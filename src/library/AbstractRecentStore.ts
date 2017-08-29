@@ -7,7 +7,7 @@ import { IUIElement } from "carbon-model";
 interface IRecentStoreState{
     elements: any;
 }
-export default class AbstractRecentStore extends CarbonStore<IRecentStoreState>{
+export default abstract class AbstractRecentStore extends CarbonStore<IRecentStoreState>{
     [name: string]: any;
 
     constructor(name){

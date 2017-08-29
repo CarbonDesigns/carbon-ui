@@ -1,5 +1,5 @@
 import React from "react";
-import StencilsPage from "./stencils/StencilsPage";
+import SymbolsPage from "./symbols/SymbolsPage";
 import IconsPage from "./icons/IconsPage";
 import ImagesPage from "./images/ImagesPage";
 import DataPage from "./data/DataPage";
@@ -8,28 +8,9 @@ import Progress from "../shared/Progress";
 import Panel from '../layout/Panel'
 import {richApp} from "../RichApp";
 import {listenTo, Component, dispatch} from '../CarbonFlux';
-import {FormattedHTMLMessage, defineMessages} from 'react-intl';
+import {FormattedMessage, defineMessages} from 'react-intl';
 import libraryTabStore from "./LibraryTabStore";
 import LibraryActions from "./LibraryActions";
-
-const messages = defineMessages({
-    Stencils: {
-        defaultMessage: 'Stencils',
-        id: 'Stencils'
-    },
-    Icons: {
-        defaultMessage: 'Icons',
-        id: 'Icons'
-    },
-    Images: {
-        defaultMessage: 'Images',
-        id: 'Images'
-    },
-    Data: {
-        defaultMessage: 'Data',
-        id: 'Data'
-    }
-});
 
 export default class LibraryPanel extends Component {
     constructor(props) {
@@ -66,16 +47,16 @@ export default class LibraryPanel extends Component {
                         tabMods="level1"
                         insertBefore={this.state.progressVisible ? <Progress /> : null}
                         items={[
-                            <FormattedHTMLMessage tagName="h5" {...messages.Stencils}/>,
-                            <FormattedHTMLMessage tagName="h5" {...messages.Icons}/>,
-                            <FormattedHTMLMessage tagName="h5" {...messages.Images}/>,
-                            <FormattedHTMLMessage tagName="h5" {...messages.Data}/>
+                            <FormattedMessage tagName="h5" id="@library.symbols"/>,
+                            <FormattedMessage tagName="h5" id="@library.icons"/>,
+                            <FormattedMessage tagName="h5" id="@library.images"/>,
+                            <FormattedMessage tagName="h5" id="@library.data"/>
                         ]}
                     />
 
                     <TabArea className="gui-pages">
                         <TabPage tabId="1" className="gui-page">
-                            <StencilsPage />
+                            <SymbolsPage />
                         </TabPage>
                         <TabPage tabId="2" className="gui-page">
                             <IconsPage />

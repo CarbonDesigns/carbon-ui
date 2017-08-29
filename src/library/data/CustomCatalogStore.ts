@@ -14,8 +14,19 @@ class CustomCatalogStore extends CarbonStore<CustomCatalogStoreState> implements
     storeType = "customData";
     _app: IApp;
 
+    findStencil(info: StencilInfo) {
+        for (let i = 0; i < this.state.config.groups.length; ++i) {
+            for (let j = 0; j < this.state.config.groups[i].children.length; ++j) {
+                let stencil = this.state.config.groups[i].children[j];
+                if (stencil.templateId === info.stencilId) {
+                    return stencil;
+                }
+            }
+        }
+        return null;
+    }
     createElement(info: StencilInfo) {
-        let templateId = info.templateId;
+        let templateId = info.stencilId;
         var colon = templateId.indexOf(":");
         var providerId = null, field = null;
         if (colon !== -1) {

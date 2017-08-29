@@ -1,7 +1,7 @@
 import React from "react";
-import StandardStencils from "./StandardStencils";
-import RecentStencils from "./RecentStencils";
-import SearchStencils from "./SearchStencils";
+import Symbols from "./Symbols";
+import RecentSymbols from "./RecentSymbols";
+import SearchSymbols from "./SearchSymbols";
 import {domUtil} from "carbon-core";
 import {listenTo, Component, dispatch} from "../../CarbonFlux";
 // import {default as TabContainer, TabArea, TabHeader, TabPage} from "../../shared/TabContainer";
@@ -12,7 +12,7 @@ import libraryTabStore from "../LibraryTabStore";
 import LibraryActions from "../LibraryActions";
 
 
-export default class StencilsPage extends Component<any, any> {
+export default class SymbolsPage extends Component<any, any> {
     constructor(props) {
         super(props);
         this.state = {
@@ -37,13 +37,13 @@ export default class StencilsPage extends Component<any, any> {
             />
             <TabArea className="gui-pages" id="stencils-page__pages">
                 <TabPage tabId="1" className="gui-page">
-                    <StandardStencils ref="tab1"/>
+                    <Symbols ref="tab1"/>
                 </TabPage>
                 <TabPage tabId="2" className="gui-page">
-                    <RecentStencils ref="tab2" />
+                    <RecentSymbols ref="tab2" />
                 </TabPage>
                 <TabPage tabId="3" className="gui-page tab-page_search">
-                    <SearchStencils ref="tab4" />
+                    <SearchSymbols ref="tab4" />
                 </TabPage>
             </TabArea>
         </TabContainer>;

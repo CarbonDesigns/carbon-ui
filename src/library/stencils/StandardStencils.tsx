@@ -10,11 +10,9 @@ import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import SymbolsStore, { SymbolsStoreState } from "./SymbolsStore";
 import { IPage, app } from "carbon-core";
 import Refresher from "../Refresher";
+import { StencilsColumnWidth, StencilsOverscanCount } from "../LibraryDefs";
 
 require("../../import/ImportResourceDialog");
-
-const OverscanCount = 10;
-const ColumnWidth = 128;
 
 export default class StandardStencils extends StoreComponent<{}, SymbolsStoreState> {
     refs: {
@@ -84,8 +82,8 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
                     changedId={this.state.changedId}
                     scrollToCategory={this.state.lastScrolledCategory}
                     onScrolledToCategory={this.onScrolledToCategory}
-                    overscanCount={OverscanCount}
-                    columnWidth={ColumnWidth}
+                    overscanCount={StencilsOverscanCount}
+                    columnWidth={StencilsColumnWidth}
                     sourceId={page.id()}
                     borders={true}
                     templateType={SymbolsStore.storeType}/>

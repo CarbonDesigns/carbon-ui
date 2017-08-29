@@ -11,6 +11,7 @@ import LayoutActions, { LayoutAction } from "../../layout/LayoutActions";
 import { util } from "carbon-core";
 import { isRetina } from "../../utils/domUtil";
 import { CellSize } from "../../shared/collections/CollectionDefs";
+import { ToolboxConfigGroup } from "../ToolboxConfiguration";
 
 const CategoryHeight = 36;
 
@@ -78,7 +79,6 @@ export default class SpriteView extends Component<SpriteViewProps>{
 
     onClicked = (e) => {
         var templateId = e.currentTarget.dataset.templateId;
-        var sourceId = e.currentTarget.dataset.sourceId;
         if (templateId !== this.props.changedId) {
             dispatchAction({ type: "Stencils_Clicked", e, ...e.currentTarget.dataset });
         }
@@ -167,7 +167,7 @@ export default class SpriteView extends Component<SpriteViewProps>{
         </div>;
     }
 
-    private renderItem = (x, g) => {
+    private renderItem = (x, g: ToolboxConfigGroup) => {
         var containerStyle = {};
         if (x.style) {
             extend(containerStyle, x.style);
@@ -210,11 +210,11 @@ export default class SpriteView extends Component<SpriteViewProps>{
             className={cn}
             data-template-id={x.id}
             data-template-type={this.props.templateType}
-            data-template-pid={x.pageId}
+            data-template-pid={g.pageId || x.pageId}
             data-template-aid={x.artboardId}
             data-template-width={x.realWidth}
             data-template-height={x.realHeight}
-            data-source-id={this.props.sourceId}
+            data-source-id={g.pageId || this.props.sourceId}
             title={x.title}
             style={containerStyle}
             onClick={this.onClicked}>

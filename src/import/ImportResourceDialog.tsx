@@ -20,6 +20,11 @@ const TabGallery = "2";
 const TabCompany = "3";
 const TabSearch = "4";
 
+interface ImportResourceDialogProps {
+    tags?: string;
+    query?: string;
+}
+
 type ImportPageDialogState = {
     loading: boolean;
     tabId: string;
@@ -35,12 +40,23 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
         grid: InfiniteGrid<ISharedResource>;
     }
 
-    constructor(props) {
+    constructor(props: ImportResourceDialogProps) {
         super(props);
+
+        let query = this.getQueryFromProps(props);
         this.state = {
             loading: false,
-            tabId: TabBuiltIn
+            tabId: query ? TabGallery : TabBuiltIn,
+            query
         };
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<ImportResourceDialogProps>) {
+        let query = this.getQueryFromProps(nextProps);
+        this.setState({
+            query,
+            tabId: query ? TabGallery : this.state.tabId
+        });
     }
 
     close() {
@@ -50,6 +66,17 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
         else {
             super.close();
         }
+    }
+
+    private getQueryFromProps(props: ImportResourceDialogProps) {
+        let query = "";
+        if (props.tags) {
+            query = props.tags + ": ";
+        }
+        if (props.query) {
+            query += props.query;
+        }
+        return query;
     }
 
     private onTabChanged = (tabId: string) => {
@@ -117,14 +144,14 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
     renderBody() {
         return <div className={bem("import-resource-dialog", null, { "details-open": !!this.state.selectedResource })}>
             <div className="import-resource-dialog__panel  import-resource-dialog__panel_list">
-                <TabContainer type="normal" className="resources-list" onTabChanged={this.onTabChanged}>
+                <TabContainer type="normal" className="resources-list" onTabChanged={this.onTabChanged} currentTabId={this.state.tabId}>
                     <TabTabs tabClassName="resources-list__tab-header" tabMods="nogrow"
                         items={[
                             <FormattedMessage tagName="h5" id="@import.builtin" />,
                             <FormattedMessage tagName="h5" id="@import.gallery" />,
                             <FormattedMessage tagName="h5" id="@import.team" />
                         ]}
-                        insertAfter={<Search className="resources-list__search-field" onQuery={this.onSearch} />}
+                        insertAfter={<Search className="resources-list__search-field" query={this.state.query} onQuery={this.onSearch} />}
                     />
                     <TabArea className="gui-pages">
                         <TabPage className="gui-page" tabId={TabBuiltIn}>

@@ -1,4 +1,4 @@
-import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, ToolboxGroup } from "carbon-core";
+import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, ToolboxGroup, IPage, ISize } from "carbon-core";
 
 let PADDING = 5;
 let _configCache = {};
@@ -9,6 +9,22 @@ export interface IStencil {
     realWidth: number;
     realHeight: number;
     spriteMap: number[];
+}
+
+export type ToolboxConfigGroup = {
+    name: string;
+    items: IStencil[];
+    spriteUrl: string;
+    spriteUrl2x: string;
+    size: ISize;
+    pageId?: string; //for search results with groups from different pages
+}
+
+export type ToolboxConfig = {
+    id: string;
+    name: string;
+    pageId: string;
+    groups: ToolboxConfigGroup[];
 }
 
 export default class ToolboxConfiguration {
@@ -202,7 +218,7 @@ export default class ToolboxConfiguration {
             .then(() => ToolboxConfiguration._performRenderTask(t, element, elementsMap, context, contextScale, env));
     }
 
-    static getConfigForPage(page) {
+    static getConfigForPage(page: IPage) {
         if (page.props.toolboxConfigUrl && page.props.toolboxConfigUrl !== '#') {
             let config = _configCache[page.props.toolboxConfigUrl];
             if (config) {
@@ -214,10 +230,11 @@ export default class ToolboxConfiguration {
             });
         }
 
-        return ToolboxConfiguration.buildToolboxConfig(page)
+        //skip page update to avoid infinite loops
+        return ToolboxConfiguration.buildToolboxConfig(page, true);
     }
 
-    static buildToolboxConfig(page) {
+    static buildToolboxConfig(page, skipPageUpdate?: boolean) {
         let elements = page.getAllResourceArtboards(ArtboardType.Symbol) as IArtboard[];
 
         if (!elements.length) {
@@ -264,16 +281,18 @@ export default class ToolboxConfiguration {
             }
         }
 
-        let config = { groups: groups, id: configId };
+        let config: ToolboxConfig = { groups: groups, id: configId, name: page.name(), pageId: page.id() };
         return Promise.all(promises)
             .then(() => {
                 if (app.serverless()) {
-                    return { url: '#', configId: createUUID() };
+                    return { url: '#' };
                 }
                 return backend.fileProxy.uploadPublicFile({ content: JSON.stringify(config) });
             })
             .then((data) => {
-                page.setProps({ toolboxConfigUrl: data.url, toolboxConfigId: configId });
+                if (!skipPageUpdate) {
+                    page.setProps({ toolboxConfigUrl: data.url, toolboxConfigId: configId });
+                }
                 return config;
             })
     }

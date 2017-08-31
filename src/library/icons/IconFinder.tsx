@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
 import cx from "classnames";
-import IconsList from "./IconsList";
 import { Component, handles, dispatch, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import Search from "../../shared/Search";
 import { domUtil } from "carbon-core";
@@ -37,7 +36,7 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
     }
 
     private onSearch = term => {
-        dispatch(IconsActions.webSearch(term));
+        dispatchAction({ type: "Icons_WebSearch", q: term });
         this.refs.grid.reset();
     }
 

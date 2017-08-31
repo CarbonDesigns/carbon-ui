@@ -1,4 +1,4 @@
-import { Component, handles, dispatch, listenTo } from '../../CarbonFlux';
+import { Component, handles, dispatch, listenTo, dispatchAction } from '../../CarbonFlux';
 import React from 'react';
 import { app, PropertyTracker } from "carbon-core";
 import Navigatable from "../../shared/Navigatable";
@@ -9,7 +9,6 @@ import { default as TabContainer, TabTabs, TabArea, TabPage } from "../../shared
 import bem from '../../utils/commonUtils';
 import { GuiButton } from "../../shared/ui/GuiComponents";
 import libraryTabStore from "../LibraryTabStore";
-import LibraryActions from "../LibraryActions";
 import BuiltInProviders from "./BuiltInProviders";
 import NotReady from "../../shared/NotReady";
 
@@ -39,7 +38,7 @@ export default class DataPanel extends Component<{}, DataPanelState> {
     render() {
         var { children, ...rest } = this.props;
 
-        return <TabContainer className="gui-page__content data" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("data", tabId))}>
+        return <TabContainer className="gui-page__content data" currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({ type: "Library_Tab", area: "data", tabId})}>
             <TabTabs
                 items={[
                     <i className="ico-library" />,

@@ -21,13 +21,12 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
         return this.state.images.find(img => img.id === info.stencilId);
     }
 
-    createElement(info: StencilInfo) {
-        var image = this.findStencil(info);
+    createElement(stencil) {
         var element = new Image();
         element.setProps({
-            width: image.realWidth,
-            height: image.realHeight,
-            source: Image.createUrlSource(image.url)
+            width: stencil.realWidth,
+            height: stencil.realHeight,
+            source: Image.createUrlSource(stencil.url)
         });
         return element;
     }

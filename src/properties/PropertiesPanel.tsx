@@ -11,7 +11,7 @@ import PropertyStore from "./PropertyStore";
 import Immutable from 'immutable';
 import TabContainer, { TabPage, TabArea } from "../shared/TabContainer";
 import { PropertiesTab } from "./PropertyActions";
-import ToolboxGroupsPanel from "./ToolboxGroupsPanel";
+import SymbolGroupsPanel from "./SymbolGroupsPanel";
 
 interface IPropertiesPanelProps {
 }
@@ -63,7 +63,7 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
                             {this.renderProperties()}
                         </TabPage>
                         <TabPage className="gui-page" tabId="2">
-                            <ToolboxGroupsPanel/>
+                            <SymbolGroupsPanel/>
                         </TabPage>
                     </TabArea>
                 </TabContainer>

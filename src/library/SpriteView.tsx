@@ -1,17 +1,17 @@
 import React from "react";
 import ReactDom from "react-dom";
-import { Component, listenTo, dispatchAction, handles } from "../../CarbonFlux";
-import { richApp } from "../../RichApp";
-import StencilsActions from "../StencilsActions";
+import { Component, listenTo, dispatchAction, handles } from "../CarbonFlux";
+import { richApp } from "../RichApp";
+import StencilsActions from "./StencilsActions";
 import { FormattedHTMLMessage, defineMessages, FormattedMessage } from 'react-intl';
-import bem from "../../utils/commonUtils";
-import VirtualCollection from "../../shared/collections/VirtualCollection";
-import ToolboxMasonry from "../ToolboxMasonry";
-import LayoutActions, { LayoutAction } from "../../layout/LayoutActions";
+import bem from "../utils/commonUtils";
+import VirtualCollection from "../shared/collections/VirtualCollection";
+import ToolboxMasonry from "./ToolboxMasonry";
+import LayoutActions, { LayoutAction } from "../layout/LayoutActions";
 import { util } from "carbon-core";
-import { isRetina } from "../../utils/domUtil";
-import { CellSize } from "../../shared/collections/CollectionDefs";
-import { SpriteStencil, ToolboxConfigGroup, ToolboxConfig } from "../LibraryDefs";
+import { isRetina } from "../utils/domUtil";
+import { CellSize } from "../shared/collections/CollectionDefs";
+import { SpriteStencil, ToolboxGroup, ToolboxConfig } from "./LibraryDefs";
 
 const CategoryHeight = 36;
 
@@ -173,7 +173,7 @@ export default class SpriteView extends Component<SpriteViewProps>{
         </div>;
     }
 
-    private renderItem = (x: SpriteStencil, g: ToolboxConfigGroup<SpriteStencil>) => {
+    private renderItem = (x: SpriteStencil, g: ToolboxGroup<SpriteStencil>) => {
         var spriteUrl;
 
         if (isRetina) {

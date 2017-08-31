@@ -6,7 +6,7 @@ import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
 import { app, Symbol, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection } from "carbon-core";
-import { IToolboxStore, StencilInfo, StencilClickEvent } from "./LibraryDefs";
+import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 
 interface Interaction {
     dropElement: HTMLElement;
@@ -123,7 +123,8 @@ export class Toolbox extends CarbonStore<ToolboxState>{
 
     elementFromTemplate(info: StencilInfo) {
         var store = this.stores[info.stencilType];
-        var element = store.createElement(info);
+        var stencil = store.findStencil(info);
+        var element = store.createElement(stencil);
 
         app.assignNewName(element);
         this.fitToViewportIfNeeded(element);
@@ -161,9 +162,9 @@ export class Toolbox extends CarbonStore<ToolboxState>{
 
     private onElementAdded(info: StencilInfo) {
         var store = this.stores[info.stencilType];
-        store.elementAdded(info);
-
         let stencil = store.findStencil(info);
+        store.elementAdded(stencil);
+
         dispatchAction({ type: "Stencils_Added", stencilType: info.stencilType, stencil, async: true });
     }
 

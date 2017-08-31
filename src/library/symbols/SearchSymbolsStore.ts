@@ -4,8 +4,9 @@ import { handles, CarbonStore, dispatchAction } from "../../CarbonFlux";
 import ToolboxConfiguration from "../ToolboxConfiguration";
 import { CarbonAction } from "../../CarbonActions";
 import { app, Symbol, IPage } from "carbon-core";
-import { ToolboxConfig, SpriteStencil, ToolboxConfigGroup, IToolboxStore, StencilInfo, SpriteStencilInfo } from "../LibraryDefs";
+import { ToolboxConfig, SpriteStencil, ToolboxGroup, IToolboxStore, StencilInfo, SpriteStencilInfo } from "../LibraryDefs";
 import Toolbox from "../Toolbox";
+import symbolsStore from "./SymbolsStore";
 
 export type SearchSymbolsStoreState = {
     searchConfig: ToolboxConfig<SpriteStencil>;
@@ -54,10 +55,8 @@ class SearchSymbolsStore extends CarbonStore<SearchSymbolsStoreState> implements
         return null;
     }
 
-    createElement(info: SpriteStencilInfo) {
-        var element = new Symbol();
-        element.source({ pageId: info.pageId, artboardId: info.stencilId });
-        return element;
+    createElement(stencil: SpriteStencil) {
+        return symbolsStore.createElement(stencil);
     }
 
     elementAdded() {}
@@ -99,7 +98,7 @@ class SearchSymbolsStore extends CarbonStore<SearchSymbolsStoreState> implements
     private search(q) {
         this.ensureConfigsLoaded();
 
-        var result = { groups: [], id: "searchConfig", name: "searchConfig", pageId: "searchConfig" };
+        var result = { groups: [], id: "searchConfig" };
         var r = new RegExp(q, "gi");
         for (var i = 0; i < this.cachedConfigs.length; i++) {
             var config = this.cachedConfigs[i];
@@ -126,7 +125,7 @@ class SearchSymbolsStore extends CarbonStore<SearchSymbolsStoreState> implements
         });
     }
 
-    private findOrCreateGroup(searchConfig: ToolboxConfig<SpriteStencil>, sourceConfig: ToolboxConfig<SpriteStencil>, sourceGroup: ToolboxConfigGroup<SpriteStencil>, pageId: string) {
+    private findOrCreateGroup(searchConfig: ToolboxConfig<SpriteStencil>, sourceConfig: ToolboxConfig<SpriteStencil>, sourceGroup: ToolboxGroup<SpriteStencil>, pageId: string) {
         let page = app.getImmediateChildById<IPage>(pageId);
         let pageName = page.name();
 

@@ -1,7 +1,7 @@
 import Toolbox from "../Toolbox";
 import { handles, dispatch, CarbonStore } from "../../CarbonFlux";
 import { app } from "carbon-core";
-import { IToolboxStore, StencilInfo } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, Stencil } from "../LibraryDefs";
 import { DataAction } from "./DataActions";
 
 export type DataStoreState = {
@@ -37,8 +37,8 @@ export class DataStore extends CarbonStore<DataStoreState> implements IToolboxSt
         return null;
     }
 
-    createElement(info: StencilInfo){
-        let templateId = info.stencilId;
+    createElement(stencil: Stencil){
+        let templateId = stencil.id;
         var colon = templateId.indexOf(":");
         var providerId = templateId.substr(0, colon);
         var field = templateId.substr(colon + 1);

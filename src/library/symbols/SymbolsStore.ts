@@ -1,5 +1,5 @@
 import { CarbonStore, dispatchAction } from "../../CarbonFlux";
-import { IPage, app, IDisposable, ArtboardType, Symbol } from "carbon-core";
+import { IPage, app, IDisposable, ArtboardType, Symbol, Page } from "carbon-core";
 import { CarbonAction } from "../../CarbonActions";
 import { SymbolsAction } from "./SymbolsActions";
 import ToolboxConfiguration from "../ToolboxConfiguration";
@@ -43,12 +43,12 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         }
         return null;
     }
-    createElement(data: SpriteStencilInfo) {
+    createElement(stencil: SpriteStencil) {
         var element = new Symbol();
-        element.source({pageId: data.pageId, artboardId: data.stencilId});
+        element.source({ pageId: stencil.pageId, artboardId: stencil.id });
         return element;
     }
-    elementAdded(){
+    elementAdded() {
     }
 
     onAction(action: SymbolsAction | CarbonAction) {
@@ -67,6 +67,14 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                     }
 
                     this.setState({ config: action.config, dirtyConfig: false, changedId: null, activeCategory, configVersion: ++this.state.configVersion });
+                }
+                return;
+            case "Carbon_PropsChanged":
+                if (action.element instanceof Page && action.props.toolboxConfigId) {
+                    ToolboxConfiguration.getConfigForPage(action.element as IPage)
+                        .then(config => {
+                            dispatchAction({ type: "Symbols_Loaded", page: action.element as IPage, config, async: true });
+                        });
                 }
                 return;
             case "Carbon_ResourceAdded":

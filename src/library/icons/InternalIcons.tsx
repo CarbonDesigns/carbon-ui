@@ -1,5 +1,5 @@
 import React from "react";
-import SpriteView from "../symbols/SpriteView";
+import SpriteView from "../SpriteView";
 import Dropdown from "../../shared/Dropdown";
 import Navigatable from "../../shared/Navigatable";
 import { Component, listenTo, Dispatcher, StoreComponent, dispatchAction } from "../../CarbonFlux";
@@ -12,9 +12,7 @@ import InternalIconsStore, { InternalIconsStoreState } from "./InternalIconsStor
 import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
 import Refresher from "../Refresher";
-
-const OverscanCount = 20;
-const IconSize = 40;
+import { IconsOverscanCount, IconSize } from "../LibraryDefs";
 
 export default class InternalIcons extends StoreComponent<any, InternalIconsStoreState> {
     constructor(props) {
@@ -53,7 +51,7 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
                 changedId={this.state.changedId}
                 scrollToCategory={this.state.lastScrolledCategory}
                 onScrolledToCategory={this.onScrolledToCategory}
-                overscanCount={OverscanCount}
+                overscanCount={IconsOverscanCount}
                 columnWidth={IconSize}
                 keepAspectRatio={true}
                 templateType={InternalIconsStore.storeType}/>

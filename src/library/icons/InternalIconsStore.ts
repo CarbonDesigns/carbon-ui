@@ -2,38 +2,38 @@ import IconFinderApi from "./IconFinderApi";
 import IconsActions, { IconsAction } from "./IconsActions";
 import CarbonActions, { CarbonAction } from "../../CarbonActions";
 import { CarbonStore, dispatchAction } from '../../CarbonFlux';
-import { Image, Brush, ContentSizing, ArtboardType, UIElementFlags, IconSetSpriteManager, PatchType, app } from "carbon-core";
+import { util, IArtboard, Image, Brush, ContentSizing, ArtboardType, UIElementFlags, PatchType, app, Page, IArtboardProps, IPage, IUIElement, ISize } from "carbon-core";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo, ToolboxConfig, IconSpriteStencil } from "../LibraryDefs";
-
-var key = 0;
-
-interface InternalIconInfo {
-    pageId: string
-    artboard: any;
-    element: any;
-}
+import { IToolboxStore, StencilInfo, ToolboxConfig, IconSpriteStencil, ToolboxGroup, Stencil, SpriteStencilInfo, PageSpriteCacheItem } from "../LibraryDefs";
+import IconSetSpriteManager from "../IconSetSpriteManager";
 
 export type InternalIconsStoreState = {
-    iconSets: any[],
-    config: ToolboxConfig<IconSpriteStencil>,
-    configVersion: number,
-    dirtyConfig: boolean,
-    changedId: string | null,
-    activeCategory: any,
-    lastScrolledCategory: any
+    config: ToolboxConfig<IconSpriteStencil>;
+    configVersion: number;
+    dirtyConfig: boolean;
+    changedId: string | null;
+    activeCategory: any;
+    lastScrolledCategory: any;
 }
 
-export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> implements IToolboxStore{
+type ArtboardState = {
+    pageId: string;
+    artboardId: string;
+    version: string;
+}
+
+const IconSize = 32;
+const DeletedVersion = "deleted";
+
+export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> implements IToolboxStore {
     storeType = "internalIcons";
 
-    private updating: boolean;
+    private artboardStates: ArtboardState[] = [];
 
     constructor() {
         super();
 
         this.state = {
-            iconSets: [],
             config: null,
             configVersion: 0,
             dirtyConfig: false,
@@ -43,11 +43,11 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         };
     }
 
-    findStencil(info: StencilInfo) {
+    findStencil(info: SpriteStencilInfo) {
         for (let i = 0; i < this.state.config.groups.length; ++i) {
             for (let j = 0; j < this.state.config.groups[i].items.length; ++j) {
                 let stencil = this.state.config.groups[i].items[j];
-                if (stencil.id === info.stencilId) {
+                if (stencil.id === info.stencilId && stencil.pageId === info.pageId) {
                     return stencil;
                 }
             }
@@ -55,14 +55,13 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         return null;
     }
 
-    createElement(info: StencilInfo) {
+    createElement(stencil: IconSpriteStencil) {
         let element = new Image();
-        let stencil = this.findStencil(info);
 
         element.setProps({
-            width: stencil.realWidth || 46,
-            height: stencil.realHeight || 46,
-            source: Image.createElementSource(stencil.id, stencil.artboardId, stencil.pageId)
+            width: stencil.realWidth,
+            height: stencil.realHeight,
+            source: Image.createElementSource(stencil.pageId, stencil.artboardId, stencil.id)
         });
 
         return element;
@@ -70,149 +69,11 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
     elementAdded() {
     }
 
-    _buildIconSet(artboard) {
-        var iconSet = {
-            pageId: artboard.parent().id(),
-            artboard: artboard,
-            elements: [],
-            version: artboard.version
+    getConfig() {
+        if (!this.state.config) {
+            this.setConfig();
         }
-        var elements = iconSet.elements;
-        artboard.applyVisitor(e => {
-            if (e.hasFlags(UIElementFlags.Icon)) {
-                elements.unshift(e);
-            }
-        })
-
-        return iconSet;
-    }
-
-
-    buildIconGroup(groups, set) {
-        let elements = set.elements;
-        let artboard = set.artboard;
-
-        var group = {
-            name: artboard.name(),
-            items: [],
-            spriteUrl: null,
-            spriteUrl2x: null,
-            size: null
-        }
-        var parent = artboard.parent();
-        if (!parent) {
-            return;
-        }
-
-        var data = parent.getArrayPropValue("iconSpriteCache", artboard.id());
-
-        groups.push(group);
-
-        var props = set.artboard.props;
-
-        var promise;
-        if (data) {
-            promise = Promise.resolve({
-                spriteUrl: data.u,
-                spriteUrl2x: data.u2,
-                size: { width: data.w, height: data.h }
-            })
-        } else {
-            promise = IconSetSpriteManager.getSpriteForIconSet(set.artboard, 32).then(data => {
-                parent.patchProps(PatchType.Remove, "iconSpriteCache", {
-                    id: artboard.id()
-                });
-
-                parent.patchProps(PatchType.Insert, "iconSpriteCache", {
-                    u: data.spriteUrl,
-                    u2: data.spriteUrl2x,
-                    w: data.size.width,
-                    h: data.size.height,
-                    id: artboard.id()
-                });
-
-                return data;
-            })
-        }
-
-        return promise.then(data => {
-            var x = 0;
-            group.spriteUrl = data.spriteUrl;
-            group.spriteUrl2x = data.spriteUrl2x;
-            group.size = data.size;
-
-            for (let e of elements) {
-                group.items.push({
-                    "id": e.id(),
-                    "type": this.storeType,
-                    "pageId": set.pageId,
-                    "artboardId": set.artboard.id(),
-                    "realHeight": e.height(),
-                    "realWidth": e.width(),
-                    "spriteMap": [
-                        x,
-                        0,
-                        32,
-                        32
-                    ],
-                    title: e.name()
-                });
-                x += 32;
-            }
-        });
-    }
-
-    generateConfig() {
-        var iconSets = this.state.iconSets;
-        if (!iconSets.length) {
-            dispatchAction({ type: "Icons_Loaded", config: null, iconSets, async: true });
-            return;
-        }
-
-        this.updating = true;
-
-        var config = {
-            groups: [],
-            id: ''
-        };
-        var promises = [];
-        for (var set of iconSets) {
-            promises.push(this.buildIconGroup(config.groups, set));
-        }
-
-        Promise.all(promises)
-            .then(() => dispatchAction({ type: "Icons_Loaded", config, iconSets, async: true }));
-    }
-
-    onUpdated() {
-        var iconSetArtboards = app.getAllResourceArtboards(ArtboardType.IconSet);
-        var iconSets = [];
-        for (var i = 0; i < iconSetArtboards.length; ++i) {
-            iconSets.push(this._buildIconSet(iconSetArtboards[i]));
-        }
-        this.setState({ iconSets: iconSets, dirtyConfig: false });
-
-        this.generateConfig();
-    }
-
-    private onLoaded(iconSets, config) {
-        if (iconSets !== this.state.iconSets) {
-            return;
-        }
-        let activeCategory = null;
-        if (config && config.groups.length) {
-            activeCategory = config.groups[0];
-        }
-
-        this.setState({ config, activeCategory, dirtyConfig: false, configVersion: ++this.state.configVersion });
-        this.updating = false;
-    }
-
-    private onCategoryClicked(category) {
-        this.setState({ activeCategory: category, lastScrolledCategory: category });
-    }
-    private onScrolledToCategory(category) {
-        this.setState({ activeCategory: category });
+        return this.state.config;
     }
 
     onAction(action: CarbonAction | IconsAction) {
@@ -220,11 +81,18 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
 
         switch (action.type) {
             case "Icons_Refresh":
-            case "Carbon_AppUpdated":
-                this.onUpdated();
+                this.updateDirtySets();
                 return;
-            case "Icons_Loaded":
-                this.onLoaded(action.iconSets, action.config);
+            case "Icons_Update":
+            case "Carbon_AppUpdated":
+                this.setConfig();
+                return;
+            case "Carbon_PropsChanged":
+                if (action.element instanceof Page && action.props.iconSpriteCache) {
+                    // if the page is updated by another user, make a refresh in a new cycle
+                    // to ensure that all other changes are applied first
+                    dispatchAction({ type: "Icons_Update", async: true });
+                }
                 return;
 
             case "Carbon_ResourceAdded":
@@ -246,73 +114,216 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         }
     }
 
-    onResourceAdded(resourceType: ArtboardType, element) {
+    private onResourceAdded(resourceType: ArtboardType, artboard: IArtboard) {
         if (resourceType !== ArtboardType.IconSet) {
             return;
         }
 
-        if (this.updating) {
-            return;
-        }
+        this.markArtboardAsDirty(artboard);
 
         if (!this.state.config) {
-            this.onUpdated();
+            this.updateDirtySets();
         }
         else {
             this.setState({ dirtyConfig: true });
         }
     }
 
-    onResourceChanged(resourceType, element) {
-        if (this.updating) {
-            return;
-        }
-
+    private onResourceChanged(resourceType, artboard: IArtboard) {
         if (resourceType !== ArtboardType.IconSet) {
             return;
         }
 
-        this.updating = true;
+        this.markArtboardAsDirty(artboard);
+        this.setState({ dirtyConfig: true });
+    }
 
-        var iconSets = this.state.iconSets.slice();
-        let iconSet = this._buildIconSet(element);
+    private onIconSetDeleted(resourceType, artboard: IArtboard) {
+        if (resourceType !== ArtboardType.IconSet) {
+            return;
+        }
 
-        element.parent().patchProps(PatchType.Remove, "iconSpriteCache", {
-            id: element.id()
-        });
+        this.markArtboardAsDirty(artboard, DeletedVersion);
+        this.setState({ dirtyConfig: true });
+    }
 
-        let inserted = false;
-        for (var i = 0; i < iconSets.length; ++i) {
-            if (iconSets[i].artboard === element) {
-                iconSets[i] = iconSet;
-                inserted = true;
-                break;
+    private setConfig() {
+        let pages = app.pages.filter(x => x.props.iconSpriteCache);
+
+        let newStates: ArtboardState[] = [];
+        for (let i = 0; i < pages.length; ++i) {
+            let cacheItems = pages[i].props.iconSpriteCache as PageSpriteCacheItem[];
+            for (let j = 0; j < cacheItems.length; ++j) {
+                newStates.push({ pageId: pages[i].id(), artboardId: cacheItems[j].id, version: cacheItems[j].version });
             }
         }
 
-        if (!inserted) {
-            iconSets.push(iconSet);
+        if (this.artboardStates.length) {
+            if (this.areSameArtboardStates(this.artboardStates, newStates) || !this.hasDirtyArtboards()) {
+                let config = this.buildToolboxConfig(pages);
+                this.setState({ dirtyConfig: false, config, configVersion: ++this.state.configVersion });
+                this.artboardStates = newStates;
+            }
+            else {
+                this.setState({ dirtyConfig: true });
+            }
         }
+        else {
+            let config = this.buildToolboxConfig(pages);
+            let activeCategory = this.state.activeCategory || config.groups[0];
 
-        this.setState({ iconSets: iconSets, dirtyConfig: true });
-        this.updating = false;
+            this.setState({ dirtyConfig: false, config, activeCategory, configVersion: ++this.state.configVersion });
+            this.artboardStates = newStates;
+        }
     }
 
-    onIconSetDeleted(resourceType, element) {
-        if (resourceType !== ArtboardType.IconSet) {
+    private buildToolboxConfig(pages: IPage[]) {
+        let config: ToolboxConfig<IconSpriteStencil> = {
+            id: util.createUUID(),
+            groups: []
+        }
+
+        for (let i = 0; i < pages.length; ++i) {
+            let page = pages[i];
+            let cacheItems = pages[i].props.iconSpriteCache as PageSpriteCacheItem[];
+
+            for (let j = 0; j < cacheItems.length; j++) {
+                let cacheItem = cacheItems[j];
+                let artboard = page.getImmediateChildById<IArtboard>(cacheItem.id);
+                let elements = this.buildIconSet(artboard);
+                let group: ToolboxGroup<IconSpriteStencil> = {
+                    name: artboard.name(),
+                    items: []
+                }
+
+                let x = 0;
+                for (let k = 0; k < elements.length; ++k) {
+                    let element = elements[k];
+                    group.items.push({
+                        id: element.id(),
+                        realWidth: IconSize,
+                        realHeight: IconSize,
+                        spriteMap: { x, y: 0, width: IconSize, height: IconSize },
+                        title: element.name(),
+                        spriteSize: cacheItem.spriteSize,
+                        spriteUrl: cacheItem.spriteUrl,
+                        spriteUrl2x: cacheItem.spriteUrl2x,
+                        artboardId: artboard.id(),
+                        pageId: page.id()
+                    });
+                    x += IconSize;
+                }
+                config.groups.push(group);
+            }
+        }
+
+        return config;
+    }
+
+    private buildIconSet(artboard: IArtboard): IUIElement[] {
+        var elements: IUIElement[] = [];
+
+        artboard.applyVisitor(e => {
+            if (e.hasFlags(UIElementFlags.Icon)) {
+                elements.push(e);
+            }
+        });
+
+        elements.sort((a, b) => {
+            let rect1 = a.getBoundingBoxGlobal();
+            let rect2 = b.getBoundingBoxGlobal();
+
+            if (rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y) {
+                return rect1.x - rect2.x;
+            }
+            return rect1.y - rect2.y;
+        });
+
+        return elements;
+    }
+
+    private updateDirtySets() {
+        let dirtyArtboards = this.artboardStates.filter(x => !x.version);
+        if (!dirtyArtboards.length) {
             return;
         }
 
-        if (this.updating) {
-            return;
-        }
+        app.beginUpdate();
 
-        let iconSets = this.state.iconSets.slice();
-        var index = iconSets.findIndex(p => p.artboard.id() === element.id());
-        if (index !== -1) {
-            iconSets.splice(index, 1);
-            this.setState({ iconSets: iconSets, dirtyConfig: true });
+        let promises = [];
+        let artboards: IArtboard[] = [];
+        for (let i = dirtyArtboards.length - 1; i >= 0; --i) {
+            let artboardState = dirtyArtboards[i];
+            let page = app.getImmediateChildById(artboardState.pageId);
+            if (!page) {
+                dirtyArtboards.splice(i, 1);
+                continue;
+            }
+            let artboard = page.getImmediateChildById<IArtboard>(artboardState.artboardId);
+            if (!artboard) {
+                dirtyArtboards.splice(i, 1);
+                continue;
+            }
+
+            if (artboardState.version === DeletedVersion) {
+                dirtyArtboards.splice(i, 1);
+                artboard.parent().patchProps(PatchType.Remove, "iconSpriteCache", {
+                    id: artboard.id()
+                });
+                continue;
+            }
+
+            artboardState.version = util.createUUID();
+            artboards.push(artboard);
+
+            let elements = this.buildIconSet(artboard);
+            promises.push(IconSetSpriteManager.buildAndUploadSprite(artboard.id(), artboardState.version, elements, IconSize));
         }
+        Promise.all(promises)
+            .then(results => {
+                for (let i = 0; i < results.length; ++i) {
+                    let result = results[i];
+                    let artboard = artboards[i];
+                    artboard.parent().patchProps(PatchType.Remove, "iconSpriteCache", {
+                        id: artboard.id()
+                    });
+                    artboard.parent().patchProps(PatchType.Insert, "iconSpriteCache", result);
+                }
+            })
+            .finally(() => app.endUpdate());
+    }
+
+    private onCategoryClicked(category) {
+        this.setState({ activeCategory: category, lastScrolledCategory: category });
+    }
+
+    private onScrolledToCategory(category) {
+        this.setState({ activeCategory: category });
+    }
+
+    private areSameArtboardStates(a: ArtboardState[], b: ArtboardState[]) {
+        if (a.length !== b.length) {
+            return false;
+        }
+        return a.every(x => b.findIndex(y => y.pageId === x.pageId && y.artboardId === x.artboardId && y.version === x.version) !== -1);
+    }
+
+    private markArtboardAsDirty(artboard: IArtboard, version = "") {
+        let pageId = artboard.parent().id();
+        let state = this.artboardStates.find(x => x.pageId === pageId && x.artboardId === artboard.id());
+        if (state) {
+            state.version = version;
+        }
+        else {
+            this.artboardStates.push({
+                artboardId: artboard.id(),
+                pageId,
+                version
+            });
+        }
+    }
+    private hasDirtyArtboards() {
+        return this.artboardStates.some(x => !x.version);
     }
 }
 

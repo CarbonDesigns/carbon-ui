@@ -4,11 +4,10 @@ import InternalIcons from "./InternalIcons";
 import RecentIcons from "./RecentIcons";
 import IconFinder from "./IconFinder";
 import SearchIcons from "./SearchIcons";
-import {listenTo, Component, dispatch} from '../../CarbonFlux';
+import {listenTo, Component, dispatch, dispatchAction} from '../../CarbonFlux';
 import {default as TabContainer, TabArea, TabTabs, TabPage} from "../../shared/TabContainer";
 import bem from '../../utils/commonUtils';
 import libraryTabStore from "../LibraryTabStore";
-import LibraryActions from "../LibraryActions";
 import InternalIconsStore from "./InternalIconsStore";
 
 export default class IconsPage extends Component {
@@ -25,7 +24,7 @@ export default class IconsPage extends Component {
     }
 
     render(){
-        return <TabContainer id="icons-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("icons", tabId))}>
+        return <TabContainer id="icons-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({type: "Library_Tab", area: "icons", tabId})}>
             <TabTabs
                 items={[
                     <i className="ico-library"/>,

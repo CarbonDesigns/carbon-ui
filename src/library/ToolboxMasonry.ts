@@ -1,5 +1,5 @@
 import { CellSize } from "../shared/collections/CollectionDefs";
-import { ToolboxConfig, ToolboxStencil } from "./LibraryDefs";
+import { ToolboxConfig, Stencil } from "./LibraryDefs";
 
 export default class ToolboxMasonry {
     private columns: number[] = [];
@@ -8,7 +8,7 @@ export default class ToolboxMasonry {
     constructor(private categoryHeight: number, private widthAccessor: (item) => number, private heightAccessor: (item) => number) {
     }
 
-    measure(config: ToolboxConfig<ToolboxStencil>, collectionWidth: number, columnWidth: number, keepAspectRatio?: boolean, reverse?: boolean): CellSize[] {
+    measure(config: ToolboxConfig<Stencil>, collectionWidth: number, columnWidth: number, keepAspectRatio?: boolean, reverse?: boolean): CellSize[] {
         let colCount = Math.floor(collectionWidth / columnWidth);
         colCount = Math.max(colCount, 1);
         this.columns.length = 0;
@@ -42,7 +42,7 @@ export default class ToolboxMasonry {
         return result;
     }
 
-    private processItem(item: ToolboxStencil, columnWidth: number, flexShare: number, keepAspectRatio: boolean) {
+    private processItem(item: Stencil, columnWidth: number, flexShare: number, keepAspectRatio: boolean) {
         let width = this.widthAccessor(item);
         let height = this.heightAccessor(item);
 

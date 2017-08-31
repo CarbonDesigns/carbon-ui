@@ -1,7 +1,6 @@
 import Dropzone from "dropzone";
-import { dispatch } from "../CarbonFlux";
+import { dispatch, dispatchAction } from "../CarbonFlux";
 import ImagesActions from "../library/images/ImagesActions";
-import LibraryActions from "../library/LibraryActions";
 import DropzoneRegistry from "./DropzoneRegistry";
 import { } from "carbon-model";
 import {
@@ -223,8 +222,8 @@ export default class ImageDrop {
                     }
                 }
 
-                dispatch(LibraryActions.changeTab("library", "3"));
-                dispatch(LibraryActions.changeTab("images", "1"));
+                dispatchAction({ type: "Library_Tab", area: "library", tabId: "3"});
+                dispatchAction({ type: "Library_Tab", area: "images", tabId: "1"});
 
                 keyboardState = Environment.controller.keyboardStateFromEvent(e, keyboardState);
                 dropHandler.resolveDropped({ e: e, keys: keyboardState, elements: images });

@@ -1,5 +1,5 @@
 import React from "react";
-import SpriteView from "./SpriteView";
+import SpriteView from "../SpriteView";
 import Navigatable from "../../shared/Navigatable";
 import { dispatchAction, StoreComponent } from "../../CarbonFlux";
 import { FormattedMessage } from "react-intl";

@@ -4,7 +4,6 @@ import LayoutStore from './layout/LayoutStore';
 
 import RichPanelConfig from "./RichPanelConfig";
 import LibraryProgressStore from './library/LibraryProgressStore';
-import SearchIconsStore from './library/icons/SearchIconsStore';
 
 import RecentImagesStore from './library/images/RecentImagesStore';
 import WorkspaceStore from "./workspace/WorkspaceStore";
@@ -26,8 +25,6 @@ export class Application {
         this.layoutStore = LayoutStore;
 
         this.libraryProgressStore = new LibraryProgressStore(this.Dispatcher);
-
-        this.searchIconsStore = new SearchIconsStore(this.Dispatcher);
 
         this.recentImagesStore = new RecentImagesStore(this.Dispatcher);
         //this.recentIconsStore', require('./library/icons/RecentIconsStore'));

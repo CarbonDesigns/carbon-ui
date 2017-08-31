@@ -4,13 +4,13 @@ import EditorComponent, { IEditorProps, IProperty } from "../EditorComponent";
 import { app, IArtboardPage } from "carbon-core";
 import { dispatchAction } from "../../../CarbonFlux";
 
-type ToolboxGroupEditorState = {
+type SymbolGroupEditorState = {
     property: IProperty;
 }
 
 const ManageOption = "_manage";
 
-export default class ToolboxGroupEditor extends EditorComponent<string, IEditorProps, ToolboxGroupEditorState> {
+export default class SymbolGroupEditor extends EditorComponent<string, IEditorProps, SymbolGroupEditorState> {
     constructor(props: IEditorProps, context) {
         super(props, context);
 
@@ -26,7 +26,7 @@ export default class ToolboxGroupEditor extends EditorComponent<string, IEditorP
     private getProperty(props, context) {
         let artboardPage = app.activePage as IArtboardPage;
         let options = {
-            items: artboardPage.props.toolboxGroups
+            items: artboardPage.props.symbolGroups
                 .map(x => {return { name: x.name, value: x.id }})
                 .concat([{ name: this.formatLabel("@page.manageGroups"), value: ManageOption }])
         }

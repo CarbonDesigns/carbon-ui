@@ -2,7 +2,7 @@ import { app, IApp } from "carbon-core";
 import CarbonActions, { CarbonAction } from '../../CarbonActions';
 import { handles, CarbonStore } from "../../CarbonFlux";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, Stencil } from "../LibraryDefs";
 import { DataAction } from "./DataActions";
 
 export interface CustomCatalogStoreState {
@@ -25,8 +25,8 @@ class CustomCatalogStore extends CarbonStore<CustomCatalogStoreState> implements
         }
         return null;
     }
-    createElement(info: StencilInfo) {
-        let templateId = info.stencilId;
+    createElement(stencil: Stencil) {
+        let templateId = stencil.id;
         var colon = templateId.indexOf(":");
         var providerId = null, field = null;
         if (colon !== -1) {

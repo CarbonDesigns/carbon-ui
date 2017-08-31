@@ -1,5 +1,5 @@
-import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, ToolboxGroup, IPage, ISize, IRect, IRectData } from "carbon-core";
-import { ToolboxConfig, SpriteStencil, ToolboxConfigGroup } from "./LibraryDefs";
+import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup } from "carbon-core";
+import { ToolboxConfig, SpriteStencil, ToolboxGroup } from "./LibraryDefs";
 
 let PADDING = 5;
 let _configCache = {};
@@ -241,14 +241,14 @@ export default class ToolboxConfiguration {
         let configId = createUUID();
         let groups = [];
         let promises = [];
-        let toolboxGroups = page.props.toolboxGroups as ToolboxGroup[];
+        let symbolGroups = page.props.symbolGroups as SymbolGroup[];
 
-        for (let i = 0; i < toolboxGroups.length; ++i) {
-            let group = toolboxGroups[i];
+        for (let i = 0; i < symbolGroups.length; ++i) {
+            let group = symbolGroups[i];
             let groupElements = [];
             for (let j = 0; j < elements.length; ++j) {
                 let e = elements[j];
-                if (e.props.toolboxGroup === group.id) {
+                if (e.props.symbolGroup === group.id) {
                     groupElements.push(e);
                 }
             }
@@ -256,14 +256,14 @@ export default class ToolboxConfiguration {
             if (group.id === "default") {
                 for (let k = 0; k < elements.length; ++k) {
                     let e = elements[k];
-                    if (!toolboxGroups.find(x => x.id === e.props.toolboxGroup)) {
+                    if (!symbolGroups.find(x => x.id === e.props.symbolGroup)) {
                         groupElements.push(e);
                     }
                 }
             }
 
             if (groupElements.length) {
-                promises.push(ToolboxConfiguration.makeGroup(page, groups, group.name, groupElements));
+                promises.push(ToolboxConfiguration.makeGroup(page, groups, group.id, group.name, groupElements));
             }
         }
 
@@ -283,12 +283,12 @@ export default class ToolboxConfiguration {
             })
     }
 
-    private static makeGroup(page: IPage, groups, groupName, elements): Promise<any> {
+    private static makeGroup(page: IPage, groups, groupId, groupName, elements): Promise<any> {
         let items = [];
         let spriteUrlPromise = ToolboxConfiguration.renderElementsToSprite(page, elements, items);
 
         let spriteUrl2xPromise = ToolboxConfiguration.renderElementsToSprite(page, elements, null, 2);
-        let group: ToolboxConfigGroup<SpriteStencil> = {
+        let group: ToolboxGroup<SpriteStencil> = {
             name: groupName,
             items: items
         };

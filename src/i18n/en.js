@@ -264,9 +264,9 @@ export default
         "@repeater.copiesX": "H copies", //
         "@repeater.copiesY": "V copies", //
 
-        "@page.defaultToolboxGroup": "My Symbols",
-        "@page.newToolboxGroup": "Add group",
-        "@page.toolboxGroup": "Group",
+        "@page.defaultSymbolGroup": "My Symbols",
+        "@page.newSymbolGroup": "Add group",
+        "@page.symbolGroup": "Group",
         "@page.manageGroups": "Edit groups...",
 
         "New board": "New board", //
@@ -558,7 +558,12 @@ export default
         "@resources.removeFromIconSet": "Remove from icon set",
         "@resources.markAsIcon": "Add to icon set",
 
+        "@icons.recent": "Recent icons",
         "@icons.find": "Find icon...",
+        "@icons.noneFoundSearch": "No symbols match your search criteria",
+        "@icons.searchOnline": "Search in gallery",
+        "@icons.searchIconFinderMsg": "Or try our friends at IconFinder.com",
+        "@icons.searchIconFinder": "Search in IconFinder",
         "@iconfinder.error": "Could not concant the IconFinder.com service. Please try again later.",
 
         "@images.find": "Find image...",

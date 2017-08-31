@@ -3,13 +3,12 @@ import Symbols from "./Symbols";
 import RecentSymbols from "./RecentSymbols";
 import SearchSymbols from "./SearchSymbols";
 import {domUtil} from "carbon-core";
-import {listenTo, Component, dispatch} from "../../CarbonFlux";
+import { listenTo, Component, dispatch, dispatchAction } from "../../CarbonFlux";
 // import {default as TabContainer, TabArea, TabHeader, TabPage} from "../../shared/TabContainer";
 import {default as TabContainer, TabTabs, TabArea, TabPage} from "../../shared/TabContainer";
 import bem from '../../utils/commonUtils';
 
 import libraryTabStore from "../LibraryTabStore";
-import LibraryActions from "../LibraryActions";
 
 
 export default class SymbolsPage extends Component<any, any> {
@@ -26,7 +25,7 @@ export default class SymbolsPage extends Component<any, any> {
     }
 
     render(){
-        return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("stencils", tabId))}>
+        return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({ type: "Library_Tab", area: "stencils", tabId})}>
             <TabTabs
                 items={[
                     <i className="ico-library"/>,

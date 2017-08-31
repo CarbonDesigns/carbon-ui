@@ -1,19 +1,18 @@
 import { app, Symbol } from "carbon-core";
 import { CarbonStore } from "../../CarbonFlux";
-import { SymbolsAction } from "./SymbolsActions";
-import { ToolboxConfig, SpriteStencil, StencilInfo, SpriteStencilInfo } from "../LibraryDefs";
-import symbolsStore from "./SymbolsStore";
-import searchSymbolsStore from "./SearchSymbolsStore";
+import { ToolboxConfig, SpriteStencil, StencilInfo, SpriteStencilInfo, IconSpriteStencil } from "../LibraryDefs";
+import internalIconsStore from "./InternalIconsStore";
+import searchIconsStore from "./SearchIconsStore";
 import Toolbox from "../Toolbox";
 import { StencilsAction } from "../StencilsActions";
 
-export type RecentSymbolsStoreState = {
-    recentConfig: ToolboxConfig<SpriteStencil>;
+export type RecentIconsStoreState = {
+    recentConfig: ToolboxConfig<IconSpriteStencil>;
     configVersion: number;
 }
 
-class RecentSymbolsStore extends CarbonStore<RecentSymbolsStoreState> {
-    storeType = "recentSymbols";
+class RecentIconsStore extends CarbonStore<RecentIconsStoreState> {
+    storeType = "recentIcons";
 
     constructor() {
         super();
@@ -22,7 +21,7 @@ class RecentSymbolsStore extends CarbonStore<RecentSymbolsStoreState> {
                 id: "recent",
                 groups: [
                     {
-                        name: "@symbols.recent",
+                        name: "@icons.recent",
                         items: []
                     }
                 ]
@@ -35,8 +34,8 @@ class RecentSymbolsStore extends CarbonStore<RecentSymbolsStoreState> {
         return this.state.recentConfig.groups[0].items.find(x => x.id === info.stencilId && x.pageId === info.pageId);
     }
 
-    createElement(stencil: SpriteStencil) {
-        return symbolsStore.createElement(stencil);
+    createElement(stencil: IconSpriteStencil) {
+        return internalIconsStore.createElement(stencil);
     }
 
     elementAdded() {
@@ -45,9 +44,9 @@ class RecentSymbolsStore extends CarbonStore<RecentSymbolsStoreState> {
     onAction(action: StencilsAction) {
         switch (action.type) {
             case "Stencils_Added":
-                if (action.stencilType === symbolsStore.storeType || action.stencilType === searchSymbolsStore.storeType) {
+                if (action.stencilType === internalIconsStore.storeType || action.stencilType === searchIconsStore.storeType) {
                     let items = this.state.recentConfig.groups[0].items;
-                    let spriteStencil = action.stencil as SpriteStencil;
+                    let spriteStencil = action.stencil as IconSpriteStencil;
                     let index = items.findIndex(x => x.id === spriteStencil.id && x.pageId === spriteStencil.pageId);
 
                     if (index !== -1) {
@@ -64,4 +63,4 @@ class RecentSymbolsStore extends CarbonStore<RecentSymbolsStoreState> {
     }
 }
 
-export default Toolbox.registerStore(new RecentSymbolsStore());
+export default Toolbox.registerStore(new RecentIconsStore());

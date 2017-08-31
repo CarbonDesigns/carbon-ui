@@ -1,5 +1,5 @@
 import { IPage } from "carbon-core";
-import { StencilInfo, StencilClickEvent, ToolboxStencil } from "../LibraryDefs";
+import { StencilInfo, StencilClickEvent, Stencil } from "../LibraryDefs";
 
 export type SymbolsAction =
     { type: "Symbols_ChangePage", page: IPage } |

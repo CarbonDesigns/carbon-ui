@@ -7,10 +7,9 @@ import {default as TabContainer, TabTabs, TabArea, TabHeader, TabPage} from "../
 import Progress from "../shared/Progress";
 import Panel from '../layout/Panel'
 import {richApp} from "../RichApp";
-import {listenTo, Component, dispatch} from '../CarbonFlux';
+import {listenTo, Component, dispatch, dispatchAction} from '../CarbonFlux';
 import {FormattedMessage, defineMessages} from 'react-intl';
 import libraryTabStore from "./LibraryTabStore";
-import LibraryActions from "./LibraryActions";
 
 export default class LibraryPanel extends Component {
     constructor(props) {
@@ -42,7 +41,7 @@ export default class LibraryPanel extends Component {
     render() {
         return (
             <Panel ref="panel" {...this.props} header="Library" id="library-panel">
-                <TabContainer currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("library", tabId))}>
+                <TabContainer currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({type: "Library_Tab", area: "library", tabId})}>
                     <TabTabs
                         tabMods="level1"
                         insertBefore={this.state.progressVisible ? <Progress /> : null}

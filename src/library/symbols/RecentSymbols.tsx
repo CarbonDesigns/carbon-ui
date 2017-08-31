@@ -1,6 +1,6 @@
 import React from "react";
 import { Component, StoreComponent } from "../../CarbonFlux";
-import SpriteView from "./SpriteView";
+import SpriteView from "../SpriteView";
 import { richApp } from "../../RichApp";
 import recentSymbolsStore, { RecentSymbolsStoreState } from "./RecentSymbolsStore";
 import { SymbolsOverscanCount, SymbolsColumnWidth } from "../LibraryDefs";

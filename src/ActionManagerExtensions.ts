@@ -1,11 +1,10 @@
-import { dispatch } from "./CarbonFlux";
+import { dispatch, dispatchAction } from "./CarbonFlux";
 import AppActions from "./RichAppActions";
-import LibraryActions from "./library/LibraryActions";
 import { app } from "carbon-core";
 
 function registerTabAction(area, tab) {
     app.actionManager.registerAction(area + tab, area + tab, "Navigation", function () {
-        dispatch(LibraryActions.changeTab(area, "" + tab));
+        dispatchAction({ type: "Library_Tab", area, tabId: "" + tab});
     });
 }
 

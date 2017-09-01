@@ -2,14 +2,14 @@
 import { handles, CarbonStore, dispatchAction } from "../../CarbonFlux";
 import ToolboxConfiguration from "../ToolboxConfiguration";
 import { CarbonAction } from "../../CarbonActions";
-import { app, Symbol, IPage, ArtboardType, IArtboard } from "carbon-core";
-import { ToolboxConfig, SpriteStencil, ToolboxGroup, IToolboxStore, StencilInfo, SpriteStencilInfo, IconSpriteStencil } from "../LibraryDefs";
+import { app, Symbol, IPage, ArtboardType, IArtboard, Artboard } from "carbon-core";
+import { ToolboxConfig, SpriteStencil, ToolboxGroup, IToolboxStore, StencilInfo, SpriteStencilInfo } from "../LibraryDefs";
 import Toolbox from "../Toolbox";
 import internalIconsStore from "./InternalIconsStore";
 import { IconsAction } from "./IconsActions";
 
 export type SearchIconsStoreState = {
-    searchConfig: ToolboxConfig<IconSpriteStencil>;
+    searchConfig: ToolboxConfig<SpriteStencil>;
     query: string;
     configVersion: number;
     activeCategory: any;
@@ -34,7 +34,7 @@ class SearchIconsStore extends CarbonStore<SearchIconsStoreState> implements ITo
         return internalIconsStore.findStencil(info);
     }
 
-    createElement(stencil: IconSpriteStencil) {
+    createElement(stencil: SpriteStencil) {
         return internalIconsStore.createElement(stencil);
     }
 
@@ -66,7 +66,7 @@ class SearchIconsStore extends CarbonStore<SearchIconsStoreState> implements ITo
                     var stencil = group.items[k];
                     r.lastIndex = 0;
                     if (r.test(stencil.title)) {
-                        var searchGroup = this.findOrCreateGroup(result, config, group, stencil.pageId, stencil.artboardId);
+                        var searchGroup = this.findOrCreateGroup(result, config, group, stencil.pageId, stencil.id);
                         searchGroup.items.push(stencil);
                     }
                 }
@@ -83,9 +83,10 @@ class SearchIconsStore extends CarbonStore<SearchIconsStoreState> implements ITo
         });
     }
 
-    private findOrCreateGroup(searchConfig: ToolboxConfig<SpriteStencil>, sourceConfig: ToolboxConfig<SpriteStencil>, sourceGroup: ToolboxGroup<SpriteStencil>, pageId: string, artboardId: string) {
+    private findOrCreateGroup(searchConfig: ToolboxConfig<SpriteStencil>, sourceConfig: ToolboxConfig<SpriteStencil>, sourceGroup: ToolboxGroup<SpriteStencil>, pageId: string, elementId: string) {
         let page = app.getImmediateChildById<IPage>(pageId);
-        let artboard = page.getImmediateChildById<IArtboard>(artboardId);
+        let element = page.findNodeByIdBreadthFirst(elementId);
+        let artboard = element.findAncestorOfType<IArtboard>(Artboard);
         let artboardName = artboard.name();
 
         for (let i = 0; i < searchConfig.groups.length; i++) {

@@ -7,6 +7,7 @@ import AddButton from "../shared/ui/AddButton";
 import { MarkupLine, Markup } from "../shared/ui/Markup";
 import BackButton from "../shared/ui/BackButton";
 import Sortable from "../shared/collections/Sortable";
+import { PropertiesTab } from "./PropertyActions";
 
 type SymbolGroupList = new (props) => EditableList<SymbolGroup>;
 const SymbolGroupList = EditableList as SymbolGroupList;
@@ -92,7 +93,7 @@ export default class SymbolGroupsPanel extends Component<{}, SymbolGroupsPanelSt
     }
 
     private goBack() {
-        dispatchAction({ type: "Properties_ChangeTab", tabId: "1" });
+        dispatchAction({ type: "Properties_ChangeTab", tabId: "1" as PropertiesTab });
     }
 
     render() {

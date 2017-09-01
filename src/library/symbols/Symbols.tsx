@@ -28,7 +28,7 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
     };
 
     private onAddMore = () => {
-        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog" });
+        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog", args: { tags: "symbols" } });
     }
 
     private onRefreshLibrary = () => {

@@ -71,7 +71,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
     private getQueryFromProps(props: ImportResourceDialogProps) {
         let query = "";
         if (props.tags) {
-            query = props.tags + ": ";
+            query = "tags:" + props.tags + " ";
         }
         if (props.query) {
             query += props.query;

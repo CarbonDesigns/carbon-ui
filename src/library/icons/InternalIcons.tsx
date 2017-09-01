@@ -13,6 +13,7 @@ import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
 import Refresher from "../Refresher";
 import { IconsOverscanCount, IconSize } from "../LibraryDefs";
+import { Markup, MarkupLine } from "../../shared/ui/Markup";
 
 export default class InternalIcons extends StoreComponent<any, InternalIconsStoreState> {
     constructor(props) {
@@ -24,7 +25,7 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
     }
 
     private onAddMore = () => {
-        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog" });
+        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog", args: { tags: "icons" } });
     }
 
     private onCategoryChanged = category => {
@@ -36,8 +37,19 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
 
     render() {
         var config = this.state.config;
-        if (!config) {
-            return null;
+        if (!config || !config.groups.length) {
+            if (this.state.dirtyConfig) {
+                return <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>;
+            }
+
+            return <Markup>
+                <MarkupLine mods="center">
+                    <FormattedMessage tagName="p" id="@icons.noneFound"/>
+                </MarkupLine>
+                <MarkupLine mods="center">
+                    <GuiButton caption="@icons.import" mods="hover-white" onClick={this.onAddMore} />
+                </MarkupLine>
+            </Markup>;
         }
 
         return <Navigatable className={bem("library-page", "content")}

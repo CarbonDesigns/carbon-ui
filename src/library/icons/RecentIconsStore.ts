@@ -1,13 +1,13 @@
 import { app, Symbol } from "carbon-core";
 import { CarbonStore } from "../../CarbonFlux";
-import { ToolboxConfig, SpriteStencil, StencilInfo, SpriteStencilInfo, IconSpriteStencil } from "../LibraryDefs";
+import { ToolboxConfig, SpriteStencil, StencilInfo, SpriteStencilInfo } from "../LibraryDefs";
 import internalIconsStore from "./InternalIconsStore";
 import searchIconsStore from "./SearchIconsStore";
 import Toolbox from "../Toolbox";
 import { StencilsAction } from "../StencilsActions";
 
 export type RecentIconsStoreState = {
-    recentConfig: ToolboxConfig<IconSpriteStencil>;
+    recentConfig: ToolboxConfig<SpriteStencil>;
     configVersion: number;
 }
 
@@ -34,7 +34,7 @@ class RecentIconsStore extends CarbonStore<RecentIconsStoreState> {
         return this.state.recentConfig.groups[0].items.find(x => x.id === info.stencilId && x.pageId === info.pageId);
     }
 
-    createElement(stencil: IconSpriteStencil) {
+    createElement(stencil: SpriteStencil) {
         return internalIconsStore.createElement(stencil);
     }
 
@@ -46,7 +46,7 @@ class RecentIconsStore extends CarbonStore<RecentIconsStoreState> {
             case "Stencils_Added":
                 if (action.stencilType === internalIconsStore.storeType || action.stencilType === searchIconsStore.storeType) {
                     let items = this.state.recentConfig.groups[0].items;
-                    let spriteStencil = action.stencil as IconSpriteStencil;
+                    let spriteStencil = action.stencil as SpriteStencil;
                     let index = items.findIndex(x => x.id === spriteStencil.id && x.pageId === spriteStencil.pageId);
 
                     if (index !== -1) {

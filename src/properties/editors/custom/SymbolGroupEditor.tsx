@@ -3,6 +3,7 @@ import DropDownEditor from "../DropdownEditor";
 import EditorComponent, { IEditorProps, IProperty } from "../EditorComponent";
 import { app, IArtboardPage } from "carbon-core";
 import { dispatchAction } from "../../../CarbonFlux";
+import { PropertiesTab } from "../../PropertyActions";
 
 type SymbolGroupEditorState = {
     property: IProperty;
@@ -35,7 +36,7 @@ export default class SymbolGroupEditor extends EditorComponent<string, IEditorPr
 
     private onSettingValue = value => {
         if (value === ManageOption) {
-            dispatchAction({ type: "Properties_ChangeTab", tabId: "2" });
+            dispatchAction({ type: "Properties_ChangeTab", tabId: "2" as PropertiesTab });
             return false;
         }
         return true;

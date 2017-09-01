@@ -247,7 +247,9 @@ export default class UserImages extends Component<any, any>{
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.images !== this.state.images) {
-            this.refs.list.reset();
+            if (this.refs.list) {
+                this.refs.list.reset();
+            }
         }
     }
 

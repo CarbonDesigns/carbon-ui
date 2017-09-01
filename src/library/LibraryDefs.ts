@@ -15,10 +15,6 @@ export interface SpriteStencil extends Stencil {
     pageId: string;
 }
 
-export interface IconSpriteStencil extends SpriteStencil {
-    artboardId: string;
-}
-
 export type ToolboxGroup<T extends Stencil> = {
     name: string;
     items: T[];

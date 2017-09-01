@@ -2,13 +2,13 @@ import IconFinderApi from "./IconFinderApi";
 import IconsActions, { IconsAction } from "./IconsActions";
 import CarbonActions, { CarbonAction } from "../../CarbonActions";
 import { CarbonStore, dispatchAction } from '../../CarbonFlux';
-import { util, IArtboard, Image, Brush, ContentSizing, ArtboardType, UIElementFlags, PatchType, app, Page, IArtboardProps, IPage, IUIElement, ISize } from "carbon-core";
+import { util, IArtboard, Image, Brush, ContentSizing, ArtboardType, UIElementFlags, PatchType, app, Page, IArtboardProps, IPage, IUIElement, ISize, Artboard } from "carbon-core";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo, ToolboxConfig, IconSpriteStencil, ToolboxGroup, Stencil, SpriteStencilInfo, PageSpriteCacheItem } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, ToolboxConfig, ToolboxGroup, Stencil, SpriteStencilInfo, PageSpriteCacheItem, SpriteStencil } from "../LibraryDefs";
 import IconSetSpriteManager from "../IconSetSpriteManager";
 
 export type InternalIconsStoreState = {
-    config: ToolboxConfig<IconSpriteStencil>;
+    config: ToolboxConfig<SpriteStencil>;
     configVersion: number;
     dirtyConfig: boolean;
     changedId: string | null;
@@ -55,13 +55,16 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         return null;
     }
 
-    createElement(stencil: IconSpriteStencil) {
+    createElement(stencil: SpriteStencil) {
         let element = new Image();
+        let page = app.getImmediateChildById(stencil.pageId);
+        let sourceElement = page.findNodeByIdBreadthFirst(stencil.id);
+        let artboard = sourceElement.findAncestorOfType(Artboard);
 
         element.setProps({
             width: stencil.realWidth,
             height: stencil.realHeight,
-            source: Image.createElementSource(stencil.pageId, stencil.artboardId, stencil.id)
+            source: Image.createElementSource(stencil.pageId, artboard.id(), stencil.id)
         });
 
         return element;
@@ -178,7 +181,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
     }
 
     private buildToolboxConfig(pages: IPage[]) {
-        let config: ToolboxConfig<IconSpriteStencil> = {
+        let config: ToolboxConfig<SpriteStencil> = {
             id: util.createUUID(),
             groups: []
         }
@@ -191,7 +194,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                 let cacheItem = cacheItems[j];
                 let artboard = page.getImmediateChildById<IArtboard>(cacheItem.id);
                 let elements = this.buildIconSet(artboard);
-                let group: ToolboxGroup<IconSpriteStencil> = {
+                let group: ToolboxGroup<SpriteStencil> = {
                     name: artboard.name(),
                     items: []
                 }
@@ -208,7 +211,6 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                         spriteSize: cacheItem.spriteSize,
                         spriteUrl: cacheItem.spriteUrl,
                         spriteUrl2x: cacheItem.spriteUrl2x,
-                        artboardId: artboard.id(),
                         pageId: page.id()
                     });
                     x += IconSize;

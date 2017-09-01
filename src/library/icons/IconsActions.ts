@@ -1,5 +1,3 @@
-import { ToolboxConfig, IconSpriteStencil } from "../LibraryDefs";
-
 export type IconsAction =
     { type: "Icons_Refresh" } |
     { type: "Icons_Update", async: true } |

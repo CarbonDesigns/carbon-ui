@@ -560,7 +560,9 @@ export default
 
         "@icons.recent": "Recent icons",
         "@icons.find": "Find icon...",
+        "@icons.noneFound": "We did not find any icons in this project",
         "@icons.noneFoundSearch": "No symbols match your search criteria",
+        "@icons.import": "Import from gallery",
         "@icons.searchOnline": "Search in gallery",
         "@icons.searchIconFinderMsg": "Or try our friends at IconFinder.com",
         "@icons.searchIconFinder": "Search in IconFinder",

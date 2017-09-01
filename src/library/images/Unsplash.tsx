@@ -40,7 +40,7 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
     }
 
     private onSearch = term => {
-        dispatch(ImagesActions.webSearch(term));
+        dispatchAction({ type: "Images_UnsplashSearch", q: term });
         this.refs.list.reset();
     }
 

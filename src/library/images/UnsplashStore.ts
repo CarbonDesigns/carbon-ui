@@ -1,5 +1,5 @@
 import Unsplash, {toJson} from "unsplash-js";
-import ImagesActions from "./ImagesActions";
+import ImagesActions, { ImagesAction } from "./ImagesActions";
 import {handles, CarbonStore, dispatch} from "../../CarbonFlux";
 import { Image, IPaginatedResult, util } from "carbon-core";
 import Toolbox from "../Toolbox";
@@ -63,12 +63,17 @@ export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IT
     elementAdded() {
     }
 
-    @handles(ImagesActions.search, ImagesActions.webSearch)
-    search({term}){
-        if (term){
-            this.setState({
-                term, error: false, results: []
-            });
+    onAction(action: ImagesAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Images_UnsplashSearch":
+                if (action.q){
+                    this.setState({
+                        term: action.q, error: false, results: []
+                    });
+                }
+                return;
         }
     }
 

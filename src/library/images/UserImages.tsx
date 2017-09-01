@@ -339,9 +339,20 @@ export default class UserImages extends Component<any, any>{
         if (this.state.error) {
             return this.renderError();
         }
+        if (this.state.images && this.state.images.length === 0) {
+            return this.renderNoResults();
+        }
         return <div className="user-images__list">
             <ImageList ref="list" data={this.state.images} rowHeight={getUserImageHeight} rowRenderer={this.renderItem} />
         </div>;
+    }
+
+    private renderNoResults() {
+        return <Markup>
+            <MarkupLine mods="center">
+                <FormattedMessage tagName="p" id="@images.noneFound" />
+            </MarkupLine>
+        </Markup>;
     }
 
     render() {

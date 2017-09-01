@@ -1,4 +1,4 @@
-import { app, Image, backend } from "carbon-core";
+import { app, Image, backend, UserImage } from "carbon-core";
 import { handles, CarbonStore, dispatch } from "../../CarbonFlux";
 import ImagesActions from "./ImagesActions";
 import Toolbox from "../Toolbox";
@@ -73,28 +73,30 @@ class UserImagesStore extends CarbonStore<UserImagesStoreState> implements ITool
         this.setState({ images: newImages.concat(oldImages) });
     }
 
-    toMetadata(images): UserImageStencil[] {
-        return images.map(img => {
-            var thumbHeight = 60;
-            if (img.thumbHeight > 200) {
-                thumbHeight = 200;
-            }
-            else if (img.thumbHeight > 100) {
-                thumbHeight = 100;
-            }
+    toMetadata(images: UserImage[]): UserImageStencil[] {
+        return images.map(img => this.createStencil(img));
+    }
 
-            return {
-                id: img.name,
-                type: this.storeType,
-                url: img.url,
-                title: `${img.name} (${img.width}×${img.height})`,
-                thumbUrl: img.thumbUrl,
-                thumbHeight: thumbHeight,
-                realWidth: img.width,
-                realHeight: img.height,
-                cover: img.thumbHeight > thumbHeight
-            };
-        });
+    createStencil(img: UserImage) {
+        var thumbHeight = 60;
+        if (img.thumbHeight > 200) {
+            thumbHeight = 200;
+        }
+        else if (img.thumbHeight > 100) {
+            thumbHeight = 100;
+        }
+
+        return {
+            id: img.name,
+            type: this.storeType,
+            url: img.url,
+            title: `${img.name} (${img.width}×${img.height})`,
+            thumbUrl: img.thumbUrl,
+            thumbHeight: thumbHeight,
+            realWidth: img.width,
+            realHeight: img.height,
+            cover: img.thumbHeight > thumbHeight
+        };
     }
 }
 

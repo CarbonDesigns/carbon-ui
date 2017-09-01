@@ -569,6 +569,9 @@ export default
         "@iconfinder.error": "Could not concant the IconFinder.com service. Please try again later.",
 
         "@images.find": "Find image...",
+        "@images.noneFound": "You don't have any uploaded images yet",
+        "@images.noneFoundSearch": "We did not find a matching image in your uploads",
+        "@images.searchUnsplash": "Search on Unsplash",
         "@unsplash.error": "Could not contact the Unsplash.com service. Please try again later.",
         "@userImages.error": "Could not connect to the server. Please try again later.",
 

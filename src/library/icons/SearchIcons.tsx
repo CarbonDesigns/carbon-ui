@@ -8,13 +8,13 @@ import { domUtil } from "carbon-core";
 import searchIconsStore, { SearchIconsStoreState } from "./SearchIconsStore";
 import Navigatable from "../../shared/Navigatable";
 import bem from "../../utils/commonUtils";
-import { SymbolsOverscanCount, SymbolsColumnWidth, IconsOverscanCount, IconSize } from "../LibraryDefs";
+import { IconsOverscanCount, IconSize } from "../LibraryDefs";
 import LessVars from "../../styles/LessVars";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
 import { GuiButton } from "../../shared/ui/GuiComponents";
 
-export default class SearchSymbols extends StoreComponent<{}, SearchIconsStoreState>{
+export default class SearchIcons extends StoreComponent<{}, SearchIconsStoreState>{
     refs: {
         page: HTMLElement;
         search: Search;

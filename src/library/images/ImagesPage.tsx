@@ -10,6 +10,7 @@ import {default as TabContainer, TabTabs, TabArea, TabPage} from "../../shared/T
 import bem from '../../utils/commonUtils';
 
 import libraryTabStore from "../LibraryTabStore";
+import SearchImages from "./SearchImages";
 
 export default class ImagesPage extends Component<any, any> {
     constructor(props) {
@@ -45,6 +46,9 @@ export default class ImagesPage extends Component<any, any> {
                 </TabPage>
                 <TabPage tabId="3" className="gui-page web-images">
                     <Unsplash ref="tab3"/>
+                </TabPage>
+                <TabPage tabId="4" className="gui-page">
+                    <SearchImages ref="tab4"/>
                 </TabPage>
             </TabArea>
         </TabContainer>

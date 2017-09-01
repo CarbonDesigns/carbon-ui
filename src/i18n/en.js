@@ -572,6 +572,8 @@ export default
         "@unsplash.error": "Could not contact the Unsplash.com service. Please try again later.",
         "@userImages.error": "Could not connect to the server. Please try again later.",
 
+        "@data.find": "Find catalog...",
+
         "@status.saveFailed": "Could not save to the server.",
         "@status.saveFailed2": "We are already notified of this problem. Please contact us at team@carbonium.io.",
         "@status.connected": "Everything looks great!",

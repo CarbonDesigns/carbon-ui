@@ -124,7 +124,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
     elementFromTemplate(info: StencilInfo) {
         var store = this.stores[info.stencilType];
         var stencil = store.findStencil(info);
-        var element = store.createElement(stencil);
+        var element = store.createElement(stencil, info);
 
         app.assignNewName(element);
         this.fitToViewportIfNeeded(element);

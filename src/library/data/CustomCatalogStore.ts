@@ -1,24 +1,26 @@
-import { app, IApp } from "carbon-core";
+import { app, IApp, util, PatchType } from "carbon-core";
 import CarbonActions, { CarbonAction } from '../../CarbonActions';
 import { handles, CarbonStore } from "../../CarbonFlux";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo, Stencil } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, Stencil, ToolboxConfig, DataStencil } from "../LibraryDefs";
 import { DataAction } from "./DataActions";
+import CustomDataProvider from "./CustomDataProvider";
 
 export interface CustomCatalogStoreState {
-    config: any;
+    config: ToolboxConfig<DataStencil>;
     editing: boolean;
 }
 
 class CustomCatalogStore extends CarbonStore<CustomCatalogStoreState> implements IToolboxStore {
     storeType = "customData";
-    _app: IApp;
+
+    private providers: CustomDataProvider[] = [];
 
     findStencil(info: StencilInfo) {
         for (let i = 0; i < this.state.config.groups.length; ++i) {
-            for (let j = 0; j < this.state.config.groups[i].children.length; ++j) {
-                let stencil = this.state.config.groups[i].children[j];
-                if (stencil.templateId === info.stencilId) {
+            for (let j = 0; j < this.state.config.groups[i].items.length; ++j) {
+                let stencil = this.state.config.groups[i].items[j];
+                if (stencil.id === info.stencilId) {
                     return stencil;
                 }
             }
@@ -26,18 +28,11 @@ class CustomCatalogStore extends CarbonStore<CustomCatalogStoreState> implements
         return null;
     }
     createElement(stencil: Stencil) {
-        let templateId = stencil.id;
-        var colon = templateId.indexOf(":");
-        var providerId = null, field = null;
-        if (colon !== -1) {
-            providerId = templateId.substr(0, colon);
-            field = templateId.substr(colon + 1);
-        }
-        else {
-            field = templateId;
-        }
+        var colon = stencil.id.indexOf(":");
+        var providerId = stencil.id.substr(0, colon);
+        var field = stencil.id.substr(colon + 1);
 
-        var provider = providerId ? app.dataManager.getProvider(providerId) : app.dataManager.getBuiltInProvider();
+        var provider = this.providers.find(x => x.id === providerId);
         return provider.createElement(app, field);
     }
 
@@ -58,45 +53,52 @@ class CustomCatalogStore extends CarbonStore<CustomCatalogStoreState> implements
             case "Data_CancelCatalog":
                 this.onCancel();
                 return;
+            case "Carbon_AppLoaded":
+                app.enablePropsTracking();
+                return;
+            case "Carbon_AppUpdated":
+                this.updateState();
+                return;
             case "Carbon_PropsChanged":
-                if (action.element === this._app && action.props.dataProviders !== undefined) {
-                    this._updateState();
+                if (action.element === app && action.props.dataProviders) {
+                    this.updateState();
                 }
                 return;
         }
     }
 
-    @handles(CarbonActions.loaded)
-    onLoaded({ app }) {
-        this._app = app;
-        this._app.enablePropsTracking();
-
-        this._updateState();
-    }
-
     private onAddNew() {
         this.setState({ editing: true });
     }
-    private onSave(name, data) {
-        app.dataManager.createCustomProvider(name, data);
+    private onSave(name, text: string) {
+        var data = text.split('\n');
+        var provider = new CustomDataProvider(util.createUUID(), name, data, "list");
+        app.patchProps(PatchType.Insert, "dataProviders", provider.toJSON());
+
         this.setState({ editing: false });
     }
     private onCancel() {
         this.setState({ editing: false });
     };
 
-    _updateState() {
-        var customProviders = app.dataManager.getCustomProviders();
-        if (customProviders.length) {
+    private updateProviders() {
+        this.providers = app.props.dataProviders.map(x => CustomDataProvider.fromJSON(x));
+        this.providers.forEach(x => app.dataManager.registerProvider(x.id, x));
+    }
+    private updateState() {
+        this.updateProviders();
+
+        if (this.providers.length) {
             this.setState({
                 config: {
+                    id: "custom",
                     groups: [{
                         name: "Lists",
-                        children: customProviders
+                        items: this.providers
                             .filter(x => x.format === "list")
                             .map(x => {
                                 var config = x.getConfig();
-                                return { name: x.name, examples: config.groups[0].examples, templateType: this.storeType, templateId: x.id + ":default" }
+                                return { title: x.name, examples: config.groups[0].examples, id: x.id + ":default" }
                             })
                     }]
                 }

@@ -3,8 +3,8 @@ import { IUIElement, IRectData, ISize, IContainerProps } from "carbon-core";
 export interface Stencil {
     id: string;
     title: string;
-    realWidth: number;
-    realHeight: number;
+    realWidth?: number;
+    realHeight?: number;
 }
 
 export interface SpriteStencil extends Stencil {
@@ -13,6 +13,10 @@ export interface SpriteStencil extends Stencil {
     spriteUrl: string;
     spriteUrl2x: string;
     pageId: string;
+}
+
+export interface DataStencil extends Stencil {
+    examples: (string | number)[];
 }
 
 export type ToolboxGroup<T extends Stencil> = {
@@ -37,7 +41,7 @@ export interface IToolboxStore {
     storeType: string;
 
     findStencil(info: StencilInfo): Stencil;
-    createElement(stencil: Stencil): IUIElement;
+    createElement(stencil: Stencil, info: StencilInfo): IUIElement;
     elementAdded(stencil: Stencil);
 }
 

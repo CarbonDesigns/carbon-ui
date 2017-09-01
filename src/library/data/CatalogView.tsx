@@ -2,10 +2,11 @@ import React from "react";
 import { FormattedHTMLMessage } from 'react-intl';
 import { Component, dispatch, dispatchAction } from "../../CarbonFlux";
 import ScrollContainer from "../../shared/ScrollContainer";
+import { ToolboxConfig, DataStencil } from "../LibraryDefs";
 
 interface CatalogViewProps extends ISimpleReactElementProps {
-    config: any;
-    templateType?: string;
+    config: ToolboxConfig<DataStencil>;
+    templateType: string;
     onScrolledToCategory?: (category) => void;
     scrollToCategory?: any;
 }
@@ -68,12 +69,12 @@ export default class CatalogView extends Component<CatalogViewProps> {
                         <strong><FormattedHTMLMessage id={g.name} defaultMessage={g.name} /></strong>
                     </div>
                     <div className="data__fields">
-                        {g.children.map(x => <div key={x.name} className="stencil stencil_data stencil_bordered"
-                            data-stencil-type={this.props.templateType || x.templateType}
-                            data-stencil-id={x.templateId}
+                        {g.items.map(x => <div key={x.title} className="stencil stencil_data stencil_bordered"
+                            data-stencil-type={this.props.templateType}
+                            data-stencil-id={x.id}
                             onClick={this.onClicked}>
                             <div className="data__field">
-                                <span className="data__title">{x.name}</span>
+                                <span className="data__title">{x.title}</span>
                                 {x.examples.map(e => <span className="data__example" key={e}>{e}</span>)}
                             </div>
                         </div>)}

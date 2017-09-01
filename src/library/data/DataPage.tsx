@@ -11,6 +11,7 @@ import { GuiButton } from "../../shared/ui/GuiComponents";
 import libraryTabStore from "../LibraryTabStore";
 import BuiltInProviders from "./BuiltInProviders";
 import NotReady from "../../shared/NotReady";
+import DataSearch from "./DataSearch";
 
 require("./DataStore");
 
@@ -52,7 +53,7 @@ export default class DataPanel extends Component<{}, DataPanelState> {
                 <TabPage tabId="1" className="gui-page"> <BuiltInProviders /></TabPage>
                 <TabPage tabId="2" className="gui-page"> <CustomProviders /> </TabPage>
                 <TabPage tabId="3" className="gui-page"> <NotReady feature="dataJson"/> </TabPage>
-                <TabPage tabId="4" className="gui-page"> <NotReady feature="dataSearch"/> </TabPage>
+                <TabPage tabId="4" className="gui-page"> <DataSearch/> </TabPage>
             </TabArea>
         </TabContainer>;
     }

@@ -105,7 +105,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                 this.onResourceChanged(action.resourceType, action.resource);
                 return;
             case "Carbon_ResourceDeleted":
-                this.onIconSetDeleted(action.resourceType, action.resource);
+                this.onIconSetDeleted(action.resourceType, action.resource, action.parent);
                 return;
 
             case "Icons_ClickedCategory":
@@ -122,7 +122,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             return;
         }
 
-        this.markArtboardAsDirty(artboard);
+        this.markArtboardAsDirty(artboard.parent().id(), artboard.id());
 
         if (!this.state.config) {
             this.updateDirtySets();
@@ -137,16 +137,16 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             return;
         }
 
-        this.markArtboardAsDirty(artboard);
+        this.markArtboardAsDirty(artboard.parent().id(), artboard.id());
         this.setState({ dirtyConfig: true });
     }
 
-    private onIconSetDeleted(resourceType, artboard: IArtboard) {
+    private onIconSetDeleted(resourceType, artboard: IArtboard, page: IPage) {
         if (resourceType !== ArtboardType.IconSet) {
             return;
         }
 
-        this.markArtboardAsDirty(artboard, DeletedVersion);
+        this.markArtboardAsDirty(page.id(), artboard.id(), DeletedVersion);
         this.setState({ dirtyConfig: true });
     }
 
@@ -245,7 +245,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
     }
 
     private updateDirtySets() {
-        let dirtyArtboards = this.artboardStates.filter(x => !x.version);
+        let dirtyArtboards = this.artboardStates.filter(x => !x.version || x.version === DeletedVersion);
         if (!dirtyArtboards.length) {
             return;
         }
@@ -257,20 +257,17 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         for (let i = dirtyArtboards.length - 1; i >= 0; --i) {
             let artboardState = dirtyArtboards[i];
             let page = app.getImmediateChildById(artboardState.pageId);
+
             if (!page) {
-                dirtyArtboards.splice(i, 1);
-                continue;
-            }
-            let artboard = page.getImmediateChildById<IArtboard>(artboardState.artboardId);
-            if (!artboard) {
-                dirtyArtboards.splice(i, 1);
+                this.deleteArtboardState(artboardState.pageId, artboardState.artboardId);
                 continue;
             }
 
-            if (artboardState.version === DeletedVersion) {
-                dirtyArtboards.splice(i, 1);
-                artboard.parent().patchProps(PatchType.Remove, "iconSpriteCache", {
-                    id: artboard.id()
+            let artboard = page.getImmediateChildById<IArtboard>(artboardState.artboardId);
+            if (!artboard || artboardState.version === DeletedVersion) {
+                this.deleteArtboardState(artboardState.pageId, artboardState.artboardId);
+                page.patchProps(PatchType.Remove, "iconSpriteCache", {
+                    id: artboardState.artboardId
                 });
                 continue;
             }
@@ -310,22 +307,27 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         return a.every(x => b.findIndex(y => y.pageId === x.pageId && y.artboardId === x.artboardId && y.version === x.version) !== -1);
     }
 
-    private markArtboardAsDirty(artboard: IArtboard, version = "") {
-        let pageId = artboard.parent().id();
-        let state = this.artboardStates.find(x => x.pageId === pageId && x.artboardId === artboard.id());
+    private markArtboardAsDirty(pageId: string, artboardId: string, version = "") {
+        let state = this.artboardStates.find(x => x.pageId === pageId && x.artboardId === artboardId);
         if (state) {
             state.version = version;
         }
         else {
             this.artboardStates.push({
-                artboardId: artboard.id(),
+                artboardId,
                 pageId,
                 version
             });
         }
     }
+    private deleteArtboardState(pageId: string, artboardId: string) {
+        let i = this.artboardStates.findIndex(x => x.pageId === pageId && x.artboardId === artboardId);
+        if (i !== -1) {
+            this.artboardStates.splice(i, 1);
+        }
+    }
     private hasDirtyArtboards() {
-        return this.artboardStates.some(x => !x.version);
+        return this.artboardStates.some(x => !x.version || x.version === DeletedVersion);
     }
 }
 

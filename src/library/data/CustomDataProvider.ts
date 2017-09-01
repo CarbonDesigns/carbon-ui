@@ -46,7 +46,7 @@ export default class CustomDataProvider implements IDataProvider {
             dp: this.id,
             df: field
         });
-        element.runtimeProps.isDataElement = true;
+        element.markAsDataField();
         return element;
     }
 

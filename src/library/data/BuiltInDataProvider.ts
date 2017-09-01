@@ -129,7 +129,7 @@ export default class BuiltInDataProvider implements IDataProvider {
             dp: "builtin",
             df: stencilId
         });
-        element.runtimeProps.isDataElement = true;
+        element.markAsDataField();
         return element;
     }
 

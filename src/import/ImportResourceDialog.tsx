@@ -71,7 +71,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
     private getQueryFromProps(props: ImportResourceDialogProps) {
         let query = "";
         if (props.tags) {
-            query = props.tags + ": ";
+            query = "tags:" + props.tags + " ";
         }
         if (props.query) {
             query += props.query;
@@ -117,7 +117,7 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
             .then(response => response.json())
             .then(data => ResourceSharer.importPage(data))
             .then(page => {
-                dispatchAction({ type: "Stencils_ChangePage", page });
+                dispatchAction({ type: "Symbols_ChangePage", page });
                 super.close();
             });
     }

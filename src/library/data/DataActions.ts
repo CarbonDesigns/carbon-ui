@@ -3,4 +3,5 @@ export type DataAction =
 { type: "Data_ScrolledToCategory", category: any } |
 { type: "Data_AddCatalog" } |
 { type: "Data_SaveCatalog", name: string, data: string } |
-{ type: "Data_CancelCatalog" };
+{ type: "Data_CancelCatalog" } |
+{ type: "Data_Search", q: string };

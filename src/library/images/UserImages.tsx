@@ -7,7 +7,7 @@ import { Component, listenTo, dispatch, handles, dispatchAction } from "../../Ca
 import ImagesActions from "./ImagesActions";
 import { FormattedMessage } from "react-intl";
 import LayoutActions from '../../layout/LayoutActions';
-import UserImagesStore from "./UserImagesStore";
+import UserImagesStore, { UserImageStencil } from "./UserImagesStore";
 import ImageUploadQueueStore from "./ImageUploadQueueStore";
 import { UploadStatus, IQueueFile } from "./ImageUploadQueueStore";
 import ScrollContainer from "../../shared/ScrollContainer";
@@ -15,10 +15,12 @@ import DropzoneRegistry from "../../workspace/DropzoneRegistry";
 import bem from "bem"
 import VirtualList from "../../shared/collections/VirtualList";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
+import { UserImage, getUserImageHeight } from "./UserImage";
 
 function b(a, b?, c?) { return bem("image-upload", a, b, c) }
 
-
+type ImageList = new (props) => VirtualList<UserImageStencil>;
+const ImageList = VirtualList as ImageList;
 
 const upload_classnames = {
     previews_list: "image-upload__file-previews",
@@ -224,8 +226,7 @@ export default class UserImages extends Component<any, any>{
     }
 
     private onClicked = (e) => {
-        var templateId = e.currentTarget.dataset.templateId;
-        dispatchAction({ type: "Stencils_Clicked", e, templateType: UserImagesStore.storeType, templateId });
+        dispatchAction({ type: "Stencils_Clicked", e: { ctrlKey: e.ctrlKey, metaKey: e.metaKey, currentTarget: e.currentTarget }, stencil: { ...e.currentTarget.dataset } });
     }
 
     componentDidMount() {
@@ -248,7 +249,9 @@ export default class UserImages extends Component<any, any>{
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.images !== this.state.images) {
-            this.refs.list.reset();
+            if (this.refs.list) {
+                this.refs.list.reset();
+            }
         }
     }
 
@@ -317,25 +320,8 @@ export default class UserImages extends Component<any, any>{
             this.dropzone['options'].headers = backend.getAuthorizationHeaders());
     }
 
-    private getItemHeight = (i) => {
-        return i.thumbHeight;
-    }
-
-    private renderItem = (stencil) => {
-        var imageStyle: any = {
-            backgroundImage: 'url(' + stencil.thumbUrl + ')',
-            backgroundSize: stencil.cover ? "cover" : "contain"
-        };
-        return <div
-            key={stencil.id}
-            className="stencil stencil_userImage"
-            title={stencil.title}
-            data-template-type={UserImagesStore.storeType}
-            data-template-id={stencil.id}
-            onClick={this.onClicked}
-        >
-            <i style={imageStyle} />
-        </div>;
+    private renderItem = (stencil: UserImageStencil) => {
+        return <UserImage stencilType={UserImagesStore.storeType} stencil={stencil} onClicked={this.onClicked} />;
     }
 
     private renderError() {
@@ -353,9 +339,20 @@ export default class UserImages extends Component<any, any>{
         if (this.state.error) {
             return this.renderError();
         }
+        if (this.state.images && this.state.images.length === 0) {
+            return this.renderNoResults();
+        }
         return <div className="user-images__list">
-            <VirtualList ref="list" data={this.state.images} rowHeight={this.getItemHeight} rowRenderer={this.renderItem}/>
+            <ImageList ref="list" data={this.state.images} rowHeight={getUserImageHeight} rowRenderer={this.renderItem} />
         </div>;
+    }
+
+    private renderNoResults() {
+        return <Markup>
+            <MarkupLine mods="center">
+                <FormattedMessage tagName="p" id="@images.noneFound" />
+            </MarkupLine>
+        </Markup>;
     }
 
     render() {

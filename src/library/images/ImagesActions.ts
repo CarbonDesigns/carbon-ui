@@ -1,4 +1,11 @@
 import {DropzoneType} from "../../workspace/DropzoneRegistry";
+import { ImagesResult, UserImage } from "carbon-core";
+
+export type ImagesAction =
+    { type: "Images_Search", q: string } |
+    { type: "Images_UnsplashSearch", q: string } |
+    { type: "Images_Error" } |
+    { type: "SearchImages_Loaded", images: UserImage[] };
 
 var ImagesActions = {
     changeTab:(tabId) => {
@@ -10,12 +17,6 @@ var ImagesActions = {
     search:(term) => {
         return {
             type:'IMAGES_SEARCH',
-            term
-        }
-    },
-    webSearch:(term) => {
-        return {
-            type:'IMAGES_WEB_SEARCH',
             term
         }
     },

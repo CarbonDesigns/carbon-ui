@@ -1,18 +1,17 @@
 import Unsplash, {toJson} from "unsplash-js";
-import ImagesActions from "./ImagesActions";
+import ImagesActions, { ImagesAction } from "./ImagesActions";
 import {handles, CarbonStore, dispatch} from "../../CarbonFlux";
 import { Image, IPaginatedResult, util } from "carbon-core";
 import Toolbox from "../Toolbox";
-import { IStencil } from "../ToolboxConfiguration";
-import { IToolboxStore } from "../LibraryDefs";
+import { IToolboxStore, Stencil, StencilInfo } from "../LibraryDefs";
 
 const PageSize = 15;
 
-export interface IUnsplashStencil extends IStencil {
+export interface UnsplashStencil extends Stencil {
     type: string;
     url: string;
+    urls?: any[],
     portrait: boolean;
-    cover?: boolean;
     thumbUrl: string;
     thumbHeight: number;
     credits: {
@@ -48,25 +47,33 @@ export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IT
         };
     }
 
-    createElement({templateId}){
-        var image = this.state.results.find(x => x.id === templateId);
+    findStencil(info: StencilInfo) {
+        return this.state.results.find(x => x.id === info.stencilId);
+    }
+
+    createElement(stencil: UnsplashStencil){
         var element = new Image();
         element.setProps({
-            width: image.realWidth, height: image.realHeight,
-            source: Image.createUrlSource(image.url),
-            sourceProps: {cors: true, urls: image.urls, width: image.realWidth, height: image.realHeight, cw: image.realWidth}
+            width: stencil.realWidth, height: stencil.realHeight,
+            source: Image.createUrlSource(stencil.url),
+            sourceProps: {cors: true, urls: stencil.urls, width: stencil.realWidth, height: stencil.realHeight, cw: stencil.realWidth}
         });
         return element;
     }
     elementAdded() {
     }
 
-    @handles(ImagesActions.search, ImagesActions.webSearch)
-    search({term}){
-        if (term){
-            this.setState({
-                term, error: false, results: []
-            });
+    onAction(action: ImagesAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Images_UnsplashSearch":
+                if (action.q){
+                    this.setState({
+                        term: action.q, error: false, results: []
+                    });
+                }
+                return;
         }
     }
 

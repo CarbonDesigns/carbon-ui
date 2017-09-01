@@ -2,8 +2,7 @@ import CarbonActions from './CarbonActions';
 import AppActions from "./RichAppActions";
 import IdleDialog from "./workspace/IdleDialog";
 import { dispatch, dispatchAction } from "./CarbonFlux";
-import { app, backend, PropertyTracker, Selection, Environment, IDisposable, IPage, CommandManager, Page } from "carbon-core";
-import ToolboxConfiguration from "./library/ToolboxConfiguration";
+import { app, backend, PropertyTracker, Selection, Environment, IDisposable, IPage, CommandManager } from "carbon-core";
 
 let workspaceTokens: IDisposable[] = [];
 let frequentTokens: IDisposable[] = [];
@@ -36,13 +35,6 @@ export function registerEvents() {
 
         token = PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => {
             dispatchAction({ type: "Carbon_PropsChanged", element: e, props, oldProps });
-
-            if (e instanceof Page && props.toolboxConfigId) {
-                ToolboxConfiguration.getConfigForPage(e)
-                    .then(config => {
-                        dispatchAction({ type: "Stencils_Loaded", page: e, config, async: true });
-                    });
-            }
         });
         frequentTokens.push(token);
 

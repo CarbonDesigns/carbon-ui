@@ -1,55 +1,88 @@
-import {app, Brush, Image} from "carbon-core";
-import AbstractStore from "../AbstractRecentStore";
+import { app, Image } from "carbon-core";
+import { CarbonStore } from "../../CarbonFlux";
+import { ToolboxConfig, SpriteStencil, StencilInfo, SpriteStencilInfo, Stencil } from "../LibraryDefs";
+import unsplashStore, { UnsplashStencil } from "./UnsplashStore";
+import userImagesStore, { UserImageStencil } from "./UserImagesStore";
 import Toolbox from "../Toolbox";
-import { ImageSource, ImageSourceType, IImage } from "carbon-model";
-import { workspace } from "carbon-core";
-import ToolboxConfiguration from "../ToolboxConfiguration";
+import { StencilsAction } from "../StencilsActions";
 
-export default class RecentImagesStore extends AbstractStore{
-    constructor(){
-        super("Recent images");
-    }
+export type ImageType =
+    { type: "unsplash", stencil: UnsplashStencil } |
+    { type: "user", stencil: UserImageStencil };
 
-    canAddElement(e){
-        return e instanceof Image;
-    }
+export interface RecentImage extends Stencil {
+    imageType: ImageType;
+}
 
-    getTrackData(e){
-        var data = {
-            fill: e.fill(),
-            stroke: e.stroke(),
-            opacity: e.opacity(),
-            source: e.props.source
+export type RecentImagesStoreState = {
+    images: RecentImage[];
+    configVersion: number;
+}
+
+class RecentImagesStore extends CarbonStore<RecentImagesStoreState> {
+    storeType = "recentImages";
+
+    constructor() {
+        super();
+        this.state = {
+            images: [],
+            configVersion: 0
         };
-
-        return data;
     }
 
-    createElementConfig(e){
-        var w = e.width();
-        var h = e.height();
-        var tileType = ToolboxConfiguration.chooseTileType(w, h);
-        var tileSize = ToolboxConfiguration.fitToTile(w, h, tileType);
-
-        var imageDesc = this._getSourceDescription(e);
-        var elementConfig = {
-            id: imageDesc,
-            type: "recentImage",
-            json: e.toJSON(),
-            spriteUrl: workspace.view.renderElementToDataUrl(e, tileSize),
-            tileWidth: tileSize.width,
-            tileHeight: tileSize.height,
-            fit: tileSize.scale < 1,
-            title: e.displayName(),
-            name: imageDesc,
-            realWidth: e.width(),
-            realHeight: e.height()
-        };
-
-        return elementConfig;
+    findStencil(info: StencilInfo) {
+        return this.state.images.find(x => x.id === info.stencilId);
     }
 
-    _getSourceDescription(e: IImage){
-        return Toolbox.imageSourceToString(e.props.source);
+    createElement(stencil: RecentImage) {
+        if (stencil.imageType.type === "unsplash") {
+            return unsplashStore.createElement(stencil.imageType.stencil);
+        }
+
+        return userImagesStore.createElement(stencil.imageType.stencil);
+    }
+
+    elementAdded() {
+    }
+
+    onAction(action: StencilsAction) {
+        switch (action.type) {
+            case "Stencils_Added":
+                if (action.stencilType === unsplashStore.storeType || action.stencilType === userImagesStore.storeType) {
+                    let index = this.state.images.findIndex(x => x.id === action.stencil.id);
+
+                    if (index !== -1) {
+                        this.state.images.splice(index, 1);
+                    }
+
+                    if (action.stencilType === unsplashStore.storeType) {
+                        this.state.images.push({
+                            id: action.stencil.id,
+                            title: action.stencil.title,
+                            imageType: {
+                                type: "unsplash",
+                                stencil: action.stencil as UnsplashStencil
+                            }
+                        });
+                    }
+                    else {
+                        this.state.images.push({
+                            id: action.stencil.id,
+                            title: action.stencil.title,
+                            imageType: {
+                                type: "user",
+                                stencil: action.stencil as UserImageStencil
+                            }
+                        });
+                    }
+
+                    this.setState({
+                        configVersion: ++this.state.configVersion
+                    });
+                }
+                return;
+        }
     }
 }
+
+export default Toolbox.registerStore(new RecentImagesStore());

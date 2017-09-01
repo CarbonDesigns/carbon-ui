@@ -3,26 +3,25 @@ import ReactDom from "react-dom";
 import { Component, listenTo, dispatchAction, StoreComponent } from "../../CarbonFlux";
 import Search from "../../shared/Search";
 import ScrollContainer from "../../shared/ScrollContainer";
-import SpriteView from "./SpriteView";
+import SpriteView from "../SpriteView";
 import { domUtil } from "carbon-core";
-import searchStencilsStore, { SearchStencilsStoreState } from "./SearchStencilsStore";
-import symbolsStore from "./SymbolsStore";
+import searchIconsStore, { SearchIconsStoreState } from "./SearchIconsStore";
 import Navigatable from "../../shared/Navigatable";
 import bem from "../../utils/commonUtils";
-import { StencilsOverscanCount, StencilsColumnWidth } from "../LibraryDefs";
+import { IconsOverscanCount, IconSize } from "../LibraryDefs";
 import LessVars from "../../styles/LessVars";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
 import { GuiButton } from "../../shared/ui/GuiComponents";
 
-export default class SearchStencils extends StoreComponent<{}, SearchStencilsStoreState>{
+export default class SearchIcons extends StoreComponent<{}, SearchIconsStoreState>{
     refs: {
         page: HTMLElement;
         search: Search;
     }
 
     constructor(props) {
-        super(props, searchStencilsStore);
+        super(props, searchIconsStore);
     }
 
     componentDidMount() {
@@ -35,18 +34,23 @@ export default class SearchStencils extends StoreComponent<{}, SearchStencilsSto
     }
 
     private onSearch = (q) => {
-        dispatchAction({ type: "Stencils_Search", q });
+        dispatchAction({ type: "Icons_Search", q });
     }
 
-    private onAddMore = () => {
-        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog", args: { tags: "symbols", query: this.state.query } });
+    private onGallerySearch = () => {
+        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog", args: { tags: "icons", query: this.state.query } });
+    }
+
+    private onIconFinderSearch = () => {
+        dispatchAction({ type: "Library_Tab", area: "icons", tabId: "3"});
+        dispatchAction({ type: "Icons_WebSearch", q: this.state.query });
     }
 
     private onCategoryChanged = category => {
-        dispatchAction({ "type": "StencilsSearch_ClickedCategory", category });
+        dispatchAction({ "type": "IconsSearch_ClickedCategory", category });
     }
     private onScrolledToCategory = category => {
-        dispatchAction({ "type": "StencilsSearch_ScrolledToCategory", category });
+        dispatchAction({ "type": "IconsSearch_ScrolledToCategory", category });
     }
 
     render() {
@@ -54,7 +58,7 @@ export default class SearchStencils extends StoreComponent<{}, SearchStencilsSto
 
         return <div ref="page">
             <div className="library-page__header">
-                <Search query={this.state.query} onQuery={this.onSearch} placeholder={this.formatLabel("@symbols.find")} ref="search" />
+                <Search query={this.state.query} onQuery={this.onSearch} placeholder="@icons.find" ref="search" />
             </div>
 
             {noResults ? this.renderNoResults() : this.renderResults()}
@@ -64,10 +68,16 @@ export default class SearchStencils extends StoreComponent<{}, SearchStencilsSto
     private renderNoResults() {
         return <Markup>
             <MarkupLine mods="center">
-                <FormattedMessage tagName="p" id="@symbols.noneFoundSearch" />
+                <FormattedMessage tagName="p" id="@icons.noneFoundSearch" />
+            </MarkupLine>
+            <MarkupLine mods={["center", "slim"]}>
+                <GuiButton caption="@icons.searchOnline" mods="hover-white" onClick={this.onGallerySearch} />
             </MarkupLine>
             <MarkupLine mods="center">
-                <GuiButton caption="@symbols.searchOnline" mods="hover-white" onClick={this.onAddMore} />
+                <FormattedMessage tagName="p" id="@icons.searchIconFinderMsg" />
+            </MarkupLine>
+            <MarkupLine mods={["center", "slim"]}>
+                <GuiButton caption="@icons.searchIconFinder" mods="hover-white" onClick={this.onIconFinderSearch} />
             </MarkupLine>
         </Markup>;
     }
@@ -78,15 +88,13 @@ export default class SearchStencils extends StoreComponent<{}, SearchStencilsSto
             onCategoryChanged={this.onCategoryChanged}
             config={this.state.searchConfig}>
 
-            <SpriteView
-                config={this.state.searchConfig}
-                configVersion={this.state.configVersion}
+            <SpriteView config={this.state.searchConfig} configVersion={this.state.configVersion}
                 scrollToCategory={this.state.lastScrolledCategory}
                 onScrolledToCategory={this.onScrolledToCategory}
-                overscanCount={StencilsOverscanCount}
-                columnWidth={StencilsColumnWidth}
-                borders={true}
-                templateType={symbolsStore.storeType} />
+                overscanCount={IconsOverscanCount}
+                columnWidth={IconSize}
+                keepAspectRatio={true}
+                templateType={searchIconsStore.storeType}/>
         </Navigatable>;
     }
 }

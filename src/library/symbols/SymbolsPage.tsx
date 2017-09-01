@@ -1,18 +1,17 @@
 import React from "react";
-import StandardStencils from "./StandardStencils";
-import RecentStencils from "./RecentStencils";
-import SearchStencils from "./SearchStencils";
+import Symbols from "./Symbols";
+import RecentSymbols from "./RecentSymbols";
+import SearchSymbols from "./SearchSymbols";
 import {domUtil} from "carbon-core";
-import {listenTo, Component, dispatch} from "../../CarbonFlux";
+import { listenTo, Component, dispatch, dispatchAction } from "../../CarbonFlux";
 // import {default as TabContainer, TabArea, TabHeader, TabPage} from "../../shared/TabContainer";
 import {default as TabContainer, TabTabs, TabArea, TabPage} from "../../shared/TabContainer";
 import bem from '../../utils/commonUtils';
 
 import libraryTabStore from "../LibraryTabStore";
-import LibraryActions from "../LibraryActions";
 
 
-export default class StencilsPage extends Component<any, any> {
+export default class SymbolsPage extends Component<any, any> {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +25,7 @@ export default class StencilsPage extends Component<any, any> {
     }
 
     render(){
-        return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatch(LibraryActions.changeTab("stencils", tabId))}>
+        return <TabContainer id="stencils-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({ type: "Library_Tab", area: "stencils", tabId})}>
             <TabTabs
                 items={[
                     <i className="ico-library"/>,
@@ -37,13 +36,13 @@ export default class StencilsPage extends Component<any, any> {
             />
             <TabArea className="gui-pages" id="stencils-page__pages">
                 <TabPage tabId="1" className="gui-page">
-                    <StandardStencils ref="tab1"/>
+                    <Symbols ref="tab1"/>
                 </TabPage>
                 <TabPage tabId="2" className="gui-page">
-                    <RecentStencils ref="tab2" />
+                    <RecentSymbols ref="tab2" />
                 </TabPage>
                 <TabPage tabId="3" className="gui-page tab-page_search">
-                    <SearchStencils ref="tab4" />
+                    <SearchSymbols ref="tab4" />
                 </TabPage>
             </TabArea>
         </TabContainer>;

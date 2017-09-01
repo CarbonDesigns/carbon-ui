@@ -1,14 +1,31 @@
-import { app, Image, backend } from "carbon-core";
+import { app, Image, backend, UserImage } from "carbon-core";
 import { handles, CarbonStore, dispatch } from "../../CarbonFlux";
 import ImagesActions from "./ImagesActions";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, Stencil } from "../LibraryDefs";
 
-class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
+export interface UserImageStencil extends Stencil {
+    url: string;
+    thumbUrl: string;
+    thumbHeight: number;
+    cover: boolean;
+}
+
+export type UserImagesStoreState = {
+    images: UserImageStencil[];
+    error: boolean;
+}
+
+class UserImagesStore extends CarbonStore<UserImagesStoreState> implements IToolboxStore {
     storeType = "userImage";
 
-    getInitialState() {
-        return { images: [], error: false };
+    constructor() {
+        super();
+
+        this.state = {
+            images: [],
+            error: false
+        };
     }
 
     getImages() {
@@ -17,17 +34,16 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
             .catch(() => dispatch(ImagesActions.userImagesError()));
     }
 
-    findById(id) {
-        return this.state.images.find(img => img.id === id);
+    findStencil(info: StencilInfo) {
+        return this.state.images.find(img => img.id === info.stencilId);
     }
 
-    createElement(info: StencilInfo) {
-        var image = this.findById(info.templateId);
+    createElement(stencil) {
         var element = new Image();
         element.setProps({
-            width: image.realWidth,
-            height: image.realHeight,
-            source: Image.createUrlSource(image.url)
+            width: stencil.realWidth,
+            height: stencil.realHeight,
+            source: Image.createUrlSource(stencil.url)
         });
         return element;
     }
@@ -57,28 +73,30 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
         this.setState({ images: newImages.concat(oldImages) });
     }
 
-    toMetadata(images) {
-        return images.map(img => {
-            var thumbHeight = 60;
-            if (img.thumbHeight > 200) {
-                thumbHeight = 200;
-            }
-            else if (img.thumbHeight > 100) {
-                thumbHeight = 100;
-            }
+    toMetadata(images: UserImage[]): UserImageStencil[] {
+        return images.map(img => this.createStencil(img));
+    }
 
-            return {
-                id: img.name,
-                type: this.storeType,
-                url: img.url,
-                title: `${img.name} (${img.width}×${img.height})`,
-                thumbUrl: img.thumbUrl,
-                thumbHeight: thumbHeight,
-                realWidth: img.width,
-                realHeight: img.height,
-                cover: img.thumbHeight > thumbHeight
-            };
-        });
+    createStencil(img: UserImage) {
+        var thumbHeight = 60;
+        if (img.thumbHeight > 200) {
+            thumbHeight = 200;
+        }
+        else if (img.thumbHeight > 100) {
+            thumbHeight = 100;
+        }
+
+        return {
+            id: img.name,
+            type: this.storeType,
+            url: img.url,
+            title: `${img.name} (${img.width}×${img.height})`,
+            thumbUrl: img.thumbUrl,
+            thumbHeight: thumbHeight,
+            realWidth: img.width,
+            realHeight: img.height,
+            cover: img.thumbHeight > thumbHeight
+        };
     }
 }
 

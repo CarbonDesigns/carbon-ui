@@ -8,9 +8,10 @@ import ImagesActions from './ImagesActions';
 import LayoutActions from '../../layout/LayoutActions';
 import unsplashStore, { UnsplashStoreState, UnsplashStore, UnsplashStencil } from "./UnsplashStore";
 import InfiniteList from "../../shared/collections/InfiniteList";
-import { PortraitHeight, LandscapeHeight } from "./ImageDefs";
+import { ImagePortraitHeight, ImageLandscapeHeight } from "../LibraryDefs";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
+import { getUnsplashImageHeight, UnsplashImage } from "./UnsplashImage";
 
 type UnsplashList = new (props) => InfiniteList<UnsplashStencil>;
 const UnsplashList = InfiniteList as UnsplashList;
@@ -47,13 +48,6 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
         dispatchAction({ type: "Stencils_Clicked", e: {ctrlKey: e.ctrlKey, metaKey: e.metaKey, currentTarget: e.currentTarget}, stencil: { ...e.currentTarget.dataset } });
     }
 
-    private getItemHeight(i: UnsplashStencil) {
-        if (i.thumbHeight) {
-            return i.thumbHeight;
-        }
-        return i.portrait ? PortraitHeight : LandscapeHeight;
-    }
-
     private renderError() {
         if (this.state.error) {
             return <Markup>
@@ -67,8 +61,8 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
 
     private renderList() {
         return <UnsplashList className="list" ref="list"
-            rowHeight={this.getItemHeight}
-            estimatedRowHeight={LandscapeHeight}
+            rowHeight={getUnsplashImageHeight}
+            estimatedRowHeight={ImageLandscapeHeight}
             rowRenderer={this.renderItem}
             noContentRenderer={this.renderNoContent}
             loadMore={this.onLoadMore} />;
@@ -83,22 +77,7 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
     }
 
     private renderItem = (stencil: UnsplashStencil) => {
-        var imageStyle: any = {
-            backgroundImage: 'url(' + stencil.thumbUrl + ')'
-        };
-        var image = <i className="unsplash__image" style={imageStyle} />;
-        var credits = <a className="unsplash__credits" href={stencil.credits.link} target="_blank"><span>{stencil.credits.name}</span></a>;
-        return <div
-            key={stencil.id}
-            className={cx("stencil unsplash__holder", { "unsplash__holder_portrait": stencil.portrait })}
-            title={stencil.title}
-            data-stencil-type={unsplashStore.storeType}
-            data-stencil-id={stencil.id}
-            onClick={this.onClicked}
-        >
-            {image}
-            {credits}
-        </div>;
+        return <UnsplashImage stencilType={unsplashStore.storeType} stencil={stencil} onClicked={this.onClicked}/>
     };
 
     render() {

@@ -65,3 +65,6 @@ export const SymbolsColumnWidth = 128;
 
 export const IconsOverscanCount = 20;
 export const IconSize = 40;
+
+export const ImageLandscapeHeight = 200;
+export const ImagePortraitHeight = 300;

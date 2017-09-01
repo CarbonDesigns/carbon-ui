@@ -2,13 +2,30 @@ import { app, Image, backend } from "carbon-core";
 import { handles, CarbonStore, dispatch } from "../../CarbonFlux";
 import ImagesActions from "./ImagesActions";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, Stencil } from "../LibraryDefs";
 
-class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
+export interface UserImageStencil extends Stencil {
+    url: string;
+    thumbUrl: string;
+    thumbHeight: number;
+    cover: boolean;
+}
+
+export type UserImagesStoreState = {
+    images: UserImageStencil[];
+    error: boolean;
+}
+
+class UserImagesStore extends CarbonStore<UserImagesStoreState> implements IToolboxStore {
     storeType = "userImage";
 
-    getInitialState() {
-        return { images: [], error: false };
+    constructor() {
+        super();
+
+        this.state = {
+            images: [],
+            error: false
+        };
     }
 
     getImages() {
@@ -56,7 +73,7 @@ class UserImagesStore extends CarbonStore<any> implements IToolboxStore {
         this.setState({ images: newImages.concat(oldImages) });
     }
 
-    toMetadata(images) {
+    toMetadata(images): UserImageStencil[] {
         return images.map(img => {
             var thumbHeight = 60;
             if (img.thumbHeight > 200) {

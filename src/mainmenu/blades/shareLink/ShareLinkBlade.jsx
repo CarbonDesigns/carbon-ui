@@ -3,7 +3,7 @@ import cx from 'classnames';
 import {GuiButton, GuiCheckbox, GuiInput} from "../../../shared/ui/GuiComponents";
 import {Markup, MarkupLine}  from "../../../shared/ui/Markup";
 import {BladePage, BladeBody}  from "../BladePage";
-import {app, ShareProxy} from "carbon-core";
+import {app, backend, ShareProxy} from "carbon-core";
 
 export default class ShareLinkBlade extends React.Component {
     constructor(props) {
@@ -12,7 +12,7 @@ export default class ShareLinkBlade extends React.Component {
     }
 
     _share = () => {
-        ShareProxy.code(app.companyId(), app.id(), 2)
+        backend.shareProxy.code(app.companyId(), app.id(), 2)
                   .then(data => this.setState({code: data.code}))
     };
 

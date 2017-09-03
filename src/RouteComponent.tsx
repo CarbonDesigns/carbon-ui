@@ -17,6 +17,12 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
         intl:any
     }
 
+    componentDidMount() {
+        super.componentDidMount();
+
+        this.updateTitle(this.getTitle());
+    }
+
     goToDashboard(companyName: string, companyId: string){
         this.context.router.push({
             pathname: "/@" + (companyName || "guest"),
@@ -68,6 +74,14 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
 
     replacePath(path){
         this.context.router.replace({ pathname: path, query: this.props.location.query });
+    }
+
+    protected getTitle() {
+        return "Carbonium";
+    }
+
+    protected updateTitle(title: string) {
+        document.title = title + " | Carbonium";
     }
 
     static contextTypes = {

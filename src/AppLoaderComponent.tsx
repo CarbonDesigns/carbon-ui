@@ -5,6 +5,7 @@ import { Component, dispatchAction } from "./CarbonFlux";
 import { app, logger, backend } from "carbon-core";
 import RouteComponent, { IRouteComponentProps } from "./RouteComponent";
 import { LoginRequiredError } from "./Constants";
+import { CarbonAction } from "./CarbonActions";
 
 export interface IAppLoaderComponentProps extends IRouteComponentProps{
     params: {
@@ -14,6 +15,27 @@ export interface IAppLoaderComponentProps extends IRouteComponentProps{
     }
 }
 export default class AppLoaderComponent extends RouteComponent<IAppLoaderComponentProps>{
+
+    canHandleActions() {
+        return true;
+    }
+
+    onAction(action: CarbonAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Carbon_PropsChanged":
+                if (action.element === app && action.props.name) {
+                    this.updateTitle(app.name());
+                }
+                return;
+
+            case "Carbon_AppUpdated":
+                this.updateTitle(app.name());
+                return;
+        }
+    }
+
     componentDidMount() {
         super.componentDidMount();
         if (!app.isLoaded) {

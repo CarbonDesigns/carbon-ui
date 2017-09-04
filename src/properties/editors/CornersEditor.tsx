@@ -1,7 +1,7 @@
 import React from 'react';
 import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from 'classnames';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import bem from '../../utils/commonUtils';
 import {QuadAndLock} from "carbon-core";
 
@@ -75,7 +75,7 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
         var locked = value.locked;
 
         return <div className={classes}>
-            <div className={this.b('name') }><FormattedHTMLMessage id={this.displayName()}/></div>
+            <div className={this.b('name') }><FormattedMessage id={this.displayName()}/></div>
             <div className={this.b('editor')}>
                 <div className={b("container")}>
                     { ["upperLeft", "upperRight", "bottomRight", "bottomLeft"].map((c)=>{

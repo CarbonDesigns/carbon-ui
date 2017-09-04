@@ -9,7 +9,7 @@ import { listenTo, Component, ComponentWithImmutableState, CarbonLabel, dispatch
 import AppActions from '../RichAppActions';
 import cx from "classnames";
 import bem from '../utils/commonUtils';
-import {FormattedHTMLMessage, defineMessages} from 'react-intl';
+import {FormattedMessage, defineMessages} from 'react-intl';
 import {Record} from "immutable";
 import Dropdown from "../shared/Dropdown";
 import PreviewActions from "../preview/PreviewActions";
@@ -203,7 +203,7 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                                      onClick={()=>app.setMode(item)}>
                                     <div className="big-icon"></div>
                                     <div className="pill-cap">
-                                        <FormattedHTMLMessage id={'mode.' + item}/>
+                                        <FormattedMessage id={'mode.' + item}/>
                                     </div>
                                 </div>
                             )

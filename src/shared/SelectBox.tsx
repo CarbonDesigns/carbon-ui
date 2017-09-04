@@ -6,7 +6,7 @@ import { default as bem, join_bem_mods } from '../utils/commonUtils';
 
 import FlyoutButton from './FlyoutButton';
 import ScrollContainer from './ScrollContainer';
-import { FormattedHTMLMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 
 function b(a, b, c) { return bem('drop', a, b, c) }

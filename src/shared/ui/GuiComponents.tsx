@@ -436,7 +436,7 @@ export class GuiDropDown extends Component<IGuiDropDownProps>{
 /**
  * GuiInput
  */
-interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement>, IHasMods<
+export interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement>, IHasMods<
     "small" |
     "valid" |
     "checking" |

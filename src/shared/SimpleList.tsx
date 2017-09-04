@@ -1,5 +1,5 @@
 import React                  from 'react';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import cx                     from 'classnames';
 import Dots                   from "./dots";
 import ScrollContainer        from "./ScrollContainer";

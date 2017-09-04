@@ -1,10 +1,10 @@
 import {Component, listenTo} from "../CarbonFlux";
 import NotReady from '../shared/NotReady';
 import React from 'react';
-//import {FormattedHTMLMessage} from 'react-intl';
+//import {FormattedMessage} from 'react-intl';
 //import {msg} from '../intl/store';
 import Panel from '../layout/Panel'
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import ScrollContainer        from "../shared/ScrollContainer";
 import { GuiButton } from "../shared/ui/GuiComponents";
 
@@ -196,7 +196,7 @@ function CommentAction ({actionName, onClick}){
         onClick={onClick}
     >
         <i className={ico}/>
-        <FormattedHTMLMessage tagName='span' id={actionName} defaultMessage={actionName} />
+        <FormattedMessage tagName='span' id={actionName} defaultMessage={actionName} />
     </div>
 }
 
@@ -340,7 +340,7 @@ class Comment extends Component {
             replies_content = [
                 (<section  className="replies__actions"  key="replies__actions">
                     <div className="replies__add-reply  comment__inline-action  txt" onClick={this._toggleRepliesList}>
-                        <i className="ico-add-reply"/><FormattedHTMLMessage defaultMessage="Add a reply" tagName="span" id="translateme!" />
+                        <i className="ico-add-reply"/><FormattedMessage defaultMessage="Add a reply" tagName="span" id="translateme!" />
                     </div>
                 </section>)
             ];
@@ -351,7 +351,7 @@ class Comment extends Component {
                 (<div  className="replies__actions"  key="replies__actions"  onClick={this._toggleRepliesList}>
                     <div className="replies__amount txt">
                         <i><span>{replies_amount}</span></i>
-                        <FormattedHTMLMessage defaultMessage="replies" tagName="span" id="translateme!" values={{amount: replies_amount}}/>
+                        <FormattedMessage defaultMessage="replies" tagName="span" id="translateme!" values={{amount: replies_amount}}/>
                     </div>
                 </div>),
                 (<div className="replies-list" key="replies-list">
@@ -448,7 +448,7 @@ class CommentsPanel extends Component {
                             </div>
                             <div className="create-comment__opener">
                                 <i className="ico-add-comment"/>
-                                <div className="cap">{<FormattedHTMLMessage defaultMessage="Add comment" tagName="span" id="translateme!"/>}</div>
+                                <div className="cap">{<FormattedMessage defaultMessage="Add comment" tagName="span" id="translateme!"/>}</div>
                             </div>
                         </label>
                     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import ColorPicker from "./ColorPicker";
+import ColorPicker from "../../shared/ui/ColorPicker";
 import { default as TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../../shared/TabContainer";
 import { BrushGammaSelector, Gammas } from "./BrushGammaSelector";
 import { richApp } from '../../RichApp';
@@ -7,7 +7,7 @@ import { Component } from '../../CarbonFlux';
 import { Brush, BrushType } from "carbon-core";
 import LinearGradientPicker from "./LinearGradientPicker";
 
-import { FormattedHTMLMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import tinycolor from "tinycolor2";
 
@@ -99,16 +99,16 @@ export default class BrushTabs extends Component<any, any> {
             brush = Brush.Empty;
         }
         let tabs =[
-            [<i key="ico" className="ico-colorpicker-solid" />, <FormattedHTMLMessage key="text" id="Solid" />]
+            [<i key="ico" className="ico-colorpicker-solid" />, <FormattedMessage key="text" id="Solid" />]
         ]
         if (this.props.hasGradient) {
             if (brush.type === BrushType.lineargradient) {
                 tabId = "2";
             }
-            tabs.push( [<i key="ico" className="ico-colorpicker-gradient" />, <FormattedHTMLMessage key="text" id="Gradient" />]);
+            tabs.push( [<i key="ico" className="ico-colorpicker-gradient" />, <FormattedMessage key="text" id="Gradient" />]);
         }
 
-        {/*[<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedHTMLMessage key="text" id="Swatches"/>],*/ }
+        {/*[<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedMessage key="text" id="Swatches"/>],*/ }
         return <TabContainer currentTabId={tabId} onTabChanged={this.onTabChanged}>
             <TabTabs
                 items={tabs}

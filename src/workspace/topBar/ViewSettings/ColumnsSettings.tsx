@@ -5,7 +5,7 @@ import Alpha from 'react-color/lib/components/common/Alpha';
 import {Component, handles}   from "../../../CarbonFlux";
 import EnterInput             from "../../../shared/EnterInput";
 import SliderHandle           from "../../../shared/SliderHandle";
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 
 import ViewSettingsPage     from "./ViewSettingsPage";
 import {FormHeading, FormLine, FormGroup}                 from "../../../shared/FormComponents"
@@ -222,7 +222,7 @@ export default class ColumnsSettings extends Component<any, any> {
                             <input ref="autoColumnWidth" type="checkbox" checked={this.state.setup.autoColumnWidth}
                                    onChange={this.autoColumnWidthChanged}/>
                             <i />
-                            <FormattedHTMLMessage id="Auto"/>
+                            <FormattedMessage id="Auto"/>
                         </label>
                     </div>
                 </FormLine>
@@ -265,19 +265,19 @@ export default class ColumnsSettings extends Component<any, any> {
                         <input type="radio" checked={this.state.applyOptions.activeArtboard}
                                onChange={this.setApplyOption} data-option="activeArtboard"/>
                         <i />
-                        <span><FormattedHTMLMessage id="Apply to current artboard"/></span>
+                        <span><FormattedMessage id="Apply to current artboard"/></span>
                     </label>
                     <label className="gui-radio gui-radio_line">
                         <input type="radio" checked={this.state.applyOptions.activePage}
                                onChange={this.setApplyOption} data-option="activePage"/>
                         <i />
-                        <FormattedHTMLMessage id="Apply to all artboards on current page"/>
+                        <FormattedMessage id="Apply to all artboards on current page"/>
                     </label>
                     <label className="gui-radio gui-radio_line">
                         <input type="radio" checked={this.state.applyOptions.allPages}
                                onChange={this.setApplyOption} data-option="allPages"/>
                         <i />
-                        <FormattedHTMLMessage id="Apply to all artboards on all pages"/>
+                        <FormattedMessage id="Apply to all artboards on all pages"/>
                     </label>
                 </FormLine>
             </FormGroup>
@@ -288,13 +288,13 @@ export default class ColumnsSettings extends Component<any, any> {
                         <input type="radio" checked={this.state.style.type === "stroke"}
                                onChange={this.setStyleType} data-type="stroke"/>
                         <i />
-                        <FormattedHTMLMessage id="Stroke lines"/>
+                        <FormattedMessage id="Stroke lines"/>
                     </label>
                     <label className="gui-radio gui-radio_line">
                         <input type="radio" checked={this.state.style.type === "fill"}
                                onChange={this.setStyleType} data-type="fill"/>
                         <i />
-                        <FormattedHTMLMessage id="Fill columns"/>
+                        <FormattedMessage id="Fill columns"/>
                     </label>
                 </FormLine>
                 <FormLine>

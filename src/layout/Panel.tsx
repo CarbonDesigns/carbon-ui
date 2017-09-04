@@ -9,7 +9,7 @@ import {domUtil} from "carbon-core";
 
 import cx from 'classnames';
 import bem_mod from '../utils/commonUtils';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 
 
 interface IPanelProps {
@@ -91,7 +91,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
                 <div className="panel__header">
                     <div className="panel__icon"><i/></div>
                     <div className="panel__name">
-                        <FormattedHTMLMessage id={this.props.header} tagName="h3" defaultMessage={this.props.header}/>
+                        <FormattedMessage id={this.props.header} tagName="h3" defaultMessage={this.props.header}/>
                     </div>
                     <div className="panel__settings-pill" ><i></i></div>
                     <div className="panel__closer" onClick={this._resolveOnGroupCloseClick({index : this.props.index})}><i></i></div>
@@ -105,7 +105,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
                     <div className="panel__settings-heading">
                         <hgroup>
                             <i className="ico ico-settings"/>
-                            <FormattedHTMLMessage id={"Settings"} tagName="h4" defaultMessage={"Settings"}/>
+                            <FormattedMessage id={"Settings"} tagName="h4" defaultMessage={"Settings"}/>
                         </hgroup>
                         <div className="panel__settings-closer">
                             <i className="icon ico-close"/>

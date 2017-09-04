@@ -1,7 +1,7 @@
 import React from "react";
 import {app} from "carbon-core";
 import classNames from 'classnames';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 
 interface IDropButtonItemProps extends IReactElementProps{
     action?: string;
@@ -42,7 +42,7 @@ export default class DropButtonItem extends React.Component<IDropButtonItemProps
         return (
             <p className="dropdown__item" id={this.props.id} onMouseDown={this._stopPropagation} onClick={this._action}>
                 {this._renderIcon()}
-                <span className="text pill-cap"><FormattedHTMLMessage id={labelId}></FormattedHTMLMessage></span>
+                <span className="text pill-cap"><FormattedMessage id={labelId}/></span>
                 <span className="shortcut">{this.props.action ? app.shortcutManager.getActionHotkeyDisplayLabel(this.props.action) : ""}</span>
             </p>
         )

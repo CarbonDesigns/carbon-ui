@@ -6,13 +6,14 @@ import Search from "../../shared/Search";
 import { domUtil } from "carbon-core";
 import ImagesActions from './ImagesActions';
 import LayoutActions from '../../layout/LayoutActions';
-import unsplashStore, { UnsplashStoreState, UnsplashStore, IUnsplashStencil } from "./UnsplashStore";
+import unsplashStore, { UnsplashStoreState, UnsplashStore, UnsplashStencil } from "./UnsplashStore";
 import InfiniteList from "../../shared/collections/InfiniteList";
-import { PortraitHeight, LandscapeHeight } from "./ImageDefs";
+import { ImagePortraitHeight, ImageLandscapeHeight } from "../LibraryDefs";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
+import { getUnsplashImageHeight, UnsplashImage } from "./UnsplashImage";
 
-type UnsplashList = new (props) => InfiniteList<IUnsplashStencil>;
+type UnsplashList = new (props) => InfiniteList<UnsplashStencil>;
 const UnsplashList = InfiniteList as UnsplashList;
 
 export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
@@ -39,21 +40,12 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
     }
 
     private onSearch = term => {
-        dispatch(ImagesActions.webSearch(term));
+        dispatchAction({ type: "Images_UnsplashSearch", q: term });
         this.refs.list.reset();
     }
 
     private onClicked = (e) => {
-        var templateType = e.currentTarget.dataset.templateType;
-        var templateId = e.currentTarget.dataset.templateId;
-        dispatchAction({ type: "Stencils_Clicked", e, templateType, templateId });
-    }
-
-    private getItemHeight(i: IUnsplashStencil) {
-        if (i.thumbHeight) {
-            return i.thumbHeight;
-        }
-        return i.portrait ? PortraitHeight : LandscapeHeight;
+        dispatchAction({ type: "Stencils_Clicked", e: {ctrlKey: e.ctrlKey, metaKey: e.metaKey, currentTarget: e.currentTarget}, stencil: { ...e.currentTarget.dataset } });
     }
 
     private renderError() {
@@ -69,8 +61,8 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
 
     private renderList() {
         return <UnsplashList className="list" ref="list"
-            rowHeight={this.getItemHeight}
-            estimatedRowHeight={LandscapeHeight}
+            rowHeight={getUnsplashImageHeight}
+            estimatedRowHeight={ImageLandscapeHeight}
             rowRenderer={this.renderItem}
             noContentRenderer={this.renderNoContent}
             loadMore={this.onLoadMore} />;
@@ -84,23 +76,8 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
         </Markup>;
     }
 
-    private renderItem = (stencil: IUnsplashStencil) => {
-        var imageStyle: any = {
-            backgroundImage: 'url(' + stencil.thumbUrl + ')'
-        };
-        var image = <i className="unsplash__image" style={imageStyle} />;
-        var credits = <a className="unsplash__credits" href={stencil.credits.link} target="_blank"><span>{stencil.credits.name}</span></a>;
-        return <div
-            key={stencil.id}
-            className={cx("stencil unsplash__holder", { "unsplash__holder_portrait": stencil.portrait })}
-            title={stencil.title}
-            data-template-type={unsplashStore.storeType}
-            data-template-id={stencil.id}
-            onClick={this.onClicked}
-        >
-            {image}
-            {credits}
-        </div>;
+    private renderItem = (stencil: UnsplashStencil) => {
+        return <UnsplashImage stencilType={unsplashStore.storeType} stencil={stencil} onClicked={this.onClicked}/>
     };
 
     render() {

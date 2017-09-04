@@ -1,9 +1,9 @@
 import IconFinderApi from "./IconFinderApi";
-import IconsActions from "./IconsActions";
-import {handles, CarbonStore, dispatch} from '../../CarbonFlux';
+import IconsActions, { IconsAction } from "./IconsActions";
+import { handles, CarbonStore, dispatch } from '../../CarbonFlux';
 import { Image, Brush, ContentSizing, IPaginatedResult } from "carbon-core";
 import Toolbox from "../Toolbox";
-import { IToolboxStore } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo } from "../LibraryDefs";
 
 export type IconFinderStoreState = {
     error: boolean;
@@ -13,12 +13,12 @@ export type IconFinderStoreState = {
 
 var key = 0;
 
-export class IconFinderStore extends CarbonStore<IconFinderStoreState> implements IToolboxStore{
+export class IconFinderStore extends CarbonStore<IconFinderStoreState> implements IToolboxStore {
     storeType = "iconFinder";
 
     private api: any;
 
-    constructor(){
+    constructor() {
         super();
 
         this.api = new IconFinderApi();
@@ -30,21 +30,23 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
         };
     }
 
-    createElement({templateId}){
-        var icon = this.state.results.find(x => x.id === templateId);
+    findStencil(info: StencilInfo) {
+        return this.state.results.find(x => x.id === info.stencilId);
+    }
+    createElement(stencil) {
         var element = new Image();
         element.setProps({
-            width: icon.realWidth, height: icon.realHeight,
-            source: icon.url ? Image.createUrlSource(icon.url) : Image.EmptySource,
+            width: stencil.realWidth, height: stencil.realHeight,
+            source: stencil.url ? Image.createUrlSource(stencil.url) : Image.EmptySource,
             fill: Brush.Empty,
             sizing: ContentSizing.fit,
             sourceProps: {
                 cors: true,
-                svg: icon.svg,
-                urls: icon.urls,
-                width: icon.realWidth,
-                height: icon.realHeight,
-                cw: icon.realWidth
+                svg: stencil.svg,
+                urls: stencil.urls,
+                width: stencil.realWidth,
+                height: stencil.realHeight,
+                cw: stencil.realWidth
             }
         });
         return element;
@@ -52,22 +54,27 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
     elementAdded() {
     }
 
-    @handles(IconsActions.search, IconsActions.webSearch)
-    search({term}) {
-        if (term){
-            this.setState({
-                term, error: false, results: []
-            });
+    onAction(action: IconsAction) {
+        super.onAction(action);
+
+        switch (action.type) {
+            case "Icons_WebSearch":
+                if (action.q) {
+                    this.setState({
+                        term: action.q, error: false, results: []
+                    });
+                }
+                return;
         }
     }
 
     runQuery(start: number, stop: number): Promise<IPaginatedResult<any>> {
-        if (!this.state.term){
+        if (!this.state.term) {
             return Promise.reject(new Error("No iconfinder search term"));
         }
         return this.api.search(this.state.term, start, stop)
             .then(data => this.handleResults(data, start))
-            .catch(e =>{
+            .catch(e => {
                 dispatch(IconsActions.iconFinderError());
                 throw e;
             });
@@ -75,14 +82,14 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
 
     handleResults(data, start: number): IPaginatedResult<any> {
         var page = data.icons.map(x => {
-            var largestSize = x.raster_sizes[x.raster_sizes.length-1].size;
+            var largestSize = x.raster_sizes[x.raster_sizes.length - 1].size;
             var thumbUrl = null;
             var thumbSize = 128;
-            for (var i = x.raster_sizes.length -1; i >= 0; --i){
+            for (var i = x.raster_sizes.length - 1; i >= 0; --i) {
                 var raster = x.raster_sizes[i];
-                if (raster.size <= 256){
+                if (raster.size <= 256) {
                     var format = raster.formats.find(x => x.format === "png");
-                    if (format){
+                    if (format) {
                         thumbUrl = format.preview_url;
                     }
                     thumbSize = raster.size;
@@ -90,7 +97,7 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
                 }
             }
 
-            if (thumbUrl === null){
+            if (thumbUrl === null) {
                 return this.notFound();
             }
 
@@ -120,9 +127,9 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
                 }
             };
 
-            if (!x.is_premium && x.type === "vector" && x.vector_sizes.length){
+            if (!x.is_premium && x.type === "vector" && x.vector_sizes.length) {
                 var svg = x.vector_sizes[0].formats.find(f => f.format === "svg");
-                if (svg){
+                if (svg) {
                     icon.svg = IconFinderApi.Base + svg.download_url;
                 }
             }
@@ -142,7 +149,7 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
         };
     }
 
-    notFound(){
+    notFound() {
         return {
             id: ++key + "",
             type: this.storeType,
@@ -154,8 +161,8 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
     }
 
     @handles(IconsActions.iconFinderError)
-    handleError(){
-        this.setState({error: true});
+    handleError() {
+        this.setState({ error: true });
     }
 }
 

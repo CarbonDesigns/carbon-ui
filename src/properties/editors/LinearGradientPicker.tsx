@@ -1,6 +1,6 @@
 import React from 'react'
 import cx from "classnames";
-import ColorPicker from "./ColorPicker";
+import ColorPicker from "../../shared/ui/ColorPicker";
 import { Component } from "../../CarbonFlux";
 import { util } from "carbon-api";
 import { BrushType, Brush, Selection, IUIElement, Invalidate } from "carbon-core";

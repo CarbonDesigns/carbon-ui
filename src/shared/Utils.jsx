@@ -1,5 +1,5 @@
 import React from "react";
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 
 export function say(defaultMessage, id="translateme", tag="span"){
     var props;
@@ -9,7 +9,7 @@ export function say(defaultMessage, id="translateme", tag="span"){
     else {
         props = Object.assign({id, tagName:tag}, defaultMessage); //todo finish later
     }
-    return React.createElement(FormattedHTMLMessage, props);
+    return React.createElement(FormattedMessage, props);
 }
 
 export function ico(ico){

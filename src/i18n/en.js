@@ -46,10 +46,11 @@ export default
         "Library": "Library",
         "Comments": "Comments",
         "Layers": "Layers",
-        "Stencils": "Symbols",
-        "Images": "Images",
+        "@library.symbols": "Symbols",
+        "@library.icons": "Icons",
+        "@library.images": "Images",
+        "@library.data": "Data",
         "Image": "Image",
-        "Icons": "Icons",
         "Pages": "Pages",
         "Recent stencils": "Recent symbols",
         "My stencils": "My symbols",
@@ -263,9 +264,9 @@ export default
         "@repeater.copiesX": "H copies", //
         "@repeater.copiesY": "V copies", //
 
-        "@page.defaultToolboxGroup": "My Symbols",
-        "@page.newToolboxGroup": "Add group",
-        "@page.toolboxGroup": "Group",
+        "@page.defaultSymbolGroup": "My Symbols",
+        "@page.newSymbolGroup": "Add group",
+        "@page.symbolGroup": "Group",
         "@page.manageGroups": "Edit groups...",
 
         "New board": "New board", //
@@ -545,7 +546,11 @@ export default
         "@symbols.detach": "Detach instance",
         "@symbols.add": "Add more symbols...",
         "@symbols.noneFound": "We did not find any symbols in this project",
+        "@symbols.noneFoundSearch": "No symbols match your search criteria",
         "@symbols.import": "Import from gallery",
+        "@symbols.searchOnline": "Search in gallery",
+        "@symbols.find": "Find symbols...",
+        "@symbols.recent": "Recent symbols",
 
         "@resources.markAsPaletteItem": "Use background in swatches",
         "@resources.removeFromPalette": "Remove from swatches",
@@ -553,12 +558,24 @@ export default
         "@resources.removeFromIconSet": "Remove from icon set",
         "@resources.markAsIcon": "Add to icon set",
 
+        "@icons.recent": "Recent icons",
         "@icons.find": "Find icon...",
+        "@icons.noneFound": "We did not find any icons in this project",
+        "@icons.noneFoundSearch": "No symbols match your search criteria",
+        "@icons.import": "Import from gallery",
+        "@icons.searchOnline": "Search in gallery",
+        "@icons.searchIconFinderMsg": "Or try our friends at IconFinder.com",
+        "@icons.searchIconFinder": "Search in IconFinder",
         "@iconfinder.error": "Could not concant the IconFinder.com service. Please try again later.",
 
         "@images.find": "Find image...",
+        "@images.noneFound": "You don't have any uploaded images yet",
+        "@images.noneFoundSearch": "We did not find a matching image in your uploads",
+        "@images.searchUnsplash": "Search on Unsplash",
         "@unsplash.error": "Could not contact the Unsplash.com service. Please try again later.",
         "@userImages.error": "Could not connect to the server. Please try again later.",
+
+        "@data.find": "Find catalog...",
 
         "@status.saveFailed": "Could not save to the server.",
         "@status.saveFailed2": "We are already notified of this problem. Please contact us at team@carbonium.io.",

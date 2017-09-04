@@ -1,15 +1,15 @@
 import { CarbonStore, dispatchAction } from "../../CarbonFlux";
-import { IPage, app, IDisposable, ArtboardType, Symbol } from "carbon-core";
+import { IPage, app, IDisposable, ArtboardType, Symbol, Page } from "carbon-core";
 import { CarbonAction } from "../../CarbonActions";
-import { StencilsAction } from "./StencilsActions";
+import { SymbolsAction } from "./SymbolsActions";
 import ToolboxConfiguration from "../ToolboxConfiguration";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, ToolboxConfig, SpriteStencil, SpriteStencilInfo } from "../LibraryDefs";
 
 export type SymbolsStoreState = {
     dirtyConfig: boolean;
     changedId: string;
-    config: any;
+    config: ToolboxConfig<SpriteStencil>;
     configVersion: number;
     currentPage: IPage;
     activeCategory: any;
@@ -32,23 +32,34 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         };
     }
 
-    createElement(data: StencilInfo) {
+    findStencil(info: StencilInfo) {
+        for (let i = 0; i < this.state.config.groups.length; ++i) {
+            for (let j = 0; j < this.state.config.groups[i].items.length; ++j) {
+                let stencil = this.state.config.groups[i].items[j];
+                if (stencil.id === info.stencilId) {
+                    return stencil;
+                }
+            }
+        }
+        return null;
+    }
+    createElement(stencil: SpriteStencil) {
         var element = new Symbol();
-        element.source({pageId: data.sourceId, artboardId: data.templateId});
+        element.source({ pageId: stencil.pageId, artboardId: stencil.id });
         return element;
     }
-    elementAdded(){
+    elementAdded() {
     }
 
-    onAction(action: StencilsAction | CarbonAction) {
+    onAction(action: SymbolsAction | CarbonAction) {
         switch (action.type) {
-            case "Stencils_Refresh":
+            case "Symbols_Refresh":
                 this.refreshLibrary();
                 return;
-            case "Stencils_ChangePage":
+            case "Symbols_ChangePage":
                 this.loadConfig(action.page);
                 return;
-            case "Stencils_Loaded":
+            case "Symbols_Loaded":
                 if (action.page === this.state.currentPage) {
                     let activeCategory = null;
                     if (action.config && action.config.groups.length) {
@@ -56,6 +67,14 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                     }
 
                     this.setState({ config: action.config, dirtyConfig: false, changedId: null, activeCategory, configVersion: ++this.state.configVersion });
+                }
+                return;
+            case "Carbon_PropsChanged":
+                if (action.element instanceof Page && action.props.toolboxConfigId) {
+                    ToolboxConfiguration.getConfigForPage(action.element as IPage)
+                        .then(config => {
+                            dispatchAction({ type: "Symbols_Loaded", page: action.element as IPage, config, async: true });
+                        });
                 }
                 return;
             case "Carbon_ResourceAdded":
@@ -91,10 +110,10 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                 this.loadInitialConfig();
                 return;
 
-            case "Stencils_ClickedCategory":
+            case "Symbols_ClickedCategory":
                 this.onCategoryClicked(action.category);
                 return;
-            case "Stencils_ScrolledToCategory":
+            case "Symbols_ScrolledToCategory":
                 this.onScrolledToCategory(action.category);
                 return;
         }
@@ -133,7 +152,7 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         this.setState({ currentPage: page });
 
         configPromise.then(config => {
-            dispatchAction({ type: "Stencils_Loaded", config: config, page: page, async: true });
+            dispatchAction({ type: "Symbols_Loaded", config: config, page: page, async: true });
         });
     }
 
@@ -151,10 +170,7 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
     }
 
     private refreshLibrary() {
-        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage)
-            .then(config => {
-                dispatchAction({ type: "Stencils_Loaded", config: config, page: this.state.currentPage, async: true });
-            });
+        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage);
     }
 
     private onCategoryClicked(category) {

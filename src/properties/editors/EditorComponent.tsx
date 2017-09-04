@@ -1,7 +1,7 @@
 import React from 'react';
 import {Component, dispatch} from "../../CarbonFlux";
 import PropertyActions from "../PropertyActions";
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {util, PatchType} from "carbon-core";
 
 import bem from '../../utils/commonUtils';

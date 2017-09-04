@@ -7,5 +7,6 @@ export default {
     tile3Height: 200,
     iconStencilHeight: 50,
     layerItemHeight: 32,
-    layerOverlayHeight: 6
+    layerOverlayHeight: 6,
+    tabTransitionTime: 800
 }

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {app} from "carbon-core";
 import {richApp}    from '../RichApp';
 import { handles, ComponentWithImmutableState, Component, listenTo } from '../CarbonFlux';
-import {FormattedHTMLMessage, FormattedMessage} from "react-intl"
+import {FormattedMessage} from "react-intl"
 import electronEndpoint from "electronEndpoint";
 
 import MainMenuButton from './MainMenuButton';
@@ -27,7 +27,7 @@ import bem from 'bem';
 
 function _heading(text) {
     return (<div className="main-menu__heading">
-        <FormattedHTMLMessage tagName="h3" id={text}/>
+        <FormattedMessage tagName="h3" id={text}/>
     </div>);
 }
 
@@ -121,12 +121,12 @@ export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
         return <div className="main-menu__section" id="project-sharing">
             <section className="main-menu__line">
                 <MainMenuButton id="main-menu__button_share-by-link" onClick={()=>this._desktopOpenDialog()}>
-                    <FormattedHTMLMessage id="@menu.openProject" defaultMessage="Open project..."/>
+                    <FormattedMessage id="@menu.openProject" defaultMessage="Open project..."/>
                 </MainMenuButton>
             </section>
             <section className="main-menu__line">
                 <MainMenuButton id="main-menu__button_share-by-link" onClick={()=>this._desktopSaveDialog()}>
-                    <FormattedHTMLMessage id="@menu.saveProjectAs" defaultMessage="Save project..."/>
+                    <FormattedMessage id="@menu.saveProjectAs" defaultMessage="Save project..."/>
                 </MainMenuButton>
             </section>
         </div>
@@ -168,7 +168,7 @@ export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
                 {_heading('Sharing')}
                 <section className="main-menu__line">
                     <MainMenuButton id="main-menu__button_share-by-link" onClick={this._resolveSetBladePage("share-link")}>
-                        <FormattedHTMLMessage id="menu.sharing" defaultMessage="Share link"/>
+                        <FormattedMessage id="menu.sharing" defaultMessage="Share link"/>
                     </MainMenuButton>
                 </section>
                 <section className="main-menu__line">
@@ -178,12 +178,12 @@ export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
                 </section>
                 <section className="main-menu__line">
                     <MainMenuButton id="main-menu__button_share-by-email" onClick={this._resolveSetBladePage("share-email")}>
-                        <FormattedHTMLMessage id="Share by email"/>
+                        <FormattedMessage id="Share by email"/>
                     </MainMenuButton>
                 </section>
                 <section className="main-menu__line">
                     <MainMenuButton id="main-menu__button_resources-page" onClick={this._resolveSetBladePage("publish")}>
-                        <FormattedHTMLMessage id="menu.publish"/>
+                        <FormattedMessage id="menu.publish"/>
                     </MainMenuButton>
                 </section>
             </div>
@@ -194,7 +194,7 @@ export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
 
                 <section className="main-menu__line">
                     <MainMenuButton  blade="#blade1" onClick={this._resolveSetBladePage("recent-projects")} >
-                        <FormattedHTMLMessage id="Show more..."/>
+                        <FormattedMessage id="Show more..."/>
                     </MainMenuButton>
                 </section>
 

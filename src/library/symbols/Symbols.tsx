@@ -1,5 +1,5 @@
 import React from "react";
-import SpriteView from "./SpriteView";
+import SpriteView from "../SpriteView";
 import Navigatable from "../../shared/Navigatable";
 import { dispatchAction, StoreComponent } from "../../CarbonFlux";
 import { FormattedMessage } from "react-intl";
@@ -10,13 +10,11 @@ import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import SymbolsStore, { SymbolsStoreState } from "./SymbolsStore";
 import { IPage, app } from "carbon-core";
 import Refresher from "../Refresher";
+import { SymbolsColumnWidth, SymbolsOverscanCount } from "../LibraryDefs";
 
 require("../../import/ImportResourceDialog");
 
-const OverscanCount = 10;
-const ColumnWidth = 128;
-
-export default class StandardStencils extends StoreComponent<{}, SymbolsStoreState> {
+export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
     refs: {
         spriteView: SpriteView;
     };
@@ -26,22 +24,22 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
     }
 
     private onPageSelected = (page) => {
-        dispatchAction({ type: "Stencils_ChangePage", page });
+        dispatchAction({ type: "Symbols_ChangePage", page });
     };
 
     private onAddMore = () => {
-        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog" });
+        dispatchAction({ type: "Dialog_Show", dialogType: "ImportResourceDialog", args: { tags: "symbols" } });
     }
 
     private onRefreshLibrary = () => {
-        dispatchAction({ type: "Stencils_Refresh" });
+        dispatchAction({ type: "Symbols_Refresh" });
     }
 
     private onCategoryChanged = category => {
-        dispatchAction({ "type": "Stencils_ClickedCategory", category });
+        dispatchAction({ "type": "Symbols_ClickedCategory", category });
     }
     private onScrolledToCategory = category => {
-        dispatchAction({ "type": "Stencils_ScrolledToCategory", category });
+        dispatchAction({ "type": "Symbols_ScrolledToCategory", category });
     }
 
     private renderPageItem = (page: IPage) => {
@@ -84,8 +82,8 @@ export default class StandardStencils extends StoreComponent<{}, SymbolsStoreSta
                     changedId={this.state.changedId}
                     scrollToCategory={this.state.lastScrolledCategory}
                     onScrolledToCategory={this.onScrolledToCategory}
-                    overscanCount={OverscanCount}
-                    columnWidth={ColumnWidth}
+                    overscanCount={SymbolsOverscanCount}
+                    columnWidth={SymbolsColumnWidth}
                     sourceId={page.id()}
                     borders={true}
                     templateType={SymbolsStore.storeType}/>

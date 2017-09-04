@@ -37,7 +37,7 @@ export default class CustomProviders extends StoreComponent<{}, CustomCatalogSto
         }
         return <div className="fill">
             <GuiButton mods={["full", "hover-success"]} onClick={this._addCatalog} caption="button.addDataset" defaultMessage="Add dataset" bold />
-            <CatalogView config={this.state.config} />
+            <CatalogView config={this.state.config} templateType={customCatalogStore.storeType} />
         </div>;
     }
 

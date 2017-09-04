@@ -1,11 +1,12 @@
 import Toolbox from "../Toolbox";
 import { handles, dispatch, CarbonStore } from "../../CarbonFlux";
-import { app } from "carbon-core";
-import { IToolboxStore, StencilInfo } from "../LibraryDefs";
+import { app, IDataProvider } from "carbon-core";
+import { IToolboxStore, StencilInfo, Stencil, ToolboxConfig, DataStencil } from "../LibraryDefs";
 import { DataAction } from "./DataActions";
+import BuiltInDataProvider from "./BuiltInDataProvider";
 
 export type DataStoreState = {
-    config: any;
+    config: ToolboxConfig<DataStencil>;
     activeCategory: any;
     lastScrolledCategory: any;
 }
@@ -13,11 +14,14 @@ export type DataStoreState = {
 export class DataStore extends CarbonStore<DataStoreState> implements IToolboxStore {
     storeType: string = "Data";
 
+    private provider = new BuiltInDataProvider("builtin", "builtin");
+
     constructor() {
         super();
 
-        let config = app.dataManager.getBuiltInProvider().getConfig();
+        app.dataManager.registerProvider("builtin", this.provider);
 
+        let config = this.provider.getConfig();
         this.state = {
             config,
             activeCategory: config.groups[0],
@@ -25,14 +29,25 @@ export class DataStore extends CarbonStore<DataStoreState> implements IToolboxSt
         }
     }
 
-    createElement(info: StencilInfo){
-        let templateId = info.templateId;
+    findStencil(info: StencilInfo) {
+        for (let i = 0; i < this.state.config.groups.length; ++i) {
+            for (let j = 0; j < this.state.config.groups[i].items.length; ++j) {
+                let stencil = this.state.config.groups[i].items[j];
+                if (stencil.id === info.stencilId) {
+                    return stencil;
+                }
+            }
+        }
+        return null;
+    }
+
+    createElement(stencil: Stencil){
+        let templateId = stencil.id;
         var colon = templateId.indexOf(":");
         var providerId = templateId.substr(0, colon);
         var field = templateId.substr(colon + 1);
 
-        var provider = app.dataManager.getBuiltInProvider();
-        return provider.createElement(app, field);
+        return this.provider.createElement(app, field);
     }
 
     elementAdded(){

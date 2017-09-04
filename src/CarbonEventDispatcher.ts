@@ -5,7 +5,7 @@ import { dispatch, dispatchAction } from "./CarbonFlux";
 import { app, backend, PropertyTracker, Selection, Environment, IDisposable, IPage, CommandManager } from "carbon-core";
 
 let workspaceTokens: IDisposable[] = [];
-let frequentAppTokens: IDisposable[] = [];
+let frequentTokens: IDisposable[] = [];
 
 export function registerEvents() {
     app.onLoad(() => {
@@ -13,25 +13,30 @@ export function registerEvents() {
     });
 
     app.updating.bind(() => {
-        frequentAppTokens.forEach(x => x.dispose());
-        frequentAppTokens.length = 0;
+        frequentTokens.forEach(x => x.dispose());
+        frequentTokens.length = 0;
     });
 
     app.updated.bind(() => {
         let token = app.resourceAdded.bindAsync((resourceType, resource) => dispatchAction({type: "Carbon_ResourceAdded", resourceType, resource}));
-        frequentAppTokens.push(token);
+        frequentTokens.push(token);
 
         token = app.resourceChanged.bindAsync((resourceType, resource) => dispatchAction({type: "Carbon_ResourceChanged", resourceType, resource}));
-        frequentAppTokens.push(token);
+        frequentTokens.push(token);
 
         token = app.resourcePageChanged.bindAsync((page) => dispatchAction({type: "Carbon_ResourcePageChanged", page}));
-        frequentAppTokens.push(token);
+        frequentTokens.push(token);
 
         token = app.resourceDeleted.bindAsync((resourceType, resource, parent) => dispatchAction({type: "Carbon_ResourceDeleted", resourceType, resource, parent}));
-        frequentAppTokens.push(token);
+        frequentTokens.push(token);
 
         token = app.changed.bindAsync(events => dispatch((CarbonActions.appChanged(events))));
-        frequentAppTokens.push(token);
+        frequentTokens.push(token);
+
+        token = PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => {
+            dispatchAction({ type: "Carbon_PropsChanged", element: e, props, oldProps });
+        });
+        frequentTokens.push(token);
 
         dispatchAction({ type: "Carbon_AppUpdated" });
     });
@@ -45,8 +50,6 @@ export function registerEvents() {
     app.settingsChanged.bindAsync(settings => {
         dispatchAction({ type: "Carbon_AppSettingsChanged", settings });
     });
-
-    PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => dispatchAction({ type: "Carbon_PropsChanged", element: e, props, oldProps }));
 
     Selection.onElementSelected.bindAsync((e, prevSelectedElements) =>
         dispatch(CarbonActions.elementSelected(e, prevSelectedElements)));

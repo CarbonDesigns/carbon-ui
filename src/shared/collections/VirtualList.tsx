@@ -14,9 +14,10 @@ interface VirtualListProps<T> extends ISimpleReactElementProps {
     scrollToRow?: number;
     scrollToAlignment?: Alignment;
     useTranslate3d?: boolean;
+    reverse?: boolean;
 }
 
-export default class VirtualList<T> extends Component<VirtualListProps<T>> {
+export default class VirtualList<T = any> extends Component<VirtualListProps<T>> {
     private scroller: Antiscroll;
     private list: List = null;
 
@@ -50,16 +51,18 @@ export default class VirtualList<T> extends Component<VirtualListProps<T>> {
     }
 
     private getRowHeight = (params: Index) => {
+        let index = this.props.reverse ? this.props.data.length - params.index - 1 : params.index;
         if (typeof this.props.rowHeight === "function") {
-            let item = this.props.data[params.index];
-            return this.props.rowHeight(item, params.index);
+            let item = this.props.data[index];
+            return this.props.rowHeight(item, index);
         }
         return this.props.rowHeight;
     }
 
     private rowRenderer = (props: ListRowProps) => {
-        let item = this.props.data[props.index];
-        let child = item ? this.props.rowRenderer(item, props.index) : null;
+        let index = this.props.reverse ? this.props.data.length - props.index - 1 : props.index;
+        let item = this.props.data[index];
+        let child = item ? this.props.rowRenderer(item, index) : null;
         let style = props.style;
         if (this.props.useTranslate3d) {
             style = {

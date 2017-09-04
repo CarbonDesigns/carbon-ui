@@ -1,15 +1,10 @@
-import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, ToolboxGroup } from "carbon-core";
+import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup } from "carbon-core";
+import { ToolboxConfig, SpriteStencil, ToolboxGroup } from "./LibraryDefs";
 
 let PADDING = 5;
 let _configCache = {};
 
-export interface IStencil {
-    id: string;
-    title: string;
-    realWidth: number;
-    realHeight: number;
-    spriteMap: number[];
-}
+type StencilMap = {[id: string]: SpriteStencil};
 
 export default class ToolboxConfiguration {
     static chooseTileType(w, h) {
@@ -59,7 +54,7 @@ export default class ToolboxConfiguration {
         return data;
     }
 
-    static renderElementsToSprite(elements, outConfig, contextScale?): Promise<any> {
+    static renderElementsToSprite(page: IPage, elements, items, contextScale?): Promise<any> {
         contextScale = contextScale || 1;
         if (!elements.length) {
             return Promise.resolve({});
@@ -129,17 +124,17 @@ export default class ToolboxConfiguration {
         let context = workspace.contextPool.getContext(width, height, contextScale, true);
         context.clearRect(0, 0, context.width, context.height);
         let env = { finalRender: true, setupContext: () => { }, contextScale: contextScale, offscreen: true, view: { scale: () => 1, contextScale, focused: () => false } };
-        let elementsMap = {};
+        let elementsMap: StencilMap = {};
         let taskPromises = [];
         for (i = 0; i < renderTasks.length; ++i) {
-            taskPromises.push(ToolboxConfiguration._performRenderTask(renderTasks[i], elementWithTiles[i].element, elementsMap, context, contextScale, env));
+            taskPromises.push(ToolboxConfiguration._performRenderTask(page, renderTasks[i], elementWithTiles[i].element, elementsMap, context, contextScale, env));
         }
 
         return Promise.all(taskPromises)
             .then(() => {
-                if (outConfig) {
+                if (items) {
                     for (i = elements.length - 1; i >= 0; --i) {
-                        outConfig.push(elementsMap[elements[i].id()]);
+                        items.push(elementsMap[elements[i].id()]);
                     }
                 }
 
@@ -152,7 +147,7 @@ export default class ToolboxConfiguration {
             });
     }
 
-    static _performRenderTask(t, element, elementsMap, context, contextScale, env): Promise<any> {
+    static _performRenderTask(page: IPage, t, element, elementsMap: StencilMap, context, contextScale, env): Promise<any> {
         let w = element.width();
         let h = element.height();
         let scale = t.data.scale;
@@ -186,11 +181,16 @@ export default class ToolboxConfiguration {
         context.restore();
 
         elementsMap[element.id()] = {
-            "id": element.id(),
-            "realHeight": w,
-            "realWidth": h,
-            "spriteMap": [t.x * contextScale, t.y * contextScale, t.data.width * contextScale, t.data.height * contextScale],
-            "title": element.name()
+            id: element.id(),
+            pageId: page.id(),
+            realHeight: w,
+            realWidth: h,
+            spriteMap: {x : t.x * contextScale, y: t.y * contextScale, width: t.data.width * contextScale, height: t.data.height * contextScale},
+            title: element.name(),
+            //will be set later
+            spriteSize: null,
+            spriteUrl: null,
+            spriteUrl2x: null
         };
 
         let fontTasks = app.fontManager.getPendingTasks();
@@ -199,10 +199,10 @@ export default class ToolboxConfiguration {
         }
 
         return Promise.all(fontTasks)
-            .then(() => ToolboxConfiguration._performRenderTask(t, element, elementsMap, context, contextScale, env));
+            .then(() => ToolboxConfiguration._performRenderTask(page, t, element, elementsMap, context, contextScale, env));
     }
 
-    static getConfigForPage(page) {
+    static getConfigForPage(page: IPage) {
         if (page.props.toolboxConfigUrl && page.props.toolboxConfigUrl !== '#') {
             let config = _configCache[page.props.toolboxConfigUrl];
             if (config) {
@@ -214,14 +214,17 @@ export default class ToolboxConfiguration {
             });
         }
 
-        return ToolboxConfiguration.buildToolboxConfig(page)
+        //skip page update to avoid infinite loops
+        return ToolboxConfiguration.buildToolboxConfig(page, true);
     }
 
-    static buildToolboxConfig(page) {
+    static buildToolboxConfig(page, skipPageUpdate?: boolean): Promise<ToolboxConfig<SpriteStencil>> {
         let elements = page.getAllResourceArtboards(ArtboardType.Symbol) as IArtboard[];
 
         if (!elements.length) {
-            page.setProps({ toolboxConfigUrl: null });
+            if (!skipPageUpdate) {
+                page.setProps({ toolboxConfigUrl: null });
+            }
             return Promise.resolve({ groups: [] });
         }
 
@@ -238,14 +241,14 @@ export default class ToolboxConfiguration {
         let configId = createUUID();
         let groups = [];
         let promises = [];
-        let toolboxGroups = page.props.toolboxGroups as ToolboxGroup[];
+        let symbolGroups = page.props.symbolGroups as SymbolGroup[];
 
-        for (let i = 0; i < toolboxGroups.length; ++i) {
-            let group = toolboxGroups[i];
+        for (let i = 0; i < symbolGroups.length; ++i) {
+            let group = symbolGroups[i];
             let groupElements = [];
             for (let j = 0; j < elements.length; ++j) {
                 let e = elements[j];
-                if (e.props.toolboxGroup === group.id) {
+                if (e.props.symbolGroup === group.id) {
                     groupElements.push(e);
                 }
             }
@@ -253,63 +256,71 @@ export default class ToolboxConfiguration {
             if (group.id === "default") {
                 for (let k = 0; k < elements.length; ++k) {
                     let e = elements[k];
-                    if (!toolboxGroups.find(x => x.id === e.props.toolboxGroup)) {
+                    if (!symbolGroups.find(x => x.id === e.props.symbolGroup)) {
                         groupElements.push(e);
                     }
                 }
             }
 
             if (groupElements.length) {
-                promises.push(ToolboxConfiguration.makeGroup(groups, group.name, groupElements));
+                promises.push(ToolboxConfiguration.makeGroup(page, groups, group.id, group.name, groupElements));
             }
         }
 
-        let config = { groups: groups, id: configId };
+        let config: ToolboxConfig<SpriteStencil> = { groups: groups, id: configId };
         return Promise.all(promises)
             .then(() => {
                 if (app.serverless()) {
-                    return { url: '#', configId: createUUID() };
+                    return { url: '#' };
                 }
                 return backend.fileProxy.uploadPublicFile({ content: JSON.stringify(config) });
             })
             .then((data) => {
-                page.setProps({ toolboxConfigUrl: data.url, toolboxConfigId: configId });
+                if (!skipPageUpdate) {
+                    page.setProps({ toolboxConfigUrl: data.url, toolboxConfigId: configId });
+                }
                 return config;
             })
     }
 
-    private static makeGroup(groups, groupName, elements): Promise<any> {
-        let config = [];
-        let spriteUrlPromise = ToolboxConfiguration.renderElementsToSprite(elements, config);
+    private static makeGroup(page: IPage, groups, groupId, groupName, elements): Promise<any> {
+        let items = [];
+        let spriteUrlPromise = ToolboxConfiguration.renderElementsToSprite(page, elements, items);
 
-        let spriteUrl2xPromise = ToolboxConfiguration.renderElementsToSprite(elements, null, 2);
-        let group: any = {
+        let spriteUrl2xPromise = ToolboxConfiguration.renderElementsToSprite(page, elements, null, 2);
+        let group: ToolboxGroup<SpriteStencil> = {
             name: groupName,
-            items: config
+            items: items
         };
         groups.push(group);
 
         if (app.serverless()) {
             return Promise.all([spriteUrlPromise, spriteUrl2xPromise])
                 .then(sprites => {
-                    group.spriteUrl = sprites[0].backgroundUrl;
-                    group.spriteUrl2x = sprites[1].backgroundUrl;
-                    group.size = sprites[0].size;
+                    group.items.forEach(x => {
+                        x.spriteUrl = sprites[0].backgroundUrl;
+                        x.spriteUrl2x = sprites[1].backgroundUrl;
+                        x.spriteSize = sprites[0].size;
+                    });
                 });
         }
 
         spriteUrlPromise = spriteUrlPromise.then(sprite => {
             return backend.fileProxy.uploadPublicImage({ content: sprite.imageData })
                 .then((data) => {
-                    group.spriteUrl = "url('" + data.url + "')";
-                    group.size = sprite.size;
+                    group.items.forEach(x => {
+                        x.spriteUrl = "url('" + data.url + "')";
+                        x.spriteSize = sprite.size;
+                    });
                 })
         });
 
         spriteUrl2xPromise = spriteUrl2xPromise.then(sprite => {
             return backend.fileProxy.uploadPublicImage({ content: sprite.imageData })
                 .then((data) => {
-                    group.spriteUrl2x = "url('" + data.url + "')";
+                    group.items.forEach(x => {
+                        x.spriteUrl2x = "url('" + data.url + "')";
+                    });
                 })
         });
 

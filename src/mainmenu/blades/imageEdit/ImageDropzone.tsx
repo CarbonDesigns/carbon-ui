@@ -1,7 +1,7 @@
 import React from "react";
 import { Component } from "../../../CarbonFlux";
 import Dropzone, { DropzoneOptions } from "dropzone";
-import { backend, IImagesResult, IDisposable } from "carbon-core";
+import { backend, ImagesResult, IDisposable } from "carbon-core";
 import { ico, say } from "../../../shared/Utils";
 import bem from "../../../utils/commonUtils";
 import { FormattedMessage } from "react-intl";
@@ -75,7 +75,7 @@ export default class ImageDropzone extends Component<IImageDropzoneProps, IImage
     private onProgress = (file, progress) => {
         this.setState({ progress });
     };
-    private onSuccess = (file, response: IImagesResult) => {
+    private onSuccess = (file, response: ImagesResult) => {
         this.setState({ progress: 100, loading: false });
         this.props.onSuccess(response.images[0].url);
     };

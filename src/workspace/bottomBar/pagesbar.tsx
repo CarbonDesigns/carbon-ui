@@ -1,6 +1,6 @@
 import React                  from 'react';
 import ReactDom               from 'react-dom';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import cx                     from 'classnames';
 import Dots                   from "../../shared/dots";
 import FlyoutButton           from "../../shared/FlyoutButton";
@@ -241,7 +241,7 @@ export default class PagesBar extends Component<any, any> {
         }
         return [
             <i className="type-icon inline-ico type-icon_board"/>,
-            <span className="cap">{this.state.pageName}</span>
+            <span>{this.state.pageName}</span>
         ];
     };
 

@@ -6,7 +6,7 @@ import {richApp} from '../RichApp';
 import {Component, listenTo} from "../CarbonFlux";
 import Dropdown from "../shared/Dropdown";
 import {RequestAnimationSettings, app, ActionType, AnimationType, EasingType} from "carbon-core";
-import {FormattedHTMLMessage, defineMessages} from 'react-intl';
+import {FormattedMessage, defineMessages} from 'react-intl';
 
 
 var TransitionTypeValues = [
@@ -85,7 +85,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
     }
 
     renderTarget = (selectedItemIndex)=> {
-        const __target   = <FormattedHTMLMessage id="transition.target"/>;
+        const __target   = <FormattedMessage id="transition.target"/>;
 
         const current = this._artboards[selectedItemIndex].name();
 
@@ -97,9 +97,9 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
 
 
     renderTransitionType = (selectedItemIndex)=> {
-        const __type = <FormattedHTMLMessage id="transition.type"/>;
+        const __type = <FormattedMessage id="transition.type"/>;
 
-        const value = <FormattedHTMLMessage id={TransitionTypeValues[selectedItemIndex].label}/>
+        const value = <FormattedMessage id={TransitionTypeValues[selectedItemIndex].label}/>
 
         return <div className="tile-editor">
             <div className="tile-editor__label">{__type}</div>
@@ -113,9 +113,9 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
     }
 
     renderEasing = (selectedItemIndex)=> {
-        const __easing = <FormattedHTMLMessage id="transition.easing"/>
+        const __easing = <FormattedMessage id="transition.easing"/>
 
-        const value = <FormattedHTMLMessage id={EasingValues[selectedItemIndex].label}/>
+        const value = <FormattedMessage id={EasingValues[selectedItemIndex].label}/>
 
         return <div className="tile-editor">
             <div className="tile-editor__label">{__easing}</div>
@@ -124,7 +124,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
     }
 
     render() {
-        const __duration = <FormattedHTMLMessage id="transition.duration"/>;
+        const __duration = <FormattedMessage id="transition.duration"/>;
 
         return <div  className="transition-dialog">
             <h2>Transition</h2>
@@ -156,7 +156,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
                         renderSelected={this.renderTransitionType}
                     >
                         {TransitionTypeValues.map(v=> {
-                            return <p key={v.label}><FormattedHTMLMessage id={v.label}/></p>
+                            return <p key={v.label}><FormattedMessage id={v.label}/></p>
                         })}
                     </Dropdown>
                 </div>
@@ -190,7 +190,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
                             renderSelected={this.renderEasing}
                         >
                             {EasingValues.map(v=> {
-                                return <p key={v.label}><FormattedHTMLMessage id={v.label}/></p>
+                                return <p key={v.label}><FormattedMessage id={v.label}/></p>
                             })}
                         </Dropdown>
                     </div>

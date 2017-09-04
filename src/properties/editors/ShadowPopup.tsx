@@ -1,19 +1,21 @@
 import React from "react";
 import ReactDom from "react-dom";
-import {SketchPicker} from "react-color";
+import ColorPicker from "../../shared/ui/ColorPicker";
 import FlyoutActions from "../../FlyoutActions";
 import {Component, dispatch} from "../../CarbonFlux";
 import {default as TabContainer, TabTabs, TabPage, TabArea} from "../../shared/TabContainer";
 import bem from "../../utils/commonUtils";
 import {GuiInput, GuiSlider} from "../../shared/ui/GuiComponents";
-import {FormattedHTMLMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
+import ArrowKeyModifier from "../../shared/ui/ArrowKeyModifier";
+import GuiNumericInput from "../../shared/ui/GuiNumericInput";
 
 
 var b = function (elem = null, mods = null, mix = null) {
     return bem("shadow-editor", elem, mods, mix)
 };
 var shadow_label = function (id, defaultMessage, mods = null) {
-    return <div className={b("label", mods)}><FormattedHTMLMessage id={id} defaultMessage={defaultMessage}/></div>
+    return <div className={b("label", mods)}><FormattedMessage id={id} defaultMessage={defaultMessage}/></div>
 };
 
 function rgbaToString(rgba){
@@ -36,7 +38,15 @@ class ShadowDirection extends Component<any, any> {
 
     constructor(props) {
         super(props);
-        this.state = {x: this.props.x + .5, y: this.props.y + .5};
+        this.state = this.propsToState(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState(this.propsToState(nextProps));
+    }
+
+    propsToState(props) {
+        return {x: this.props.x + .5, y: this.props.y + .5};
     }
 
     _onMouseDown = (event)=> {
@@ -142,42 +152,56 @@ class ShadowEditor extends Component<any, any> {
         };
     }
 
-    _setValue(name, value) {
-        var number = parseInt(value);
-        if (!isNaN(number)) {
-            this.setState({[name]: number});
-        } else if (!value || value==='-') {
-            this.setState({[name]: value});
-        }
+    private setX = (x: number) => {
+        this.setState({x});
     }
+    private setY = (y: number) => {
+        this.setState({y});
+    }
+    private setSpread = (spread: number) => {
+        this.setState({spread});
+    }
+    private setBlur = (blur: number) => {
+        this.setState({blur});
+    }
+
+    private static numericMods = ["right", "slim"];
 
     _renderNumberParams() {
 
         return <div className={b("numbers")}>
-            <GuiInput
-                className={b("number-param")}
-                mods={['right', 'slim']}
-                label={  shadow_label('x', 'x')   }
-                value={this.state.x}
-                onChange={v=>this._setValue('x', v.target.value)}/>
-            <GuiInput
-                className={b("number-param")}
-                mods={['right', 'slim']}
-                label={  shadow_label('y', 'y')   }
-                value={this.state.y}
-                onChange={v=>this._setValue('y', v.target.value)}/>
-            <GuiInput
-                className={b("number-param")}
-                mods={['right', 'slim']}
-                label={  shadow_label('s', 's')   }
-                value={this.state.spread}
-                onChange={v=>this._setValue('spread', v.target.value)}/>
-            <GuiInput
-                className={b("number-param")}
-                mods={['right', 'slim']}
-                label={  shadow_label('b', 'b')   }
-                value={this.state.blur}
-                onChange={v=>this._setValue('blur', v.target.value)}/>
+            <ArrowKeyModifier value={this.state.x} onChanged={this.setX} onChanging={this.setX}>
+                <GuiNumericInput
+                    className={b("number-param")}
+                    mods={ShadowEditor.numericMods}
+                    label={  shadow_label('x', 'x')   }
+                    value={this.state.x}
+                    onValueChanged={this.setX}/>
+            </ArrowKeyModifier>
+            <ArrowKeyModifier value={this.state.y} onChanged={this.setY} onChanging={this.setY}>
+                <GuiNumericInput
+                    className={b("number-param")}
+                    mods={ShadowEditor.numericMods}
+                    label={  shadow_label('y', 'y')   }
+                    value={this.state.y}
+                    onValueChanged={this.setY}/>
+            </ArrowKeyModifier>
+            <ArrowKeyModifier value={this.state.spread} onChanged={this.setSpread} onChanging={this.setSpread}>
+                <GuiNumericInput
+                    className={b("number-param")}
+                    mods={ShadowEditor.numericMods}
+                    label={  shadow_label('s', 's')   }
+                    value={this.state.spread}
+                    onValueChanged={this.setSpread}/>
+            </ArrowKeyModifier>
+            <ArrowKeyModifier value={this.state.blur} onChanged={this.setBlur} onChanging={this.setBlur}>
+                <GuiNumericInput
+                    className={b("number-param")}
+                    mods={ShadowEditor.numericMods}
+                    label={  shadow_label('b', 'b')   }
+                    value={this.state.blur}
+                    onValueChanged={this.setBlur}/>
+            </ArrowKeyModifier>
         </div>
     }
 
@@ -261,12 +285,6 @@ export default class ShadowPopup extends Component<any, any> {
         (ReactDom.findDOMNode(this) as HTMLElement).focus();
     }
 
-    // render(){
-    //     return <div onKeyDown={this.onKeyDown} tabIndex="1" style={{height: 100, width: 200, background: "red"}}>
-    //         <span>Shadow content here</span>
-    //     </div>;
-    // }
-
     onColorPickerChange = (color)=> {
         var newvalue = Object.assign({}, this.state.value, {color:rgbaToString(color.rgb)});
         this.setState({value:newvalue});
@@ -280,28 +298,15 @@ export default class ShadowPopup extends Component<any, any> {
     };
 
     render() {
-        // var recent_shadows = [
-        //     // { id: '1',  inset: true,     color: "grey",  opacity: .5,  x:   0,  y: 2,  size: 0,  blur: 4 },
-        //     // { id: '2',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '3',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '4',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '5',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '6',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '7',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '8',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '9',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '10',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        //     // { id: '11',  inset: false,    color: "red" ,  opacity: .5,  x: -80,  y: 2,  size: 2,  blur: 4 },
-        // ];
         return ( <div className="shadows-popup" onKeyDown={this.onKeyDown}>
             <TabContainer>
                 <TabTabs
                     items={[
-                        [<i key="color_icon"/>, <FormattedHTMLMessage tagName="span" id="@params" key="text"/>],
-                        <FormattedHTMLMessage tagName="span" id="@color"/>
+                        [<i key="color_icon"/>, <FormattedMessage tagName="span" id="@params" key="text"/>],
+                        <FormattedMessage tagName="span" id="@color"/>
                     ]}
                 />
-                {/*<FormattedHTMLMessage tagName="span" id="@recent" />,*/}
+                {/*<FormattedMessage tagName="span" id="@recent" />,*/}
 
                 <TabArea className="gui-pages">
 
@@ -310,7 +315,7 @@ export default class ShadowPopup extends Component<any, any> {
                     </TabPage>
 
                     <TabPage className="gui-page shadow-color-page" tabId="2">
-                        <SketchPicker display={true} color={this.state.value.color}
+                        <ColorPicker display={true} color={this.state.value.color}
                                       onChangeComplete={this.onColorPickerChange} presetColors={[]}/>
                     </TabPage>
 

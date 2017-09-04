@@ -1,6 +1,6 @@
 import React                  from 'react';
 import Dots                   from '../shared/dots';
-// import {FormattedHTMLMessage} from "react-intl";
+// import {FormattedMessage} from "react-intl";
 
 /**
  *  Turns ('base', ['mod1', 'mod2'])  to -> 'base_mod1 base_mod2'.

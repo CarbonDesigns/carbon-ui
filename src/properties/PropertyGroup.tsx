@@ -30,8 +30,8 @@ import StatesEditor from "./editors/custom/StatesEditor";
 
 import {app, TileSize, Types} from "carbon-core";
 
-import {FormattedHTMLMessage} from "react-intl";
-import ToolboxGroupEditor from "./editors/custom/ToolboxGroupEditor";
+import {FormattedMessage} from "react-intl";
+import SymbolGroupEditor from "./editors/custom/SymbolGroupEditor";
 
 interface IPropertyGroupProps {
     e: any, // page element
@@ -49,7 +49,7 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
         if (this._hasVisiblePropertiesInTheGroup(properties)) {
             return <div className="props-group">
                 <div className="props-group__heading">
-                    <FormattedHTMLMessage tagName="h5" id={this.props.g.get("label") || "empty.label"}/>
+                    <FormattedMessage tagName="h5" id={this.props.g.get("label") || "empty.label"}/>
                 </div>
                 <section className="props-group__list">
                     {properties.map(p => this._chooseEditor(p))}
@@ -119,8 +119,8 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <CustomPropertiesEditor e={elem} p={prop} key={key}/>;
             case "states":
                 return <StatesEditor e={elem} p={prop} key={key}/>;
-            case "toolboxGroup":
-                return <ToolboxGroupEditor e={elem} p={prop} key={key}/>;
+            case "symbolGroup":
+                return <SymbolGroupEditor e={elem} p={prop} key={key}/>;
         }
 
         return null;

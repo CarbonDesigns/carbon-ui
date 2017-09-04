@@ -1,6 +1,6 @@
 import React from "react";
 import cx from 'classnames';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 
 interface IDropButtonProps extends IReactElementProps
 {
@@ -47,7 +47,7 @@ export default class DropButton extends React.Component<IDropButtonProps, IDropB
 
     _renderText(){
         if(this.props.caption) {
-            return (<div className="pill-cap"><FormattedHTMLMessage id={this.props.caption}/></div>)
+            return (<div className="pill-cap"><FormattedMessage id={this.props.caption}/></div>)
         }
         return null;
     }

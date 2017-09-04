@@ -1,22 +1,23 @@
 import React from "react";
 import ReactDom from "react-dom";
-import { Component, listenTo, dispatchAction, handles } from "../../CarbonFlux";
-import { richApp } from "../../RichApp";
+import { Component, listenTo, dispatchAction, handles } from "../CarbonFlux";
+import { richApp } from "../RichApp";
 import StencilsActions from "./StencilsActions";
-import { FormattedHTMLMessage, defineMessages, FormattedMessage } from 'react-intl';
-import bem from "../../utils/commonUtils";
-import VirtualCollection from "../../shared/collections/VirtualCollection";
-import ToolboxMasonry from "../ToolboxMasonry";
-import LayoutActions, { LayoutAction } from "../../layout/LayoutActions";
+import { FormattedMessage, defineMessages } from 'react-intl';
+import bem from "../utils/commonUtils";
+import VirtualCollection from "../shared/collections/VirtualCollection";
+import ToolboxMasonry from "./ToolboxMasonry";
+import LayoutActions, { LayoutAction } from "../layout/LayoutActions";
 import { util } from "carbon-core";
-import { isRetina } from "../../utils/domUtil";
-import { CellSize } from "../../shared/collections/CollectionDefs";
+import { isRetina } from "../utils/domUtil";
+import { CellSize } from "../shared/collections/CollectionDefs";
+import { SpriteStencil, ToolboxGroup, ToolboxConfig } from "./LibraryDefs";
 
 const CategoryHeight = 36;
 
 interface SpriteViewProps extends ISimpleReactElementProps {
     templateType: string;
-    config: any;
+    config: ToolboxConfig<SpriteStencil>;
     configVersion: number;
     columnWidth: number;
     onScrolledToCategory?: (category) => void;
@@ -26,10 +27,11 @@ interface SpriteViewProps extends ISimpleReactElementProps {
     sourceId?: string;
     borders?: boolean;
     keepAspectRatio?: boolean;
+    reverse?: boolean;
 }
 
 export default class SpriteView extends Component<SpriteViewProps>{
-    private masonry: ToolboxMasonry = new ToolboxMasonry(CategoryHeight, x => x.spriteMap[2], x => x.spriteMap[3]);
+    private masonry: ToolboxMasonry = new ToolboxMasonry(CategoryHeight, x => x.spriteMap.width, x => x.spriteMap.height);
     private measureCache: CellSize[];
     private lastConfigVersion = 0;
 
@@ -77,15 +79,14 @@ export default class SpriteView extends Component<SpriteViewProps>{
     }
 
     onClicked = (e) => {
-        var templateId = e.currentTarget.dataset.templateId;
-        var sourceId = e.currentTarget.dataset.sourceId;
-        if (templateId !== this.props.changedId) {
-            dispatchAction({ type: "Stencils_Clicked", e, ...e.currentTarget.dataset });
+        var stencilId = e.currentTarget.dataset.stencilId;
+        if (stencilId !== this.props.changedId) {
+            dispatchAction({ type: "Stencils_Clicked", e: {ctrlKey: e.ctrlKey, metaKey: e.metaKey, currentTarget: e.currentTarget}, stencil: {...e.currentTarget.dataset} });
         }
     };
 
     private measureCells = (collectionWidth: number) => {
-        this.measureCache = this.masonry.measure(this.props.config, collectionWidth, this.props.columnWidth, this.props.keepAspectRatio);
+        this.measureCache = this.masonry.measure(this.props.config, collectionWidth, this.props.columnWidth, this.props.keepAspectRatio, this.props.reverse);
         this.lastConfigVersion = this.props.configVersion;
         return this.measureCache;
     }
@@ -140,7 +141,7 @@ export default class SpriteView extends Component<SpriteViewProps>{
             count += group.items.length + 1;
         }
 
-        if (activeCategory) {
+        if (activeCategory && this.props.onScrolledToCategory) {
             this.props.onScrolledToCategory(activeCategory);
         }
     }
@@ -148,13 +149,18 @@ export default class SpriteView extends Component<SpriteViewProps>{
     private renderCell = (index: number) => {
         let current = 0;
         let groups = this.props.config.groups;
+
         for (let i = 0; i < groups.length; i++) {
             let group = groups[i];
             if (index === current) {
                 return this.renderCategory(group);
             }
             if (index <= current + group.items.length) {
-                return this.renderItem(group.items[index - current - 1], group);
+                let indexInGroup = index - current - 1;
+                if (this.props.reverse) {
+                    indexInGroup = group.items.length - indexInGroup - 1;
+                }
+                return this.renderItem(group.items[indexInGroup], group);
             }
             current += group.items.length + 1;
         }
@@ -167,36 +173,27 @@ export default class SpriteView extends Component<SpriteViewProps>{
         </div>;
     }
 
-    private renderItem = (x, g) => {
-        var containerStyle = {};
-        if (x.style) {
-            extend(containerStyle, x.style);
-        }
-        var spriteMap = x.spriteMap;
+    private renderItem = (x: SpriteStencil, g: ToolboxGroup<SpriteStencil>) => {
         var spriteUrl;
 
         if (isRetina) {
-            spriteUrl = (x.spriteUrl2x || g.spriteUrl2x || x.spriteUrl || g.spriteUrl);
-        } else {
-            spriteUrl = (x.spriteUrl || g.spriteUrl);
+            spriteUrl = x.spriteUrl2x || x.spriteUrl;
+        }
+        else {
+            spriteUrl = x.spriteUrl;
         }
 
-        var width = spriteMap[2];
-        var height = spriteMap[3];
+        var width = x.spriteMap.width;
+        var height = x.spriteMap.height;
 
         var imageStyle: React.CSSProperties = {
             backgroundImage: spriteUrl,
+            backgroundSize: x.spriteSize.width + 'px ' + x.spriteSize.height + "px",
+            backgroundPosition: -x.spriteMap.x + 'px ' + -x.spriteMap.y + 'px',
             width: width,
             height: height,
             overflow: 'hidden'
         };
-
-        if (g.size) {
-            imageStyle.backgroundSize = g.size.width + 'px ' + g.size.height + "px";
-        }
-        if (spriteMap[0] || spriteMap[1]) {
-            imageStyle.backgroundPosition = -spriteMap[0] + 'px ' + -spriteMap[1] + 'px';
-        }
 
         var modified = x.id === this.props.changedId;
         var modification_badge = modified ? <div className="stencil__modification-indicator"><i className="ico-refresh" /></div> : null;
@@ -208,17 +205,12 @@ export default class SpriteView extends Component<SpriteViewProps>{
 
         return <div key={g.name + x.id}
             className={cn}
-            data-template-id={x.id}
-            data-template-type={this.props.templateType}
-            data-template-pid={x.pageId}
-            data-template-aid={x.artboardId}
-            data-template-width={x.realWidth}
-            data-template-height={x.realHeight}
-            data-source-id={this.props.sourceId}
+            data-stencil-type={this.props.templateType}
+            data-stencil-id={x.id}
+            data-page-id={x.pageId}
             title={x.title}
-            style={containerStyle}
             onClick={this.onClicked}>
-            <div className={bem("stencil", "image", null, x.imageClass)} style={imageStyle}>
+            <div className={bem("stencil", "image")} style={imageStyle}>
             </div>
             {modification_badge}
         </div>;

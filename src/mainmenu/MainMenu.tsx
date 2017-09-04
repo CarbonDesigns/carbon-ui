@@ -3,7 +3,7 @@ import {app} from "carbon-core";
 import {richApp}    from '../RichApp';
 import AppActions   from '../RichAppActions';
 import {handles, ComponentWithImmutableState} from '../CarbonFlux';
-import {FormattedHTMLMessage, FormattedMessage} from "react-intl"
+import {FormattedMessage} from "react-intl"
 import {Record} from "immutable";
 import appStore from "../AppStore";
 

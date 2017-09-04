@@ -6,7 +6,7 @@ import FlyoutActions from '../../FlyoutActions';
 import {Component, dispatch} from '../../CarbonFlux';
 import {Brush} from "carbon-core";
 
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 
 export default class BrushSelector extends Component<any, any> {
     constructor(props){

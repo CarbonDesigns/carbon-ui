@@ -1,6 +1,6 @@
 import React                  from 'react';
 import ReactDom               from 'react-dom';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import cx                     from 'classnames';
 import Dots                   from "../../shared/dots";
 import FlyoutButton           from "../../shared/FlyoutButton";

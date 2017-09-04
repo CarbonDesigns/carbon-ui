@@ -30,7 +30,7 @@ import StatesEditor from "./editors/custom/StatesEditor";
 
 import {app, TileSize, Types} from "carbon-core";
 
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import SymbolGroupEditor from "./editors/custom/SymbolGroupEditor";
 
 interface IPropertyGroupProps {
@@ -49,7 +49,7 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
         if (this._hasVisiblePropertiesInTheGroup(properties)) {
             return <div className="props-group">
                 <div className="props-group__heading">
-                    <FormattedHTMLMessage tagName="h5" id={this.props.g.get("label") || "empty.label"}/>
+                    <FormattedMessage tagName="h5" id={this.props.g.get("label") || "empty.label"}/>
                 </div>
                 <section className="props-group__list">
                     {properties.map(p => this._chooseEditor(p))}

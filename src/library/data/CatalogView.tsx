@@ -1,5 +1,5 @@
 import React from "react";
-import { FormattedHTMLMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Component, dispatch, dispatchAction } from "../../CarbonFlux";
 import ScrollContainer from "../../shared/ScrollContainer";
 import { ToolboxConfig, DataStencil } from "../LibraryDefs";
@@ -66,7 +66,7 @@ export default class CatalogView extends Component<CatalogViewProps> {
             {this.props.config.groups.map(g => {
                 return <section className="stencils-group" key={g.name} data-name={g.name}>
                     <div className="stencils-group__name" ref={this.registerCategoryNode}>
-                        <strong><FormattedHTMLMessage id={g.name} defaultMessage={g.name} /></strong>
+                        <strong><FormattedMessage id={g.name} defaultMessage={g.name} /></strong>
                     </div>
                     <div className="data__fields">
                         {g.items.map(x => <div key={x.title} className="stencil stencil_data stencil_bordered"

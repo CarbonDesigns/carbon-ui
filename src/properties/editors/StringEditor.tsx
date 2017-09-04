@@ -1,7 +1,7 @@
 import React from 'react';
 import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from 'classnames';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import EnterInput from "../../shared/EnterInput";
 
 interface IStringEditorProps extends IEditorProps{
@@ -27,7 +27,7 @@ export default class StringEditor extends EditorComponent<string, IStringEditorP
     renderPropertyName(p){
         var displayName = p.get("descriptor").displayName;
         if(displayName) {
-            return <div className="prop__name"><FormattedHTMLMessage id={displayName}/></div>;
+            return <div className="prop__name"><FormattedMessage id={displayName}/></div>;
         }
     }
     onValueEntered=(value)=>{

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Component} from "../../CarbonFlux";
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 import {GuiCheckbox, GuiButton} from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
 import SimpleList from '../../shared/SimpleList';

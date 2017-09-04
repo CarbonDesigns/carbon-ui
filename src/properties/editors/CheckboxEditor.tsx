@@ -1,7 +1,7 @@
 import React from 'react';
 import EditorComponent from "./EditorComponent";
 import cx from 'classnames';
-import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { GuiCheckbox}           from "../../shared/ui/GuiComponents";
 
 export default class CheckboxEditor extends EditorComponent<boolean> {

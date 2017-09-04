@@ -1,14 +1,14 @@
 import React from 'react';
 import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from 'classnames';
-import {FormattedHTMLMessage} from "react-intl";
+import {FormattedMessage} from "react-intl";
 
 export default class MultiSwitchEditor extends EditorComponent<any, IEditorProps> {
     render(){
         var items = this.extractOption(this.props, "items");
         var classes = cx("prop prop_pushbuttons", this.widthClass(this.props.className || "prop_width-1-1"));
         return <div className={classes}>
-            <div className="prop__name"><FormattedHTMLMessage id={this.displayName()}/></div>
+            <div className="prop__name"><FormattedMessage id={this.displayName()}/></div>
             <div className="prop__value">
                 {items.map(x => this.renderItem(x))}
             </div>

@@ -2,7 +2,7 @@ import { Component, handles, dispatch, listenTo, dispatchAction } from '../../Ca
 import React from 'react';
 import { app, PropertyTracker } from "carbon-core";
 import Navigatable from "../../shared/Navigatable";
-import { FormattedHTMLMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import CustomProviders from './CustomProviders';
 import CatalogView from './CatalogView';
 import { default as TabContainer, TabTabs, TabArea, TabPage } from "../../shared/TabContainer";

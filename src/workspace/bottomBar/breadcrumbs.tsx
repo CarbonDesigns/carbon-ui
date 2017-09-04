@@ -5,7 +5,7 @@ import cx from 'classnames';
 import {listenTo, Component} from "../../CarbonFlux";
 import {iconType} from "../../utils/appUtils";
 import {
-    FormattedHTMLMessage,
+    FormattedMessage,
     FormattedNumber,
     FormattedPlural
 } from "react-intl";
@@ -180,7 +180,7 @@ export default class Breadcrumbs extends Component<any, any> {
             }
         }
 
-        // <FormattedHTMLMessage id="todo translateme!" defaultMessage={`{1} elements selected`} values={{amount: amount}}/>
+        // <FormattedMessage id="todo translateme!" defaultMessage={`{1} elements selected`} values={{amount: amount}}/>
         return <div className="breadcrumbs__message">
             <span className="breadcrumbs__selected-amount"><FormattedNumber value={selection.count()} /></span>
             <FormattedPlural {...plurals} />

@@ -88,7 +88,7 @@ export default class ShadowsEditor extends EditorComponent<Shadow, IShadowEditor
         this._lastShadow = null;
     };
 
-    onDeleted = (shadow) => {
-        this.patchValueByCommand(PatchType.Remove, shadow, true);
+    onDeleted = (shadowItem) => {
+        this.patchValueByCommand(PatchType.Remove, shadowItem.shadow, true);
     }
 }

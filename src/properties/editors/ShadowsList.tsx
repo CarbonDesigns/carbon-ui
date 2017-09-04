@@ -84,7 +84,8 @@ export default class ShadowsList extends Component<any, any> {
         }
 
         var items = this.props.items.map((itemProps)=>{return {
-            id      : itemProps.id,
+            id: itemProps.id,
+            shadow: itemProps,
             content : <ShadowFlat value={itemProps} onPreview={this.props.onPreview} onConfirmed={this.props.onConfirmed} onCancelled={this.props.onCancelled} onEnableChanged={this.props.onEnableChanged} />
         }});
 

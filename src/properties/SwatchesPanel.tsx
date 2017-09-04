@@ -51,6 +51,7 @@ class SwatchesSlot extends Component<any, any> {
                     delete this._lastValue;
                 }
             }}>
+
             <BrushSelector className="flyout__content" ref="selector"
                 brush={this.props.slot.brush}
                 hasGradient={this.props.hasGradient}
@@ -81,7 +82,6 @@ interface ISwatchesPanelState {
 }
 
 export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
-
     constructor(props) {
         super(props);
         var state: ISwatchesPanelState = {
@@ -113,17 +113,25 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
 
             hasGradient = propertyStore.getPropertyOptions('fill').gradient || false;
 
-            if (propertyStore.hasProperty('fill', false)) {
+            if (propertyStore.hasProperty('fill', true)) {
                 fillBrush = propertyStore.getPropertyValue('fill');
 
                 if (isShape) {
                     app.defaultFill(fillBrush, ChangeMode.Root);
+                }
+
+                if (fillBrush.value !== 'transparent') {
+                    app.useRecentColor(fillBrush.value);
                 }
             }
             if (propertyStore.hasProperty('stroke', true)) {
                 strokeBrush = propertyStore.getPropertyValue('stroke');
                 if (isShape) {
                     app.defaultStroke(strokeBrush, ChangeMode.Root);
+                }
+
+                if (strokeBrush.value !== 'transparent') {
+                    app.useRecentColor(strokeBrush.value);
                 }
             }
         }

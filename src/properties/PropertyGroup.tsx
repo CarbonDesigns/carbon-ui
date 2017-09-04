@@ -70,6 +70,10 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
 
         var options, empty_option_name;
 
+        if(!descriptor.options && typeof descriptor.getOptions === 'function') {
+            prop = prop.set('options', descriptor.getOptions(elem));
+        }
+
         switch (descriptor.type) {
             case "shadow":
                 return <ShadowsEditor e={elem} p={prop} key={key} items={null} />;
@@ -79,8 +83,6 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <CornersEditor e={elem} p={prop} key={key}/>;
             case "strokePattern":
                 return <StrokePatternEditor  e={elem} p={prop} key={key}/>;
-
-
             case "numeric":
                 return <NumericEditor e={elem} p={prop} key={key}/>;
             case "text":
@@ -119,36 +121,6 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <StatesEditor e={elem} p={prop} key={key}/>;
             case "toolboxGroup":
                 return <ToolboxGroupEditor e={elem} p={prop} key={key}/>;
-            case "artboard":
-                //TODO: move all dynamic options to core project, introduce something like getOptions()
-                options = {
-                    items: app.activePage.getAllArtboards().map(artboard=> {
-                        return {
-                            name  : artboard.name(),
-                            value : {
-                                pageId     : app.activePage.id(),
-                                artboardId : artboard.id()
-                            }
-                        }
-                    })
-                };
-                return <DropDownEditor e={elem} p={prop.set('options', options)} key={key}/>;
-
-            case "frame":
-                empty_option_name = 'none';  //fixme - translate!
-                var items = [ { name: empty_option_name,  value:null } ];
-                options = Object.assign({}, prop.get('options'), {
-                    items: items.concat(app.getAllFrames().map(framed_artboard=> {
-                        return {
-                            name: framed_artboard.name(),
-                            value: {
-                                pageId     : framed_artboard.parent().id(),
-                                artboardId : framed_artboard.id()
-                            }
-                        }
-                    }))
-                });
-                return <DropDownEditor e={elem} p={prop.set('options', options)} key={key}/>;
         }
 
         return null;

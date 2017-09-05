@@ -33,6 +33,9 @@ export function registerEvents() {
         token = app.changed.bindAsync(events => dispatch((CarbonActions.appChanged(events))));
         frequentTokens.push(token);
 
+        token = app.recentColorsChanged.bindAsync(colors => dispatch((CarbonActions.recentColorsChanged(colors))));
+        frequentTokens.push(token);
+
         token = PropertyTracker.propertyChanged.bindAsync((e, props, oldProps) => {
             dispatchAction({ type: "Carbon_PropsChanged", element: e, props, oldProps });
         });

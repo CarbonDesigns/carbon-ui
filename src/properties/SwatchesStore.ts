@@ -3,6 +3,7 @@ import Immutable from "immutable";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import { PropertyTracker, Selection, Brush, app, PropertyMetadata, ChangeMode, ArtboardType, ActionManager, UIElementFlags } from "carbon-core";
 import SwatchesActions from './SwatchesActions';
+import PropertyActions from "./PropertyActions";
 
 interface IPalette {
     id: string,
@@ -14,13 +15,14 @@ interface ISwatchesState {
     palettes: IPalette[],
     active?: string,
     fill?: any,
-    stroke?: any
+    stroke?: any;
+    recentColors?:any[];
 }
 
 export class SwatchesStore extends CarbonStore<ISwatchesState> {
     constructor() {
         super();
-        this.state = { palettes: [], active: 'fill' };
+        this.state = { palettes: [], active: 'fill', recentColors:app.props.recentColors };
         ActionManager.subscribe("transparentColor", () => {
             var changes = {};
             changes[this.state.active] = { color: Brush.Empty.value };
@@ -42,7 +44,7 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
     }
 
     @handles(SwatchesActions.changeActiveColors)
-    onActiveColorsChanged({ fill, stroke}) {
+    onActiveColorsChanged({ fill, stroke }) {
         this.setState({ fill, stroke })
     }
 
@@ -53,12 +55,29 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
             palettes.push(this._buildPaletteForElement(paletteArtboards[i]));
         }
 
-        this.setState({ palettes: palettes });
+        this.setState({ palettes: palettes, recentColors:app.props.recentColors });
     }
 
     @handles(SwatchesActions.changeActiveSlot)
     onActiveSlotChanged({ active }) {
         this.setState({ active: active });
+    }
+
+    @handles(PropertyActions.changed)
+    onPropertyChanged({ changes }) {
+        if (changes.fill || changes.stroke) {
+            let brush:any;
+            for (brush of [changes.fill, changes.stroke]) {
+                if (brush && brush.value !== 'transparent') {
+                    app.useRecentColor(brush.value);
+                }
+            }
+        }
+    }
+
+    @handles(CarbonActions.recentColorsChanged)
+    onRecentColorsChanged({colors}) {
+        this.setState({recentColors:colors});
     }
 
     onAction(action: CarbonAction) {
@@ -77,6 +96,8 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
                 return;
         }
     }
+
+
 
     onPaletteChanged(resourceType, element) {
         if (resourceType !== ArtboardType.Palette) {

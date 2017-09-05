@@ -1,5 +1,5 @@
 import React from 'react';
-import { Component, listenTo, dispatch } from "../CarbonFlux";
+import { Component, listenTo, dispatch, handles } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'
 import { Brush, app, ChangeMode, Shape, Selection } from "carbon-core";
@@ -23,9 +23,9 @@ function b(elem, mods?, mix?) {
 function colorToBrush(color) {
     let brush;
 
-    if(color === 'transparent') {
+    if (color === 'transparent') {
         brush = Brush.Empty;
-    } else if(color.stops) {
+    } else if (color.stops) {
         brush = Brush.createFromLinearGradientObject(color);
     } else {
         brush = Brush.createFromColor(color);
@@ -60,7 +60,7 @@ class SwatchesSlot extends Component<any, any> {
                     this._lastValue = brush.value;
                 }}
                 onPreview={
-                    (brush)=>{
+                    (brush) => {
                         this.props.colorSelected(brush.value, true, true);
                     }
                 }
@@ -78,7 +78,7 @@ interface ISwatchesPanelState {
     palettes?: any[];
     fill?: any;
     stroke?: any;
-    hasGradient?:boolean;
+    hasGradient?: boolean;
 }
 
 export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
@@ -86,7 +86,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         super(props);
         var state: ISwatchesPanelState = {
             active: swatchesStore.state.active,
-            recentColors: { name: '', colors: [] },
+            recentColors: { name: '', colors: swatchesStore.state.recentColors },
             palettes: []
         };
         this.state = state;
@@ -94,12 +94,21 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
 
     @listenTo(swatchesStore)
     onSwatchesChanged() {
-        this.setState({
+        var newState:any = {
             palettes: swatchesStore.state.palettes,
             active: swatchesStore.state.active,
             fill: swatchesStore.state.fill,
-            stroke:  swatchesStore.state.stroke
-        });
+            stroke: swatchesStore.state.stroke
+        };
+
+        if (!this.state.recentColors || this.state.recentColors.colors !== swatchesStore.state.recentColors) {
+            newState.recentColors = {
+                name: '',
+                colors: swatchesStore.state.recentColors
+            };
+        }
+
+        this.setState(newState);
     }
 
     @listenTo(propertyStore)
@@ -119,19 +128,11 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
                 if (isShape) {
                     app.defaultFill(fillBrush, ChangeMode.Root);
                 }
-
-                if (fillBrush.value !== 'transparent') {
-                    app.useRecentColor(fillBrush.value);
-                }
             }
             if (propertyStore.hasProperty('stroke', true)) {
                 strokeBrush = propertyStore.getPropertyValue('stroke');
                 if (isShape) {
                     app.defaultStroke(strokeBrush, ChangeMode.Root);
-                }
-
-                if (strokeBrush.value !== 'transparent') {
-                    app.useRecentColor(strokeBrush.value);
                 }
             }
         }
@@ -143,15 +144,8 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         var active = this.state.active;
 
         var newState: ISwatchesPanelState = {
-            hasGradient:hasGradient
+            hasGradient: hasGradient
         };
-
-        if (!this.state.recentColors || this.state.recentColors.colors !== app.recentColors()) {
-            newState.recentColors = {
-                name: '',
-                colors: app.recentColors()
-            };
-        }
 
         this.setState(newState);
         richApp.dispatch(SwatchesActions.changeActiveColors(fillBrush, strokeBrush));
@@ -177,16 +171,16 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
             app.defaultStroke(brush);
         }
 
-        if (!norecent && color !== 'transparent') {
-            app.useRecentColor(color);
-        }
+        // if (!norecent && color !== 'transparent') {
+        //     app.useRecentColor(color);
+        // }
 
         var changes = {};
         changes[this.state.active] = brush;
 
         var selection = Selection.selectComposite();
         if (selection.elements.length) {
-            if(preview) {
+            if (preview) {
                 richApp.Dispatcher.dispatchAsync(PropertyActions.preview(changes));
             } else {
                 richApp.Dispatcher.dispatchAsync(PropertyActions.changed(changes));

@@ -81,6 +81,12 @@ var CarbonActions = {
             primitives
         }
     },
+    recentColorsChanged:(colors)=>{
+        return {
+            type:"CARBON_RECENTCOLORS_CHANGED",
+            colors
+        }
+    },
     inlineEditModeChanged: mode => {
         return {
             type:"CARBON_INLINE_MODE",

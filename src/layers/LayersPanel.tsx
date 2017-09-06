@@ -118,7 +118,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         (app.activePage as IArtboardPage).setActiveArtboard(null);
         var artboards = app.activePage.children;
         Environment.view.ensureScale(artboards);
-        Environment.view.ensureVisible(artboards);
+        Environment.view.ensureCentered(artboards);
     }
 
     private renderBackButton() {

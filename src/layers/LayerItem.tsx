@@ -73,7 +73,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         var artboard = app.activePage.getActiveArtboard();
         if (artboard) {
             Environment.view.ensureScale([artboard]);
-            Environment.view.ensureVisible([artboard]);
+            Environment.view.ensureCentered([artboard]);
             Selection.clearSelection();
         }
     }

@@ -4,7 +4,7 @@ import ImagesActions from "../library/images/ImagesActions";
 import DropzoneRegistry from "./DropzoneRegistry";
 import { } from "carbon-model";
 import {
-    IUIElement, IKeyboardState, createUUID, IDropElementData, RepeatContainer, IImage,
+    IUIElement, KeyboardState, createUUID, IDropElementData, RepeatContainer, IImage,
     app, backend, Environment, Selection, SvgParser, Matrix, Image, OriginType, IDisposable
 } from "carbon-core";
 
@@ -82,9 +82,8 @@ function tryInsertIntoRepeater(e: MouseEvent, images: IImage[]): boolean {
         return false;
     }
 
-    var keys = Environment.controller.keyboardStateFromEvent(e);
     var eventData = Environment.controller.createEventData(e);
-    var parent = Environment.controller.getCurrentDropTarget(eventData, keys);
+    var parent = Environment.controller.getCurrentDropTarget(eventData, eventData);
     var repeater = RepeatContainer.tryFindRepeaterParent(parent);
     if (!repeater) {
         return false;
@@ -111,7 +110,7 @@ interface IDropHandler {
     resolveUploaded: (urls: string[]) => void;
 }
 
-var keyboardState: IKeyboardState = { ctrl: false, alt: false, shift: false };
+var keyboardState: KeyboardState = { ctrlKey: false, altKey: false, shiftKey: false };
 var dropHandler: IDropHandler = {
     imageMap: {},
     resolveDropped: null,
@@ -173,7 +172,9 @@ export default class ImageDrop {
             },
             dragover: function (e: MouseEvent) {
                 //window is not focused, so keyboard state is not tracked
-                keyboardState = Environment.controller.keyboardStateFromEvent(e, keyboardState);
+                keyboardState.ctrlKey = e.ctrlKey || e.metaKey;
+                keyboardState.shiftKey = e.shiftKey;
+                keyboardState.altKey = e.altKey;
 
                 var eventData = Environment.controller.createEventData(e);
                 Environment.controller.onmousemove(eventData, keyboardState);
@@ -225,7 +226,10 @@ export default class ImageDrop {
                 dispatchAction({ type: "Library_Tab", area: "library", tabId: "3"});
                 dispatchAction({ type: "Library_Tab", area: "images", tabId: "1"});
 
-                keyboardState = Environment.controller.keyboardStateFromEvent(e, keyboardState);
+                keyboardState.ctrlKey = e.ctrlKey || e.metaKey;
+                keyboardState.shiftKey = e.shiftKey;
+                keyboardState.altKey = e.altKey;
+
                 dropHandler.resolveDropped({ e: e, keys: keyboardState, elements: images });
 
                 dropHandler.resolveDropped = null;

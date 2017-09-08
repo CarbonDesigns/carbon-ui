@@ -4,7 +4,7 @@ import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
 import { richApp } from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
-import { app, Symbol, Environment, Rect, IDropElementData, IKeyboardState, IUIElement } from "carbon-core";
+import { app, Symbol, Environment, Rect, IDropElementData, KeyboardState, IUIElement } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection } from "carbon-core";
 import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 
@@ -112,11 +112,13 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         //analytics.event("Toolbox", "Drag-out", interaction.templateType + "/" + interaction.templateId);
     };
     onDrop = (event: MouseEvent, interaction: Interaction) => {
+        let eventData = Environment.controller.createEventData(event);
+
         app.activePage.remove(interaction.placeholder, ChangeMode.Self);
         interaction.dropElement.classList.remove("dragover"); //#viewport
 
         interaction.dropPromise.then(() => this.onElementAdded(interaction.stencil));
-        interaction.resolveDrop({ elements: [interaction.placeholder], e: event, keys: Environment.controller.keyboardStateFromEvent(event) });
+        interaction.resolveDrop({ elements: [interaction.placeholder], e: event, keys: eventData });
 
         //analytics.event("Toolbox", "Drag-drop", interaction.templateType + "/" + interaction.templateId);
     };

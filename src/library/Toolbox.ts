@@ -112,6 +112,8 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         //analytics.event("Toolbox", "Drag-out", interaction.templateType + "/" + interaction.templateId);
     };
     onDrop = (event: MouseEvent, interaction: Interaction) => {
+        Selection.makeSelection(Selection.previousElements);
+
         let eventData = Environment.controller.createEventData(event);
 
         app.activePage.remove(interaction.placeholder, ChangeMode.Self);

@@ -93,14 +93,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         }
         var selected = Selection.isElementSelected(element);
 
-        if (selected) {
-            Selection.selectionMode("remove");
-        } else {
-            Selection.selectionMode("add");
-        }
-
-        Selection.makeSelection([element]);
-        Selection.selectionMode("new");
+        Selection.makeSelection([element], "toggle");
     }
 
     private selectElement = (ev) => {
@@ -112,20 +105,13 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         }
         var selected = Selection.isElementSelected(element);
 
-        if (ev.ctrlKey || ev.metaKey || ev.shiftKey) {
-            if (selected) {
-                Selection.selectionMode("remove");
-            }
-            else {
-                if (!this.props.ancestorSelected) {
-                    Selection.selectionMode("add");
-                }
+        let mode = Selection.getSelectionMode({
+            ctrlKey: ev.ctrlKey || ev.metaKey,
+            altKey: ev.altKey,
+            shiftKey: ev.shiftKey
+        }, true);
 
-            }
-        }
-
-        Selection.makeSelection([element]);
-        Selection.selectionMode("new");
+        Selection.makeSelection([element], mode);
     }
 
     private static findSelectionTarget(node: LayerNode) {

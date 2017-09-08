@@ -1,4 +1,4 @@
-import { IMouseEventHandler, IKeyboardState, IMouseEventData, IDisposable, AngleAdjuster, NearestPoint, BrushType } from "carbon-core";
+import { IMouseEventHandler, KeyboardState, IMouseEventData, IDisposable, AngleAdjuster, NearestPoint, BrushType } from "carbon-core";
 import { UIElementDecorator, Environment, ILayer, IContext, IEnvironment, Invalidate, Brush, ChangeMode } from "carbon-core";
 import { LayerTypes, ILayerDrawHandlerObject } from "carbon-app";
 
@@ -119,7 +119,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         return newY;
     }
 
-    mousemove(event: IMouseEventData, keys: IKeyboardState) {
+    mousemove(event: IMouseEventData, keys: KeyboardState) {
         if (this._movePoint !== null) {
             let g = this._gradient;
             let pos = this.element.globalViewMatrixInverted().transformPoint(event);
@@ -184,7 +184,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         }
     }
 
-    mouseup(event: IMouseEventData, keys: IKeyboardState) {
+    mouseup(event: IMouseEventData, keys: KeyboardState) {
         if (this._movePoint !== null) {
             this._movePoint = null;
             if (this._lastGradient) {
@@ -195,7 +195,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         }
     }
 
-    mousedown(event: IMouseEventData, keys: IKeyboardState) {
+    mousedown(event: IMouseEventData, keys: KeyboardState) {
         var brush = this.element.props.fill;
         if (brush.type !== BrushType.lineargradient) {
             return;

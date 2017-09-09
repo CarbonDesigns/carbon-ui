@@ -13,10 +13,8 @@ var hiddenInput = document.createElement("div");
 const SvgMimeType = "image/svg+xml";
 
 //an image which is dragged, but never actually dropped
-let dragImage = new Image();
+let dragImage: IImage = null;
 let dragPosition;
-dragImage.size({ width: Image.NewImageSize, height: Image.NewImageSize });
-dragImage.source(Image.EmptySource);
 
 function readFromSvgFile(f: File) {
     return new Promise((resolve, reject) => {
@@ -164,6 +162,11 @@ export default class ImageDrop {
             },
 
             dragenter: function (e) {
+                dragImage = new Image();
+                dragImage.size({ width: Image.NewImageSize, height: Image.NewImageSize });
+                dragImage.source(Image.EmptySource);
+                Selection.makeSelection([dragImage]);
+
                 var dropPromise = new Promise<IDropElementData>((resolve, reject) => {
                     dropHandler.resolveDropped = resolve;
                     dropHandler.rejectDropped = reject;
@@ -190,7 +193,7 @@ export default class ImageDrop {
             },
             drop: function (e: DragEvent) {
                 app.resetCurrentTool();
-                Selection.clearSelection();
+                Selection.makeSelection(Selection.previousElements);
 
                 var images = [];
                 for (let i = 0; i < e.dataTransfer.files.length; ++i) {

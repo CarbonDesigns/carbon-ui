@@ -206,7 +206,6 @@ export default class Breadcrumbs extends Component<any, any> {
             }
         }
 
-        // <FormattedMessage id="todo translateme!" defaultMessage={`{1} elements selected`} values={{amount: amount}}/>
         return <div className="breadcrumbs__message">
             <span className="breadcrumbs__selected-amount"><FormattedNumber value={selection.count()} /></span>
             <FormattedPlural {...plurals} />

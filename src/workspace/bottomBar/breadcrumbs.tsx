@@ -1,9 +1,9 @@
 import React from 'react';
-import {CompositeElement, PrimitiveType} from "carbon-core";
-import {app, Artboard, Selection, Environment} from "carbon-core";
+import { CompositeElement, PrimitiveType } from "carbon-core";
+import { app, Artboard, Selection, Environment, LayerTypes, IIsolationLayer } from "carbon-core";
 import cx from 'classnames';
-import {listenTo, Component} from "../../CarbonFlux";
-import {iconType} from "../../utils/appUtils";
+import { listenTo, Component } from "../../CarbonFlux";
+import { iconType } from "../../utils/appUtils";
 import {
     FormattedMessage,
     FormattedNumber,
@@ -11,14 +11,14 @@ import {
 } from "react-intl";
 
 export default class Breadcrumbs extends Component<any, any> {
-    [name:string] : any;
+    [name: string]: any;
 
     constructor(props) {
         super(props);
         this.state = {
-            parentId       : null,
-            elements       : [],
-            selection      : null
+            parentId: null,
+            elements: [],
+            selection: null
         };
     }
 
@@ -26,22 +26,40 @@ export default class Breadcrumbs extends Component<any, any> {
         var e = element;
         var res = [];
         var view = Environment.view;
+        var layer = Environment.view.getLayer(LayerTypes.Isolation) as IIsolationLayer;
         while (e) {
-            if (e.canSelect()  || e instanceof Artboard) {
+            if (e.canSelect() || e instanceof Artboard) {
                 res.splice(0, 0, {
-                    name     : e.displayName(),
-                    type     : e.t,
-                    iconType : iconType(e),
-                    id       : e.id()
+                    name: e.displayName(),
+                    type: e.t,
+                    iconType: iconType(e),
+                    id: e.id()
                 });
             }
             e = e.parent();
         }
 
+        if (layer.isActive) {
+            e = layer.getOwner();
+            while (e) {
+                if (e.canSelect() || e instanceof Artboard) {
+                    res.splice(0, 0, {
+                        name: e.displayName(),
+                        type: e.t,
+                        iconType: iconType(e),
+                        id: e.id(),
+                        element:e,
+                        exitIsolation:true
+                    });
+                }
+                e = e.parent();
+            }
+        }
+
         return res;
     }
 
-    onSelectionMade(selection){
+    onSelectionMade(selection) {
         this.onElementSelected(selection);
     }
 
@@ -51,6 +69,8 @@ export default class Breadcrumbs extends Component<any, any> {
         if (selection.count() === 1) {
             elements = this._buildBreadcrumbElements(selection.elements[0]);
             parentId = selection.elements[0].parent().id();
+        } else {
+            elements = this._buildBreadcrumbElements(null);
         }
 
         this.setState({ elements, selection, parentId });
@@ -65,15 +85,15 @@ export default class Breadcrumbs extends Component<any, any> {
         var pageId = app.activePage.id();
         var elements = this.state.elements;
 
-        for (var i = 0; i < primitives.length; i++){
+        for (var i = 0; i < primitives.length; i++) {
             var p = primitives[i];
-            if (p.path[0] === pageId){
+            if (p.path[0] === pageId) {
                 if (p.type === PrimitiveType.DataNodeRemove
                     || p.type === PrimitiveType.DataNodeChange
-                    || p.type === PrimitiveType.DataNodeAdd){
+                    || p.type === PrimitiveType.DataNodeAdd) {
                     var elementId = p.path[p.path.length - 1];
                     var needUpdate = elements.some(x => x.id === elementId);
-                    if (needUpdate){
+                    if (needUpdate) {
                         break;
                     }
                 }
@@ -82,14 +102,14 @@ export default class Breadcrumbs extends Component<any, any> {
         }
 
         if (needUpdate) {
-            setTimeout(()=>this.onElementSelected(current), 0);
+            setTimeout(() => this.onElementSelected(current), 0);
         }
     }
 
     componentDidMount() {
-        app.onLoad(()=> {
+        app.onLoad(() => {
             this._onElementSelectedSubscribtion = Selection.onElementSelected.bind(this, this.onSelectionMade);
-            this._syncLogToken                  = app.changed.bind(this, this.onAppChanged);
+            this._syncLogToken = app.changed.bind(this, this.onAppChanged);
         });
     }
 
@@ -113,7 +133,13 @@ export default class Breadcrumbs extends Component<any, any> {
         if (isLast) {
             return;
         }
-        if (this.state.selection.count() === 1){
+
+        if(element.exitIsolation) {
+            app.actionManager.invoke("exitisolation");
+            Selection.makeSelection([element.element]);
+            return;
+        }
+        if (this.state.selection.count() === 1) {
             var e = this.state.selection.elements[0];
             while (e && e.parent && e.id() !== element.id) {
                 e = e.parent();
@@ -122,15 +148,15 @@ export default class Breadcrumbs extends Component<any, any> {
         }
     }
 
-
     _arrow(isLast) {
-        if (!isLast)
+        if (!isLast) {
             return (<div className="breadcrumb__arrow" key="breadcrumb__arrow"></div>);
+        }
         return null;
     }
 
     _breadcrumbElement(element, isLast, index) {
-        if(!element.id) {
+        if (!element.id) {
             return null;
         }
 
@@ -141,13 +167,13 @@ export default class Breadcrumbs extends Component<any, any> {
         return (
             <div
                 className={cx("breadcrumb", {
-                        breadcrumb_first: index === 0,
-                        breadcrumb_last: isLast
-                    })}
-                onClick={()=>this._select(element, isLast)} key={element.id}>
+                    breadcrumb_first: index === 0,
+                    breadcrumb_last: isLast
+                })}
+                onClick={() => this._select(element, isLast)} key={element.id}>
                 <i className={className} />
                 <span className="breadcrumb__caption" >{
-                    (element.name||"").trim().length>0
+                    (element.name || "").trim().length > 0
                         ? (element.name + '')
                         : (element.type + ' ' + element.id)
                 }</span>
@@ -160,23 +186,23 @@ export default class Breadcrumbs extends Component<any, any> {
         var plurals;
         if (selection.allHaveSameType()) {
             var displayType = selection.elements[0].displayType();
-            var translatedType = this.context.intl.formatMessage({id: displayType, defaultMessage: displayType});
+            var translatedType = this.context.intl.formatMessage({ id: displayType, defaultMessage: displayType });
             translatedType = translatedType.toLowerCase();
             plurals = {
-                value : selection.count(),
-                one   : translatedType + "  selected",
-                two   : translatedType + "s selected",
-                few   : translatedType + "s selected",
-                other : translatedType + "s selected"
+                value: selection.count(),
+                one: translatedType + "  selected",
+                two: translatedType + "s selected",
+                few: translatedType + "s selected",
+                other: translatedType + "s selected"
             }
         }
         else {
             plurals = {
-                value : selection.count(),
-                one   : "element selected",
-                two   : "elements selected",
-                few   : "elements selected",
-                other : "elements selected"
+                value: selection.count(),
+                one: "element selected",
+                two: "elements selected",
+                few: "elements selected",
+                other: "elements selected"
             }
         }
 
@@ -187,19 +213,19 @@ export default class Breadcrumbs extends Component<any, any> {
         </div>
     }
 
-    _selectAll(){app.actionManager.invoke('selectAll')}
+    _selectAll() { app.actionManager.invoke('selectAll') }
 
-    _selectNone(){app.actionManager.invoke('clearSelection')}
+    _selectNone() { app.actionManager.invoke('clearSelection') }
 
     render() {
         var renderedBreadcrumbs = null;
 
-        if (this.state.selection){
+        if (this.state.selection) {
             var selectedAmount = this.state.selection.count();
             var lastElementIndex = this.state.elements.length - 1;
 
             if (this.state.elements.length) {
-                renderedBreadcrumbs = this.state.elements.map((e, index)=>
+                renderedBreadcrumbs = this.state.elements.map((e, index) =>
                     this._breadcrumbElement(e, index === lastElementIndex, index)
                 )
             }
@@ -211,9 +237,9 @@ export default class Breadcrumbs extends Component<any, any> {
         return (<div className="breadcrumbs">
             {renderedBreadcrumbs}
             <div className="breadcrumbs__actions">
-                <div className={"breadcrumbs__action"} title="Select all" onClick={this._selectAll}><i className="ico-select-all"/></div>
-                { selectedAmount > 0 &&
-                    <div className={"breadcrumbs__action"} title="Deselect" onClick={this._selectNone}><i className="ico-select-none"/></div> }
+                <div className={"breadcrumbs__action"} title="Select all" onClick={this._selectAll}><i className="ico-select-all" /></div>
+                {selectedAmount > 0 &&
+                    <div className={"breadcrumbs__action"} title="Deselect" onClick={this._selectNone}><i className="ico-select-none" /></div>}
                 {//fixme - translate titles
                     /*<div className="breadcrumbs__action"><i className="ico-select-all"/>Isolate</div> */}
             </div>

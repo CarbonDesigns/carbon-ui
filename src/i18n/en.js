@@ -87,6 +87,9 @@ export default
         "@tool.ellipse": "Ellipse tool", //
         "@tool.pencil": "Pencil tool", //
         "@tool.handRelease": "Hand tool release", //
+        "@repeater": "Repeater", //
+        "@repeater.showOthers": "Show in other cells", //
+        "@repeater.hideOthers": "Hide in other cells", //
         "@repeater.group": "Repeate grid", //
         "@repeater.ungroup": "Ungroup grid", //
         "@tool.pen": "Pen tool", //

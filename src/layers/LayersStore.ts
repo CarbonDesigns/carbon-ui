@@ -2,7 +2,7 @@ import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import LayersActions, { LayerAction } from "./LayersActions";
-import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerTypes, IUIElement, IRepeatContainer } from "carbon-core";
+import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerTypes, IUIElement, IRepeatContainer, RepeatCell } from "carbon-core";
 import { iconType } from "../utils/appUtils";
 
 type IdMap = { [id: string]: boolean };
@@ -82,9 +82,9 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         }
 
         if (element.t === Types.RepeatContainer && element.children.length && expandedMap[node.id]) {
-            let cell = element.children[0];
+            let cell = (element as IRepeatContainer).activeCell();
             for (let i = cell.children.length - 1; i >= 0; --i) {
-                let r = this.addLayerToList(layers, expandedMap, cell.children[i], indent + 1, true, n => {
+                this.addLayerToList(layers, expandedMap, cell.children[i], indent + 1, true, n => {
                     n.repeater = element;
                 });
             }
@@ -115,11 +115,6 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             }
             if (callback(layer) === false) {
                 return false;
-            }
-            if (layer.childLayers) {
-                if (this._visitLayers(layer.childLayers, callback) === false) {
-                    return false;
-                }
             }
         }
     }
@@ -193,8 +188,8 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         selection.each(item => {
             let element = item;
             let repeater = RepeatContainer.tryFindRepeaterParent(element);
-            if (repeater) {
-                element = repeater.findMasterCounterpart(element);
+            if (repeater && this.state.layers.findIndex(x => x && x.element === element) === -1) {
+                needsRefresh = true;
             }
             selected[element.id()] = true;
 

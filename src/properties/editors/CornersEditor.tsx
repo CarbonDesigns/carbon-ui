@@ -18,14 +18,12 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
     constructor(props){
         super(props);
         var value = this.props.p.get('value');
-        this.state = {
-            value : value
-        };
     }
 
     _setValue (key, val) {
         var current;
-        if(this.state.value.locked && key === 'upperLeft') {
+        var value = this.props.p.get('value');
+        if(value.locked && key === 'upperLeft') {
             current = QuadAndLock.createFromObject({
                 locked:true,
                 upperLeft:val,
@@ -34,9 +32,9 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
                 bottomRight:val
             });
         } else {
-            current = QuadAndLock.extend(this.state.value, {[key]: val});
+            current = QuadAndLock.extend(value, {[key]: val});
         }
-        this.setState({value: current});
+        // this.setState({value: current});
         this.setValueByCommand(current);
     };
 
@@ -65,13 +63,14 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
     }
 
     _linkOnClick = (ev)=>{
-        this._setValue('locked', !this.state.value.locked);
+        var value = this.props.p.get('value');
+        this._setValue('locked', !value.locked);
     };
 
     render(){
         var classes = this.prop_cn(null, this.widthClass(this.props.className || "prop_width-1-2"));
 
-        var value = this.state.value;
+        var value = this.props.p.get('value');
         var locked = value.locked;
 
         return <div className={classes}>

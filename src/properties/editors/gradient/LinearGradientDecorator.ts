@@ -119,7 +119,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         return newY;
     }
 
-    mousemove(event: IMouseEventData, keys: KeyboardState) {
+    mousemove(event: IMouseEventData) {
         if (this._movePoint !== null) {
             let g = this._gradient;
             let pos = this.element.globalViewMatrixInverted().transformPoint(event);
@@ -133,11 +133,11 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
             if (this._movePoint === 0) {
                 let newX = g.x1 * box.width - dx;
                 let newY = g.y1 * box.height - dy;
-                if (event.event.shiftKey) {
+                if (event.shiftKey) {
                     let p = AngleAdjuster.adjust({ x: g.x2 * box.width, y: g.y2 * box.height }, { x: newX, y: newY });
                     newX = p.x;
                     newY = p.y;
-                } else if (!event.event.ctrlKey) {
+                } else if (!event.ctrlKey) {
                     newX = this._snapToBorderX(newX, { x: 0, y: 0, width: box.width }, scale);
                     newY = this._snapToBorderX(newY, { x: 0, y: 0, width: box.width }, scale);
                 }
@@ -148,11 +148,11 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
                 let newX = g.x2 * box.width - dx;
                 let newY = g.y2 * box.height - dy;
 
-                if (event.event.shiftKey) {
+                if (event.shiftKey) {
                     let p = AngleAdjuster.adjust({ x: g.x1 * box.width, y: g.y1 * box.height }, { x: newX, y: newY });
                     newX = p.x;
                     newY = p.y;
-                } else if (!event.event.ctrlKey) {
+                } else if (!event.ctrlKey) {
                     newX = this._snapToBorderX(newX, { x: 0, y: 0, width: box.width }, scale);
                     newY = this._snapToBorderX(newY, { x: 0, y: 0, width: box.width }, scale);
                 }
@@ -184,7 +184,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         }
     }
 
-    mouseup(event: IMouseEventData, keys: KeyboardState) {
+    mouseup(event: IMouseEventData) {
         if (this._movePoint !== null) {
             this._movePoint = null;
             if (this._lastGradient) {
@@ -195,7 +195,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         }
     }
 
-    mousedown(event: IMouseEventData, keys: KeyboardState) {
+    mousedown(event: IMouseEventData) {
         var brush = this.element.props.fill;
         if (brush.type !== BrushType.lineargradient) {
             return;

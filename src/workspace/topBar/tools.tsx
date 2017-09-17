@@ -1,11 +1,11 @@
 import React from 'react';
 import cx from 'classnames';
-import {app, domUtil, Selection, ViewTool} from "carbon-core";
+import { app, domUtil, Selection, WorkspaceTool } from "carbon-core";
 import AppStore from "../../AppStore";
 import AppActions from "../../RichAppActions";
-import {listenTo, Component, ComponentWithImmutableState, dispatch} from "../../CarbonFlux";
+import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../../CarbonFlux";
 import HotKeyListener from "../../HotkeyListener";
-import {Record} from "immutable";
+import { Record } from "immutable";
 import bem from '../../utils/commonUtils';
 
 function _preventDefault(event) {
@@ -17,14 +17,14 @@ function _preventDefault(event) {
 class ToolButton extends Component<any, any> {
     constructor(props) {
         super(props);
-        this.state = {hover: false};
+        this.state = { hover: false };
     }
 
     render() {
-        var {active, type, ...rest} = this.props;
+        var { active, type, ...rest } = this.props;
         var mods = {
             // hover  : this.state.hover,
-            active : active
+            active: active
         };
         mods[type] = true;
         var className = bem("tool-button", null, mods);
@@ -32,9 +32,9 @@ class ToolButton extends Component<any, any> {
             <div
                 {...rest}
                 className={className}
-                onMouseEnter={()=>this.setState({hover: true})}
-                onMouseLeave={()=>this.setState({hover: false})}
-            ><i className={"ico-tool_"+type} /></div>
+                onMouseEnter={() => this.setState({ hover: true })}
+                onMouseLeave={() => this.setState({ hover: false })}
+            ><i className={"ico-tool_" + type} /></div>
         )
     }
 }
@@ -47,16 +47,20 @@ var State = Record({
     loaded: false
 });
 
+type ToolDefinition = { type: "single", tool: WorkspaceTool } | { type: "group", name: string, children: { tool: WorkspaceTool }[] };
+type ToolMetadata = { edit: ToolDefinition[], prototype: ToolDefinition[], preview: ToolDefinition[] };
+
 export default class Tools extends ComponentWithImmutableState<any, any> {
     [name: string]: any;
     constructor(props) {
         super(props);
         this.state = {
-            data:new State({
+            data: new State({
                 loaded: false,
                 activeTool: AppStore.state.activeTool,
                 activeMode: AppStore.state.activeMode
-        })};
+            })
+        };
     }
 
     shouldComponentUpdate(nextState, nextProps) {
@@ -65,53 +69,57 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
 
     @listenTo(AppStore)
     onChange() {
-        this.mergeStateData({activeTool: AppStore.state.activeTool, loaded: AppStore.state.loaded});
+        this.mergeStateData({ activeTool: AppStore.state.activeTool, loaded: AppStore.state.loaded });
 
         if (this.state.data.activeMode !== AppStore.state.activeMode) {
-            this.mergeStateData({changingActiveMode: true});
+            this.mergeStateData({ changingActiveMode: true });
 
             //domUtil.onCssTransitionEnd(this.refs.tools, ()=> {
-                // this.setState({activeMode: AppStore.state.activeMode, changingActiveMode:false});
+            // this.setState({activeMode: AppStore.state.activeMode, changingActiveMode:false});
             //}, 500)
         }
     }
 
-    toolsMetadata = {
+    toolsMetadata: ToolMetadata = {
         edit: [
             {
-                type: "group-select",
+                type: "group",
+                name: "group-select",
                 children: [
                     {
-                        type: ViewTool.Pointer
+                        tool: "pointerTool"
                     },
                     {
-                        type: ViewTool.PointerDirect
+                        tool: "pointerDirectTool"
                     }
                 ]
             },
             {
-                type: ViewTool.Text
+                type: "single",
+                tool: "textTool"
             },
             {
-                type: ViewTool.Image
+                type: "single",
+                tool: "imageTool"
             },
             {
-                type: "group-shapes",
+                type: "group",
+                name: "group-shapes",
                 children: [
                     {
-                        type: ViewTool.Rectangle
+                        tool: "rectangleTool"
                     },
                     {
-                        type: ViewTool.Circle
+                        tool: "circleTool"
                     },
                     {
-                        type: ViewTool.Triangle
+                        tool: "triangleTool"
                     },
                     {
-                        type: ViewTool.Polygon
+                        tool: "polygonTool"
                     },
                     {
-                        type: ViewTool.Star
+                        tool: "starTool"
                     }
 
                     //      {this._renderButton("tool-button_circle")}
@@ -121,13 +129,14 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 ]
             },
             {
-                type: 'group-drawing',
+                type: "group",
+                name: 'group-drawing',
                 children: [
                     {
-                        type: ViewTool.Pencil
+                        tool: "pencilTool"
                     },
                     {
-                        type: ViewTool.Line
+                        tool: "lineTool"
                     },
                     // {this._renderButton("tool-button_pencil")}
                     //       {this._renderButton("tool-button_line")}
@@ -135,16 +144,19 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 ]
             },
             {
-                type: ViewTool.Path
+                type: "single",
+                tool: "pathTool"
             },
             {
-                type: ViewTool.Hand
+                type: "single",
+                tool: "handTool"
             },
             {
-                type:'group-artboard',
+                type: "group",
+                name: 'group-artboard',
                 children: [
-                    {type: ViewTool.Artboard},
-                    {type: ViewTool.ArtboardViewer}
+                    { tool: "artboardTool" },
+                    { tool: "artboardViewerTool" }
                 ]
             },
             // {
@@ -162,10 +174,12 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         ],
         prototype: [
             {
-                type: ViewTool.Proto
+                type: "single",
+                tool: "protoTool"
             },
             {
-                type: ViewTool.Artboard
+                type: "single",
+                tool: "artboardTool"
             }
         ],
         preview: []
@@ -173,40 +187,40 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
 
     _clickButton(event, action, group) {
         app.actionManager.invoke(action);
-        this.mergeStateData({activeGroup:null});
+        this.mergeStateData({ activeGroup: null });
 
         event.preventDefault();
     }
 
-    _onBlur = ()=> {
-        this.mergeStateData({activeGroup:null});
+    _onBlur = () => {
+        this.mergeStateData({ activeGroup: null });
     };
 
     _onMouseUp(event, action, group) {
         if (group) {
             app.actionManager.invoke(action);
-            this.mergeStateData({activeGroup:null});
+            this.mergeStateData({ activeGroup: null });
             event.preventDefault();
             event.stopPropagation();
         }
-         if(this._groupTimer){
+        if (this._groupTimer) {
             clearTimeout(this._groupTimer);
         }
 
         this.mergeStateData({ activeGroup: null });
     }
 
-    _onMouseDownGroup(event, type, group, delay_before_tool_show=200) {
+    _onMouseDownGroup(event, type, group, delay_before_tool_show = 200) {
         app.actionManager.invoke(type);
-        this.mergeStateData({activeGroup:null});
+        this.mergeStateData({ activeGroup: null });
         // event.preventDefault();
 
-        if(this._groupTimer){
+        if (this._groupTimer) {
             clearTimeout(this._groupTimer);
         }
 
-        this._groupTimer = setTimeout(()=> {
-            this.mergeStateData({activeGroup:group});
+        this._groupTimer = setTimeout(() => {
+            this.mergeStateData({ activeGroup: group });
         }, delay_before_tool_show);
 
         return _preventDefault(event);
@@ -223,17 +237,18 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     }
 
 
-    _findActiveGroup(type) {
-        var metadata = this.toolsMetadata[this.state.data.activeMode];
+    _findActiveGroup(tool: WorkspaceTool) {
+        var metadata = this.toolsMetadata[this.state.data.activeMode] as ToolDefinition[];
         for (var i = 0; i < metadata.length; i++) {
             var m = metadata[i];
-            if (m.type === type) {
+            if (m.type === "single" && m.tool === tool) {
                 return null;
-            } else if (m.children) {
+            }
+            else if (m.type === "group") {
                 for (var j = 0; j < m.children.length; j++) {
                     var mc = m.children[j];
-                    if (mc.type === type) {
-                        return m.type;
+                    if (mc.tool === tool) {
+                        return m.name;
                     }
                 }
             }
@@ -243,38 +258,38 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     }
 
 
-    _renderButton(type, active, group, is_group=false) {
+    _renderButton(type, active, group, is_group = false) {
         if (!app.actionManager.hasAction(type)) {
             throw "Unknown action " + type;
         }
 
-        var {formatMessage} = this.context.intl;
-        var fullDescription = app.actionManager.getActionFullDescription(type, (m)=>formatMessage({id: m}));
+        var { formatMessage } = this.context.intl;
+        var fullDescription = app.actionManager.getActionFullDescription(type, (m) => formatMessage({ id: m }));
 
         var mouseDown, click, mouseUp;
         if (is_group) {
-            mouseUp   = (e)=>{this._onMouseUpGroup(e, type, group)} ;
-            mouseDown = (e)=>{this._onMouseDownGroup(e, type, group)} ;
+            mouseUp = (e) => { this._onMouseUpGroup(e, type, group) };
+            mouseDown = (e) => { this._onMouseDownGroup(e, type, group) };
         }
         else {
-            mouseUp   = (e)=>{this._onMouseUp(e, type, group)};
+            mouseUp = (e) => { this._onMouseUp(e, type, group) };
             mouseDown = _preventDefault;
-            click     = (e)=>{this._clickButton(e, type, group)};
+            click = (e) => { this._clickButton(e, type, group) };
         }
         return (
             <ToolButton
-                 tabIndex={this._tabIndex++}
-                 key={type}
-                 type={type}
-                 active={active}
-                 title={fullDescription}
-                 onBlur={this._onBlur}
-                 onMouseUp={mouseUp}
-                 onMouseDown={mouseDown}
-                 onClick={click}
-                 // onMouseUp={(e)=>{this._onMouseUp(e, type, group)}}
-                 // onMouseDown={_preventDefault}
-                 // onClick={(e)=>{this._clickButton(e, type, group)}}
+                tabIndex={this._tabIndex++}
+                key={type}
+                type={type}
+                active={active}
+                title={fullDescription}
+                onBlur={this._onBlur}
+                onMouseUp={mouseUp}
+                onMouseDown={mouseDown}
+                onClick={click}
+            // onMouseUp={(e)=>{this._onMouseUp(e, type, group)}}
+            // onMouseDown={_preventDefault}
+            // onClick={(e)=>{this._clickButton(e, type, group)}}
             />
         )
     }
@@ -286,8 +301,8 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
 
         return (
             <div className="tool__more"
-                onMouseDown={(e)=>{this._onMouseDownGroup(e, type, group, 10)}}
-                onMouseUp={(e)=>{this._onMouseUpGroup(e, type, group)}}
+                onMouseDown={(e) => { this._onMouseDownGroup(e, type, group, 10) }}
+                onMouseUp={(e) => { this._onMouseUpGroup(e, type, group) }}
             ><i /></div>
         )
     }
@@ -315,45 +330,45 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     //     )
     // }
 
-    _renderToolButtonGroup(item) {
-        var className = cx("tool-button-group", {_activeGroup: item.type === this.state.data.activeGroup});
+    _renderToolButtonGroup = (item: ToolDefinition) => {
+        var className = cx("tool-button-group", { _activeGroup: item.type === "group" && item.name === this.state.data.activeGroup });
         var activeTool = this.state.data.activeTool;
 
-        if (item.hasOwnProperty('children')) {
-            var activeButton = this.state[item.type] || item.children[0].type;
+        if (item.type === "group") {
+            var activeButton = this.state[item.name] || item.children[0].tool;
             return (
-                <div className={className} data-group={item.type} key={item.type}>
+                <div className={className} data-group={item.name} key={item.name}>
                     {
                         // this._renderGroupButton(activeButton, activeTool === activeButton, item.type)
-                        this._renderButton(activeButton, activeTool === activeButton, item.type, true)
+                        this._renderButton(activeButton, activeTool === activeButton, item.name, true)
                     }
                     {
-                        this._renderMore(activeButton, item.type)
+                        this._renderMore(activeButton, item.name)
                     }
                     <div className="tool__subtools">
-                        {item.children.map((b)=>
-                            this._renderButton(b.type, activeTool === b.type, item.type)
+                        {item.children.map((b) =>
+                            this._renderButton(b.tool, activeTool === b.tool, item.name)
                         )}
                     </div>
                 </div>
             );
         }
         else {
-            return this._renderButton(item.type, activeTool === item.type, null);
+            return this._renderButton(item.tool, activeTool === item.tool, null);
         }
     }
 
-    _onMouseDownOnBody = (event)=> {
+    _onMouseDownOnBody = (event) => {
         var className = event.target.className;
 
-        if(this.state.data.activeGroup && className.indexOf('ico-tool_') == -1 && className.indexOf('tool-button') == -1 ){
-            this.mergeStateData({activeGroup:null});
+        if (this.state.data.activeGroup && className.indexOf('ico-tool_') == -1 && className.indexOf('tool-button') == -1) {
+            this.mergeStateData({ activeGroup: null });
             return _preventDefault(event);
         }
     }
 
-    _onSelectionModeChanged(directSelectionEnabled){
-        this.mergeStateData({activeTool: directSelectionEnabled ? ViewTool.PointerDirect : ViewTool.Pointer});
+    _onSelectionModeChanged(directSelectionEnabled) {
+        this.mergeStateData({ activeTool: (directSelectionEnabled ? "pointerTool" : "pointerDirectTool") as WorkspaceTool });
     }
 
     componentDidMount() {
@@ -371,7 +386,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     }
 
     render() {
-        if (!this.state.data.loaded){
+        if (!this.state.data.loaded) {
             return null;
         }
 
@@ -382,11 +397,11 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
             this.state[activeGroup] = activeTool;
         }
 
-        var classNames = cx(this.state.data.activeMode, {"changing-mode": this.state.data.changingActiveMode});
+        var classNames = cx(this.state.data.activeMode, { "changing-mode": this.state.data.changingActiveMode });
 
         return (
             <div id="tools" key="tools" ref="tools" className={classNames}>
-                {this.toolsMetadata[this.state.data.activeMode].map(this._renderToolButtonGroup.bind(this))}
+                {this.toolsMetadata[this.state.data.activeMode].map(this._renderToolButtonGroup)}
             </div>
         );
     }

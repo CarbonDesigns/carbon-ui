@@ -188,7 +188,7 @@ export default class ImageDrop {
                 }
             },
             drop: function (e: DragEvent) {
-                app.resetCurrentTool();
+                Environment.controller.resetCurrentTool();
                 Selection.makeSelection(Selection.previousElements);
 
                 var images = [];

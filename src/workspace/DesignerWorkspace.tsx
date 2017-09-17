@@ -15,7 +15,7 @@ import ImageDrop from "./ImageDrop";
 
 import {richApp} from "../RichApp";
 import {listenTo, Component, ComponentWithImmutableState} from "../CarbonFlux";
-import {Clipboard, ViewTool} from "carbon-core";
+import {Clipboard} from "carbon-core";
 import {Record} from "immutable";
 import cx from 'classnames';
 import AnimationSettings from "../animation/AnimationSetting";
@@ -103,7 +103,7 @@ class Workspace extends ComponentWithImmutableState<any, any> {
     render() {
         var status_text = 'saved2';
         return (
-            <div id="viewport" ref="viewport" key="viewport" name="viewport" className={cx({'viewport_artboard-mode':this.state.data.activeTool === ViewTool.Artboard})}>
+            <div id="viewport" ref="viewport" key="viewport" name="viewport" className={cx({'viewport_artboard-mode':this.state.data.activeTool === "artboardTool"})}>
                 {/* canvases and view container will be inserted here */}
 
                 <div id="workspace-top-edge" className="rulers">

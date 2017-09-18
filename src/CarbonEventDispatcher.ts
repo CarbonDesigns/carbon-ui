@@ -47,9 +47,6 @@ export function registerEvents() {
     app.modeChanged.bindAsync(mode => {
         dispatch((CarbonActions.modeChanged(mode)));
     });
-    app.currentToolChanged.bindAsync((tool) => {
-        dispatch(CarbonActions.toolChanged(tool));
-    });
     app.settingsChanged.bindAsync(settings => {
         dispatchAction({ type: "Carbon_AppSettingsChanged", settings });
     });
@@ -75,6 +72,11 @@ export function registerEvents() {
 
         let token = controller.onArtboardChanged.bindAsync((newArtboard, oldArtboard) =>
             dispatch(CarbonActions.activeArtboardChanged(oldArtboard, newArtboard)));
+        workspaceTokens.push(token);
+
+        token = controller.currentToolChanged.bindAsync((tool) => {
+            dispatch(CarbonActions.toolChanged(tool));
+        });
         workspaceTokens.push(token);
 
         if (view.scaleChanged) {

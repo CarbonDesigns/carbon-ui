@@ -5,7 +5,8 @@ import DropzoneRegistry from "./DropzoneRegistry";
 import { } from "carbon-model";
 import {
     IUIElement, KeyboardState, createUUID, IDropElementData, RepeatContainer, IImage,
-    app, backend, Environment, Selection, SvgParser, Matrix, Image, OriginType, IDisposable
+    app, backend, Environment, Selection, SvgParser, Matrix, Image, OriginType, IDisposable,
+    IContainer
 } from "carbon-core";
 
 var hiddenInput = document.createElement("div");
@@ -81,7 +82,7 @@ function tryInsertIntoRepeater(e: MouseEvent, images: IImage[]): boolean {
     }
 
     var eventData = Environment.controller.createEventData(e);
-    var parent = Environment.controller.getCurrentDropTarget(eventData, eventData);
+    var parent = Environment.controller.getCurrentDropTarget(eventData);
     var repeater = RepeatContainer.tryFindRepeaterParent(parent);
     if (!repeater) {
         return false;
@@ -95,7 +96,7 @@ function tryInsertIntoRepeater(e: MouseEvent, images: IImage[]): boolean {
     //image is dragged by its center, think how to do this better
     eventData.x -= Image.NewImageSize / 2;
     eventData.y -= Image.NewImageSize / 2;
-    repeater.addDroppedElements(parent, images, eventData);
+    repeater.addDroppedElements(parent as IContainer, images, eventData);
     return true;
 }
 
@@ -174,13 +175,8 @@ export default class ImageDrop {
                 Environment.controller.beginDragElement(e, dragImage, dropPromise);
             },
             dragover: function (e: MouseEvent) {
-                //window is not focused, so keyboard state is not tracked
-                keyboardState.ctrlKey = e.ctrlKey || e.metaKey;
-                keyboardState.shiftKey = e.shiftKey;
-                keyboardState.altKey = e.altKey;
-
                 var eventData = Environment.controller.createEventData(e);
-                Environment.controller.onmousemove(eventData, keyboardState);
+                Environment.controller.onmousemove(eventData);
 
                 // hack to get coordinates
                 dragPosition = (Environment.controller as any)._draggingElement.position();
@@ -192,7 +188,7 @@ export default class ImageDrop {
                 }
             },
             drop: function (e: DragEvent) {
-                app.resetCurrentTool();
+                Environment.controller.resetCurrentTool();
                 Selection.makeSelection(Selection.previousElements);
 
                 var images = [];
@@ -233,7 +229,7 @@ export default class ImageDrop {
                 keyboardState.shiftKey = e.shiftKey;
                 keyboardState.altKey = e.altKey;
 
-                dropHandler.resolveDropped({ e: e, keys: keyboardState, elements: images });
+                dropHandler.resolveDropped({ e: e, elements: images });
 
                 dropHandler.resolveDropped = null;
             }

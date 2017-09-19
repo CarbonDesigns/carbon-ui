@@ -45,7 +45,7 @@ export default class BrushEditor extends EditorComponent<Brush> {
                     brush={this.propertyValue()}
                     hasGradient={showGradient}
                     onSelected={this.setValueByCommand}
-                    onPreview={this.previewValue.bind(this)}
+                    onPreview={this.previewValueImmediate.bind(this)}
                     onCancelled={this.revertChanges}
                 />
             </FlyoutButton>

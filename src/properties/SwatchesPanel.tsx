@@ -164,10 +164,10 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         var brush = colorToBrush(color);
 
 
-        if (this.state.active === 'fill') {
+        if (!preview && this.state.active === 'fill') {
             app.defaultFill(brush);
         }
-        else if (this.state.active === 'stroke') {
+        else if (!preview && this.state.active === 'stroke' ) {
             app.defaultStroke(brush);
         }
 

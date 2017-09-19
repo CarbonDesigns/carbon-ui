@@ -89,6 +89,9 @@ interface IPanelContainerProps extends IReactElementProps {
 }
 
 function dockToString(dock: LayoutDockPosition): string {
+    if (!dock) {
+        return 'fill';
+    }
     switch (dock) {
         case LayoutDockPosition.Left:
             return 'left';

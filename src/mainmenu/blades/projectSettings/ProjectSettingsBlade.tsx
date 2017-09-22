@@ -12,6 +12,7 @@ import Dropdown from "../../../shared/Dropdown";
 import bem from '../../../utils/commonUtils';
 import appStore from "../../../AppStore";
 import { ProjectAvatarSize } from "../../../Constants";
+import BladeContainer from "../BladeContainer";
 
 type ProjectSettingsBladeState = {
     avatarUrl: string;
@@ -20,6 +21,9 @@ type ProjectSettingsBladeState = {
 export default class ProjectSettingsBlade extends Component<{}, ProjectSettingsBladeState> {
     refs: {
         name: GuiInput;
+    }
+    context: {
+        bladeContainer: BladeContainer
     }
 
     constructor(props) {

@@ -1,5 +1,5 @@
 import React from "react";
-import {app} from "carbon-core";
+import { app, workspace } from "carbon-core";
 import classNames from 'classnames';
 import {FormattedMessage} from "react-intl";
 
@@ -34,7 +34,7 @@ export default class DropButtonItem extends React.Component<IDropButtonItemProps
     render(){
         var labelId = this.props.labelId;
         if (this.props.action){
-            labelId = app.actionManager.getActionDescription(this.props.action);
+            labelId = this.props.action;
         }
         if (!labelId){
             labelId = "empty.label";
@@ -43,7 +43,6 @@ export default class DropButtonItem extends React.Component<IDropButtonItemProps
             <p className="dropdown__item" id={this.props.id} onMouseDown={this._stopPropagation} onClick={this._action}>
                 {this._renderIcon()}
                 <span className="text pill-cap"><FormattedMessage id={labelId}/></span>
-                <span className="shortcut">{this.props.action ? app.shortcutManager.getActionHotkeyDisplayLabel(this.props.action) : ""}</span>
             </p>
         )
     }

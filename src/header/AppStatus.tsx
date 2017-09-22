@@ -38,6 +38,7 @@ export default class AppStatus extends Component<AppStatusProps, AppStatusState>
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         this.tokens.forEach(x => x.dispose());
         this.tokens.length = 0;
     }

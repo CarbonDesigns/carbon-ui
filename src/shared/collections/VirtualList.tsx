@@ -38,6 +38,7 @@ export default class VirtualList<T = any> extends Component<VirtualListProps<T>>
     }
 
     componentWillUnmount(){
+        super.componentWillUnmount();
         this.scroller.destroy();
     }
 

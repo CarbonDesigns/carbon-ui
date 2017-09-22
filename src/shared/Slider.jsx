@@ -55,6 +55,7 @@ export default class Slider extends React.Component{
     }
 
     componentWillUnmount(){
+        super.componentWillUnmount();
         delete this._handle;
         delete this._slider;
     }

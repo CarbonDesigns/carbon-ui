@@ -92,12 +92,6 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
         }
     }
 
-    onKeyDown = (e) => {
-        if (e.keyCode === 27) {
-            this.close();
-        }
-    }
-
     onMouseDown = (e) => {
         e.stopPropagation();
     }
@@ -158,7 +152,6 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
                 onClick={this.onClick}
                 onDoubleClick={this.onDblClick}
                 onMouseDown={this.onMouseDown}
-                onKeyDown={this.onKeyDown}
                 tabIndex={0}
             >
                 {this.renderContent()}

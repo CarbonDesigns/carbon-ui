@@ -70,6 +70,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps, La
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         window.removeEventListener("scroll", this.onScroll)
     }
 

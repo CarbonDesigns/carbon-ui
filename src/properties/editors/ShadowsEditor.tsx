@@ -15,8 +15,8 @@ interface IShadowEditorProps extends IEditorProps{
     items: any[];
 }
 
-export default class ShadowsEditor extends EditorComponent<Shadow, IShadowEditorProps, IShadowEditorState> {
-    private _lastShadow: Shadow;
+export default class ShadowsEditor extends EditorComponent<Shadow[], IShadowEditorProps, IShadowEditorState> {
+    private initialShadows: Shadow[];
 
     constructor(props) {
         super(props);
@@ -31,15 +31,14 @@ export default class ShadowsEditor extends EditorComponent<Shadow, IShadowEditor
 
         return (<div className={classes} style={{height: "auto"}}>
             <div className={ this.b('editor') }>
-                <ShadowsList items={items} onPreview={this.onPreview} onConfirmed={this.onConfirmed}
+                <ShadowsList items={items} onOpened={this.onOpenedExisting} onPreview={this.onPreview} onConfirmed={this.onConfirmed}
                              onCancelled={this.onCancelled} onEnableChanged={this.onEnableChanged}
                              onDeleted={this.onDeleted}/>
 
                 <FlyoutButton
                     renderContent={ShadowsEditor.renderSelectedValue}
                     position={ShadowsEditor.FlyoutPosition}
-                    onOpened={this.onOpened}
-                    onClosed={this.onClosed}
+                    onOpened={this.onOpenedNew}
                     ref="add">
                     <ShadowPopup
                         className="flyout__content"
@@ -57,23 +56,20 @@ export default class ShadowsEditor extends EditorComponent<Shadow, IShadowEditor
         return <AddButton caption="@addshadow" />;
     };
 
-    onOpened = () => {
+    onOpenedNew = () => {
+        this.saveInitialShadows();
+
         var newShadow = Object.assign({id: createUUID()}, Shadow.Default);
         this.patchValueByCommand(PatchType.Insert, this.state.newShadow, true);
         this.setState({newShadow: newShadow});
-        this._lastShadow = null;
-    };
-
-    onClosed = ()=> {
-        if (this._lastShadow) {
-            this.patchValueByCommand(PatchType.Change, this._lastShadow, true);
-        }
     }
 
+    onOpenedExisting = () => {
+        this.saveInitialShadows();
+    }
 
     onPreview = (shadow)=> {
         this.previewPatchValue(PatchType.Change, shadow);
-        this._lastShadow = shadow;
     }
 
     onEnableChanged = (shadow) => {
@@ -84,11 +80,16 @@ export default class ShadowsEditor extends EditorComponent<Shadow, IShadowEditor
         this.patchValueByCommand(PatchType.Change, shadow, true);
     };
     onCancelled = () => {
-        this.cancelEdit();
-        this._lastShadow = null;
+        if (this.initialShadows) {
+            this.setValueByCommand(this.initialShadows);
+        }
     };
 
     onDeleted = (shadowItem) => {
         this.patchValueByCommand(PatchType.Remove, shadowItem.shadow, true);
+    }
+
+    private saveInitialShadows() {
+        this.initialShadows = this.propertyValue().slice();
     }
 }

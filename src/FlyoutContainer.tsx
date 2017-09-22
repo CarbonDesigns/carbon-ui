@@ -3,6 +3,7 @@ import { Component, listenTo, dispatch } from "./CarbonFlux";
 import { nodeOffset, ensureElementVisible } from "./utils/domUtil";
 import FlyoutActions from './FlyoutActions';
 import flyoutStore from "./FlyoutStore";
+import { cancellationStack, ICancellationHandler } from "./shared/ComponentStack";
 
 // TODO: define propert interfaces
 class FlyoutHost extends Component<any, any> {
@@ -49,7 +50,6 @@ interface IFlyoutContainerState {
     target?: any;
     position?: any;
     children?: any;
-    targetNode?: any;
 }
 
 interface IOffset {
@@ -61,7 +61,7 @@ interface IOffset {
     right?: any;
 }
 
-export default class FlyoutContainer extends Component<IFlyoutContainerProps, IFlyoutContainerState> {
+export default class FlyoutContainer extends Component<IFlyoutContainerProps, IFlyoutContainerState> implements ICancellationHandler {
     constructor(props) {
         super(props);
         this.state = {};
@@ -70,8 +70,20 @@ export default class FlyoutContainer extends Component<IFlyoutContainerProps, IF
     @listenTo(flyoutStore)
     onChange() {
         var state = flyoutStore.state;
+
+        if (state.target && !this.state.target) {
+            cancellationStack.push(this);
+        }
+        else if (!state.target && this.state.target) {
+            cancellationStack.pop();
+        }
+
         state = Object.assign({}, state, { targetNode: state.target });
         this.setState(state);
+    }
+
+    onCancel() {
+        dispatch(FlyoutActions.hide());
     }
 
     onAppMouseDown = e => {
@@ -118,14 +130,14 @@ export default class FlyoutContainer extends Component<IFlyoutContainerProps, IF
                 targetWidth = 0;
                 break;
 
-            case !(this.state.targetNode):
+            case !(this.state.target):
                 var documentHeight = document.documentElement.clientHeight;
                 var documentWidth = document.documentElement.clientWidth;
 
 
-                _offset = nodeOffset(this.state.targetNode);
-                targetHeight = this.state.targetNode.offsetHeight;
-                targetWidth = this.state.targetNode.offsetWidth;
+                _offset = nodeOffset(this.state.target);
+                targetHeight = this.state.target.offsetHeight;
+                targetWidth = this.state.target.offsetWidth;
 
                 if (position.targetVertical === 'top') {
                     style.bottom = documentHeight - _offset.top;

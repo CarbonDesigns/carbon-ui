@@ -1,7 +1,22 @@
 import React from "react";
 import { Component, dispatchAction } from "../CarbonFlux";
+import { cancellationStack, ICancellationHandler } from "../shared/ComponentStack";
 
-export default class Dialog<P = {}, S = {}> extends Component<P, S>{
+export default class Dialog<P = {}, S = {}> extends Component<P, S> implements ICancellationHandler {
+    componentDidMount() {
+        super.componentDidMount();
+        cancellationStack.push(this);
+    }
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        cancellationStack.pop();
+    }
+
+    onCancel() {
+        if (this.canClose()) {
+            this.close();
+        }
+    }
 
     renderHeader() {
         return <p>Dialog header</p>
@@ -16,7 +31,7 @@ export default class Dialog<P = {}, S = {}> extends Component<P, S>{
     }
 
     close() {
-        dispatchAction({ type: "Dialog_Hide" });
+        dispatchAction({ type: "Dialog_Hide", async: true });
     }
 
     private closeDialog = () => {

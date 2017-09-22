@@ -24,6 +24,7 @@ import RecentProjectsBlade  from './blades/recentProjects/RecentProjectsBlade';
 // import SelectPagesBlade from './blades/selectPages/SelectPagesBlade';
 
 import bem from 'bem';
+import BladeContainer from "./blades/BladeContainer";
 
 function _heading(text) {
     return (<div className="main-menu__heading">
@@ -50,6 +51,10 @@ type MainMenuBladeState = {
 }
 
 export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
+    context: {
+        bladeContainer: BladeContainer
+    }
+
     constructor(props) {
         super(props);
         this.state = {

@@ -311,7 +311,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         window.addEventListener('keypress', this.onKeyPress);
     }
 
-    componentWillUnmound() {
+    componentWillUnmount() {
         super.componentWillUnmount();
         window.removeEventListener('keypress', this.onKeyPress);
     }

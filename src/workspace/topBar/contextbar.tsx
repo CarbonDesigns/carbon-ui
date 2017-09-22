@@ -10,33 +10,36 @@ import { PaneButton } from "../../shared/Pane";
 import { PaneList } from "../../shared/Pane";
 import { PaneListItem } from "../../shared/Pane";
 import CarbonActions from "../../CarbonActions";
-import { app, Selection, Environment, ContextBarPosition } from "carbon-core";
+import { app, Selection, Environment, ContextBarPosition, workspace } from "carbon-core";
 import { handles, Component, CarbonLabel } from "../../CarbonFlux";
 import FlyoutButton from "../../shared/FlyoutButton";
 
 
 export class ContextButton extends React.Component<any, any> {
     render() {
-        var caption;
-        var icon;
+        var renderedCaption;
+        var renderedIcon;
 
         if (this.props.icon) {
             switch (this.props.icon) {
                 case 'dots':
-                    icon = (<i className="contextbar__icon"><Dots /></i>);
+                    renderedIcon = (<i className="contextbar__icon"><Dots /></i>);
                     break;
                 default:
-                    icon = <i className={cx("contextbar__icon", this.props.icon)} />;
+                    renderedIcon = <i className={cx("contextbar__icon", this.props.icon)} />;
             }
         }
         if (this.props.children) {
-            caption = (<span className="contextbar__cap">{this.props.children}</span>);
+            renderedCaption = (<span className="contextbar__cap">{this.props.children}</span>);
         }
 
+        let {children, icon, actionId, ...rest} = this.props;
+        let title = workspace.shortcutManager.getActionHotkey(actionId);
+
         return (
-            <div className="contextbar__button" onClick={this.props.onClick}>
-                {icon}
-                {caption}
+            <div className="contextbar__button" data-action={actionId} title={title} onClick={this.props.onClick}>
+                {renderedIcon}
+                {renderedCaption}
             </div>
         )
     }
@@ -101,9 +104,14 @@ export default class ContextBar extends Component<any, any> {
         this.setState({ items: menu.items, isolationActive: app.isolationActive() });
     }
 
+    private static onClick(e: React.MouseEvent<HTMLElement>) {
+        let actionId = e.currentTarget.dataset.action;
+        app.actionManager.invoke(actionId);
+    }
+
     _renderItem(item) {
         if (!item.items) {
-            return <ContextButton key={item.name} onClick={item.callback} icon={item.icon}><CarbonLabel id={item.name} /></ContextButton>;
+            return <ContextButton key={item.name} onClick={ContextBar.onClick} icon={item.icon} actionId={item.actionId}><CarbonLabel id={item.name} /></ContextButton>;
         }
 
         if (item.items.every(a => a.disabled)) {
@@ -114,7 +122,10 @@ export default class ContextBar extends Component<any, any> {
             return <ContextDropdown key={item.name} icon={item.icon} label={item.name}>
                 <Pane>
                     <PaneList>
-                        {item.items.map(a => <PaneListItem key={item.name + a.name} onClick={a.callback} icon={a.icon} disabled={a.disabled}><CarbonLabel id={a.name} /></PaneListItem>)}
+                        {item.items.map(a => <PaneListItem key={item.name + a.name} onClick={ContextBar.onClick} icon={a.icon} disabled={a.disabled} actionId={a.actionId}>
+                            <CarbonLabel id={a.name} />
+                            <span className="pane-shortcut">{workspace.shortcutManager.getActionHotkey(a.actionId)}</span>
+                        </PaneListItem>)}
                     </PaneList>
                 </Pane>
             </ContextDropdown>
@@ -124,7 +135,7 @@ export default class ContextBar extends Component<any, any> {
         return <ContextDropdown icon={item.icon} label={item.name} key={item.name}>
             <Pane>
                 {item.rows.map((r, i) => {
-                    var rowItems = item.items.filter(a => a.row === i).map(a => <PaneButton key={a.name} onClick={a.callback} icon={a.icon} label={a.name} disabled={a.disabled} />);
+                    var rowItems = item.items.filter(a => a.row === i).map(a => <PaneButton key={a.name} onClick={ContextBar.onClick} icon={a.icon} label={a.name} disabled={a.disabled} actionId={a.actionId} />);
                     if (!rowItems.length) {
                         return null;
                     }
@@ -212,65 +223,65 @@ export default class ContextBar extends Component<any, any> {
     }
 }
 
-export class AltContext extends React.Component<any, any> {
+// export class AltContext extends React.Component<any, any> {
 
-    constructor(props) {
-        super(props);
-        this.state = { secondaryIsOpen: false };
-    }
+//     constructor(props) {
+//         super(props);
+//         this.state = { secondaryIsOpen: false };
+//     }
 
-    _openSecondary = () => {
-        this.setState({ secondaryIsOpen: true });
-    };
+//     _openSecondary = () => {
+//         this.setState({ secondaryIsOpen: true });
+//     };
 
-    _closeSecondary = () => {
-        this.setState({ secondaryIsOpen: false });
-    };
+//     _closeSecondary = () => {
+//         this.setState({ secondaryIsOpen: false });
+//     };
 
-    render() {
+//     render() {
 
-        var cn = cx("altcontext", { "altcontext_secondary-open": this.state.secondaryIsOpen });
-        return <div className={cn}>
-            {/* First (main) page*/}
-            <div className="altcontext__primary" onClick={this._openSecondary}>
-                <Pane>
-                    <PaneList>
-                        <PaneRow>
-                            <PaneButton icon="ico-small-move-upper">Action one</PaneButton>
-                            <PaneButton icon="ico-small-move-lower" />
-                        </PaneRow>
-                        <PaneRow>
-                            <PaneButton icon="ico-small-send-to-foreground" />
-                            <PaneButton icon="ico-small-send-to-background" />
-                        </PaneRow>
-                    </PaneList>
-                </Pane>
-            </div>
+//         var cn = cx("altcontext", { "altcontext_secondary-open": this.state.secondaryIsOpen });
+//         return <div className={cn}>
+//             {/* First (main) page*/}
+//             <div className="altcontext__primary" onClick={this._openSecondary}>
+//                 <Pane>
+//                     <PaneList>
+//                         <PaneRow>
+//                             <PaneButton icon="ico-small-move-upper">Action one</PaneButton>
+//                             <PaneButton icon="ico-small-move-lower" />
+//                         </PaneRow>
+//                         <PaneRow>
+//                             <PaneButton icon="ico-small-send-to-foreground" />
+//                             <PaneButton icon="ico-small-send-to-background" />
+//                         </PaneRow>
+//                     </PaneList>
+//                 </Pane>
+//             </div>
 
-            <div className="altcontext__secondary">
-                <Pane>
-                    <PaneList>
-                        <PaneRow>
-                            <PaneButton icon="ico-small-move-upper">Action one</PaneButton>
-                            <PaneButton icon="ico-small-move-lower" />
-                        </PaneRow>
-                        <PaneRow>
-                            <PaneButton icon="ico-small-send-to-foreground" />
-                            <PaneButton icon="ico-small-send-to-background" />
-                            <PaneButton icon="ico-small-send-to-background" />
-                            <PaneButton icon="ico-small-send-to-background" />
-                        </PaneRow>
-                        <PaneRow>
-                            <PaneButton icon="ico-small-move-upper" />
-                            <PaneButton icon="ico-small-send-to-background" />
-                            <PaneButton icon="ico-small-move-upper" />
-                        </PaneRow>
-                    </PaneList>
-                </Pane>
+//             <div className="altcontext__secondary">
+//                 <Pane>
+//                     <PaneList>
+//                         <PaneRow>
+//                             <PaneButton icon="ico-small-move-upper">Action one</PaneButton>
+//                             <PaneButton icon="ico-small-move-lower" />
+//                         </PaneRow>
+//                         <PaneRow>
+//                             <PaneButton icon="ico-small-send-to-foreground" />
+//                             <PaneButton icon="ico-small-send-to-background" />
+//                             <PaneButton icon="ico-small-send-to-background" />
+//                             <PaneButton icon="ico-small-send-to-background" />
+//                         </PaneRow>
+//                         <PaneRow>
+//                             <PaneButton icon="ico-small-move-upper" />
+//                             <PaneButton icon="ico-small-send-to-background" />
+//                             <PaneButton icon="ico-small-move-upper" />
+//                         </PaneRow>
+//                     </PaneList>
+//                 </Pane>
 
-            </div>
+//             </div>
 
-            <div className="altcontext__secondary-closer" onClick={this._closeSecondary} />
-        </div>
-    }
-}
+//             <div className="altcontext__secondary-closer" onClick={this._closeSecondary} />
+//         </div>
+//     }
+// }

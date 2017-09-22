@@ -4,7 +4,7 @@ import {FormattedMessage} from "react-intl";
 import {GuiCheckbox, GuiButton} from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
 import SimpleList from '../../shared/SimpleList';
-import FlyoutButton from '../../shared/FlyoutButton';
+import FlyoutButton, { FlyoutPosition } from '../../shared/FlyoutButton';
 import ShadowPopup from './ShadowPopup';
 
 function cn(elem = null, mods = null, mix = null) {
@@ -62,7 +62,8 @@ class ShadowFlat extends Component<any, any> {
             </i>
             <FlyoutButton
                 renderContent={()=>null}
-                position={{targetVertical: "bottom", disableAutoClose: true}}
+                position={ShadowFlat.FlyoutPosition}
+                onOpened={this.props.onOpened}
                 ref="modify">
                 <ShadowPopup
                     className="flyout__content"
@@ -74,6 +75,8 @@ class ShadowFlat extends Component<any, any> {
             </FlyoutButton>
         </div>
     }
+
+    private static FlyoutPosition: FlyoutPosition = {targetVertical: "bottom", disableAutoClose: true};
 }
 
 
@@ -86,7 +89,7 @@ export default class ShadowsList extends Component<any, any> {
         var items = this.props.items.map((itemProps)=>{return {
             id: itemProps.id,
             shadow: itemProps,
-            content : <ShadowFlat value={itemProps} onPreview={this.props.onPreview} onConfirmed={this.props.onConfirmed} onCancelled={this.props.onCancelled} onEnableChanged={this.props.onEnableChanged} />
+            content : <ShadowFlat value={itemProps} onOpened={this.props.onOpened} onPreview={this.props.onPreview} onConfirmed={this.props.onConfirmed} onCancelled={this.props.onCancelled} onEnableChanged={this.props.onEnableChanged} />
         }});
 
         var props = {

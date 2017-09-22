@@ -21,12 +21,6 @@ export default class BrushSelector extends Component<any, any> {
         this.props.onSelected(brush);
     };
 
-    onKeyDown = e => {
-        if (e.key === "Escape" && e.target.tagName !== "INPUT"){
-            this.ok();
-        }
-    };
-
     ok = () => {
         dispatch(FlyoutActions.hide());
     };
@@ -41,7 +35,7 @@ export default class BrushSelector extends Component<any, any> {
 
     render(){
         var classes = cx("colorpicker-popup", this.props.className);
-        return <div className={classes} onKeyDown={this.onKeyDown} tabIndex={1}>
+        return <div className={classes} tabIndex={1}>
             <BrushTabs brush={this.props.brush} onSelected={this.selectBrush} hasGradient={this.props.hasGradient} onPreview={this.props.onPreview}/>
             <footer>
                 <div className="swatches__color-input">

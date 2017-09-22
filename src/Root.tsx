@@ -10,10 +10,17 @@ export default class Root extends Component<any, any>{
 
     onMouseDown = e => {
         this.refs.flyout.onAppMouseDown(e);
-    };
+    }
+
+    onKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+        let target = e.target as HTMLElement;
+        if (e.key === "Escape" && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+            target.blur();
+        }
+    }
 
     render(){
-        return <div onMouseDown={this.onMouseDown} className="root">
+        return <div onMouseDown={this.onMouseDown} onKeyDown={this.onKeyDown} className="root">
             <FlyoutContainer ref="flyout"/>
             {this.renderContent()}
             <DialogContainer/>

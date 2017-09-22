@@ -33,6 +33,7 @@ export default class Sortable<T> extends Component<SortableProps<T>> {
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         this.detach();
     }
 

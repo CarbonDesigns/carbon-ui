@@ -7,18 +7,29 @@ import {Component} from "../../CarbonFlux";
 import BladeHeader from "./BladeHeader";
 
 
-export class BladeBody extends Component {
+export class BladeBody extends Component<ISimpleReactElementProps> {
     constructor(props) {
         super(props);
     }
 
     render (){
         var cn = bem("blade", "body", null, this.props.className);
-        return <div {...this.props} className={cn}>{this.props.children}</div>
+        return <div {...this.props} className={cn}></div>
     }
 }
 
-export default class BladePage extends Component {
+export interface BladePageProps {
+    id: string;
+    currentBladeId: number;
+    caption: string;
+    noheader?: boolean;
+}
+
+export type BladePageState = {
+    visible: boolean;
+}
+
+export default class BladePage extends Component<BladePageProps, BladePageState> {
     renderBody() {
         return this.props.children;
     }
@@ -49,7 +60,7 @@ export default class BladePage extends Component {
                 <div className={ bem('blade', 'content',  {visible: this.state.visible}) }>
 
                     { this.props.noheader ? null
-                        : <BladeHeader caption={this.props.caption || this.caption}/>
+                        : <BladeHeader caption={this.props.caption}/>
                     }
 
                     <ScrollContainer className="thin">
@@ -61,10 +72,12 @@ export default class BladePage extends Component {
             </div>
         )
     }
+
+    static contextTypes = {
+        intl: PropTypes.object,
+        bladeContainer: PropTypes.any
+    };
+    static childContextTypes = {
+        currentBladeId: PropTypes.number
+    }
 }
-
-BladePage.contextTypes = { bladeContainer: PropTypes.any };
-
-BladePage.childContextTypes = {
-    currentBladeId: PropTypes.number
-};

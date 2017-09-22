@@ -64,6 +64,7 @@ export default class VirtualCollection extends Component<VirtualCollectionProps>
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         this.scroller.destroy();
     }
 

@@ -46,12 +46,5 @@ export default {
 			value,
 			async
 		}
-	},
-
-	cancelEdit: (async=false) => {
-		return {
-			type: 'PropertyActions_cancelEdit',
-			async
-		}
 	}
 }

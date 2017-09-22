@@ -1,5 +1,6 @@
 import React                  from 'react';
 import Dots                   from '../shared/dots';
+import { workspace } from "carbon-core";
 // import {FormattedMessage} from "react-intl";
 
 /**
@@ -61,6 +62,7 @@ var _get_caption = function (props) {
 };
 
 interface IPanelButtonProps extends IReactElementProps<HTMLButtonElement>{
+    actionId: string;
     icon?: string;
     label?: string;
     disabled?: boolean;
@@ -75,10 +77,11 @@ export class PaneButton extends React.Component<IPanelButtonProps>  {
     render() {
         var cn = _render_full_classname("pane-button", this.props);
         var caption = _get_caption(this.props);
-        var icon = _get_icon(this.props);
+        var {children, className, onClick, icon, label, disabled, actionId, ...rest} = this.props;
+        var title = workspace.shortcutManager.getActionHotkey(actionId);
         return (
-            <div className={cn} onClick={this.onClick}>
-                {icon}
+            <div className={cn} onClick={this.onClick} data-action={actionId} title={title}>
+                {_get_icon(this.props)}
                 {caption}
             </div>
         )
@@ -99,9 +102,11 @@ export class PaneListItem extends React.Component<any>  {
         var cn = _render_full_classname("pane-list__item", this.props);
         var icon    = _get_icon(this.props);
         var caption = _get_caption(this.props);
+        var {children, className, actionId} = this.props;
+        var title = workspace.shortcutManager.getActionHotkey(actionId);
 
         return (
-            <div className={cn} onClick={this.onClick}>
+            <div className={cn} onClick={this.onClick} data-action={actionId} title={title}>
                 {icon}
                 {caption}
             </div>

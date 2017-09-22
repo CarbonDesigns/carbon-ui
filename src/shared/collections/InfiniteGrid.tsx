@@ -61,6 +61,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         this.scroller.destroy();
     }
 

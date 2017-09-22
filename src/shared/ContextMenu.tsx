@@ -3,10 +3,11 @@ import ReactDOM from "react-dom";
 import cx from 'classnames';
 import FlyoutActions from '../FlyoutActions';
 import flyoutStore from '../FlyoutStore';
-import { richApp } from '../RichApp';
-import { Component, listenTo, stopPropagationHandler, CarbonLabel } from "../CarbonFlux";
+import { Component, listenTo, stopPropagationHandler, CarbonLabel, dispatch } from "../CarbonFlux";
 import bem from "../utils/commonUtils";
 import { ensureElementVisible } from "../utils/domUtil";
+import { ICancellationHandler, cancellationStack } from "./ComponentStack";
+import { workspace, app } from "carbon-core";
 
 function b(a?, b?, c?) { return bem("context-menu", a, b, c) }
 
@@ -24,14 +25,17 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
 
     private onClick(event) {
         if (!this.props.item.disabled) {
-            this.props.item.callback();
+            app.actionManager.invoke(this.props.item.actionId);
         }
-        richApp.dispatch(FlyoutActions.hide());
+        dispatch(FlyoutActions.hide());
     }
     private onMouseEnter = () => {
         this.setState({ submenuVisible: true });
     }
     private onMouseLeave = () => {
+        this.setState({ submenuVisible: false });
+    }
+    private onSubmenuCancelled = () => {
         this.setState({ submenuVisible: false });
     }
 
@@ -43,23 +47,25 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
 
         if (this.props.item.items) {
             return <li className={b('item', null)} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-                <i className={cx("icon", b("icon"), item.icon)} />
-                <CarbonLabel id={this.props.item.name} />
+                {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
+                <span className={b("label")}>{this.formatLabel(item.name)}</span>
                 <div className={b('item-arrow')}></div>
-                {this.state.submenuVisible && <SubMenu className={b("submenu", { disabled: item.disabled })} items={this.props.item.items} />}
+                {this.state.submenuVisible && <SubMenu className={b("submenu", { disabled: item.disabled })} items={this.props.item.items} onCancelled={this.onSubmenuCancelled} />}
             </li>
         }
-        return <li className={b("item", { disabled: this.props.item.disabled })} onMouseDown={stopPropagationHandler} onClick={this.onClick.bind(this)}>
-            <i className={cx("icon", b("icon"), item.icon)} />
-            <CarbonLabel id={this.props.item.name} />
+        return <li className={b("item", { disabled: this.props.item.disabled, "with-icon": item.icon })} onMouseDown={stopPropagationHandler} onClick={this.onClick.bind(this)}>
+            {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
+            <span className={b("label")}>{this.formatLabel(this.props.item.name)}</span>
+            <span className={b("shortcut")}>{workspace.shortcutManager.getActionHotkey(item.actionId)}</span>
         </li>
     }
 }
 
 interface SubMenuProps extends ISimpleReactElementProps {
     items: any[];
+    onCancelled: () => void;
 }
-class SubMenu extends Component<SubMenuProps> {
+class SubMenu extends Component<SubMenuProps> implements ICancellationHandler {
     componentDidMount() {
         super.componentDidMount();
         let node = ReactDOM.findDOMNode<HTMLElement>(this);
@@ -69,6 +75,17 @@ class SubMenu extends Component<SubMenuProps> {
         if (node.style.right === "0px") {
             node.style.right = "100%";
         }
+
+        cancellationStack.push(this);
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        cancellationStack.pop();
+    }
+
+    onCancel() {
+        this.props.onCancelled();
     }
 
     render() {
@@ -120,11 +137,11 @@ export default class ContextMenu extends Component<any, any> {
 
 
     _popupContextMenu(target, content, position, onClose?) {
-        richApp.dispatch(FlyoutActions.show(target, content, position, onClose));
+        dispatch(FlyoutActions.show(target, content, position, onClose));
     };
 
     _hideContextMenu() {
-        richApp.dispatch(FlyoutActions.hide());
+        dispatch(FlyoutActions.hide());
     };
 
     _getFlyoutPositionFromEvent(event) {
@@ -166,12 +183,6 @@ export default class ContextMenu extends Component<any, any> {
             this._runOnCloseCallback();
         }
     }
-
-    onKeyDown = (e) => {
-        if (e.keyCode === 27 /*ESC*/) {
-            this.close();
-        }
-    };
 
     onMouseDown = (e) => {
         e.stopPropagation();

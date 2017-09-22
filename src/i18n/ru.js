@@ -50,7 +50,6 @@ export default
     "Pages": "Страницы",
     "Recent stencils": "Последние элементы",
     "My stencils": "Мои элементы",
-    "Find stencil (F3)...": "Найти элементы (F3)...",
     "Search...": "Найти...",
     "Basic": "Базовые", // group in library
     "Navigation": "Навигация", // group in library
@@ -66,7 +65,6 @@ export default
     "Standard icons": "Стандартные иконки",
     "Recent icons": "Недавно использованные иконки",
     "Could not connect to IconFinder": "Не удалось соединиться с IconFinder",
-    "Find icon (Shift+F3)...": "Найти иконку (Shift+F3)...",
     "Recent images": "Недавно использованные картинки", //
     "Selection tool": "Инструмент выделения", // tools actions
     "Rectangle tool": "Инструмет прямоугольник", //

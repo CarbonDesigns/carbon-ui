@@ -67,7 +67,7 @@
             .flex();
             .jmiddle();
             flex-wrap : nowrap;
-
+            justify-content: space-between;
         }
     }
 
@@ -78,5 +78,14 @@
 
     &-caption {
         .nowrap;
+        flex-grow: 1;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &-shortcut {
+        .f10;
+        margin-left: @line_air;
+        opacity: .5;
     }
 }

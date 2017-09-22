@@ -22,6 +22,7 @@ import AnimationSettings from "../animation/AnimationSetting";
 
 import {AltContext}    from './topBar/contextbar';
 import appStore from "../AppStore";
+import { cancellationStack, ICancellationHandler } from "../shared/ComponentStack";
 
 require("./IdleDialog");
 
@@ -31,7 +32,7 @@ const State = Record({
 })
 
 
-class Workspace extends ComponentWithImmutableState<any, any> {
+class Workspace extends ComponentWithImmutableState<any, any> implements ICancellationHandler {
     private _renderLoop = new RenderLoop();
     private _imageDrop = new ImageDrop();
 
@@ -60,6 +61,10 @@ class Workspace extends ComponentWithImmutableState<any, any> {
         }
     }
 
+    onCancel() {
+        app.actionManager.invoke("cancel");
+    }
+
     _buildContextMenu(event) {
         var menu = {items: []};
         var context = {
@@ -83,6 +88,8 @@ class Workspace extends ComponentWithImmutableState<any, any> {
 
         this.refs.contextMenu.bind(this._renderLoop.viewContainer);
         this.refs.animationSettings.attach();
+
+        cancellationStack.push(this);
     }
 
 
@@ -98,6 +105,8 @@ class Workspace extends ComponentWithImmutableState<any, any> {
         this._imageDrop.destroy();
         this.refs.contextMenu.unbind(this._renderLoop.viewContainer);
         this.refs.animationSettings.detach();
+
+        cancellationStack.pop();
     }
 
     render() {

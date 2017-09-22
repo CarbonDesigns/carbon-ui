@@ -45,7 +45,7 @@ class ContiniouseAction extends Component<any> {
     render() {
         let classes = cx("button zoom__button", this.props.className);
         return (
-            <div className={classes} tabIndex={this.props.tabIndex} title={app.actionManager.getActionFullDescription(this.props.action)} onMouseDown={this._onMouseDown} onMouseUp={this._onMouseUp}>
+            <div className={classes} tabIndex={this.props.tabIndex} title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onMouseUp={this._onMouseUp}>
                 <i />
             </div>)
     }
@@ -67,8 +67,8 @@ class ZoomMenuAction extends Component<any> {
     }
 
     render() {
-        return (<span className="zoom__scale" title={app.actionManager.getActionFullDescription(this.props.action)} onMouseDown={this._onMouseDown} onClick={this._onClick}>
-            {app.actionManager.getActionDescription(this.props.action)}
+        return (<span className="zoom__scale" title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onClick={this._onClick}>
+            {this.formatLabel(this.props.action)}
         </span>)
     }
 }
@@ -78,9 +78,9 @@ class ZoomMenuDropAction extends ZoomMenuAction {
         var className = cx("zoom__action", { zoom__action_disabled: this.props.disabled });
 
         return (
-            <div className={className} title={app.actionManager.getActionFullDescription(this.props.action)} onMouseDown={this._onMouseDown} onClick={this._onClick}>
+            <div className={className} title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onClick={this._onClick}>
                 <span>
-                    {app.actionManager.getActionDescription(this.props.action)}
+                    {this.formatLabel(this.props.action)}
                 </span>
             </div>
         )

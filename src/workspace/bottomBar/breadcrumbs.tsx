@@ -114,6 +114,7 @@ export default class Breadcrumbs extends Component<any, any> {
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         if (this._onElementSelectedSubscribtion) {
             this._onElementSelectedSubscribtion.dispose();
             delete this._onElementSelectedSubscribtion;

@@ -9,6 +9,7 @@ import {GuiInput, GuiSlider} from "../../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
 import ArrowKeyModifier from "../../shared/ui/ArrowKeyModifier";
 import GuiNumericInput from "../../shared/ui/GuiNumericInput";
+import { util } from "carbon-core";
 
 
 var b = function (elem = null, mods = null, mix = null) {
@@ -105,6 +106,7 @@ class ShadowDirection extends Component<any, any> {
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         delete this._handle;
         delete this._slider;
     }
@@ -222,7 +224,7 @@ class ShadowEditor extends Component<any, any> {
     };
 
     componentDidUpdate(prevProps, prevState) {
-        if(this.state != prevState) {
+        if(this.state !== prevState) {
             this.props.changed && this.props.changed(this.state);
         }
     }
@@ -263,16 +265,10 @@ export default class ShadowPopup extends Component<any, any> {
     constructor(props) {
         super(props);
         this.state = {value: this.props.value};
+        this.confirmDebounced = util.debounce(this.confirmDebounced, 200);
     }
 
-    onKeyDown = e => {
-        if (e.key === "Escape" && e.target.tagName !== "INPUT") {
-            this.ok();
-        }
-    };
-
     ok = () => {
-        this.props.onConfirmed && this.props.onConfirmed(this.state.value);
         dispatch(FlyoutActions.hide());
     };
 
@@ -282,23 +278,32 @@ export default class ShadowPopup extends Component<any, any> {
     };
 
     componentDidMount() {
+        super.componentDidMount();
         (ReactDom.findDOMNode(this) as HTMLElement).focus();
     }
 
     onColorPickerChange = (color)=> {
         var newvalue = Object.assign({}, this.state.value, {color:rgbaToString(color.rgb)});
         this.setState({value:newvalue});
-        this.props.onPreview && this.props.onPreview(newvalue);
-    };
+        this.previewAndUpdateDebounced(newvalue);
+    }
 
     _propsChanged = (value)=> {
         var newvalue = Object.assign({}, this.state.value, value);
         this.setState({value:newvalue});
-        this.props.onPreview && this.props.onPreview(newvalue);
-    };
+        this.previewAndUpdateDebounced(newvalue);
+    }
+
+    private previewAndUpdateDebounced(newValue) {
+        this.props.onPreview && this.props.onPreview(newValue);
+        this.confirmDebounced(newValue);
+    }
+    private confirmDebounced = (newValue) => {
+        this.props.onConfirmed && this.props.onConfirmed(newValue);
+    }
 
     render() {
-        return ( <div className="shadows-popup" onKeyDown={this.onKeyDown}>
+        return ( <div className="shadows-popup">
             <TabContainer>
                 <TabTabs
                     items={[

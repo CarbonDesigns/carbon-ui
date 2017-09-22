@@ -15,6 +15,7 @@ import Tiler, { ITile } from "./Tiler";
 import PublishPageForm from "./PublishPageForm";
 import TabContainer, { TabArea, TabPage } from "../../../shared/TabContainer";
 import { PublishAction } from "./PublishActions";
+import BladeContainer from "../BladeContainer";
 
 const BoardSize = 3;
 const CoverSide = 300;
@@ -33,6 +34,10 @@ interface IPublishBladeState {
 const EmptySetup: ISharedPageSetup = { name: "", description: "", tags: "", scope: ResourceScope.Public, coverUrl: "" };
 
 export default class PublishBlade extends Component<void, IPublishBladeState> {
+    context: {
+        bladeContainer: BladeContainer
+    }
+
     constructor(props) {
         super(props);
 

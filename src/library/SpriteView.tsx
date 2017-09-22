@@ -53,7 +53,7 @@ export default class SpriteView extends Component<SpriteViewProps>{
         }
     }
 
-    componentWillUnmoumt() {
+    componentWillUnmount() {
         super.componentWillUnmount();
         this.measureCache = null;
     }

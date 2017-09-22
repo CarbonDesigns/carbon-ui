@@ -1,7 +1,10 @@
-import {app, Clipboard, params} from "carbon-core";
+import { app, Clipboard, params, IShortcut, workspace } from "carbon-core";
 import Mousetrap from "mousetrap";
+import { dispatchAction } from "./CarbonFlux";
+import { cancellationStack, searchStack } from "./shared/ComponentStack";
+import { DefaultScheme } from "./Hotkeys";
 
-var hotkeyMap = {};
+var hotkeyMap: {[key: string]: {action: string, shortcut: IShortcut}} = {};
 var defaults = {
     type: undefined, //auto-detect best type
     repeatable: true
@@ -19,8 +22,22 @@ function onKeyEvent(e, hotkey){
     if (!handler){
         handler = hotkeyMap[hotkey];
     }
-    if (handler && (handler.options.repeatable || !e.repeat)){
-        app.actionManager.invoke(handler.action);
+    if (handler && (handler.shortcut.repeatable !== false || !e.repeat)){
+        if (handler.action === "general.cancel") {
+            let top = cancellationStack.peek();
+            if (top) {
+                top.onCancel();
+            }
+        }
+        else if (handler.action === "general.search") {
+            let top = searchStack.peek();
+            if (top) {
+                top.onSearch();
+            }
+        }
+        else {
+            app.actionManager.invoke(handler.action);
+        }
         return false;
     }
 }
@@ -37,19 +54,22 @@ function bindFallbackClipboard(){
 
 export default {
     attach: function(){
-        if (!this._attached && app.shortcutManager.actionShortcuts){
-            for (var action in app.shortcutManager.actionShortcuts){
-                var shortcuts = app.shortcutManager.actionShortcuts[action];
+        if (!this._attached){
+            workspace.shortcutManager.mapScheme(DefaultScheme);
+
+            for (var action in workspace.shortcutManager.actionShortcuts){
+                var shortcuts = workspace.shortcutManager.actionShortcuts[action];
                 for (var i = 0; i < shortcuts.length; i++){
                     var shortcut = shortcuts[i];
-                    var shortcutType = shortcut.options && shortcut.options.type;
                     var hotkey = shortcut.key;
+                    var shortcutType = shortcut.type;
                     if (shortcutType){
                         hotkey += ":" + shortcutType;
                     }
-                    var options = shortcut.options ? Object.assign({}, defaults, shortcut.options) : defaults;
-                    hotkeyMap[hotkey] = {action, options};
-                    Mousetrap.bind(shortcut.key, onKeyEvent, shortcutType);
+                    if (!hotkeyMap.hasOwnProperty(hotkey)) {
+                        hotkeyMap[hotkey] = {action, shortcut};
+                        Mousetrap.bind(shortcut.key, onKeyEvent, shortcutType);
+                    }
                 }
             }
 

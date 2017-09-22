@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import { app, domUtil, Selection, WorkspaceTool } from "carbon-core";
+import { app, domUtil, Selection, WorkspaceTool, workspace } from "carbon-core";
 import AppStore from "../../AppStore";
 import AppActions from "../../RichAppActions";
 import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../../CarbonFlux";
@@ -259,12 +259,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
 
 
     _renderButton(type, active, group, is_group = false) {
-        if (!app.actionManager.hasAction(type)) {
-            throw "Unknown action " + type;
-        }
-
-        var { formatMessage } = this.context.intl;
-        var fullDescription = app.actionManager.getActionFullDescription(type, (m) => formatMessage({ id: m }));
+        var actionLabel = app.actionManager.getActionLabel(type);
 
         var mouseDown, click, mouseUp;
         if (is_group) {
@@ -282,7 +277,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 key={type}
                 type={type}
                 active={active}
-                title={fullDescription}
+                title={actionLabel}
                 onBlur={this._onBlur}
                 onMouseUp={mouseUp}
                 onMouseDown={mouseDown}

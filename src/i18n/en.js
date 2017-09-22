@@ -16,6 +16,17 @@ export default
         "@redo": "Redo",
         "@save": "Save",
 
+        "zoomOut": "Zoom out",
+        "zoomIn": "Zoom in",
+        "zoomFit": "Zoom to fit the page",
+        "zoomSelection": "Zoom to fit selection",
+        "zoom8:1": "8:1",
+        "zoom2:1": "2:1",
+        "zoom100": "1:1",
+        "zoom1:2": "1:2",
+        "zoom1:4": "1:4",
+        "pageCenter": "Center the page",
+
         "@action.done": "Done",
         "@path.union": "Union",
         "@path.join": "Join",
@@ -54,12 +65,11 @@ export default
         "Pages": "Pages",
         "Recent stencils": "Recent symbols",
         "My stencils": "My symbols",
-        "Find stencil (F3)...": "Find symbol (F3)...",
         "@choosePage": "Select a page",
         "@chooseArtboard": "Select an artboard",
         "@noPages": "No pages found",
 
-        "@search": "Search... (F3)",
+        "@search": "Search...",
 
         "Basic": "Basic", // group in library
         "Navigation": "Navigation", // group in library
@@ -76,7 +86,6 @@ export default
         "Standard icons": "Standard icons",
         "Recent icons": "Recent icons",
         "Could not connect to IconFinder": "Could not connect to IconFinder",
-        "Find icon (Shift+F3)...": "Find icon (Shift+F3)...",
         "Recent images": "Recent images", //
         "@tool.selection": "Selection tool", // tools actions
         "@tool.rect": "Rectangle tool", //

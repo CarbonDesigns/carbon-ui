@@ -3,6 +3,7 @@ import ReactDom from "react-dom";
 import {util}   from "carbon-core";
 import cx       from "classnames";
 import { Component } from "../CarbonFlux";
+import { searchStack, ISearchHandler } from "./ComponentStack";
 
 const DEBOUNCE_DELAY_MS = 500;
 
@@ -17,7 +18,7 @@ type SearchState = {
     query: string;
 }
 
-export default class Search extends Component<SearchProps, SearchState>{
+export default class Search extends Component<SearchProps, SearchState> implements ISearchHandler {
     private onChangeDebounced: () => any;
     private lastQuery: string;
 
@@ -29,6 +30,30 @@ export default class Search extends Component<SearchProps, SearchState>{
         super(props);
         this.state = {query: props.query || ""};
     }
+
+    componentWillReceiveProps(nextProps: Readonly<SearchProps>, context) {
+        if (nextProps.query !== this.state.query) {
+            this.setState({ query: nextProps.query });
+        }
+    }
+    componentWillMount(){
+        this.onChangeDebounced = util.debounce(() => {
+            this.props.onQuery(this.state.query);
+        }, DEBOUNCE_DELAY_MS);
+    }
+    componentDidMount() {
+        super.componentDidMount();
+        searchStack.push(this);
+    }
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        searchStack.pop();
+    }
+
+    onSearch() {
+        this.focus();
+    }
+
     query(term){
         this.setState({query: term});
         this.props.onQuery(term);
@@ -43,16 +68,6 @@ export default class Search extends Component<SearchProps, SearchState>{
             this.onChangeDebounced();
         }
     };
-    componentWillReceiveProps(nextProps: Readonly<SearchProps>, context) {
-        if (nextProps.query !== this.state.query) {
-            this.setState({ query: nextProps.query });
-        }
-    }
-    componentWillMount(){
-        this.onChangeDebounced = util.debounce(() => {
-            this.props.onQuery(this.state.query);
-        }, DEBOUNCE_DELAY_MS);
-    }
     focus(){
         var input = this.refs.input;
         input.focus();

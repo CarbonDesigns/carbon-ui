@@ -18,7 +18,7 @@ export interface IEditorProps{
     onPreviewingValue?: (value: any, prop?: IProperty) => boolean;
     onPatchingValue?: (patchType: PatchType, value: any, prop: IProperty) => boolean;
     onPreviewingPatchValue?: (value: any, prop: IProperty) => boolean;
-    onCancelEdit?: (prop: IProperty) => boolean;
+
 }
 
 export default class EditorComponent<T, TProps extends IEditorProps = IEditorProps, TState = {}> extends Component<TProps, TState> {
@@ -102,18 +102,6 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         }
 
         dispatch(PropertyActions.previewPatch(changeType, this.propertyName(), value));
-    }
-
-    cancelEdit(){
-        if (this.props.onCancelEdit && this.props.onCancelEdit(this.props.p) === false){
-            return;
-        }
-
-        if (this._setValueTimer){
-            clearTimeout(this._setValueTimer);
-        }
-
-        dispatch(PropertyActions.cancelEdit());
     }
 
     propertyDescriptor(){

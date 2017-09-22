@@ -137,6 +137,7 @@ export class GuiSlider extends Component<IGuiSliderProps, IGuiSliderState> {
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         delete this._handle;
         delete this._slider;
     }

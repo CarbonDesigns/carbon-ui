@@ -27,9 +27,13 @@ export default class IdleDialog extends Dialog {
         }
     }
 
+    canClose() {
+        return false;
+    }
+
     private onConnectionStateChanged(newState: ConnectionState){
         if (newState.type === "connected"){
-            dispatchAction({type: "Dialog_Hide"});
+            this.close();
         }
     }
 
@@ -40,7 +44,7 @@ export default class IdleDialog extends Dialog {
     renderBody(){
         return <div className="idleDialog">
             <FormattedMessage id="@idle.message" tagName="p"/>
-            <GuiButton onClick={this.resume} caption="@idle.resume"/>
+            <GuiButton onClick={this.resume} caption="@idle.resume" mods="hover-white"/>
         </div>
     }
 }

@@ -43,6 +43,7 @@ export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, App
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         if (this.timer) {
             clearInterval(this.timer);
             this.timer = 0;

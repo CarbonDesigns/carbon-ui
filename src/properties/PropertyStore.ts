@@ -130,11 +130,6 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         this.state.selection.patchDisplayProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
-    @handles(PropertyActions.cancelEdit)
-    onCancelEdit() {
-        this.state.selection.cancelEdit(this.state.selection.elements);
-    }
-
     @handles(PropertyActions.previewPatch)
     previewPatchProperty({ changeType, propertyName, value }) {
         this.state.selection.previewPatchDisplayProps(this.state.selection.elements, propertyName, changeType, value);

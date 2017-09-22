@@ -56,6 +56,7 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
     }
 
     componentWillUnmount(){
+        super.componentWillUnmount();
         this.scroller.destroy();
     }
 

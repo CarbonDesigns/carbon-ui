@@ -11,7 +11,6 @@ import ScrollContainer from "../shared/ScrollContainer";
 import { app, Invalidate, Selection, Environment, IArtboardPage, domUtil } from "carbon-core";
 import { say } from "../shared/Utils";
 import bem from "bem";
-import FlyoutPopupSpawner from "../shared/FlyoutPopup";
 import { MarkupLine } from "../shared/ui/Markup";
 import LayerItem from "./LayerItem";
 import layersStore, { LayerNode, LayersStoreState } from "./LayersStore";

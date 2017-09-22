@@ -233,6 +233,7 @@ export default class LinearGradientPicker extends Component<any, any> {
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         if (this._elements) {
             this._elements[0].removeDecoratorByType(LinearGradientDecorator);
             this._elements.forEach(e => e.selectFrameVisible(true));

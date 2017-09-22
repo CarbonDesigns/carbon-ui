@@ -20,7 +20,6 @@ import {Record} from "immutable";
 import cx from 'classnames';
 import AnimationSettings from "../animation/AnimationSetting";
 
-import {AltContext}    from './topBar/contextbar';
 import appStore from "../AppStore";
 import { cancellationStack, ICancellationHandler } from "../shared/ComponentStack";
 

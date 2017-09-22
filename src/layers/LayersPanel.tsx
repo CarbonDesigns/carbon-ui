@@ -8,7 +8,7 @@ import cx from 'classnames';
 import VirtualList from "../shared/collections/VirtualList";
 import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";
-import { app, Invalidate, Selection, Environment, IArtboardPage, domUtil } from "carbon-core";
+import { app, Invalidate, Selection, Environment, IArtboardPage, domUtil, LayerTypes, IIsolationLayer } from "carbon-core";
 import { say } from "../shared/Utils";
 import bem from "bem";
 import { MarkupLine } from "../shared/ui/Markup";
@@ -114,10 +114,15 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     }
 
     goBack = () => {
-        (app.activePage as IArtboardPage).setActiveArtboard(null);
-        var artboards = app.activePage.children;
-        Environment.view.ensureScale(artboards);
-        Environment.view.ensureCentered(artboards);
+        let isolationLayer = Environment.view.getLayer(LayerTypes.Isolation) as IIsolationLayer;
+        if (isolationLayer.isActive) {
+            app.actionManager.invoke("cancel");
+        } else {
+            (app.activePage as IArtboardPage).setActiveArtboard(null);
+            var artboards = app.activePage.children;
+            Environment.view.ensureScale(artboards);
+            Environment.view.ensureCentered(artboards);
+        }
     }
 
     private renderBackButton() {
@@ -125,18 +130,32 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
             return null;
         }
 
-        var artboard = app.activePage.getActiveArtboard();
-        if (!artboard) {
-            return null;
+        let name = "";
+
+        var isolationLayer: any = null;
+
+        if (Environment.view) {
+            isolationLayer = Environment.view.getLayer(LayerTypes.Isolation) as IIsolationLayer;
+        }
+
+        if (isolationLayer && isolationLayer.isActive) {
+            name = isolationLayer.getOwner().name();
+        } else {
+            var artboard = app.activePage.getActiveArtboard();
+            if (artboard) {
+                name = artboard.name();
+            } else {
+                return;
+            }
         }
 
         return <MarkupLine className="layers-back__button">
-            <BackButton onClick={this.goBack} caption={artboard.name()} translate={false}/>
+            <BackButton onClick={this.goBack} caption={name} translate={false} />
         </MarkupLine>;
     }
 
     render() {
-        let {children, ...rest} = this.props;
+        let { children, ...rest } = this.props;
         return <Panel ref="panel" header="Layers" id="layers_panel" {...rest}>
             {this.renderBackButton()}
 

@@ -51,7 +51,7 @@ export default class TopMenu extends Component<TopMenuProps, any>{
 
     _renderLogoutButton() {
         return <div>
-            <button href="#" onClick={this._logout}><span><CarbonLabel id="@logout" /></span></button>
+            <Link className="topmenu_logout-button"  to="/logout" onClick={this._logout}><CarbonLabel id="@logout" /></Link>
         </div>;
     }
 
@@ -63,10 +63,12 @@ export default class TopMenu extends Component<TopMenuProps, any>{
         let itemCn = bem("navigation-menu", "item", {dark:this.props.dark});
         var location = this.context.router.getCurrentLocation();
         var libraryActive = "/library" === location.pathname;
+        var dashboardActive = location.pathname.startsWith("/@");
         return <nav className="header-container">
             <a onClick={this._goHome} className={bem("header-container", "logo", { dark: this.props.dark })} title="carbonium.io"></a>
 
             <ul className="navigation-menu">
+                {!backend.isLoggedIn() ?null:<li className={bem("navigation-menu", "item", {active:dashboardActive, dark:this.props.dark})}><Link to="/" ><CarbonLabel id="@nav.dashboard" /></Link></li>}
                 <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>
                 <li className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>
                 <li className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>

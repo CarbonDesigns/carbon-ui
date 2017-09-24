@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router";
 import {FormattedMessage} from "react-intl";
 import {Component, listenTo, dispatch} from "../CarbonFlux";
+import cx from "classnames";
 
 import DashboardStore from "./DashboardStore";
 import DashboardActions from "./DashboardActions";
@@ -9,12 +10,12 @@ import DashboardActions from "./DashboardActions";
 export default class FolderTree extends Component<any, any>{
     constructor(props){
         super(props);
-        this.state = {folders: []};
+        this.state = {folders: [], activeFolderId:DashboardStore.state.get("activeFolderId")};
     }
 
     @listenTo(DashboardStore)
     _onChanged(){
-        this.setState({folders: DashboardStore.state.get("folders")});
+        this.setState({folders: DashboardStore.state.get("folders"), activeFolderId:DashboardStore.state.get("activeFolderId")});
     }
 
     _folderClicked = e => {
@@ -24,11 +25,11 @@ export default class FolderTree extends Component<any, any>{
     };
 
     render(){
-        return <div className="folders">
-            <Link to="/app"><span>Create new project</span></Link>
+        return <div className="side-menu">
+            {/* <Link to="/app"><span>Create new project</span></Link> */}
             {this.state.folders.map(x => {
                 return <div key={x.get("id")}>
-                    <a href="#" data-folder-id={x.get("id")} onClick={this._folderClicked}>
+                    <a className={cx("side-menu_item", {"side-menu_item__active":(x.get("id") === this.state.activeFolderId)})} href="#" data-folder-id={x.get("id")} onClick={this._folderClicked}>
                         {this._renderFolderName(x)}
                     </a>
                 </div>

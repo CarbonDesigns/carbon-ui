@@ -5,10 +5,12 @@ import {backend, DashboardProxy} from "carbon-api";
 import FolderTree from "./FolderTree";
 import ProjectList from "./ProjectList";
 import DashboardActions from "./DashboardActions";
+import TopMenu from "../shared/TopMenu";
 
 export default class DashboardPage extends Component<any, any>{
     render(){
-        return <div className="dashboard">
+        return <div className="dashboard light-page">
+            <TopMenu location={this.props.location} dark={true} />
             <FolderTree/>
             <ProjectList/>
         </div>;

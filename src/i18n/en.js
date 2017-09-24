@@ -649,6 +649,7 @@ export default
 
         "@nav.communitylibrary": "Community Library",
         "@nav.teamslack": "Team Slack",
+        "@nav.dashboard": "Dashboard",
         "@nav.github": "GitHub",
         "@nav.login": "LogIn",
         "@login.header": "Sign In",

@@ -7,6 +7,7 @@ class DashboardStore extends CarbonStore{
     getInitialState(){
         return Immutable.fromJS({
             projectList: [],
+            activeFolderId: "my",
             folders: [
                 {
                     id: "my",
@@ -29,6 +30,7 @@ class DashboardStore extends CarbonStore{
     @handles(DashboardActions.changeFolder)
     onFolderChanged({folderId}){
         var folder = this.state.get("folders").find(x => x.get("id") === folderId);
+        this.state = this.state.set("activeFolderId", folderId);
         this.state = this.state.set("projectList", folder.get("projects"));
     }
 }

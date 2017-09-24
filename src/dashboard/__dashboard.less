@@ -1,15 +1,90 @@
-.dashboard{
-  .folders{
+  .side-menu{
     float: left;
-    padding: 20px;
     width: 200px;
-    background: lightblue;
+    margin-left: 50px;
+    margin-top: 40px;
+
+    &_item {
+      line-height: 28px;
+      height:28px;
+      font-size: 14px;
+      text-decoration: none;
+      padding-left:5px;
+      display: block;
+      color: black;
+      border-left: 2px solid white;
+
+      &&__active {
+        border-left: 2px solid #8E44AD;
+        font-weight: bold;
+      }
+
+      &:hover {
+        background-color: #EFEFEF;
+      }
+    }
   }
 
-  .projects{
-    float: left;
-    padding: 20px;
-    width: 600px;
-    background: lightyellow;
+  .dashboard-projects{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
-}
+
+  .project-tile {
+    display: block;
+    width:256px;
+    height:158px;
+    position: relative;
+    background-color: lightgray;
+    margin: 0 0 20px 30px;
+  }
+
+  .project-tile__block {
+    display: block;
+    width:100%;
+    height:100px;
+    top:28px;
+    position:absolute;
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    font-family: Poppins;
+  }
+
+  .project-tile__back {
+    display: block;
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .project-tile__name {
+    font-size:18px;
+    display: block;
+    margin-left: 70px;
+    margin-top: 28px;
+    width:180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .project-tile__counter {
+    font-size:12px;
+    display: block;
+    margin-left: 70px;
+  }
+
+  .project-tile__image {
+    display: block;
+    width:46px;
+    height: 46px;
+    position: absolute;
+    top:28px;
+    left:12px;
+  }

@@ -66,7 +66,7 @@ export class GuiCopyInput extends Component<IGuiInputProps, GuiCopyInputState> {
         let {mods, onClick, value, ...rest} = this.props;
         let inputMods = this.state.message ? GuiCopyInput.InputModsMessage : GuiCopyInput.InputModsNormal;
         return <div className="gui-input-copy">
-            <GuiInput value={this.state.value} mods={inputMods} ref="input" onClick={this.onInputClick} {...rest} />
+            <GuiInput value={this.state.value} mods={inputMods} ref="input" onClick={this.onInputClick} readOnly {...rest} />
             <div className="gui-input-copy__icon" onClick={this.onCopyClick}>
                 <i className="ico ico-copy big-icon"/>
             </div>

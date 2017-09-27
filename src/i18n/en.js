@@ -328,13 +328,13 @@ export default
 
         "folders.my": "My Projects",
         "folders.shared": "Shared with me",
-        "btn.enableMirroring": "Enable",
-        "btn.disableMirroring": "Disable",
+        "btn.enableMirroring": "Enable mirroring",
+        "btn.disableMirroring": "Disable mirroring",
         "menu.mirroring": "Mirroring",
         "menu.sharing": "Sharing link", //
         "menu.publish": "Publish resources", //
         "mirroringblade.helptext": "Enable mirroring to view all changes immediately on the remote device.",
-        "mirroringblade.scancodehelp": "Scan QR code on any mobile device using your favorite QR code scanner app to view currently active artboard on the device.",
+        "mirroringblade.scancodehelp": "Scan QR code on any mobile device using your favorite QR code scanner.",
         "mirroring.urllabel": "Or copy URL manually", //
         "@menu.openProject": "Open project...", //
         "@menu.saveProjectAs": "Save project as...", //

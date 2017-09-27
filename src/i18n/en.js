@@ -371,6 +371,13 @@ export default
 
         "@nameTaken": "This name is already taken",
 
+        "@input.copied": "Copied to clipboard",
+        "@input.copyManually": "Please copy manually",
+
+        "@share.desc": "Share the secret link with your colleagues to give them access to this design.",
+        "@share.generate": "Generate code",
+        "@share.disable": "Stop sharing",
+
         "@imageEdit.artboardSnapshot": "use a snapshot of an artboard",
         "@imageEdit.pageSnapshot": "use a snapshot of a page",
         "@imageEdit.makeSnapshot": "Make snapshot",

@@ -124,6 +124,7 @@
 
 
 .big-icon { .size(28, 24); }
+
 &{
     @shift: 32;
     @x: 2;
@@ -159,7 +160,9 @@
     #action-button_send-to-foreground     > .big-icon{ .sprite1(@x + @shift * 19, @y);}
     #action-button_send-to-background     > .big-icon{ .sprite1(@x + @shift * 20, @y);}
 
-
+    .ico-copy {
+        .sprite1(@x + @shift *  3, @y);
+    }
 }
 &{
     #action-button_aligning              >.big-icon{.sprite1(100, 469);}

@@ -5,7 +5,7 @@ import FlyoutActions from "../../FlyoutActions";
 import {Component, dispatch} from "../../CarbonFlux";
 import {default as TabContainer, TabTabs, TabPage, TabArea} from "../../shared/TabContainer";
 import bem from "../../utils/commonUtils";
-import {GuiInput, GuiSlider} from "../../shared/ui/GuiComponents";
+import { GuiInput, GuiSlider, GuiInputMod } from "../../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
 import ArrowKeyModifier from "../../shared/ui/ArrowKeyModifier";
 import GuiNumericInput from "../../shared/ui/GuiNumericInput";
@@ -167,7 +167,7 @@ class ShadowEditor extends Component<any, any> {
         this.setState({blur});
     }
 
-    private static numericMods = ["right", "slim"];
+    private static numericMods: GuiInputMod[] = ["right", "slim"];
 
     _renderNumberParams() {
 

@@ -437,12 +437,16 @@ export class GuiDropDown extends Component<IGuiDropDownProps>{
 /**
  * GuiInput
  */
-export interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement>, IHasMods<
-    "small" |
+export type GuiInputMod = "small" |
     "valid" |
     "checking" |
-    "error"
-    > {
+    "error" |
+    "suffix" |
+    "right" |
+    "center" |
+    "slim" |
+    "fill";
+export interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement>, IHasMods<GuiInputMod> {
     label?: any;
     caption?: string;
     defaultMessage?: string;
@@ -457,14 +461,21 @@ export class GuiInput extends Component<IGuiInputProps>{
     }
 
     focus() {
-        var a: IGuiInputProps = { mods: { checking: true, valid: false, error: false } };
         this.refs.input.focus();
+    }
+
+    blur() {
+        this.refs.input.blur();
     }
 
     selectOnFocus = (e) => {
         if (this.props.selectOnFocus) {
             e.target.select();
         }
+    }
+
+    select() {
+        this.refs.input.select();
     }
 
     getValue() {
@@ -679,7 +690,17 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
 
     private renderFieldMods(field: Immutable.Record.Instance<IFieldState>) {
         var status = field.get("status");
-        return { valid: status === 'ok', checking: status === "checking", error: status === "error" };
+        var mods: GuiInputMod[] = [];
+        if (status === "ok") {
+            mods.push("valid");
+        }
+        else if (status === "checking") {
+            mods.push("checking");
+        }
+        else if (status === "error") {
+            mods.push("error");
+        }
+        return mods;
     }
 
     private renderFieldSuffix(field: Immutable.Record.Instance<IFieldState>, component) {

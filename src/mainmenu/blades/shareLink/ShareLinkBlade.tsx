@@ -11,20 +11,7 @@ import ShareForm from "./ShareForm";
 export type ShareCodesLoader = new (props) => GuiContentLoader<{codes: ShareCode[]}>;
 export const ShareCodesLoader = GuiContentLoader as ShareCodesLoader;
 
-type ShareLinkBladeState = {
-    codes: ShareCode[];
-    addingCode: boolean;
-}
-
-export default class ShareLinkBlade extends Component<{}, ShareLinkBladeState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            codes: [],
-            addingCode: false
-        };
-    }
-
+export default class ShareLinkBlade extends Component {
     private onLoad = () => {
         return backend.shareProxy.getCodes(app.companyId(), app.id());
     }

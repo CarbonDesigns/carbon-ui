@@ -328,6 +328,7 @@ export default
 
         "folders.my": "My Projects",
         "folders.shared": "Shared with me",
+        "folders.deleted": "Deleted",
         "btn.enableMirroring": "Enable",
         "btn.disableMirroring": "Disable",
         "menu.mirroring": "Mirroring",
@@ -643,6 +644,11 @@ export default
 
         "@data.customName": "Dataset name",
         "@data.customBody": "Enter one item per line",
+
+        "@project.open": "Open",
+        "@project.opennewtab": "Open new tab",
+        "@project.delete": "Delete",
+        "@project.confirmDelete": "Are you sure you want to delete the project?",
 
         "@message.thankyou": "Thank you!",
         "@message.wewillnotify": "We will update you with news about release date of the carbonium and give you an access as soon as possible.",

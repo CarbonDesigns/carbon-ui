@@ -43,6 +43,8 @@ export default class FolderTree extends Component<any, any>{
                 return <FormattedMessage id="folders.my" defaultMessage="My projects"/>;
             case "shared":
                 return <FormattedMessage id="folders.shared" defaultMessage="Shared with me"/>;
+            case "deleted":
+                return <FormattedMessage id="folders.deleted" defaultMessage="Deleted"/>;
             default:
                 return <span>{folder.get("name")}</span>;
         }

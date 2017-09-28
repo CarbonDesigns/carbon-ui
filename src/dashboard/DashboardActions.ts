@@ -5,6 +5,13 @@ export default {
             data
         }
     },
+    deleteProject: (companyId, projectId) => {
+        return {
+            type: 'Dashboard_deleteProject',
+            projectId,
+            companyId
+        }
+    },
     changeFolder: (folderId) => {
         return {
             type: 'Dashboard_changeFolder',

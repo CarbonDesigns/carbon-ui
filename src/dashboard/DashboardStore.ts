@@ -2,8 +2,9 @@ import {CarbonStore, dispatch, handles} from "../CarbonFlux";
 import Immutable from "immutable";
 
 import DashboardActions from "./DashboardActions";
+import { DashboardProxy } from "carbon-api";
 
-class DashboardStore extends CarbonStore{
+class DashboardStore extends CarbonStore<any> {
     getInitialState(){
         return Immutable.fromJS({
             projectList: [],
@@ -16,6 +17,10 @@ class DashboardStore extends CarbonStore{
                 {
                     id: "shared",
                     projects: []
+                },
+                {
+                    id: "deleted",
+                    projects: []
                 }
             ]
         });
@@ -23,8 +28,15 @@ class DashboardStore extends CarbonStore{
 
     @handles(DashboardActions.refresh)
     onRefreshed({data}){
-        this.state = this.state.mergeDeep(data);
+        this.state = this.state.set('folders', []).mergeDeep(data);
         dispatch(DashboardActions.changeFolder("my"));
+    }
+
+    @handles(DashboardActions.deleteProject)
+    onDeleteProject({projectId, companyId}){
+        DashboardProxy.deleteProject(companyId, projectId)
+            .then(()=>DashboardProxy.dashboard(companyId))
+            .then(data => dispatch(DashboardActions.refresh(data)));
     }
 
     @handles(DashboardActions.changeFolder)

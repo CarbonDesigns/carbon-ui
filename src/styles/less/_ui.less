@@ -1,3 +1,5 @@
+@import "./CONSTANTS.less";
+
 #reactContainer{
     //TODO: the same root/content is used for app and landing, check if height 100% is ok
     //width:  100%;
@@ -864,6 +866,9 @@
     &_right &__input{
         .tright;
     }
+    &_center &__input{
+        .tcenter;
+    }
 
 
     &__input-ico {
@@ -925,12 +930,41 @@
         display: flex;
         align-items: stretch;
     }
+    &&_suffix &__input {
+        border-radius: 2px 0 0 2px;
+    }
     &_resize-v textarea{
         resize: vertical;
     }
 
     &&_small {
         .f14;
+    }
+}
+
+.gui-input-copy {
+    display: flex;
+    align-items: center;
+    flex: auto;
+
+    &__icon {
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        cursor: pointer;
+        .bgc(@bg_input_suffix);
+
+        border-radius: 0 2px 2px 0;
+
+        &:hover {
+            .bgc(@bg_input_suffix_hover);
+        }
+    }
+
+    &&_msg {
+        text-align: center;
     }
 }
 
@@ -1689,8 +1723,22 @@
         >* {.op0}
         .loading();
     }
+}
 
+.gui-btn-loading {
+    display: flex;
+    .rel;
 
+    &&_loading {
+        .gui-btn > * {
+            visibility: hidden;
+        }
+        .loading-spinner {
+            .abs;
+            .w100;
+            .h100;
+        }
+    }
 }
 
 
@@ -2130,11 +2178,8 @@
 & {
     .loading-spinner {
         .flex();
-        padding: @line_air;
         justify-content: center;
         align-items: center;
-
-
     }
 
     @color: @font_color;
@@ -2167,6 +2212,8 @@
 
 
     .ball-pulse {
+        display: flex;
+
         &__1 {
             -webkit-animation: scale .75s -.24s infinite cubic-bezier(.2, .68, .18, 1.08);
             animation: scale .75s -.24s infinite cubic-bezier(.2, .68, .18, 1.08)
@@ -2288,4 +2335,14 @@
     flex-direction: column;
 }
 
+.loader {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 
+    &&_loading {
+        justify-content: center;
+        align-items: center;
+    }
+}

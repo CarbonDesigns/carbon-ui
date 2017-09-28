@@ -331,11 +331,13 @@ export default
         "folders.deleted": "Deleted",
         "btn.enableMirroring": "Enable",
         "btn.disableMirroring": "Disable",
+        "btn.enableMirroring": "Enable mirroring",
+        "btn.disableMirroring": "Disable mirroring",
         "menu.mirroring": "Mirroring",
         "menu.sharing": "Sharing link", //
         "menu.publish": "Publish resources", //
         "mirroringblade.helptext": "Enable mirroring to view all changes immediately on the remote device.",
-        "mirroringblade.scancodehelp": "Scan QR code on any mobile device using your favorite QR code scanner app to view currently active artboard on the device.",
+        "mirroringblade.scancodehelp": "Scan QR code on any mobile device using your favorite QR code scanner.",
         "mirroring.urllabel": "Or copy URL manually", //
         "@menu.openProject": "Open project...", //
         "@menu.saveProjectAs": "Save project as...", //
@@ -371,6 +373,13 @@ export default
         "@import.team": "Team",
 
         "@nameTaken": "This name is already taken",
+
+        "@input.copied": "Copied to clipboard",
+        "@input.copyManually": "Please copy manually",
+
+        "@share.desc": "Share the secret link with your colleagues to give them access to this design.",
+        "@share.generate": "Generate code",
+        "@share.disable": "Stop sharing",
 
         "@imageEdit.artboardSnapshot": "use a snapshot of an artboard",
         "@imageEdit.pageSnapshot": "use a snapshot of a page",

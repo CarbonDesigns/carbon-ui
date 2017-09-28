@@ -24,3 +24,5 @@ export type Url =
     "/account" |
     "/login" |
     "/account/forgotPassword";
+
+export const MinPerceivedTime = 700;

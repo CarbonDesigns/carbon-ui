@@ -29,7 +29,8 @@ class DashboardStore extends CarbonStore<any> {
     @handles(DashboardActions.refresh)
     onRefreshed({data}){
         this.state = this.state.set('folders', []).mergeDeep(data);
-        dispatch(DashboardActions.changeFolder("my"));
+        //dispatch(DashboardActions.changeFolder("my"));
+        this.refreshProjectList(this.state.get("activeFolderId"));
     }
 
     @handles(DashboardActions.deleteProject)
@@ -41,6 +42,10 @@ class DashboardStore extends CarbonStore<any> {
 
     @handles(DashboardActions.changeFolder)
     onFolderChanged({folderId}){
+        this.refreshProjectList(folderId);
+    }
+
+    refreshProjectList(folderId) {
         var folder = this.state.get("folders").find(x => x.get("id") === folderId);
         this.state = this.state.set("activeFolderId", folderId);
         this.state = this.state.set("projectList", folder.get("projects"));

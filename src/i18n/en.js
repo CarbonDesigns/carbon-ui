@@ -328,6 +328,9 @@ export default
 
         "folders.my": "My Projects",
         "folders.shared": "Shared with me",
+        "folders.deleted": "Deleted",
+        "btn.enableMirroring": "Enable",
+        "btn.disableMirroring": "Disable",
         "btn.enableMirroring": "Enable mirroring",
         "btn.disableMirroring": "Disable mirroring",
         "menu.mirroring": "Mirroring",
@@ -390,6 +393,7 @@ export default
         "@project.comment": "{num} {num, plural, one {artboard} other {artboards}}",
         "@project.editAvatar": "Edit project avatar",
         "@project.settings": "Project settings",
+        "@project.new": "+ New project",
 
         "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //
@@ -651,11 +655,17 @@ export default
         "@data.customName": "Dataset name",
         "@data.customBody": "Enter one item per line",
 
+        "@project.open": "Open",
+        "@project.opennewtab": "Open new tab",
+        "@project.delete": "Delete",
+        "@project.confirmDelete": "Are you sure you want to delete the project?",
+
         "@message.thankyou": "Thank you!",
         "@message.wewillnotify": "We will update you with news about release date of the carbonium and give you an access as soon as possible.",
 
         "@nav.communitylibrary": "Community Library",
         "@nav.teamslack": "Team Slack",
+        "@nav.dashboard": "Dashboard",
         "@nav.github": "GitHub",
         "@nav.login": "LogIn",
         "@login.header": "Sign In",

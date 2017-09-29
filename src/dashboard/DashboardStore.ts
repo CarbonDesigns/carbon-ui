@@ -29,7 +29,6 @@ class DashboardStore extends CarbonStore<any> {
     @handles(DashboardActions.refresh)
     onRefreshed({data}){
         this.state = this.state.set('folders', []).mergeDeep(data);
-        //dispatch(DashboardActions.changeFolder("my"));
         this.refreshProjectList(this.state.get("activeFolderId"));
     }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router";
 import {FormattedMessage} from "react-intl";
-import {Component, listenTo, dispatch} from "../CarbonFlux";
+import { Component, listenTo, dispatch, CarbonLabel } from "../CarbonFlux";
 import cx from "classnames";
 
 import DashboardStore from "./DashboardStore";

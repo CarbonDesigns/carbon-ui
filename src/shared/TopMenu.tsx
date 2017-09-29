@@ -57,22 +57,36 @@ export default class TopMenu extends Component<TopMenuProps, any>{
 
     _logout = () => {
         backend.logout().then(() => this._goHome());
-    };
+    }
 
-    render() {
-        let itemCn = bem("navigation-menu", "item", {dark:this.props.dark});
+    _renderMenuItems(){
         var location = this.context.router.getCurrentLocation();
         var libraryActive = "/library" === location.pathname;
         var dashboardActive = location.pathname.startsWith("/@");
+
+        if((backend.isLoggedIn() || backend.isGuest())) {
+            return [
+                <li className={bem("navigation-menu", "item", {active:dashboardActive, dark:this.props.dark})}><Link to={'/'+(this.context.router.params.companyName||'')} ><CarbonLabel id="@nav.dashboard" /></Link></li>,
+                <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
+                <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{this._renderLogoutButton()}</li>
+            ]
+        }
+
+        let itemCn = bem("navigation-menu", "item", {dark:this.props.dark});
+        return [
+            <li className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>,
+            <li className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>,
+            <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
+            <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{this._renderLoginButton()}</li>
+        ]
+    }
+
+    render() {
         return <nav className="header-container">
             <a onClick={this._goHome} className={bem("header-container", "logo", { dark: this.props.dark })} title="carbonium.io"></a>
 
             <ul className="navigation-menu">
-                {!(backend.isLoggedIn() || backend.isGuest()) ? null:(<li className={bem("navigation-menu", "item", {active:dashboardActive, dark:this.props.dark})}><Link to={'/'+(this.context.router.params.companyName||'')} ><CarbonLabel id="@nav.dashboard" /></Link></li>)}
-                <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>
-                <li className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>
-                <li className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>
-                <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{backend.isLoggedIn() && !backend.isGuest() ? this._renderLogoutButton() : this._renderLoginButton()}</li>
+                {this._renderMenuItems()}
             </ul>
         </nav>
     }

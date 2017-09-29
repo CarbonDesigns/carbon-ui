@@ -393,6 +393,7 @@ export default
         "@project.comment": "{num} {num, plural, one {artboard} other {artboards}}",
         "@project.editAvatar": "Edit project avatar",
         "@project.settings": "Project settings",
+        "@project.new": "+ New project",
 
         "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //

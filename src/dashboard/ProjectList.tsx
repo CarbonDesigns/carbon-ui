@@ -98,8 +98,18 @@ export default class ProjectList extends Component<any, any>{
         this.setState({ projects: DashboardStore.state.get("projectList") });
     }
 
+    _renderNewButton() {
+        var folder = DashboardStore.state.get("activeFolderId");
+        if(folder !== "my") {
+            return;
+        }
+
+        return <Link className="fs-main-button new-project-button" to="/app"><CarbonLabel id="@project.new" /></Link>;
+    }
+
     render() {
         return <div className="dashboard-projects">
+            {this._renderNewButton()}
             {this.state.projects.map(x => {
                 return <ProjectTile
                     key={x.get("id")}

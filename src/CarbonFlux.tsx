@@ -100,12 +100,13 @@ export class Component<P = {}, S = {}> extends React.Component<P,S> {
     canHandleActions(): boolean{
         return false;
     }
+
     onAction(action){
         var handler = this.__handlersMap && this.__handlersMap[action.type];
         if (handler){
             this[handler](action);
         }
-    };
+    }
 
     formatLabel(labelId: string, defaultMessage?: string){
         return this.context.intl.formatMessage({id: labelId, defaultMessage});

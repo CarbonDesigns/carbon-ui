@@ -148,7 +148,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         };
 
         this.setState(newState);
-        richApp.dispatch(SwatchesActions.changeActiveColors(fillBrush, strokeBrush));
+        dispatch(SwatchesActions.changeActiveColors(fillBrush, strokeBrush));
     };
 
 
@@ -181,9 +181,9 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         var selection = Selection.selectComposite();
         if (selection.elements.length) {
             if (preview) {
-                richApp.Dispatcher.dispatchAsync(PropertyActions.preview(changes));
+                dispatch(PropertyActions.preview(changes, true));
             } else {
-                richApp.Dispatcher.dispatchAsync(PropertyActions.changed(changes));
+                dispatch(PropertyActions.changed(changes, true));
             }
         }
         else {
@@ -236,7 +236,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     _resolveSetActiveSlot(slot_name) {
         return (ev) => {
             ev.preventDefault();
-            richApp.dispatch(SwatchesActions.changeActiveSlot(slot_name))
+            dispatch(SwatchesActions.changeActiveSlot(slot_name))
         }
     };
 
@@ -299,9 +299,9 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
     onKeyPress = (event) => {
         if (event.keyCode === 120) {
             if (this.state.active === 'fill') {
-                richApp.dispatch(SwatchesActions.changeActiveSlot('stroke'));
+                dispatch(SwatchesActions.changeActiveSlot('stroke'));
             } else {
-                richApp.dispatch(SwatchesActions.changeActiveSlot('fill'));
+                dispatch(SwatchesActions.changeActiveSlot('fill'));
             }
         }
     }

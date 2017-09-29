@@ -277,7 +277,7 @@ export default class ToolboxConfiguration {
             })
             .then((data) => {
                 if (!skipPageUpdate) {
-                    page.setProps({ toolboxConfigUrl: data.url, toolboxConfigId: configId });
+                    page.setProps({ toolboxConfigUrl: data.url });
                 }
                 return config;
             })

@@ -6,6 +6,7 @@ import Dialog from "../dialogs/Dialog";
 import { FormattedMessage } from "react-intl";
 import { backend, IDisposable } from "carbon-core";
 import { ConnectionState } from "carbon-api";
+import { Markup, MarkupLine } from "../shared/ui/Markup";
 
 export default class IdleDialog extends Dialog {
     _connectionToken: IDisposable;
@@ -43,8 +44,12 @@ export default class IdleDialog extends Dialog {
 
     renderBody(){
         return <div className="idleDialog">
-            <FormattedMessage id="@idle.message" tagName="p"/>
-            <GuiButton onClick={this.resume} caption="@idle.resume" mods="hover-white"/>
+            <MarkupLine>
+                <FormattedMessage id="@idle.message" tagName="p"/>
+            </MarkupLine>
+            <MarkupLine>
+                <GuiButton onClick={this.resume} caption="@idle.resume" mods="hover-white"/>
+            </MarkupLine>
         </div>
     }
 }

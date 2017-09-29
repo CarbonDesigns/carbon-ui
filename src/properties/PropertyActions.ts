@@ -31,10 +31,11 @@ export default {
 		}
 	},
 
-	preview: changes => {
+	preview: (changes, async = false) => {
 		return {
 			type:'PropertyActions_preview',
-			changes
+			changes,
+			async
 		}
 	},
 

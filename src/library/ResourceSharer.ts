@@ -6,7 +6,7 @@ export class ResourceSharer {
         var clone = page.mirrorClone();
 
         var promise;
-        if(!page.props.toolboxConfigId) {
+        if(!page.props.toolboxConfigUrl) {
             promise = ToolboxConfiguration.buildToolboxConfig(page);
         } else {
             promise = Promise.resolve();
@@ -23,7 +23,7 @@ export class ResourceSharer {
         this.populatePageStyles(clone, styles, textStyles, fontMetadata);
 
         return promise.then(()=>{
-            clone.setProps({toolboxConfigUrl:page.props.toolboxConfigUrl, toolboxConfigId:page.props.toolboxConfigId});
+            clone.setProps({toolboxConfigUrl:page.props.toolboxConfigUrl});
             return {
                 page:clone.toJSON(),
                 styles:styles,

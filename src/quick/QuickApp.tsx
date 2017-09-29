@@ -18,11 +18,10 @@ export default class QuickApp extends RouteComponent<IQuickAppProps> {
             .then(() => backend.shareProxy.use(code))
             .then(x => this._navigate(x))
             .catch(e => {
-                if (e.message !== LoginRequiredError){
-                    this.goToError("badShareCode");
+                if (e.message === LoginRequiredError){
                     return;
                 }
-                this.goToError("appRunError");
+                this.goToError("badShareCode");
             });
     }
     _navigate(data){

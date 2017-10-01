@@ -528,6 +528,8 @@ export default
         "@account.passwordHint": "Password (6+ characters)",
         "@account.login": "Log in",
         "@account.logout": "Log out",
+        "@account.settings": "Settings",
+        "@account.infoitem": "Account info",
         "@account.registrationMessage": "You don't have an account yet. It takes just a few seconds to register...",
         "@account.create": "Create account",
         "@account.noUsername": "Please enter your name",

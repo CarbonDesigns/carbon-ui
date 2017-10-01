@@ -6,6 +6,8 @@ import { GuiInput, GuiValidatedInput, ValidationTrigger, IFieldState } from "../
 import { FormattedMessage } from "react-intl";
 import { AccountAction } from "./AccountActions";
 import { LoginProviders } from "../Constants";
+import TopMenu from "../shared/TopMenu";
+import { SideMenu } from "../shared/SideMenu";
 
 interface IAccountOverviewState {
     fetched: boolean;
@@ -144,6 +146,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
 
             <div className="form__line">
                 <GuiValidatedInput ref="username" id="username"
+                    component="fs-input"
                     placeholder={this.formatLabel("@account.nameHint")}
                     defaultValue={this.state.overview.info.username}
                     onChange={this.invalidateAccountInfo}
@@ -153,6 +156,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
 
             <div className="form__line">
                 <GuiValidatedInput ref="email" id="email"
+                    component="fs-input"
                     placeholder={this.formatLabel("@account.emailHint")}
                     defaultValue={this.state.overview.info.email}
                     onChange={this.invalidateAccountInfo}
@@ -161,12 +165,10 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
             </div>
 
             <div className="form__submit">
-                <section className="gui-button gui-button_yellow">
-                    <button type="submit" className="btn"><FormattedMessage id="@update" /></button>
-                    {
-                        this.state.updatedAccountInfo ? <FormattedMessage id="@settingsUpdated" /> : null
-                    }
-                </section>
+                <button type="submit" className="fs-main-button"><FormattedMessage id="@update" /></button>
+                {
+                    this.state.updatedAccountInfo ? <FormattedMessage id="@settingsUpdated" /> : null
+                }
             </div>
         </form>;
     }
@@ -231,12 +233,10 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
             {this.state.overview.hasPassword ? this.renderChangePassword() : this.renderAddPassword()}
 
             <div className="form__submit">
-                <section className="gui-button gui-button_yellow">
-                    <button type="submit" className="btn"><FormattedMessage id="@update" /></button>
-                    {
-                        this.state.updatedPassword ? <FormattedMessage id="@settingsUpdated" /> : null
-                    }
-                </section>
+                <button type="submit" className="fs-main-button"><FormattedMessage id="@update" /></button>
+                {
+                    this.state.updatedPassword ? <FormattedMessage id="@settingsUpdated" /> : null
+                }
             </div>
         </form>;
     }
@@ -244,6 +244,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
         return [
             <div className="form__line" key="oldPassword">
                 <GuiValidatedInput ref="oldPassword" id="password" type="password"
+                    component="fs-input"
                     placeholder={this.formatLabel("@account.oldPassword")}
                     onValidate={this.validatePassword}
                     trigger={ValidationTrigger.blur | ValidationTrigger.change} />
@@ -251,6 +252,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
             <div className="form__line" key="newPassword">
                 <GuiValidatedInput ref="newPassword" id="password" type="password"
                     placeholder={this.formatLabel("@account.newPassword")}
+                    component="fs-input"
                     onValidate={this.validatePassword}
                     trigger={ValidationTrigger.blur | ValidationTrigger.change} />
             </div>
@@ -312,10 +314,18 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
             return null;
         }
 
-        return <div>
-            {this.renderAccountInfoSection()}
-            {this.renderPasswordSection()}
-            {this.renderProvidersSection()}
+        return <div className="light-page">
+            <TopMenu location={this.props.location} dark={true} />
+            <section className="sidemenu-content">
+                <SideMenu items={[
+                    { label: "@account.infoitem", id: "account" }
+                ]} />
+                <div>
+                    {this.renderAccountInfoSection()}
+                    {this.renderPasswordSection()}
+                    {this.renderProvidersSection()}
+                </div>
+            </section>
         </div>
     }
 }

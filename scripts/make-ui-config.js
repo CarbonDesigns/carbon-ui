@@ -7,7 +7,6 @@ var util = require("util");
 var fs = require("fs");
 var BundleResourcesPlugin = require("./BundleResourcesPlugin");
 var resolveCoreModules = require("./resolveCore");
-var CircularDependencyPlugin = require('circular-dependency-plugin');
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');

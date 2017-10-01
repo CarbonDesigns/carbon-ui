@@ -6,7 +6,7 @@ import RichPanelConfig from "./RichPanelConfig";
 import LibraryProgressStore from './library/LibraryProgressStore';
 
 import WorkspaceStore from "./workspace/WorkspaceStore";
-import ManageStylesDialogStore from "./properties/dialogs/ManageStylesDialogStore"
+// import ManageStylesDialogStore from "./properties/dialogs/ManageStylesDialogStore"
 
 export class Application {
     dispatch(action) {
@@ -29,7 +29,7 @@ export class Application {
 
         this.workspaceStore = new WorkspaceStore(this.Dispatcher);
 
-        this.manageStylesDialogStore = new ManageStylesDialogStore(this.Dispatcher);
+        // this.manageStylesDialogStore = new ManageStylesDialogStore(this.Dispatcher);
     }
 }
 

@@ -116,7 +116,7 @@ function getPlugins(settings) {
             resourceBundleOptions: resourceBundleOptions
         }),
 
-        new CheckerPlugin(),
+        new CheckerPlugin()
 
         // new HtmlWebpackPlugin({
         //     template: './res/electron.ejs',

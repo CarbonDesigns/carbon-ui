@@ -44,7 +44,6 @@ class ProjectTile extends Component<any, any>{
 
     _preventDefault(event) {
         event.preventDefault();
-        event.stopImmediatePropagation();
     }
 
     _deleteProject = () => {
@@ -61,7 +60,7 @@ class ProjectTile extends Component<any, any>{
     private static FlyoutPosition: any = { targetVertical: "top", targetHorizontal: "right" };
 
     render() {
-        return <div className="project-tile" onClick={this._preventDefault} onDoubleClick={this._goToProject}>
+        return <div tabIndex={1} className="project-tile" onClick={this._preventDefault} onDoubleClick={this._goToProject}>
             <figure className="project-tile__back" style={{ backgroundImage: `url(${this.props.avatar})` }}></figure>
             <div className="project-tile__block">
                 <img className="project-tile__image" src={this.props.avatar} />

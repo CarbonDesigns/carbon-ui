@@ -1,5 +1,4 @@
 import React from "react";
-import { app, workspace } from "carbon-core";
 import classNames from 'classnames';
 import {FormattedMessage} from "react-intl";
 
@@ -19,10 +18,7 @@ export default class DropButtonItem extends React.Component<IDropButtonItemProps
     }
 
     _action=()=>{
-        if (this.props.action){
-            app.actionManager.invoke(this.props.action);
-        }
-        else if (this.props.onClick){
+        if (this.props.onClick){
             this.props.onClick();
         }
     };

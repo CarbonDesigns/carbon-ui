@@ -7,6 +7,9 @@ interface IDropButtonProps extends IReactElementProps
     caption?:string;
     disabled?:boolean;
     extension_data?:any;
+    black?:boolean;
+    width?:any;
+    height?:any;
 }
 
 interface IDropButtonState
@@ -68,9 +71,10 @@ export default class DropButton extends React.Component<IDropButtonProps, IDropB
         return (
             <div id={this.props.id}
                 onMouseDown={this.toggle} onKeyDown={this.onKeyDown} onBlur={this.close} tabIndex={0}
-                className={ cx('action-button dropdown-pill', {
+                className={ cx('action-button dropdown-pill', this.props.className, {
                     open     : this.state.open && !this.props.disabled,
-                    disabled : this.props.disabled
+                    disabled : this.props.disabled,
+                    black: this.props.black
                 }) }>
                 {
                     pill_content

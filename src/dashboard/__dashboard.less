@@ -61,7 +61,11 @@
     height:158px;
     position: relative;
     background-color: lightgray;
-    margin: 0 0 20px 30px;
+    margin: 2px 0 20px 30px;
+
+    &:focus {
+      outline: 2px solid #8E44AD;
+    }
   }
 
   .project-tile__block {
@@ -125,7 +129,7 @@
     line-height: 8px;
     cursor: pointer;
     border-radius: 2px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.5);
 
     &:hover
     {

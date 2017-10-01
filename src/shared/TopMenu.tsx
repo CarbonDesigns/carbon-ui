@@ -9,6 +9,8 @@ import FlyoutButton from "./FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
 import bem from "../utils/commonUtils";
 import { backend } from "carbon-api";
+import UserAvatarButton from "./UserAvatarButton";
+import DropButtonItem from "./DropButtonItem";
 
 interface TopMenuProps extends IReactElementProps {
     dark?: boolean;
@@ -50,9 +52,9 @@ export default class TopMenu extends Component<TopMenuProps, any>{
     // }
 
     _renderLogoutButton() {
-        return <div>
-            <Link className="topmenu_logout-button"  to="/logout" onClick={this._logout}><CarbonLabel id="@logout" /></Link>
-        </div>;
+        return <UserAvatarButton black={this.props.dark} width={42} height={42}>
+            <DropButtonItem id="logout" onClick={this._logout} labelId="@account.logout"></DropButtonItem>
+        </UserAvatarButton>
     }
 
     _logout = () => {
@@ -68,7 +70,7 @@ export default class TopMenu extends Component<TopMenuProps, any>{
             return [
                 <li className={bem("navigation-menu", "item", {active:dashboardActive, dark:this.props.dark})}><Link to={'/'+(this.context.router.params.companyName||'')} ><CarbonLabel id="@nav.dashboard" /></Link></li>,
                 <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
-                <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{this._renderLogoutButton()}</li>
+                <li className={bem("navigation-menu", "item", {button:false, dark:this.props.dark})}>{this._renderLogoutButton()}</li>
             ]
         }
 

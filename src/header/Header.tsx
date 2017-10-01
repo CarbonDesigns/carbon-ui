@@ -1,6 +1,6 @@
 import React from 'react';
-import DropButton from './DropButton';
-import DropButtonItem from './DropButtonItem';
+import DropButton from '../shared/DropButton';
+import DropButtonItem from '../shared/DropButtonItem';
 import ActionButton from './ActionButton';
 import UserBar from "./UserBar";
 import FlyoutButton from "../shared/FlyoutButton";
@@ -178,7 +178,6 @@ export default class Header extends Component<HeaderProps, HeaderState> {
 
         return (
             <div className="layout__header">
-
                 <div className="projectbar">
                         { this.state.appAvatar && <div className="projectbar__pic" onClick={Header.onProjectClick}>
                               <div className="projectbar__project-avatar" style={{ backgroundImage: "url('" + this.state.appAvatar + "')" }} onClick={Header.onProjectClick}></div>
@@ -211,12 +210,10 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                     }
                 </div>
 
-
                 {/* Stories in preview*/}
                 { (this.state.activeMode === "preview")
                     &&  <StoriesSelector name=""/>
                 }
-
 
                 { /*   Userbar / Signup   */ }
                 <div className="statusbar">

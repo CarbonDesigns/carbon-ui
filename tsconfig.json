@@ -11,8 +11,8 @@
     },
     "include": [
         "src/**/*",
-        //"../carbon-core/mylibs/definitions/carbon-*.d.ts"
-        "./node_modules/@carbonium/carbon-core/types/*.d.ts"
+        "../carbon-core/mylibs/definitions/carbon-*.d.ts"
+        //"./node_modules/@carbonium/carbon-core/types/*.d.ts"
     ],
     "files": [
         //TODO: remove when immutable > 3.8.1 is released

@@ -287,16 +287,9 @@
     display: flex;
 }
 
-#user-avatar {
-    .inbl_middle;
-    .rounded(3);
-    width: @top_side;
-    height: 100%;
-    .bgc(#ccc);
-    .bgcover;
-    .bgcenter;
+.user-avatar-button {
+    width:60px;
 }
-
 
 #register{
     .bgci1();
@@ -437,6 +430,12 @@
 
     &:hover:not(.disabled):after {
         .opacity(1);
+    }
+
+    &.black {
+        &:after {
+            #triangle > .down(black, 6px, 4px);
+        }
     }
 }
 

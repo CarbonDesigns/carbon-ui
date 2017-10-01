@@ -2,11 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Component, handles, dispatch} from "../CarbonFlux";
 import FlyoutButton from "../shared/FlyoutButton";
+import Avatar from "../shared/Avatar";
 import {app, backend} from "carbon-core";
 import {FormattedMessage} from "react-intl";
 
-import UserAvatarButton from './UserAvatarButton';
-import DropButtonItem from './DropButtonItem';
+import UserAvatarButton from '../shared/UserAvatarButton';
+import DropButtonItem from '../shared/DropButtonItem';
 import RegistrationPopup from '../account/RegistrationPopup';
 import { AccountAction } from '../account/AccountActions';
 
@@ -49,7 +50,7 @@ export default class UserBar extends Component<IUserBarProps, IUserBarState> {
     };
 
     _renderUserAvatar(){
-        return <UserAvatarButton extension_data={{avatar_url: '/img/i/user-avatar.jpg'}}>
+        return <UserAvatarButton className="user-avatar-button">
             {/*<DropButtonItem id="action-button_getpro">Get PRO account</DropButtonItem>
             <DropButtonItem id="action-button_projects">My projects</DropButtonItem>
             <DropButtonItem id="action-button_profile">User profile</DropButtonItem>*/}

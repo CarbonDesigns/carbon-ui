@@ -5,8 +5,9 @@ import cx from 'classnames';
 import { default as bem, join_bem_mods } from '../utils/commonUtils';
 
 function stopPropagation(e) {
-    if (e)
+    if (e) {
         e.stopPropagation();
+    }
 }
 
 export interface IDropdownProps {

@@ -20,7 +20,11 @@ interface ISideMenuState {
 export class SideMenu extends React.Component<ISideMenuProps, ISideMenuState> {
     constructor(props) {
         super(props);
-        this.state = { activeItemId: props.items[0].id };
+        if(props.items.length) {
+            this.state = { activeItemId: props.items[0].id };
+        } else {
+            this.state = { activeItemId: null };
+        }
     }
 
     _itemClicked = (e) => {
@@ -32,7 +36,7 @@ export class SideMenu extends React.Component<ISideMenuProps, ISideMenuState> {
     }
 
     render() {
-        var items = this.props.items;
+        var items = this.props.items || [];
         return <div className="side-menu">
             {items.map(x => {
                 return <div key={x.id}>

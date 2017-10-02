@@ -61,9 +61,10 @@ export default class TopMenu extends Component<TopMenuProps, any>{
     _logout = () => {
         backend.logout().then(() => this._goHome());
     }
+
     _settings = () => {
         this.context.router.push({
-            pathname: "/account"
+            pathname: "/settings"
         });
     }
 

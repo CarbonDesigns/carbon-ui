@@ -17,6 +17,7 @@ declare interface ISimpleReactElementProps {
     key?: any;
 }
 declare interface IReactElementProps<T extends HTMLElement = HTMLElement> extends ISimpleReactElementProps, React.DOMAttributes<HTMLElement>{
+    children?:any[]|any;
 }
 
 declare type ImmutableRecord<T> = Immutable.Record.Instance<T>;

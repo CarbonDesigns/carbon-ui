@@ -1,5 +1,5 @@
 import React from "react";
-import { Component, dispatchAction } from "../CarbonFlux";
+import { Component, dispatchAction, CarbonLabel } from "../CarbonFlux";
 import { backend, IAccountOverview } from "carbon-api";
 import { IRouteComponentProps, default as RouteComponent } from "../RouteComponent";
 import { GuiInput, GuiValidatedInput, ValidationTrigger, IFieldState } from "../shared/ui/GuiComponents";
@@ -8,6 +8,7 @@ import { AccountAction } from "./AccountActions";
 import { LoginProviders } from "../Constants";
 import TopMenu from "../shared/TopMenu";
 import { SideMenu } from "../shared/SideMenu";
+import { SideMenuContainer, ContentPage } from "../shared/SideMenuContainer";
 
 interface IAccountOverviewState {
     fetched: boolean;
@@ -139,12 +140,13 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
             .finally(() => this.setState({ sendingAccountInfo: false }));
     }
     private renderAccountInfoSection() {
-        return <form className={`password_info form form_spacy form__group`} onSubmit={this.updateAccountInfo}>
-            <div className="form__heading">
+        return <form className={`password_info form form_spacy form__group fs-form`} onSubmit={this.updateAccountInfo}>
+            <div className="form__heading fs-header">
                 <FormattedMessage tagName="h3" id="@account.info" />
             </div>
 
             <div className="form__line">
+                <label className="fs-label fs-input-label" htmlFor="username"><CarbonLabel id="@account.nameLabel"/></label>
                 <GuiValidatedInput ref="username" id="username"
                     component="fs-input"
                     placeholder={this.formatLabel("@account.nameHint")}
@@ -155,6 +157,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
             </div>
 
             <div className="form__line">
+                <label className="fs-label fs-input-label" htmlFor="email"><CarbonLabel id="@account.emailLabel"/></label>
                 <GuiValidatedInput ref="email" id="email"
                     component="fs-input"
                     placeholder={this.formatLabel("@account.emailHint")}
@@ -225,8 +228,8 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
     }
 
     private renderPasswordSection() {
-        return <form className={`account_info form form_spacy form__group`} onSubmit={this.updatePassword}>
-            <div className="form__heading">
+        return <form className={`account_info form form_spacy form__group fs-form`} onSubmit={this.updatePassword}>
+            <div className="form__heading fs-header">
                 <FormattedMessage tagName="h3" id="@account.passwordInfo" />
             </div>
 
@@ -243,6 +246,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
     private renderChangePassword() {
         return [
             <div className="form__line" key="oldPassword">
+                <label className="fs-label fs-input-label" htmlFor="email"><CarbonLabel id="@account.oldPasswordLabel"/></label>
                 <GuiValidatedInput ref="oldPassword" id="password" type="password"
                     component="fs-input"
                     placeholder={this.formatLabel("@account.oldPassword")}
@@ -250,6 +254,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
                     trigger={ValidationTrigger.blur | ValidationTrigger.change} />
             </div>,
             <div className="form__line" key="newPassword">
+                <label className="fs-label fs-input-label" htmlFor="email"><CarbonLabel id="@account.newPasswordLabel"/></label>
                 <GuiValidatedInput ref="newPassword" id="password" type="password"
                     placeholder={this.formatLabel("@account.newPassword")}
                     component="fs-input"
@@ -277,19 +282,23 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
     }
     private renderProvidersSection() {
         var others = LoginProviders.filter(x => this.state.overview.enabledProviders.indexOf(x) === -1);
-        return <div>
-            <div>
-                <p>Connected accounts:</p>
+        return <div className="form__text signup__alternative">
+            <div className="form__heading fs-header">
+                <FormattedMessage tagName="h3" id="@account.link" />
+            </div>
+
+            <div className="signup__with-socials_line signup__with-socials">
+                <CarbonLabel id="@account.connected" tagName="p" />
                 {this.state.overview.enabledProviders.map(p =>
-                    <div className={"signup__social signup__social_" + p.toLowerCase()} key={p}>
+                    <div className={"signuponform__social signup__social_" + p.toLowerCase()} key={p}>
                         <div className={"ico-social ico-social_" + p.toLowerCase()}></div>
                     </div>
                 )}
             </div>
-            <div>
-                <p>Link more accounts:</p>
+            <div className="signup__with-socials_line signup__with-socials">
+                <CarbonLabel id="@account.linkmore" tagName="p" />
                 {others.map(p =>
-                    <div className={"signup__social signup__social_" + p.toLowerCase()} onClick={this.addLogin} data-provider={p} key={p}>
+                    <div className={"signuponform__social signup__social_" + p.toLowerCase()} onClick={this.addLogin} data-provider={p} key={p}>
                         <div className={"ico-social ico-social_" + p.toLowerCase()}></div>
                     </div>
                 )}
@@ -316,16 +325,19 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
 
         return <div className="light-page">
             <TopMenu location={this.props.location} dark={true} />
-            <section className="sidemenu-content">
-                <SideMenu items={[
-                    { label: "@account.infoitem", id: "account" }
-                ]} />
-                <div>
+            <SideMenuContainer>
+                <ContentPage label="@account.infoitem" id="account" key="account">
                     {this.renderAccountInfoSection()}
+                </ContentPage>
+
+                <ContentPage label="@account.managepassword" id="password" key="password">
                     {this.renderPasswordSection()}
+                </ContentPage>
+
+                <ContentPage label="@account.link" id="link" key="link">
                     {this.renderProvidersSection()}
-                </div>
-            </section>
+                </ContentPage>
+            </SideMenuContainer>
         </div>
     }
 }

@@ -139,7 +139,7 @@ const rootRoute = {
             component: require("./account/ExternalLogin")
         },
         {
-            path: "account",
+            path: "settings",
             getComponent(nextState, cb) {
                 require.ensure([], (require) => {
                     cb(null, require("./account/AccountOverview"));

@@ -26,7 +26,7 @@ export default class DashboardPage extends Component<any, any>{
     render(){
         return <div className="dashboard-page light-page">
             <TopMenu location={this.props.location} dark={true} />
-            <section className="dashboard-content">
+            <section className="sidemenu-container">
                 <FolderTree/>
                 <ProjectList/>
             </section>

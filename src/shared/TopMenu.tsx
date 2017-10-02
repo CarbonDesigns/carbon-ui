@@ -53,12 +53,19 @@ export default class TopMenu extends Component<TopMenuProps, any>{
 
     _renderLogoutButton() {
         return <UserAvatarButton black={this.props.dark} width={42} height={42}>
+            <DropButtonItem id="settings" onClick={this._settings} labelId="@account.settings"></DropButtonItem>
             <DropButtonItem id="logout" onClick={this._logout} labelId="@account.logout"></DropButtonItem>
         </UserAvatarButton>
     }
 
     _logout = () => {
         backend.logout().then(() => this._goHome());
+    }
+
+    _settings = () => {
+        this.context.router.push({
+            pathname: "/settings"
+        });
     }
 
     _renderMenuItems(){

@@ -70,7 +70,7 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                 }
                 return;
             case "Carbon_PropsChanged":
-                if (action.element instanceof Page && action.props.toolboxConfigId) {
+                if (action.element instanceof Page && action.props.toolboxConfigUrl) {
                     ToolboxConfiguration.getConfigForPage(action.element as IPage)
                         .then(config => {
                             dispatchAction({ type: "Symbols_Loaded", page: action.element as IPage, config, async: true });
@@ -84,26 +84,26 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                     }
                     else if (action.resource.parent() === this.state.currentPage) {
                         this.setState({ dirtyConfig: true });
-                        action.resource.parent().setProps({ toolboxConfigId: null });
+                        action.resource.parent().setProps({ toolboxConfigUrl: null });
                     }
                 }
                 return;
             case "Carbon_ResourceChanged":
                 if (action.resourceType === ArtboardType.Symbol && action.resource.parent() === this.state.currentPage) {
                     this.setState({ dirtyConfig: true, changedId: action.resource.id() });
-                    action.resource.parent().setProps({ toolboxConfigId: null });
+                    action.resource.parent().setProps({ toolboxConfigUrl: null });
                 }
                 return;
             case "Carbon_ResourceDeleted":
                 if (action.resourceType === ArtboardType.Symbol && action.parent === this.state.currentPage) {
                     this.setState({ dirtyConfig: true, changedId: action.resource.id() });
-                    action.parent.setProps({ toolboxConfigId: null });
+                    action.parent.setProps({ toolboxConfigUrl: null });
                 }
                 return;
             case "Carbon_ResourcePageChanged":
                 if (action.page === this.state.currentPage) {
                     this.setState({ dirtyConfig: true, changedId: null });
-                    action.page.setProps({ toolboxConfigId: null });
+                    action.page.setProps({ toolboxConfigUrl: null });
                 }
                 return;
             case "Carbon_AppUpdated":
@@ -142,7 +142,7 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         }
 
         let configPromise: Promise<any>;
-        if (!page.props.toolboxConfigId) {
+        if (!page.props.toolboxConfigUrl) {
             configPromise = ToolboxConfiguration.buildToolboxConfig(page);
         }
         else {
@@ -170,7 +170,14 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
     }
 
     private refreshLibrary() {
-        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage);
+        ToolboxConfiguration.buildToolboxConfig(this.state.currentPage)
+            .then(config => {
+                // If new config is empty and the old one is already invalidated, dispatch the action to update the panel.
+                // Scenario: add symbols, modify, delete symbol artboard, refresh toolbox.
+                if (config.groups.length === 0 && !this.state.currentPage.props.toolboxConfigUrl) {
+                    dispatchAction({ type: "Symbols_Loaded", page: this.state.currentPage, config, async: true });
+                }
+            });
     }
 
     private onCategoryClicked(category) {

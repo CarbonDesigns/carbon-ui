@@ -17,6 +17,7 @@ interface IAccountOverviewState {
     sendingPassword: boolean;
     updatedAccountInfo: boolean;
     updatedPassword: boolean;
+    activePageId?: any;
 }
 
 export default class AccountOverview extends RouteComponent<IRouteComponentProps, IAccountOverviewState>{
@@ -36,7 +37,8 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
             sendingAccountInfo: false,
             sendingPassword: false,
             updatedAccountInfo: false,
-            updatedPassword: false
+            updatedPassword: false,
+            activePageId:null
         };
     }
 
@@ -318,6 +320,22 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
         });
     }
 
+    _onActiveChanged = (id) => {
+        var location:any = this.props.location;
+        this.context.router.push({
+            pathname: "/settings/" + id,
+            query: location.query
+        });
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextContext) {
+            var location = nextContext.router.getCurrentLocation();
+            var id = nextProps.params.id
+            this.setState({activePageId:id});
+        }
+    }
+
     render() {
         if (!this.state.fetched) {
             return null;
@@ -325,7 +343,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
 
         return <div className="light-page">
             <TopMenu location={this.props.location} dark={true} />
-            <SideMenuContainer>
+            <SideMenuContainer activePageId={this.state.activePageId} onActiveChanged={this._onActiveChanged}>
                 <ContentPage label="@account.infoitem" id="account" key="account">
                     {this.renderAccountInfoSection()}
                 </ContentPage>

@@ -55,7 +55,9 @@ export default class SubscribeForm extends Component<TopMenuProps, any>{
     }
 
     render() {
-
+        if(backend.isLoggedIn()) {
+            return null;
+        }
         return <section className="subscribe-container">
                 <p className="subscribe-container__details"><CarbonLabel id={this.props.mainTextLabelId} /></p>
                 <div className="subscribe-form">

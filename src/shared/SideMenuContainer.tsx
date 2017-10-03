@@ -19,10 +19,20 @@ interface ISideMenuContainerState {
     activePageId:any;
 }
 
-export class SideMenuContainer extends React.Component<IReactElementProps, ISideMenuContainerState> {
-    constructor(props) {
-        super(props);
-        this.state = {activePageId:null}
+interface ISideMenuContainerProps extends IReactElementProps{
+    activePageId?:any;
+    onActiveChanged?:(id:any)=>void;
+}
+
+export class SideMenuContainer extends React.Component<ISideMenuContainerProps, ISideMenuContainerState> {
+    static contextTypes = {
+        router: PropTypes.any,
+        intl: PropTypes.object
+    }
+
+    constructor(props, context) {
+        super(props, context);
+        this.state = {activePageId:props.activePageId}
     }
 
     _buildItemsFromChildren() {
@@ -39,12 +49,24 @@ export class SideMenuContainer extends React.Component<IReactElementProps, ISide
     }
 
     _onActiveChanged = (id) => {
-        this.setState({activePageId:id});
+        if(this.state.activePageId !== id) {
+            this.setState({activePageId:id});
+
+            if(this.props.onActiveChanged) {
+                this.props.onActiveChanged(id);
+            }
+        }
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps) {
+            this.setState({activePageId:nextProps.activePageId});
+        }
     }
 
     render() {
         return <section className="sidemenu-container">
-            <SideMenu items={this._buildItemsFromChildren()} onActiveChanged={this._onActiveChanged} />
+            <SideMenu items={this._buildItemsFromChildren()} activeId={this.state.activePageId} onActiveChanged={this._onActiveChanged} />
             <div className="sidemenu-container_content">
                 {this._buildContent()}
             </div>

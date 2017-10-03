@@ -73,9 +73,14 @@ export default class TopMenu extends Component<TopMenuProps, any>{
         var libraryActive = "/library" === location.pathname;
         var dashboardActive = location.pathname.startsWith("/@");
 
+        var companyName = '';
+        if(this.context.router.params.companyName) {
+            companyName = "@" + this.context.router.params.companyName;
+        }
+
         if((backend.isLoggedIn() || backend.isGuest())) {
             return [
-                <li className={bem("navigation-menu", "item", {active:dashboardActive, dark:this.props.dark})}><Link to={'/'+(this.context.router.params.companyName||'')} ><CarbonLabel id="@nav.dashboard" /></Link></li>,
+                <li className={bem("navigation-menu", "item", {active:dashboardActive, dark:this.props.dark})}><Link to={'/'+ companyName} ><CarbonLabel id="@nav.dashboard" /></Link></li>,
                 <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
                 <li className={bem("navigation-menu", "item", {button:false, dark:this.props.dark})}>{this._renderLogoutButton()}</li>
             ]

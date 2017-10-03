@@ -11,6 +11,7 @@ export interface ISideMenuItem {
 interface ISideMenuProps extends IReactElementProps {
     items: ISideMenuItem[];
     onActiveChanged?: (id: any) => void;
+    activeId?: any;
 }
 
 interface ISideMenuState {
@@ -20,11 +21,12 @@ interface ISideMenuState {
 export class SideMenu extends React.Component<ISideMenuProps, ISideMenuState> {
     constructor(props) {
         super(props);
-        if(props.items.length) {
-            this.state = { activeItemId: props.items[0].id };
-        } else {
-            this.state = { activeItemId: null };
+        var activeId = this.props.activeId;
+        if(!activeId && props.items.length) {
+            activeId = props.items[0].id;
         }
+
+        this.state = { activeItemId: activeId };
     }
 
     _itemClicked = (e) => {
@@ -32,6 +34,12 @@ export class SideMenu extends React.Component<ISideMenuProps, ISideMenuState> {
         this.setState({ activeItemId: id });
         if (this.props.onActiveChanged) {
             this.props.onActiveChanged(id);
+        }
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps) {
+            this.setState({activeItemId:nextProps.activeId});
         }
     }
 

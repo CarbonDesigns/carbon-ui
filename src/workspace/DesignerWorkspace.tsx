@@ -53,7 +53,6 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     @listenTo(richApp.workspaceStore, appStore)
     onChange() {
         this.mergeStateData({activeTool: appStore.state.activeTool});
-        this.attachToView();
 
         if (app.isLoaded && !this._imageDrop.active() && this._renderLoop.isAttached()){
             this._imageDrop.setup(this._renderLoop.viewContainer);
@@ -78,8 +77,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     componentDidMount() {
         super.componentDidMount();
 
-        this._renderLoop.mount(this.refs.viewport);
-        this.attachToView();
+        this._renderLoop.mountDesignerView(app, this.refs.viewport);
 
         if (app.isLoaded && !this._imageDrop.active()){
             this._imageDrop.setup(this._renderLoop.viewContainer);
@@ -89,11 +87,6 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         this.refs.animationSettings.attach();
 
         cancellationStack.push(this);
-    }
-
-
-    attachToView() {
-        this._renderLoop.attachDesignerView(app);
     }
 
     componentWillUnmount() {

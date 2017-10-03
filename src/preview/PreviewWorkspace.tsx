@@ -13,7 +13,8 @@ import {
     Layer,
     Circle,
     Brush,
-    Invalidate
+    Invalidate,
+    ContextType
 } from "carbon-core";
 import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../CarbonFlux";
 import PreviewStore from "./PreviewStore";
@@ -83,7 +84,17 @@ function easeTypeToClassName(type) {
     return "ease-none";
 }
 
-export default class PreviewWorkspace extends ComponentWithImmutableState {
+export default class PreviewWorkspace extends ComponentWithImmutableState<any, any> {
+    [x: string]: any;
+
+    refs: {
+        viewport: HTMLDivElement;
+        canvas0: HTMLCanvasElement;
+        canvas1: HTMLCanvasElement;
+        canvas2: HTMLCanvasElement;
+        device: HTMLDivElement;
+    }
+
     constructor(props) {
         super(props);
         this.state = { data: PreviewStore.state, currentCanvas: 0 };
@@ -128,7 +139,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState {
 
     }
 
-    _updateActivePage(nextPage, animation) {
+    _updateActivePage(nextPage, animation?) {
         if (this._currentCanvas === 0) {
             this.activeCanvas = this.canvas1;
             this.activeContext = this.context1;
@@ -164,7 +175,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState {
         frame.draw(this.frameContext, env);
     }
 
-    _setupPositionBeforeAnimation(animation) {
+    _setupPositionBeforeAnimation(animation?) {
         this.canvas1.classList.remove('animate');
         this.canvas2.classList.remove('animate');
 
@@ -319,9 +330,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState {
         this.canvas1 = this.refs.canvas1;
         this.canvas2 = this.refs.canvas2;
 
-        this.context1 = new Context(this.canvas1);
-        this.context2 = new Context(this.canvas2);
-        this.frameContext = new Context(this.canvas0);
+        this.context1 = new Context(ContextType.Content, this.canvas1);
+        this.context2 = new Context(ContextType.Content, this.canvas2);
+        this.frameContext = new Context(ContextType.Content, this.canvas0);
 
         this.activeCanvas = this.canvas1;
         this.inactiveCanvas = this.canvas2;
@@ -363,7 +374,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState {
         return page.children[0];
     }
 
-    ensureCanvasSize(data) {
+    ensureCanvasSize(data?) {
         if (!this._attached || !this.refs.viewport) {
             return;
         }
@@ -520,8 +531,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState {
         this.view.setActivePage(page);
     }
 
-    componentDidUpdate() {
-        super.componentDidUpdate();
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
         requestAnimationFrame(function () {
             var duration = (!this.state.data.activePage) ? 0 : this.state.data.activePage.animation.duration;
             this.refs.canvas1.style.transitionDuration = duration + 's';

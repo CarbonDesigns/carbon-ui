@@ -8,7 +8,7 @@ import cx from 'classnames';
 import VirtualList from "../shared/collections/VirtualList";
 import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";
-import { app, Invalidate, Selection, Environment, IArtboardPage, domUtil, LayerTypes, IIsolationLayer } from "carbon-core";
+import { app, Invalidate, Selection, Environment, IArtboardPage, domUtil, LayerType, IIsolationLayer } from "carbon-core";
 import { say } from "../shared/Utils";
 import bem from "bem";
 import { MarkupLine } from "../shared/ui/Markup";
@@ -114,7 +114,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     }
 
     goBack = () => {
-        let isolationLayer = Environment.view.getLayer(LayerTypes.Isolation) as IIsolationLayer;
+        let isolationLayer = Environment.view.getLayer(LayerType.Isolation) as IIsolationLayer;
         if (isolationLayer.isActive) {
             app.actionManager.invoke("cancel");
         } else {
@@ -135,7 +135,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         var isolationLayer: any = null;
 
         if (Environment.view) {
-            isolationLayer = Environment.view.getLayer(LayerTypes.Isolation) as IIsolationLayer;
+            isolationLayer = Environment.view.getLayer(LayerType.Isolation) as IIsolationLayer;
         }
 
         if (isolationLayer && isolationLayer.isActive) {

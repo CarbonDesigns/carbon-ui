@@ -157,7 +157,7 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
     }
 
     private getCurrentSymbolsPage() {
-        let pageId = app.getUserSetting("symbolsPageId");
+        let pageId = app.getCurrentUserSetting("symbolsPageId");
         if (!pageId) {
             return null;
         }

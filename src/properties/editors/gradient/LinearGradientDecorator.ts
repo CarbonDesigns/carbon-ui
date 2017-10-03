@@ -1,6 +1,6 @@
 import { IMouseEventHandler, KeyboardState, IMouseEventData, IDisposable, AngleAdjuster, NearestPoint, BrushType } from "carbon-core";
 import { UIElementDecorator, Environment, ILayer, IContext, IEnvironment, Invalidate, Brush, ChangeMode } from "carbon-core";
-import { LayerTypes, ILayerDrawHandlerObject } from "carbon-app";
+import { LayerType, ILayerDrawHandlerObject } from "carbon-app";
 
 
 const PointRadius = 6;
@@ -28,13 +28,13 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
 
     attach(element: any) {
         super.attach(element);
-        Environment.view.registerForLayerDraw(LayerTypes.Interaction, this);
+        Environment.view.registerForLayerDraw(LayerType.Interaction, this);
         Environment.controller.captureMouse(this);
     }
 
     detach() {
         super.detach();
-        Environment.view.unregisterForLayerDraw(LayerTypes.Interaction, this);
+        Environment.view.unregisterForLayerDraw(LayerType.Interaction, this);
         Environment.controller.releaseMouse(this);
     }
 

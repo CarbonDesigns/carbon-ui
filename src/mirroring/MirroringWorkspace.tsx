@@ -8,7 +8,8 @@ import {
     MirroringView,
     IView,
     IDisposable,
-    IMirroringProxyPage
+    IMirroringProxyPage,
+    ContextType
 } from "carbon-core";
 
 import {listenTo, Component, ComponentWithImmutableState, dispatch, IComponentImmutableState} from "../CarbonFlux";
@@ -105,7 +106,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
         super.componentDidMount();
         this.canvas = this.refs.canvas;
 
-        this.context = new Context(this.canvas);
+        this.context = new Context(ContextType.Content, this.canvas);
 
         this._renderingCallback = function () {
             doRendering.call(this, false);
@@ -119,6 +120,8 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
 
         this.attachToView();
         window.addEventListener("resize", this.onresize);
+
+        document.body.classList.add("fullscreen");
     }
 
     _recalculateContextScale() {
@@ -206,7 +209,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
         app.platform.detachEvents();
         app.platform.attachEvents(this.refs.viewport);
         this.view = view;
-        view.setupRendering(this.context, redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
+        view.setupRendering([this.context], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
 
 
         // var page = previewProxy.getCurrentScreen({
@@ -234,6 +237,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
         }
 
         window.removeEventListener("resize", this.onresize);
+        document.body.classList.remove("fullscreen");
     }
 
     _setPage(page) {

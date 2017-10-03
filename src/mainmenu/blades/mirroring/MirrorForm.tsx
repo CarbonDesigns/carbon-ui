@@ -27,6 +27,10 @@ export class MirrorForm extends Component<MirrorFormProps, MirrorFormState> {
         this.setState({ code: nextProps.code });
     }
 
+    private getUrl() {
+        return location.origin + "/m/" + this.state.code;
+    }
+
     //handlers
     private onShareClick = () => {
         return backend.shareProxy.mirrorCode(app.companyId(), app.id(), true);
@@ -49,18 +53,20 @@ export class MirrorForm extends Component<MirrorFormProps, MirrorFormState> {
             return null;
         }
 
+        let url = this.getUrl();
+
         return <div>
             <MarkupLine>
                 <FormattedMessage tagName="p" id="mirroringblade.scancodehelp" />
             </MarkupLine>
             <MarkupLine mods="center">
-                <QRCode value={this.state.code} size={256} bgColor="rgba(0,0,0,0)" fgColor="#fff" />
+                <QRCode value={url} size={256} bgColor="rgba(0,0,0,0)" fgColor="#fff" />
             </MarkupLine>
             <MarkupLine>
                 <FormattedMessage id="mirroring.urllabel" tagName="p" />
             </MarkupLine>
             <MarkupLine mods="stretch">
-                <GuiCopyInput value={location.origin + "/m/" + this.state.code} />
+                <GuiCopyInput value={url} />
             </MarkupLine>
         </div>;
     }

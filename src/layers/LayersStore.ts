@@ -2,7 +2,7 @@ import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import LayersActions, { LayerAction } from "./LayersActions";
-import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerTypes, IUIElement, IRepeatContainer, RepeatCell } from "carbon-core";
+import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell } from "carbon-core";
 import { iconType } from "../utils/appUtils";
 
 type IdMap = { [id: string]: boolean };
@@ -273,7 +273,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
     @handles(CarbonActions.activeLayerChanged)
     onActiveLayerChanged({ layer }) {
         let l = layer as ILayer;
-        if (l.type === LayerTypes.Isolation) {
+        if (l.type === LayerType.Isolation) {
             this.setState({ isIsolation: true });
             this.refreshLayersTree();
         }

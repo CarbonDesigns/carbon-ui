@@ -1,6 +1,6 @@
 import React from 'react';
 import { CompositeElement, PrimitiveType } from "carbon-core";
-import { app, Artboard, Selection, Environment, LayerTypes, IIsolationLayer } from "carbon-core";
+import { app, Artboard, Selection, Environment, LayerType, IIsolationLayer } from "carbon-core";
 import cx from 'classnames';
 import { listenTo, Component } from "../../CarbonFlux";
 import { iconType } from "../../utils/appUtils";
@@ -26,7 +26,7 @@ export default class Breadcrumbs extends Component<any, any> {
         var e = element;
         var res = [];
         var view = Environment.view;
-        var layer = Environment.view.getLayer(LayerTypes.Isolation) as IIsolationLayer;
+        var layer = Environment.view.getLayer(LayerType.Isolation) as IIsolationLayer;
         while (e) {
             if (e.canSelect() || e instanceof Artboard) {
                 res.splice(0, 0, {

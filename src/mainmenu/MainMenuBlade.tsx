@@ -1,4 +1,5 @@
 import React from 'react';
+import Router from "react-router";
 import PropTypes from "prop-types";
 import { app, backend } from "carbon-core";
 import { richApp } from '../RichApp';
@@ -53,14 +54,15 @@ type MainMenuBladeState = {
 }
 
 export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
-    // context: {
-    //     bladeContainer: BladeContainer
-    // }
+    context: {
+        bladeContainer: BladeContainer,
+        router: Router.InjectedRouter
+    }
 
     static contextTypes = {
         router: PropTypes.any,
         intl: PropTypes.object,
-        bladeContainer: BladeContainer
+        bladeContainer: PropTypes.object
     }
 
     constructor(props) {

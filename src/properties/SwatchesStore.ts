@@ -45,7 +45,13 @@ export class SwatchesStore extends CarbonStore<ISwatchesState> {
 
     @handles(SwatchesActions.changeActiveColors)
     onActiveColorsChanged({ fill, stroke }) {
-        this.setState({ fill, stroke })
+        var active = this.state.active;
+        if(active === 'stroke' && !stroke) {
+            active = 'fill';
+        } else if(active === 'fill' && !fill) {
+            active = 'stroke';
+        }
+        this.setState({ fill, stroke, active })
     }
 
     onAppUpdated() {

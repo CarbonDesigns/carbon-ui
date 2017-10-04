@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import BladePage from "../BladePage";
-import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ResourceScope } from "carbon-core";
+import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ISharedResource, ResourceScope } from "carbon-core";
 import { Component, dispatchAction } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
@@ -70,7 +70,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     }
 
     private pageSelected = (page: IPage) => {
-        let promise: Promise<ISharedPageSetup | null>;
+        let promise: Promise<ISharedResource | null>;
         if (page.props.galleryId) {
             promise = backend.shareProxy.getPageSetup(page.props.galleryId);
         }
@@ -81,7 +81,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         promise.then(setup => {
             this.setState({ page });
 
-            if (!setup) {
+            if (!setup || setup.authorId !== backend.getUserId()) {
                 var tiles = this.createTiles(page);
                 tiles.sort((a, b) => b.w * b.h - a.w * a.h);
 

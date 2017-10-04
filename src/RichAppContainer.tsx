@@ -23,13 +23,6 @@ import FullScreenApi from "./shared/FullScreenApi";
 window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent {
-    constructor(props) {
-        super(props);
-        if (props.location && props.location.state && props.location.state.dataUrl) {
-            app.initializeWithResource(props.location.state.dataUrl);
-        }
-    }
-
     componentDidMount() {
         super.componentDidMount();
         document.body.classList.add("noscroll");

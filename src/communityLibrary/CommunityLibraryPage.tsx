@@ -137,7 +137,7 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
             </section>
 
             <section className="searchlib-container section-center">
-                <input value={this.state.searchText} onChange={this._onTextChange} className={bem("searchlib-container", "input")} type="text" placeholder={this.context.intl.formatMessage({ id: "@search.placeholder" })}></input>
+                <input value={this.state.searchText} onChange={this._onTextChange} className={bem("searchlib-container", "input")} type="text" placeholder={this.context.intl.formatMessage({ id: "@search.placeholder" })} autoFocus />
             </section>
 
             <section className="searchtags-container section-center">

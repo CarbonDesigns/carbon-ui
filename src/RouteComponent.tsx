@@ -6,7 +6,7 @@ import { ErrorCode, Url, InfoCode } from "./Constants";
 
 export interface IRouteComponentProps{
     location: {
-        query: string,
+        query: object,
         state: any
     }
 }
@@ -72,8 +72,8 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
         });
     }
 
-    replacePath(path){
-        this.context.router.replace({ pathname: path, query: this.props.location.query });
+    replacePath(path, query = this.props.location.query){
+        this.context.router.replace({ pathname: path, query });
     }
 
     protected getTitle() {

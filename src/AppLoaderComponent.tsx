@@ -12,6 +12,15 @@ export interface IAppLoaderComponentProps extends IRouteComponentProps{
         companyName: string,
         appId: string,
         code?: string //for mirroring, think how to separate it
+    },
+    location: {
+        query: {
+            r: string;
+        },
+        state: {
+            companyId?: string;
+            userId?: string; //for mirroring, think how to separate it
+        }
     }
 }
 export default class AppLoaderComponent extends RouteComponent<IAppLoaderComponentProps>{
@@ -42,7 +51,7 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
             app.unload();
         }
         if (!app.isLoaded) {
-            this.runApp(this.props.params, this.props.location);
+            this.runApp();
         }
     }
 
@@ -51,35 +60,38 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
         app.unload();
     }
 
-    _resolveCompanyId(app, location, companyName) {
+    _resolveCompanyId(app) {
         if (app.serverless()) {
             return Promise.resolve({ companyId: "no-server" });
         }
-        if (location.state && location.state.companyId) {
-            return Promise.resolve({ companyId: location.state.companyId });
+        if (this.props.location.state && this.props.location.state.companyId) {
+            return Promise.resolve({ companyId: this.props.location.state.companyId });
         }
-        if (!companyName) {
+        if (!this.props.params.companyName) {
             return backend.ensureLoggedIn()
                 .then(() => { return { companyId: backend.getUserId() } });
         }
-        return backend.accountProxy.resolveCompanyId(companyName);
+        return backend.accountProxy.resolveCompanyId(this.props.params.companyName);
     }
 
-    runApp(data: {companyName: string, appId: string}, location) {
+    runApp() {
         app.init();
 
-        this._resolveCompanyId(app, location, data.companyName)
+        this._resolveCompanyId(app)
             .then(x => {
                 app.companyId(x.companyId);
-                if (data.appId) {
-                    app.id(data.appId);
+                if (this.props.params.appId) {
+                    app.id(this.props.params.appId);
+                }
+                if (this.props.location.query.r) {
+                    app.initializeWithResource(this.props.location.query.r);
                 }
 
                 if (!app.id() && !app.serverless()) {
                     var token = app.actionManager.subscribe("save", (name, result) => {
                         if (result) {
-                            var newUrl = backend.addUrlPath(location.pathname, app.id());
-                            this.replacePath(newUrl);
+                            //strip possible resource from query
+                            this.replacePath(this.getAppUrlPath(this.props.params.companyName), {});
                             token.dispose();
                         }
                     });
@@ -105,6 +117,14 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
                 }
             })
             .catch(() => this.goToError("unknownCompany"));
+    }
+
+    private getAppUrlPath(companyName: string) {
+        if (app.companyId() === backend.getUserId()) {
+            return "/app/" + app.id();
+        }
+        console.assert(!!companyName);
+        return "/app/@" + companyName + "/" + app.id();
     }
 
     static contextTypes = {

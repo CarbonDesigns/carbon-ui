@@ -34,7 +34,7 @@ export default class MirroringAppContainer extends AppLoaderComponent {
     componentDidUpdate(){
         super.componentDidUpdate.apply(this, arguments);
         if (!app.isLoaded){
-            this.runApp(this.props.params, this.props.location);
+            this.runApp();
         }
     }
 

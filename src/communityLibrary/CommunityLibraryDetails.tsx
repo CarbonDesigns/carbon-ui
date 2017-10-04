@@ -34,17 +34,23 @@ function buildSymbol(name) {
 function GalleryListItem(props) {
     var item = props.item;
     return <div className={bem("gallery-item")} onClick={() => props.host.goToItem(item.id)} style={{ backgroundImage: "url('" + item.coverUrl + "')" }}>
-        <div className={bem("gallery-item", "downloads")}>{item.downloadCount}</div>
+        <div className={bem("gallery-item", "downloads")}>{item.timesUsed}</div>
         <h2 className={bem("gallery-item", "name")}>{item.name}</h2>
         <h3 className={bem("gallery-item", "tags")}>{item.tags}</h3>
     </div>
 }
 
-interface CommunityLibraryPageState {
+interface CommunityLibraryDetailsProps extends IRouteComponentProps {
+    params: {
+        id: string;
+    }
+}
+
+interface CommunityLibraryDetailsState {
     data:any;
 }
 
-export default class CommunityLibraryPage extends RouteComponent<IRouteComponentProps, CommunityLibraryPageState>{
+export default class CommunityLibraryDetails extends RouteComponent<CommunityLibraryDetailsProps, CommunityLibraryDetailsState>{
     static contextTypes = {
         router: PropTypes.any,
         intl: PropTypes.object
@@ -60,15 +66,6 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
                 this.setState({data:data});
             })
         }
-    }
-
-    _openSymbol(dataUrl) {
-        this.context.router.push({
-            pathname:"/app",
-            state: {
-                dataUrl:dataUrl
-            }
-        })
     }
 
     componentDidMount() {
@@ -107,8 +104,10 @@ export default class CommunityLibraryPage extends RouteComponent<IRouteComponent
                     <div className={bem("resource-details", "designedby")}>{data.authorName||"carbonium"}</div>
 
                     <div className="resource-details__import-aligner">
-                        <button onClick={()=>{this._openSymbol(data.dataUrl)}} className={cx("fs-main-button", bem("resource-details", "import"))}>Open symbol</button>
-                        <div className={bem("resource-details", "downloads")}>{data.timesUsed} downloads</div>
+                        <a href={"/app?r=" + this.props.params.id} className={cx("fs-main-button", bem("resource-details", "import"))}>{this.formatLabel("@library.openSymbol")}</a>
+                        <div className={bem("resource-details", "downloads")}>
+                            <FormattedMessage id="@library.downloads" values={{ num: data.timesUsed }} />
+                        </div>
                     </div>
                 </div>
             </section>

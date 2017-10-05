@@ -87,8 +87,6 @@ export default class ForgotPassword extends RouteComponent<IRouteComponentProps,
         var form_status_classname = (this.state.status) ? (" form_" + this.state.status) : "";
 
         return <div className="login-page light-page">
-            <TopMenu location={this.props.location} dark={true} />
-
             <div className="login-page_content">
                 <section className="loginheader-container smooth-header">
                     <h1 className={bem("loginheader-container", "header")} >

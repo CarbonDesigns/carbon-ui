@@ -66,8 +66,6 @@ export default class CommunityLibraryPage extends Component<CommunityLibraryPage
 
     render() {
         return <div className={bem("library-page", null, {hidden: !this.props.visible}, "light-page")}>
-            {/* <TopMenu location={this.props.location} dark={true} /> */}
-
             <section className="libraryheader-container smooth-header section-center">
                 <h1 className={bem("libraryheader-container", "h")}><CarbonLabel id="@library.header" /></h1>
             </section>

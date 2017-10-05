@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
-import Router from "react-router/lib/Router";
+import Router, { RouteConfig } from "react-router/lib/Router";
 import browserHistory from "react-router/lib/browserHistory";
 import {IntlProvider, addLocaleData} from 'react-intl';
 import en from 'react-intl/locale-data/en';
@@ -20,30 +20,104 @@ import { backend } from "carbon-api";
 // const {whyDidYouUpdate} = require('why-did-you-update');
 // whyDidYouUpdate(React);
 
-const rootRoute = {
+const rootRoute: RouteConfig = {
     childRoutes: [
+        {
+            path: "/",
+            component: require("./WebPage"),
+            indexRoute: {
+                component: require("./LandingSelector")
+            },
+            childRoutes: [
+                {
+                    path: "/@:companyName",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./dashboard/DashboardPage"));
+                        }, "dashboard");
+                    }
+                },
+                {
+                    path: "/library(/:resourceId)",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./communityLibrary/CommunityLibrary"));
+                        }, "library");
+                    }
+                },
+                {
+                    path: "/thankyou",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./landing/message"));
+                        }, "thankyou");
+                    }
+                },
+                {
+                    path: "e/:code",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./ErrorPage"));
+                        }, "other");
+                    }
+                },
+                {
+                    path: "i/:code",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./InfoPage"));
+                        }, "other");
+                    }
+                },
+
+                {
+                    path: "settings(/:id)",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./account/AccountOverview"));
+                        }, "account");
+                    }
+                },
+                {
+                    path: "account/forgotPassword",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./account/ForgotPassword"));
+                        }, "account");
+                    }
+                },
+                {
+                    path: "account/resetPassword/:token",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./account/ResetPassword"));
+                        }, "account");
+                    }
+                },
+                {
+                    path: "/login",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./account/LoginPage"));
+                        }, "account");
+                    }
+                },
+                {
+                    path: "/register",
+                    getComponent(nextState, cb) {
+                        require.ensure([], (require) => {
+                            cb(null, require("./account/RegistrationPage"));
+                        }, "account");
+                    }
+                },
+            ]
+        },
         {
             path: "/landing",
             getComponent(nextState, cb) {
                 require.ensure([], (require) => {
                     cb(null, require("./landing/LandingPage"));
                 }, "landing");
-            }
-        },
-        {
-            path: "/library(/:resourceId)",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./communityLibrary/CommunityLibrary"));
-                }, "library");
-            }
-        },
-        {
-            path: "/thankyou",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./landing/message"));
-                }, "thankyou");
             }
         },
         {
@@ -105,22 +179,6 @@ const rootRoute = {
                 });
             }
         },
-        {
-            path: "e/:code",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./ErrorPage"));
-                }, "other");
-            }
-        },
-        {
-            path: "i/:code",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./InfoPage"));
-                }, "other");
-            }
-        },
 
         {
             path: "a/renew",
@@ -129,60 +187,6 @@ const rootRoute = {
         {
             path: "a/external",
             component: require("./account/ExternalLogin")
-        },
-        {
-            path: "settings(/:id)",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./account/AccountOverview"));
-                }, "account");
-            }
-        },
-        {
-            path: "account/forgotPassword",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./account/ForgotPassword"));
-                }, "account");
-            }
-        },
-        {
-            path: "account/resetPassword/:token",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./account/ResetPassword"));
-                }, "account");
-            }
-        },
-        {
-            path: "/login",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./account/LoginPage"));
-                }, "account");
-            }
-        },
-        {
-            path: "/register",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./account/RegistrationPage"));
-                }, "account");
-            }
-        },
-
-        {
-            path: "/@:companyName",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./dashboard/DashboardPage"));
-                }, "dashboard");
-            }
-        },
-
-        {
-            path: "/",
-            component: require("./LandingSelector")
         },
 
         {

@@ -87,8 +87,6 @@ export default class CommunityLibraryDetails extends Component<CommunityLibraryD
 
         var data = this.state.data;
         return <div className="resource-page">
-            {/* <TopMenu location={this.props.location} dark={true} /> */}
-
             <section className="resource-details-container">
                 <figure className="resource-details-image" style={{ backgroundImage: "url('" + data.coverUrl + "')" }}></figure>
                 <div className="resource-details">

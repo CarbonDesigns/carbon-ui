@@ -14,7 +14,6 @@ import DropButtonItem from "./DropButtonItem";
 
 interface TopMenuProps extends IReactElementProps {
     dark?: boolean;
-    location: any;
 }
 
 export default class TopMenu extends Component<TopMenuProps, any>{
@@ -37,8 +36,7 @@ export default class TopMenu extends Component<TopMenuProps, any>{
 
     _goHome = () => {
         this.context.router.push({
-            pathname: "/",
-            query: this.props.location.query
+            pathname: "/landing"
         });
     }
 
@@ -101,7 +99,7 @@ export default class TopMenu extends Component<TopMenuProps, any>{
 
     render() {
         return <nav className="header-container">
-            <a onClick={this._goHome} className={bem("header-container", "logo", { dark: this.props.dark })} title="carbonium.io"></a>
+            <Link to={"/landing"} className={bem("header-container", "logo", { dark: this.props.dark })} title="carbonium.io"></Link>
 
             <ul className="navigation-menu">
                 {this._renderMenuItems()}

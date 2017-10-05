@@ -82,7 +82,7 @@ export default class LoginPage extends RouteComponent<IRouteComponentProps> {
 
     render() {
         return <div className="login-page light-page">
-            <TopMenu location={this.props.location} dark={true} />
+            <TopMenu dark={true} />
 
             <div className="login-page_content">
                 <section className="loginheader-container smooth-header">

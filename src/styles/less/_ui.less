@@ -2404,7 +2404,8 @@
 }
 
 .side-menu__items {
-    transition: all 0.2s ease;
+    transition: max-height 0.3s ease;
+    max-height: 100vh;
 }
 
 @media screen and (max-width:600px) {
@@ -2419,7 +2420,7 @@
 
     .side-menu:not(.active) {
         & .side-menu__items {
-            height: 0;
+            max-height: 0;
             overflow: hidden;
         }
 
@@ -2443,6 +2444,7 @@
     .side-menu.active {
         & .side-menu__activeselector {
             opacity: 0.5;
+            transition: opacity 0.1s ease-out;
             &:after {
                 .cont;
                 #triangle > .up(black, 9px, 6px);

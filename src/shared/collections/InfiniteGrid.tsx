@@ -98,6 +98,10 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
         newState = Object.assign({ data: [], version: this.state.version + 1 }, newState);
         newState.totalCount = InitialTotalCount;
         this.setState(newState);
+
+        // If number of rows/columns does not change, the grid needs to be forcefully updated
+        // to hide content
+        this.grid.forceUpdate();
     }
 
     private initScroller() {

@@ -10,12 +10,7 @@ import SubscribeForm from "../shared/SubscribeForm";
 import bem from "../utils/commonUtils";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
 import cx from "classnames";
-
-function SearchTag(props) {
-    return <div className="search-tag">
-        {props.text}
-    </div>
-}
+import { SearchTag } from "./SearchTag";
 
 function buildSymbol(name) {
     var parts = name.split(' ');

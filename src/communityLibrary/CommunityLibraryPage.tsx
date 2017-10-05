@@ -11,6 +11,7 @@ import bem from "../utils/commonUtils";
 import InfiniteGrid from "../shared/collections/InfiniteGrid";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
 import Search from "../shared/Search";
+import { SearchTag } from "./SearchTag";
 
 type ResourceGrid = new (props) => InfiniteGrid<ISharedResource>;
 const ResourceGrid = InfiniteGrid as ResourceGrid;
@@ -25,9 +26,20 @@ export default class CommunityLibraryPage extends Component<CommunityLibraryPage
         router: PropTypes.any,
         intl: PropTypes.object
     }
-
     context: {
         router: InjectedRouter
+    }
+    refs: {
+        grid: InfiniteGrid
+    }
+
+    private lastSearch: string;
+
+    componentDidUpdate(prevProps: CommunityLibraryPageProps) {
+        if (this.props.visible && this.props.search !== this.lastSearch) {
+            this.refs.grid.reset();
+            this.lastSearch = this.props.search;
+        }
     }
 
     private onLoadMore = (startIndex: number, stopIndex: number) => {
@@ -47,7 +59,6 @@ export default class CommunityLibraryPage extends Component<CommunityLibraryPage
             cellRenderer={this.renderTile}
             noContentRenderer={this.noItemsFound}
             spinnerMods="dark"
-            filter={this.props.search}
         />
     }
 
@@ -56,16 +67,18 @@ export default class CommunityLibraryPage extends Component<CommunityLibraryPage
     }
 
     private onSearch = (text) => {
+        let query: any = {};
+        if (text) {
+            query.s = text;
+        }
         this.context.router.replace({
             pathname: "/library",
-            query: {
-                s: text
-            }
+            query
         });
     }
 
     render() {
-        return <div className={bem("library-page", null, {hidden: !this.props.visible}, "light-page")}>
+        return <div className={bem("library-page", null, { hidden: !this.props.visible }, "light-page")}>
             <section className="libraryheader-container smooth-header section-center">
                 <h1 className={bem("libraryheader-container", "h")}><CarbonLabel id="@library.header" /></h1>
             </section>
@@ -75,10 +88,10 @@ export default class CommunityLibraryPage extends Component<CommunityLibraryPage
             </section>
 
             <section className="searchtags-container section-center">
-                <SearchTag text="ios" host={this}></SearchTag>
-                <SearchTag text="icons" host={this}></SearchTag>
-                <SearchTag text="android" host={this}></SearchTag>
-                <SearchTag text="landing" host={this}></SearchTag>
+                <SearchTag text="ios" />
+                <SearchTag text="icons" />
+                <SearchTag text="android" />
+                <SearchTag text="landing" />
             </section>
 
             <section className="gallery-list-container">
@@ -88,15 +101,6 @@ export default class CommunityLibraryPage extends Component<CommunityLibraryPage
             <SubscribeForm mainTextLabelId="@subscribe.details" />
         </div>;
     }
-}
-
-function SearchTag(props) {
-    return <div className="search-tag" onClick={() => {
-        props.host.setState({ searchText: "tags:" + props.text });
-        props.host._resetSearch();
-    }}>
-        {props.text}
-    </div>
 }
 
 function GalleryListItem(props) {

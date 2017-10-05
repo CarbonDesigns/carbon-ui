@@ -49,7 +49,7 @@ export default class CommunityLibrary extends RouteComponent<CommunityLibraryPro
 
     private renderList() {
         if (this.state.showList) {
-            return <CommunityLibraryPage search={this.props.location.query.s} visible={!this.props.params.resourceId} />;
+            return <CommunityLibraryPage search={this.props.location.query.s || ""} visible={!this.props.params.resourceId} />;
         }
         return null;
     }

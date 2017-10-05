@@ -31,10 +31,10 @@ const rootRoute = {
             }
         },
         {
-            path: "/library",
+            path: "/library(/:resourceId)",
             getComponent(nextState, cb) {
                 require.ensure([], (require) => {
-                    cb(null, require("./communityLibrary/CommunityLibraryPage"));
+                    cb(null, require("./communityLibrary/CommunityLibrary"));
                 }, "library");
             }
         },
@@ -44,14 +44,6 @@ const rootRoute = {
                 require.ensure([], (require) => {
                     cb(null, require("./landing/message"));
                 }, "thankyou");
-            }
-        },
-        {
-            path: "/resource/:id",
-            getComponent(nextState, cb) {
-                require.ensure([], (require) => {
-                    cb(null, require("./communityLibrary/CommunityLibraryDetails"));
-                }, "resource");
             }
         },
         {

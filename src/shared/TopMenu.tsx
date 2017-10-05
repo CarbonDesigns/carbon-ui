@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import ReactDom from "react-dom";
 import { util } from "carbon-core";
 import cx from "classnames";
-import { Link } from "react-router";
+import { Link, InjectedRouter } from "react-router";
 import { Component, CarbonLabel } from "../CarbonFlux";
 import FlyoutButton from "./FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
@@ -21,6 +21,10 @@ export default class TopMenu extends Component<TopMenuProps, any>{
     static contextTypes = {
         router: PropTypes.any,
         intl: PropTypes.object
+    }
+
+    context: {
+        router: any
     }
 
     constructor(props: TopMenuProps) {

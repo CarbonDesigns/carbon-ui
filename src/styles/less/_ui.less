@@ -1769,11 +1769,11 @@
     &__input {
         .bl;
 
-        .heading-font-thin;
         .wbg(25);
         color: @font_color;
         .placeholder(fadeout(@font_color, 50%));
         .w100;
+        .h100;
 
         padding:  @line_air/2 @line_air  @line_air/2 @line_air*2.5;
 
@@ -1786,6 +1786,11 @@
         .condensed &{
             .f14;
             padding: 2px;
+        }
+
+        &&_dark {
+            color: black;
+            .placeholder(fadeout(black, 50%));
         }
     }
 
@@ -2186,8 +2191,6 @@
         align-items: center;
     }
 
-    @color: @font_color;
-
     @-webkit-keyframes scale {
         0%, 80% {
             -webkit-transform: scale(1);
@@ -2233,12 +2236,8 @@
             animation: scale .75s 0s infinite cubic-bezier(.2, .68, .18, 1.08)
         }
 
-        &__1,
-        &__2,
-        &__3
-        {
-
-            background-color: @color;
+        & > * {
+            background-color: white;
             border-radius: 100%;
             margin: 2px;
             display: inline-block;
@@ -2248,8 +2247,10 @@
             animation-fill-mode: both
         }
 
+        &&_dark > * {
+            background-color: black;
+        }
     }
-
 
 }
 // CUSTOM PICKER

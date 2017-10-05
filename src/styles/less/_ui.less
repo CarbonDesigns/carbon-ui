@@ -2397,6 +2397,78 @@
     margin-top: 40px;
 }
 
+.side-menu__activeselector {
+    display: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.side-menu__items {
+    transition: all 0.2s ease;
+}
+
+@media screen and (max-width:600px) {
+    .sidemenu-container {
+        flex-direction: column;
+    }
+
+    .sidemenu-container__page {
+        width:100%;
+        padding: 20px 40px;
+    }
+
+    .side-menu:not(.active) {
+        & .side-menu__items {
+            height: 0;
+            overflow: hidden;
+        }
+
+        & h3 {
+            border-bottom: 1px dotted #8421BD;
+        }
+
+        & .side-menu__activeselector {
+            &:after {
+                .cont;
+                #triangle > .down(black, 9px, 6px);
+                width: 1px;
+                margin-left: 10px;
+                padding-bottom: 8px;
+                .inbl_middle;
+                .rel;
+            }
+        }
+    }
+
+    .side-menu.active {
+        & .side-menu__activeselector {
+            opacity: 0.5;
+            &:after {
+                .cont;
+                #triangle > .up(black, 9px, 6px);
+                width: 1px;
+                margin-left: 10px;
+                margin-top: -8px;
+                .inbl_middle;
+                .rel;
+            }
+        }
+    }
+
+    .side-menu__items {
+        margin-top:10px;
+        margin-left: 10px;
+    }
+
+    .side-menu__activeselector {
+        display: block;
+    }
+
+    .sidemenu-container__page .form__heading.fs-header {
+        display: none;
+    }
+}
+
 .sidemenu-container_content {
   display: flex;
   flex-direction: row;
@@ -2411,7 +2483,6 @@
         font-family: Poppins, Open Sans, Helvetica, sans-serif;
         font-weight: 900;
         color: black;
-        padding-bottom: 40px;
     }
 }
 

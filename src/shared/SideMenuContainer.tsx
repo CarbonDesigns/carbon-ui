@@ -11,7 +11,7 @@ export interface IContentPageProps extends IReactElementProps {
 
 export class ContentPage extends React.Component<IContentPageProps, any> {
     render() {
-        return <div {...this.props}></div>;
+        return <div className={cx(this.props.className, "sidemenu-container__page")}>{this.props.children}</div>;
     }
 }
 

@@ -220,7 +220,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps, La
             {/* <div ref="background4" className="page-background yellow-section"></div> */}
             {/* <div ref="background5" className="page-background red-section"></div> */}
             <section ref="heroContainer" className="hero-container">
-                <TopMenu location={this.props.location} />
+                <TopMenu />
 
                 {/* <canvas ref="backCanvas" className="hero-container__canvas"></canvas> */}
                 <div className="hero-container__canvas"></div>

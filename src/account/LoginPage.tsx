@@ -82,8 +82,6 @@ export default class LoginPage extends RouteComponent<IRouteComponentProps> {
 
     render() {
         return <div className="login-page light-page">
-            <TopMenu location={this.props.location} dark={true} />
-
             <div className="login-page_content">
                 <section className="loginheader-container smooth-header">
                     <h1 className={bem("loginheader-container", "header")} >

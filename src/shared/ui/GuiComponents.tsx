@@ -751,9 +751,14 @@ export interface IFormState {
     status: "notReady" | "sending" | "error";
 }
 
-export function GuiSpinner() {
+export type GuiSpinnerMod = "dark";
+
+export interface GuiSpinnerProps extends IHasMods<GuiSpinnerMod> {
+}
+
+export function GuiSpinner(props: GuiSpinnerProps) {
     return <div className="loading-spinner">
-        <div className="ball-pulse">
+        <div className={bem("ball-pulse", null, props.mods)}>
             <div className="ball-pulse__1"></div>
             <div className="ball-pulse__2"></div>
             <div className="ball-pulse__3"></div>

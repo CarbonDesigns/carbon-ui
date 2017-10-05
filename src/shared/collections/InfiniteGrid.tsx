@@ -6,14 +6,18 @@ import { IPaginatedResult } from "carbon-api";
 import ScrollContainer from "../ScrollContainer";
 import { DimensionsZero } from "./CollectionDefs";
 import Antiscroll from "../../external/antiscroll";
+import { GuiSpinner, GuiSpinnerMod } from "../ui/GuiComponents";
+import { Operation } from "../Operation";
 
 interface InfiniteGridProps<T = any> extends ISimpleReactElementProps {
     cellWidth: number;
     cellHeight: number;
     cellRenderer: (item: T) => React.ReactNode;
-    windowScroll?:boolean;
+    windowScroll?: boolean;
     loadMore: (startIndex: number, stopIndex: number) => Promise<IPaginatedResult<T>>;
     noContentRenderer?: () => React.ReactNode;
+    spinnerMods?: GuiSpinnerMod;
+    filter?: string;
 }
 
 type InfiniteGridState<T> = {
@@ -23,6 +27,7 @@ type InfiniteGridState<T> = {
     columnCount: number;
     totalCount: number;
     dimensions: Dimensions;
+    operation: Operation;
 }
 
 /**
@@ -51,7 +56,8 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
             rowCount: 0,
             columnCount: 0,
             totalCount: InitialTotalCount,
-            version: 0
+            version: 0,
+            operation: null
         };
     }
 
@@ -63,6 +69,12 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     componentWillUnmount() {
         super.componentWillUnmount();
         this.scroller.destroy();
+    }
+
+    componentWillReceiveProps(nextProps: InfiniteGridProps<T>) {
+        if (nextProps.filter !== this.props.filter) {
+            this.reset();
+        }
     }
 
     componentDidUpdate(prevProps: InfiniteGridProps<T>, prevState: InfiniteGridState<T>) {
@@ -83,8 +95,13 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
         this.refs.loader.resetLoadMoreRowsCache();
 
         let newState = this.recalculateStateToFit(this.state.dimensions);
-        newState = Object.assign({ data: [], totalCount: InitialTotalCount, version: this.state.version + 1 }, newState)
+        newState = Object.assign({ data: [], version: this.state.version + 1 }, newState);
+        newState.totalCount = InitialTotalCount;
         this.setState(newState);
+
+        // If number of rows/columns does not change, the grid needs to be forcefully updated
+        // to hide content
+        this.grid.forceUpdate();
     }
 
     private initScroller() {
@@ -100,14 +117,27 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     private isRowLoaded = (params: Index) => {
         return params.index >= 0 && params.index < this.state.data.length;
     }
+    /**
+     * Initial request saves the operation to show a loading spinner.
+     * Subsequent requests do not show spinner and are not delayed.
+     * Probably, the cells which are not loaded should instead draw their outline with spinners inside.
+     */
     private loadMoreRows = (params: IndexRange) => {
-        return this.props.loadMore(params.startIndex, params.stopIndex)
+        let isEmpty = this.state.data.length === 0;
+        let operation = new Operation(!isEmpty);
+        if (isEmpty) {
+            this.setState({ operation });
+        }
+        return operation.start()
+            .then(() => this.props.loadMore(params.startIndex, params.stopIndex))
+            .then(data => operation.stop(data))
             .then(result => {
                 let rowCount = Math.ceil(result.totalCount / this.state.columnCount);
                 this.setState({
                     data: this.appendPage(result.pageData),
                     totalCount: result.totalCount,
-                    rowCount
+                    rowCount,
+                    operation: null
                 });
             });
     }
@@ -138,17 +168,21 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
         }
 
         if (this.state.dimensions.width !== dimensions.width || this.state.dimensions.height !== dimensions.height) {
-            let newState;
+            let newState = null;
             if (this.state.data.length) {
                 let columnCount = this.getColumnCount(dimensions);
-                let rowCount = Math.ceil(this.state.totalCount/columnCount);
+                let rowCount = Math.ceil(this.state.totalCount / columnCount);
                 newState = { columnCount, rowCount, dimensions };
             }
-            else {
+            else if (!this.state.dimensions.width || !this.state.dimensions.height) {
+                // If the grid already takes space, but does not have any results,
+                // do not recalculate state to avoid requests on window resize
                 newState = this.recalculateStateToFit(dimensions);
             }
 
-            setTimeout(() => this.setState(newState), 1);
+            if (newState) {
+                setTimeout(() => this.setState(newState), 1);
+            }
         }
     }
 
@@ -168,34 +202,35 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
         this.registerChild = loaderProps.registerChild;
 
         return <WindowScroller>
-            {(scrollerProps:any) =>
-            <AutoSizer disableHeight>
-            {dimensions => {
-                this.onNewDimensions(dimensions);
+            {(scrollerProps: any) =>
+                <AutoSizer disableHeight>
+                    {dimensions => {
+                        this.onNewDimensions(dimensions);
 
-                //cells with aspect ratio
-                let actualCellWidth = this.props.cellWidth;// / (this.state.columnCount || 1);
-                let actualCellHeight = this.props.cellHeight;// * actualCellWidth / this.props.cellWidth;
+                        let actualCellWidth = this.props.cellWidth;
+                        let actualCellHeight = this.props.cellHeight;
 
-                return <Grid
-                        style={{ overflowX: "hidden", display:"flex", "justifyContent":"center" }}
-                        autoHeight
-                        cellRenderer={this.cellRenderer}
-                        noContentRenderer={this.props.noContentRenderer}
-                        columnCount={this.state.columnCount}
-                        columnWidth={actualCellWidth}
-                        isScrolling={scrollerProps.isScrolling}
-                        onScroll={scrollerProps.onChildScroll}
-                        rowCount={this.state.rowCount}
-                        rowHeight={actualCellHeight}
-                        width={dimensions.width}
-                        height={scrollerProps.height}
-                        scrollTop={scrollerProps.scrollTop}
-                        onSectionRendered={params => this.onSectionRendered(params, this.state.columnCount)}
-                        ref={this.registerGrid}
-                    />
-            }}
-        </AutoSizer>}</WindowScroller>;
+                        return <Grid
+                            style={InfiniteGrid.GridStyle}
+                            autoHeight
+                            cellRenderer={this.cellRenderer}
+                            noContentRenderer={this.props.noContentRenderer}
+                            columnCount={this.state.columnCount}
+                            columnWidth={actualCellWidth}
+                            isScrolling={scrollerProps.isScrolling}
+                            onScroll={scrollerProps.onChildScroll}
+                            rowCount={this.state.rowCount}
+                            rowHeight={actualCellHeight}
+                            width={dimensions.width}
+                            height={scrollerProps.height}
+                            scrollTop={scrollerProps.scrollTop}
+                            onSectionRendered={this.onSectionRendered}
+                            ref={this.registerGrid}
+                        />
+                    }}
+                </AutoSizer>
+            }
+        </WindowScroller>;
     }
 
     private infiniteLoaderChildFunction = (loaderProps: InfiniteLoaderChildProps) => {
@@ -221,7 +256,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
                         rowHeight={actualCellHeight}
                         width={dimensions.width}
                         height={dimensions.height}
-                        onSectionRendered={params => this.onSectionRendered(params, this.state.columnCount)}
+                        onSectionRendered={this.onSectionRendered}
                         ref={this.registerGrid}
                     />
                 </div>
@@ -235,13 +270,13 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
         return <div key={props.key} style={props.style}>{child}</div>
     }
 
-    private onSectionRendered(params: SectionRenderedParams, columnCount: number) {
-        if (!columnCount) {
+    private onSectionRendered = (params: SectionRenderedParams) => {
+        if (!this.state.columnCount) {
             return;
         }
 
-        const startIndex = params.rowStartIndex * columnCount + params.columnStartIndex;
-        const stopIndex = params.rowStopIndex * columnCount + params.columnStopIndex;
+        const startIndex = params.rowStartIndex * this.state.columnCount + params.columnStartIndex;
+        const stopIndex = params.rowStopIndex * this.state.columnCount + params.columnStopIndex;
 
         //memorize most recent size of the first page
         if (!startIndex) {
@@ -256,9 +291,15 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     }
 
     render() {
-        return <InfiniteLoader ref="loader" isRowLoaded={this.isRowLoaded} loadMoreRows={this.loadMoreRows}
-            rowCount={this.state.totalCount}>
-            {this.props.windowScroll?this.infiniteLoaderChildFunctionWindowScroller:this.infiniteLoaderChildFunction}
-        </InfiniteLoader>;
+        return <div style={InfiniteGrid.TopDivStyle}>
+            { this.state.operation ? <GuiSpinner mods={this.props.spinnerMods} /> : null}
+            <InfiniteLoader ref="loader" isRowLoaded={this.isRowLoaded} loadMoreRows={this.loadMoreRows}
+                rowCount={this.state.totalCount}>
+                {this.props.windowScroll ? this.infiniteLoaderChildFunctionWindowScroller : this.infiniteLoaderChildFunction}
+            </InfiniteLoader>
+        </div>;
     }
+
+    private static TopDivStyle: React.CSSProperties = {flex: "auto"};
+    private static GridStyle: React.CSSProperties = { overflowX: "hidden", display: "flex", "justifyContent": "center" };
 }

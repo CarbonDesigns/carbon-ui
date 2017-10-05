@@ -85,7 +85,8 @@ export class Avatar extends React.Component<any, any> {
                 text += ' ';
             }
             text = text[0].toUpperCase() + text[1].toLowerCase();
-            var color = create_avatar_color_from_user_id(stringHash(text));
+            var hash = stringHash(text);
+            var color = create_avatar_color_from_user_id(hash);
 
             context.fillStyle = color;
             context.strokeStyle = "black";
@@ -93,11 +94,21 @@ export class Avatar extends React.Component<any, any> {
             context.rect(0, 0, w, h);
             context.fill();
             context.stroke();
+
             context.font = `${0 | w / 2}px Poppins, Open Sans, Helvetica, sans-serif`;
             context.textBaseline = 'middle';
             context.textAlign = "center";
             context.fillStyle = "black";
             context.fillText(text, w / 2 | 0, h / 2 | 0, w);
+
+            context.font = `${w / 6 | 0}px Poppins, Open Sans, Helvetica, sans-serif`;
+            context.textBaseline = 'top';
+            context.textAlign = "right";
+            context.fillText("IO", w-2| 0, 2, w);
+
+            context.textBaseline = 'bottom';
+            context.textAlign = "left";
+            context.fillText(""+(hash%42), 2, h-2, w);
         }
     }
 

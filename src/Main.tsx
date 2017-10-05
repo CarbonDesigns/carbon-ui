@@ -20,7 +20,7 @@ import { backend } from "carbon-api";
 // const {whyDidYouUpdate} = require('why-did-you-update');
 // whyDidYouUpdate(React);
 
-const rootRoute: RouteConfig = {
+const rootRoute = {
     childRoutes: [
         {
             path: "/",

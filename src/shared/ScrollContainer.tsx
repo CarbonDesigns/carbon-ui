@@ -26,8 +26,10 @@ export default class ScrollContainer extends Component<ScrollContainerProps, any
         y: true
     }
 
+    static defaultOptions = {};
+
     static initScroller(element: HTMLElement, options?: Partial<AntiscrollOptions>) {
-        return new Antiscroll(element, options);
+        return new Antiscroll(element, options || ScrollContainer.defaultOptions);
     }
 
     onScroll = (e) => {

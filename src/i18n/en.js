@@ -326,9 +326,9 @@ export default
         "resources.my": "Published by me",
         "resources.public": "Published by community",
 
-        "folders.my": "My Projects",
-        "folders.shared": "Shared with me",
-        "folders.deleted": "Deleted",
+        "@folders.my": "My Projects",
+        "@folders.shared": "Shared with me",
+        "@folders.deleted": "Deleted",
         "btn.enableMirroring": "Enable",
         "btn.disableMirroring": "Disable",
         "btn.enableMirroring": "Enable mirroring",

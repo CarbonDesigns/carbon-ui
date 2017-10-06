@@ -2401,7 +2401,6 @@
 .side-menu__activeselector {
     display: none;
     cursor: pointer;
-    margin-left: 10px;
 }
 
 .side-menu__items {
@@ -2489,10 +2488,17 @@
     }
 }
 
-
 .fs-form {
     .form__submit {
         margin-top: 20px;
+    }
+}
+
+@media screen and (max-width:400px) {
+    .fs-header {
+        h3 {
+            font-size: 2em;
+        }
     }
 }
 

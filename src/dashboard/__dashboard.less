@@ -15,21 +15,20 @@
     align-content: flex-start;
   }
 
-  .new-project-button {
-    display: block;
-    width:256px;
-    height:158px;
-    line-height: 158px;
-    margin: 0 0 20px 30px;
-  }
-
-  .project-tile {
+  .project-tile-bone {
     display: block;
     width:256px;
     height:158px;
     position: relative;
-    background-color: lightgray;
     margin: 2px 0 20px 30px;
+  }
+
+  .new-project-button {
+    line-height: 158px;
+  }
+
+  .project-tile {
+    background-color: lightgray;
 
     &:focus {
       outline: 2px solid #8E44AD;
@@ -122,5 +121,15 @@
     &:hover {
       background: rgba(255, 255, 255, 0.1);;
       cursor: pointer;
+    }
+  }
+
+  @media screen and (max-width:600px) {
+    .dashboard-projects {
+      justify-content: center;
+    }
+
+    .project-tile-bone {
+      margin: 0 0 20px 0;
     }
   }

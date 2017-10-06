@@ -60,7 +60,7 @@ class ProjectTile extends Component<any, any>{
     private static FlyoutPosition: any = { targetVertical: "top", targetHorizontal: "right" };
 
     render() {
-        return <div tabIndex={1} className="project-tile" onClick={this._preventDefault} onDoubleClick={this._goToProject}>
+        return <div tabIndex={1} className="project-tile project-tile-bone" onClick={this._preventDefault} onDoubleClick={this._goToProject}>
             <figure className="project-tile__back" style={{ backgroundImage: `url(${this.props.avatar})` }}></figure>
             <div className="project-tile__block">
                 <img className="project-tile__image" src={this.props.avatar} />
@@ -89,7 +89,7 @@ export default class ProjectList extends Component<any, any>{
 
     constructor(props) {
         super(props);
-        this.state = { projects: [] };
+        this.state = { projects: DashboardStore.state.get("projectList") };
     }
 
     @listenTo(DashboardStore)
@@ -103,7 +103,11 @@ export default class ProjectList extends Component<any, any>{
             return;
         }
 
-        return <Link className="fs-main-button new-project-button" to="/app"><CarbonLabel id="@project.new" /></Link>;
+        return <Link className="fs-main-button new-project-button project-tile-bone" to="/app"><CarbonLabel id="@project.new" /></Link>;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ projects: DashboardStore.state.get("projectList") });
     }
 
     render() {

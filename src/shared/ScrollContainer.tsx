@@ -10,6 +10,7 @@ interface ScrollContainerProps extends ISimpleReactElementProps {
     [name: string]: any;
     x?: boolean;
     y?: boolean;
+    boxClassName: string;
 }
 
 export default class ScrollContainer extends Component<ScrollContainerProps, any>{

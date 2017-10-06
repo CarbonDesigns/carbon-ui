@@ -108,7 +108,7 @@ export default class ProjectList extends Component<any, any>{
     }
 
     render() {
-        return <ScrollContainer className="dashboard-projects">
+        return <ScrollContainer boxClassName="dashboard-projects">
             {this._renderNewButton()}
             {this.state.projects.map(x => {
                 return <ProjectTile

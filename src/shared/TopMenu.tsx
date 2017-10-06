@@ -14,6 +14,7 @@ import DropButtonItem from "./DropButtonItem";
 
 interface TopMenuProps extends IReactElementProps {
     dark?: boolean;
+    pathname?: string;
 }
 
 export default class TopMenu extends Component<TopMenuProps, any>{
@@ -26,22 +27,12 @@ export default class TopMenu extends Component<TopMenuProps, any>{
         router: any
     }
 
-    constructor(props: TopMenuProps) {
-        super(props);
-    }
-
-    _goToCommunity = () => {
-        this.context.router.push("/library");
-    }
-
     _goHome = () => {
-        this.context.router.push({
-            pathname: "/landing"
-        });
+        this.context.router.push("/landing");
     }
 
     _renderLoginButton() {
-        return <Link className="topmenu_login-button"  to="/login"><CarbonLabel id="@nav.login" /></Link>;
+        return <Link className="topmenu_login-button" to="/login"><CarbonLabel id="@nav.login" /></Link>;
     }
 
     // _renderLoginFlyout() {
@@ -71,29 +62,23 @@ export default class TopMenu extends Component<TopMenuProps, any>{
     }
 
     _renderMenuItems(){
-        var location = this.context.router.getCurrentLocation();
-        var libraryActive = "/library" === location.pathname;
-        var dashboardActive = location.pathname.startsWith("/@");
+        var libraryActive = "/library" === this.props.pathname;
+        var dashboardActive = this.props.pathname && this.props.pathname.startsWith("/@");
 
-        var companyName = '';
-        if(this.context.router.params.companyName) {
-            companyName = "@" + this.context.router.params.companyName;
-        }
-
-        if((backend.isLoggedIn() || backend.isGuest())) {
+        if (backend.isLoggedIn() || backend.isGuest()) {
             return [
-                <li className={bem("navigation-menu", "item", {active:dashboardActive, dark:this.props.dark})}><Link to={'/'+ companyName} ><CarbonLabel id="@nav.dashboard" /></Link></li>,
-                <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
-                <li className={bem("navigation-menu", "item", {button:false, dark:this.props.dark})}>{this._renderLogoutButton()}</li>
+                <li key="dashboard" className={bem("navigation-menu", "item", {active:dashboardActive, dark:this.props.dark})}><Link to="/" ><CarbonLabel id="@nav.dashboard" /></Link></li>,
+                <li key="library" className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
+                <li key="account" className={bem("navigation-menu", "item", {button:false, dark:this.props.dark})}>{this._renderLogoutButton()}</li>
             ]
         }
 
         let itemCn = bem("navigation-menu", "item", {dark:this.props.dark});
         return [
-            <li className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>,
-            <li className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>,
-            <li className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
-            <li className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{this._renderLoginButton()}</li>
+            <li key="slack" className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>,
+            <li key="gh" className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>,
+            <li key="library" className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
+            <li key="account" className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{this._renderLoginButton()}</li>
         ]
     }
 

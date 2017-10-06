@@ -10,6 +10,7 @@ interface ScrollContainerProps extends ISimpleReactElementProps {
     [name: string]: any;
     x?: boolean;
     y?: boolean;
+    boxClassName?: string;
 }
 
 export default class ScrollContainer extends Component<ScrollContainerProps, any>{
@@ -26,8 +27,10 @@ export default class ScrollContainer extends Component<ScrollContainerProps, any
         y: true
     }
 
+    static defaultOptions = {};
+
     static initScroller(element: HTMLElement, options?: Partial<AntiscrollOptions>) {
-        return new Antiscroll(element, options);
+        return new Antiscroll(element, options || ScrollContainer.defaultOptions);
     }
 
     onScroll = (e) => {

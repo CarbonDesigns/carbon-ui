@@ -35,6 +35,7 @@ export default class Antiscroll {
 
     public inner: HTMLElement;
     public options: AntiscrollOptions;
+    public windowScroll: boolean;
     public cache: {
         scrollPosition: number;
         diff: number;
@@ -57,8 +58,12 @@ export default class Antiscroll {
             diff: 0
         };
 
+        this.windowScroll = wrapperElement === document.documentElement;
+
         // Reads "0" as an argument
-        this.inner = typeof this.options.innerSelector === "string"
+        this.inner = this.windowScroll
+            ? document.documentElement
+            : typeof this.options.innerSelector === "string"
             ? this.wrapperElement.querySelectorAll(this.options.innerSelector)[0] as HTMLElement
             : this.options.innerSelector;
 
@@ -139,8 +144,8 @@ export default class Antiscroll {
             console.groupEnd();
         }
 
-        //dennis: if scroll container is re-rendered with other items and is smaller, it should resize
-        if (this.inner) {
+        //if scroll container is re-rendered with other items and is smaller, it should resize
+        if (this.inner && !this.windowScroll) {
             delete this.inner.style.height;
             delete this.inner.style.width;
         }
@@ -152,18 +157,21 @@ export default class Antiscroll {
 
 abstract class Scrollbar {
     hiding: any;
-    startPageX: number;
-    startPageY: number;
+    startClientX: number;
+    startClientY: number;
+    startScrollTop: number;
+    startScrollLeft: number;
     hideDebounced: () => any;
-    innerPaneMouseWheelListener: any;
+    //innerPaneMouseWheelListener: any;
     innerPaneScrollListener: any;
     mousedownListener: any;
-    mousemoveListener: any;
+    elementMousemoveListener: any;
+    documentMousemoveListener: any;
     mouseleaveListener: any;
     mouseenterListener: any;
     shown: boolean;
     dragging: boolean;
-    innerEl: HTMLElement;
+    innerEl: Element;
 
     constructor(protected pane: Antiscroll, protected el: HTMLElement) {
         this.pane.wrapperElement.appendChild(this.el);
@@ -172,7 +180,8 @@ abstract class Scrollbar {
         this.dragging = false;
         this.shown = false;
 
-        this.mousemoveListener = this.mousemove.bind(this);
+        this.documentMousemoveListener = this.documentMousemove.bind(this);
+        this.elementMousemoveListener = this.elementMousemove.bind(this);
 
         // hovering
         this.mouseenterListener = this.mouseenter.bind(this);
@@ -186,7 +195,14 @@ abstract class Scrollbar {
 
         // scrolling
         this.innerPaneScrollListener = this.scroll.bind(this);
-        this.pane.inner.addEventListener("scroll", this.innerPaneScrollListener);
+        if (this.pane.windowScroll) {
+            window.addEventListener("scroll", this.innerPaneScrollListener);
+            window.addEventListener("mousemove", this.elementMousemoveListener);
+        }
+        else {
+            this.pane.inner.addEventListener("scroll", this.innerPaneScrollListener);
+            this.el.addEventListener("mousemove", this.elementMousemoveListener);
+        }
 
         // show
         this.hideDebounced = util.debounce(this.hide.bind(this), this.pane.options.autoHideTimeout);
@@ -194,8 +210,16 @@ abstract class Scrollbar {
 
     destroy() {
         this.el.remove();
-        this.pane.inner.removeEventListener('scroll', this.innerPaneScrollListener);
-        this.pane.inner.removeEventListener('mousewheel', this.innerPaneMouseWheelListener);
+        if (this.pane.windowScroll) {
+            window.removeEventListener("scroll", this.innerPaneScrollListener);
+            window.removeEventListener("mousemove", this.elementMousemoveListener);
+        }
+        else {
+            this.pane.inner.removeEventListener('scroll', this.innerPaneScrollListener);
+            this.el.removeEventListener("mousemove", this.elementMousemoveListener);
+        }
+
+        //this.pane.inner.removeEventListener('mousewheel', this.innerPaneMouseWheelListener);
 
         this.pane.wrapperElement.removeEventListener("mouseenter", this.mouseenterListener);
         this.pane.wrapperElement.removeEventListener("mouseleave", this.mouseleaveListener);
@@ -228,15 +252,19 @@ abstract class Scrollbar {
     }
 
     abstract update();
-    abstract mousemove(event: MouseEvent);
+    abstract elementMousemove(event: MouseEvent);
+    abstract documentMousemove(event: MouseEvent);
 
-    mousedown(event) {
+    mousedown(event: MouseEvent) {
         event.preventDefault();
 
         this.dragging = true;
 
-        this.startPageY = event.pageY - parseInt(this.el.style.top, 10);
-        this.startPageX = event.pageX - parseInt(this.el.style.left, 10);
+        this.startClientY = event.clientY;
+        this.startClientX = event.clientX;
+
+        this.startScrollTop = this.innerEl.scrollTop;
+        this.startScrollLeft = this.innerEl.scrollLeft;
 
         // prevent crazy selections on IE
         this.el.ownerDocument.onselectstart = function () {
@@ -248,12 +276,12 @@ abstract class Scrollbar {
             this.dragging = false;
             this.el.ownerDocument.onselectstart = null;
 
-            this.el.ownerDocument.removeEventListener("mousemove", this.mousemoveListener);
+            this.el.ownerDocument.removeEventListener("mousemove", this.documentMousemoveListener);
             this.el.ownerDocument.removeEventListener("mouseup", onMouseUp);
-            this.hide();
+            this.hideDebounced();
         };
 
-        this.el.ownerDocument.addEventListener("mousemove", this.mousemoveListener);
+        this.el.ownerDocument.addEventListener("mousemove", this.documentMousemoveListener);
         this.el.ownerDocument.addEventListener("mouseup", onMouseUp);
     }
 
@@ -301,18 +329,21 @@ class HorizontalScrollbar extends Scrollbar {
 
         return paneWidth < innerEl.scrollWidth;
     }
-    mousemove(event: MouseEvent) {
+    documentMousemove(event: MouseEvent) {
         var paneWidth = this.pane.wrapperElement.getBoundingClientRect().width;
-        var trackWidth = paneWidth - Padding * 2;
-        var pos = event.pageX - this.startPageX;
-        var barWidth = this.el.getBoundingClientRect().width;
-        var innerEl = this.pane.inner;
+        let scrollDelta = event.clientX - this.startClientX;
+        let realDelta = this.innerEl.scrollWidth/paneWidth * scrollDelta;
 
-        // minimum top is 0, maximum is the track height
-        var y = Math.min(Math.max(pos, 0), trackWidth - barWidth);
-
-        innerEl.scrollLeft =
-            (innerEl.scrollWidth - paneWidth) * y / (trackWidth - barWidth);
+        this.innerEl.scrollLeft = Math.round(this.startScrollLeft + realDelta);
+    }
+    elementMousemove(event: MouseEvent) {
+        let rect = this.pane.wrapperElement.getBoundingClientRect();
+        if (event.clientY > rect.bottom - size) {
+            this.show();
+        }
+        else if (this.shown) {
+            this.hideDebounced();
+        }
     }
 }
 
@@ -350,7 +381,6 @@ class VerticalScrollbar extends Scrollbar {
         }
 
         var topPos = trackHeight * innerEl.scrollTop / innerEl.scrollHeight;
-
         // If scrollbar would go beyond boundaries
         if ((topPos + barHeight) > trackHeight) {
             if (this.pane.options.debug) {
@@ -358,6 +388,10 @@ class VerticalScrollbar extends Scrollbar {
             }
             var overlap = (topPos + barHeight) - trackHeight;
             topPos = topPos - overlap;
+        }
+
+        if (this.pane.windowScroll) {
+            topPos += innerEl.scrollTop;
         }
 
         topPos = Math.round(topPos);
@@ -376,56 +410,33 @@ class VerticalScrollbar extends Scrollbar {
 
         return paneHeight < innerEl.scrollHeight;
     }
-    mousemove(event: MouseEvent) {
+    documentMousemove(event: MouseEvent) {
         if (this.pane.options.debug) {
             console.group('Scrollbar.Vertical.mousemove');
         }
 
         var paneHeight = this.pane.wrapperElement.getBoundingClientRect().height;
-        var trackHeight = paneHeight - Padding * 2;
-        var innerEl = this.innerEl;
+        let scrollDelta = event.clientY - this.startClientY;
+        let realDelta = this.innerEl.scrollHeight/paneHeight * scrollDelta;
 
-        var pos = event.pageY - this.startPageY;
-        var barHeight = this.el.getBoundingClientRect().height;
-        var scrollableTrack = trackHeight - barHeight;
-
-        // minimum top is 0, maximum is the track height
-        var heightAboveBar = Math.min(Math.max(pos, 0), scrollableTrack);
-
-        if (this.pane.options.debug) {
-            console.groupCollapsed('Measurements');
-            console.log('Content height: ', innerEl.scrollHeight);
-            console.log('Container height:', paneHeight);
-            console.log('Track height:', trackHeight);
-            console.log('Scrollbar height:', barHeight);
-            console.log('Scrollable track:', trackHeight - barHeight);
-            console.groupEnd();
-            console.log('Scrolled track: ' + heightAboveBar + ' / ' + trackHeight);
-        }
-
-        var topPos =
-            (innerEl.scrollHeight - trackHeight)
-            * heightAboveBar / scrollableTrack;
-        topPos = Math.round(topPos);
-
-        if (this.pane.options.debug) {
-            console.log('Scrolled content: '
-                + topPos + ' = '
-                + '(' + innerEl.scrollHeight + ' - ' + paneHeight + ') * '
-                + heightAboveBar + ' / ' + scrollableTrack);
-        }
-
-        innerEl.scrollTop = topPos;
-
-        // TODO: Move across boundaries is missing!
+        this.innerEl.scrollTop = Math.round(this.startScrollTop + realDelta);
 
         if (this.pane.options.debug) {
             console.groupEnd();
         }
     }
+    elementMousemove(event: MouseEvent) {
+        let rect = this.pane.wrapperElement.getBoundingClientRect();
+        if (event.clientX > rect.right - size) {
+            this.show();
+        }
+        else if (this.shown) {
+            this.hideDebounced();
+        }
+    }
 }
 
-var size = undefined;
+var size: number = undefined;
 
 function scrollbarSize() {
     if (size === undefined) {

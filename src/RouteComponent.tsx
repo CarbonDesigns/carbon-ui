@@ -6,8 +6,9 @@ import { ErrorCode, Url, InfoCode } from "./Constants";
 
 export interface IRouteComponentProps{
     location: {
-        query: object,
-        state: any
+        pathname: string;
+        query: object;
+        state: any;
     }
 }
 

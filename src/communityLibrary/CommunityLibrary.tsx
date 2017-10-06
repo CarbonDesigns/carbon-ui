@@ -10,6 +10,7 @@ interface CommunityLibraryProps extends IRouteComponentProps {
         resourceId?: string;
     };
     location: {
+        pathname: string;
         query: {
             s?: string;
         };

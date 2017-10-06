@@ -51,6 +51,9 @@ class AppStore extends CarbonStore<AppStoreState> {
             case "Carbon_ScaleChanged":
                 this.setState({ scale: action.scale });
                 return;
+            case "Carbon_AppUpdated":
+                this.setState({ appName: app.name() });
+                return;
         }
     }
 

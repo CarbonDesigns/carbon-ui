@@ -26,10 +26,7 @@ export default class MainMenu extends ComponentWithImmutableState<any, any> {
         this.state = {
             data: new State({
                 mainMenuVisible: appStore.state.mainMenuVisible,
-                recentProjects: [
-                    {name: 'Project 1', url: 'http://#1'},
-                    {name: 'Project 2', url: 'http://#2'}
-                ]
+                recentProjects: []
             })
         };
     }

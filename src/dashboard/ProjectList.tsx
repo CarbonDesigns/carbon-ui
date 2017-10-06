@@ -7,6 +7,7 @@ import FlyoutButton from "shared/FlyoutButton";
 import DashboardStore from "./DashboardStore";
 import DashboardActions from "./DashboardActions";
 import { backend } from "carbon-core";
+import ScrollContainer from "../shared/ScrollContainer";
 
 class ProjectTile extends Component<any, any>{
     static contextTypes = {
@@ -111,7 +112,7 @@ export default class ProjectList extends Component<any, any>{
     }
 
     render() {
-        return <div className="dashboard-projects">
+        return <ScrollContainer boxClassName="dashboard-projects">
             {this._renderNewButton()}
             {this.state.projects.map(x => {
                 return <ProjectTile
@@ -122,6 +123,6 @@ export default class ProjectList extends Component<any, any>{
                     companyId={x.get("companyId")}
                     avatar={x.get("avatar")} />
             })}
-        </div>
+        </ScrollContainer>
     }
 }

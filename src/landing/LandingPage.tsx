@@ -13,6 +13,8 @@ import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
 import SubscribeForm from "../shared/SubscribeForm";
+import ScrollContainer from "../shared/ScrollContainer";
+import Antiscroll from "../external/antiscroll";
 
 const GifActivationThreshold = .5;
 const PreloadedResources = ["features_data.gif", "features_data.png"];
@@ -27,6 +29,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps, La
     activeSection: any;
     currentSectionClass: any;
     gifs: HTMLElement[] = [];
+    scroller: Antiscroll;
 
     static contextTypes = {
         router: PropTypes.any,
@@ -67,11 +70,15 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps, La
         this.backgrounds[0].style.opacity = 1;
 
         this.setActiveGifs();
+        this.scroller = ScrollContainer.initScroller(document.documentElement);
+        // css from webpack is for some reason applied after the html is mounted...
+        setTimeout(() => this.scroller.refresh(), 2000);
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
         window.removeEventListener("scroll", this.onScroll)
+        this.scroller.destroy();
     }
 
     canHandleActions() {

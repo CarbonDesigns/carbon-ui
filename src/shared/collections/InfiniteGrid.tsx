@@ -105,8 +105,13 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
     }
 
     private initScroller() {
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.grid);
-        this.scroller = ScrollContainer.initScroller(gridNode.parentElement, { innerSelector: gridNode });
+        if (this.props.windowScroll) {
+            this.scroller = ScrollContainer.initScroller(document.documentElement);
+        }
+        else {
+            let gridNode = ReactDom.findDOMNode<HTMLElement>(this.grid);
+            this.scroller = ScrollContainer.initScroller(gridNode.parentElement, { innerSelector: gridNode });
+        }
     }
 
     private registerGrid = (grid) => {

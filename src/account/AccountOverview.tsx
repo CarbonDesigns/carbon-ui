@@ -279,7 +279,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
 
     private addLogin = e => {
         var provider = e.currentTarget.dataset.provider;
-        localStorage.setItem("redirect", "/account");
+        localStorage.setItem("redirect", "/settings/link");
         backend.loginExternal(provider);
     }
     private renderProvidersSection() {

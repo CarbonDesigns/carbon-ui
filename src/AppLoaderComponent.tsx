@@ -14,6 +14,7 @@ export interface IAppLoaderComponentProps extends IRouteComponentProps{
         code?: string //for mirroring, think how to separate it
     },
     location: {
+        pathname: string;
         query: {
             r: string;
         },

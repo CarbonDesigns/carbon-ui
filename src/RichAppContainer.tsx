@@ -29,6 +29,7 @@ export class RichAppContainer extends AppLoaderComponent {
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         document.body.classList.remove("noscroll");
     }
 

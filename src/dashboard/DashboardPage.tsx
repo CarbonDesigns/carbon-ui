@@ -51,7 +51,6 @@ export default class DashboardPage extends Component<any, any>{
     render(){
 
         return <div className="dashboard-page light-page">
-            <TopMenu location={this.props.location} dark={true} />
             <SideMenuContainer activePageId={this.state.activeFolderId} onActiveChanged={this._onActiveFolderChanged}>
                 {this.state.folders.map(folder=><ContentPage id={folder.get("id")} key={folder.get("id")} label={DashboardPage._getFolderLabel(folder)}>
                         <ProjectList key={"list"+folder.get("id")} />

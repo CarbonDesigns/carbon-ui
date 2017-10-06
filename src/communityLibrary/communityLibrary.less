@@ -10,6 +10,10 @@
     display: flex;
     flex-direction: column;
     min-width: 320px;
+
+    &&_hidden {
+        display: none;
+    }
 }
 
 .libraryheader-container {
@@ -33,7 +37,6 @@
     width:380px;
     height:48px;
     border: 2px solid #CCCBD7;
-    padding: 0 10px;
 }
 
 .searchtags-container {
@@ -52,7 +55,8 @@
 	font-family: Inconsolata;
 	font-size: 16px;
 	line-height: 28px;
-	text-align: center;
+    text-align: center;
+    text-decoration: none;
 
     &:nth-child(4n+1){
         border-color: #F8A21A;

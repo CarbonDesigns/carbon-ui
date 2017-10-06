@@ -35,7 +35,7 @@ export default class ResourceTile extends Component<ResourceTileProps> {
                         <span className="resource-tile__indicators">
                             {this.props.showDownloads && <span className="resource__downloads">
                                 <span className="resource__downloads-icon"><i className="ico-download" /></span>
-                                <span className="resource__downloads-number">{this.props.resource.downloads}</span>
+                                <span className="resource__downloads-number">{this.props.resource.timesUsed}</span>
                             </span>}
                             {/* <span className="resource__rating"> <span className="resource__rating-icon"><i className=""></i></span> <span className="resource__rating-number">4.5</span> </span>*/}
                         </span>

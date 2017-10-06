@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
-
 import { backend } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
@@ -11,12 +10,7 @@ import SubscribeForm from "../shared/SubscribeForm";
 import bem from "../utils/commonUtils";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
 import cx from "classnames";
-
-function SearchTag(props) {
-    return <div className="search-tag">
-        {props.text}
-    </div>
-}
+import { SearchTag } from "./SearchTag";
 
 function buildSymbol(name) {
     var parts = name.split(' ');
@@ -40,17 +34,16 @@ function GalleryListItem(props) {
     </div>
 }
 
-interface CommunityLibraryDetailsProps extends IRouteComponentProps {
-    params: {
-        id: string;
-    }
+interface CommunityLibraryDetailsProps {
+    resourceId: string;
+    data?: ISharedResource;
 }
 
 interface CommunityLibraryDetailsState {
-    data:any;
+    data: ISharedResource;
 }
 
-export default class CommunityLibraryDetails extends RouteComponent<CommunityLibraryDetailsProps, CommunityLibraryDetailsState>{
+export default class CommunityLibraryDetails extends Component<CommunityLibraryDetailsProps, CommunityLibraryDetailsState>{
     static contextTypes = {
         router: PropTypes.any,
         intl: PropTypes.object
@@ -58,11 +51,11 @@ export default class CommunityLibraryDetails extends RouteComponent<CommunityLib
 
     constructor(props) {
         super(props);
-        if(props.location.state && props.location.state.data) {
+        if(props.location && props.location.state && props.location.state.data) {
             this.state = { data:props.location.state.data };
         } else {
             this.state = {data:null};
-            backend.galleryProxy.resource(props.params.id).then(data=>{
+            backend.galleryProxy.resource(props.resourceId).then(data=>{
                 this.setState({data:data});
             })
         }
@@ -82,16 +75,13 @@ export default class CommunityLibraryDetails extends RouteComponent<CommunityLib
         return tags.map(t=><SearchTag text={t} key={t}/>)
     }
 
-
     render() {
-
         if(!this.state.data) {
             return <div></div>
         }
+
         var data = this.state.data;
         return <div className="resource-page">
-            <TopMenu location={this.props.location} dark={true} />
-
             <section className="resource-details-container">
                 <figure className="resource-details-image" style={{ backgroundImage: "url('" + data.coverUrl + "')" }}></figure>
                 <div className="resource-details">
@@ -104,7 +94,7 @@ export default class CommunityLibraryDetails extends RouteComponent<CommunityLib
                     <div className={bem("resource-details", "designedby")}>{data.authorName||"carbonium"}</div>
 
                     <div className="resource-details__import-aligner">
-                        <a href={"/app?r=" + this.props.params.id} className={cx("fs-main-button", bem("resource-details", "import"))}>{this.formatLabel("@library.openSymbol")}</a>
+                        <a href={"/app?r=" + this.props.resourceId} className={cx("fs-main-button", bem("resource-details", "import"))}>{this.formatLabel("@library.openSymbol")}</a>
                         <div className={bem("resource-details", "downloads")}>
                             <FormattedMessage id="@library.downloads" values={{ num: data.timesUsed }} />
                         </div>

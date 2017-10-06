@@ -25,8 +25,6 @@ export default class MessagePage extends RouteComponent<IRouteComponentProps, an
             var message = router.location.state.message;
         }
         return <div className="message-page">
-            <TopMenu location={this.props.location} dark={true} />
-
             <section className="message-container smooth-header">
                 <h1 className={bem("message-container", "header")}><CarbonLabel id={header || "404"} /></h1>
                 <article className={bem("message-container", "body")}><CarbonLabel id={message || "Not found"} /></article>

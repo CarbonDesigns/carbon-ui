@@ -342,7 +342,6 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
         }
 
         return <div className="light-page">
-            <TopMenu location={this.props.location} dark={true} />
             <SideMenuContainer activePageId={this.state.activePageId} onActiveChanged={this._onActiveChanged}>
                 <ContentPage label="@account.infoitem" id="account" key="account">
                     {this.renderAccountInfoSection()}

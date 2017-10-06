@@ -713,7 +713,7 @@ export default
 
         "@library.header": "Community library",
         "@library.openSymbol": "Open symbol",
-        "@library.downloads": "{num} {num, plural, one {download} other {downloads}}",
+        "@library.downloads": "{num} {num, plural, =0 {no downloads yet} one {download} other {downloads}}",
 
         "@opensource.join":"Carbonium is open source. Let's make it better ... together! Join us on ",
 

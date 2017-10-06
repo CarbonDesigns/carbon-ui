@@ -2,7 +2,7 @@ import React from "react";
 import { IGuiButtonProps, GuiButton, GuiSpinner } from "./GuiComponents";
 import { Component } from "../../CarbonFlux";
 import bem from "../../utils/commonUtils";
-import { MinPerceivedTime } from "../../Constants";
+import { Operation } from "../Operation";
 
 export interface GuiProgressButtonProps<T> extends IGuiButtonProps {
     onClick: () => Promise<T>;
@@ -28,17 +28,10 @@ export class GuiProgressButton<T = {}> extends Component<GuiProgressButtonProps<
         }
 
         this.setState({ loading: true });
-        let startTime = new Date();
-
-        this.props.onClick()
-            .then(data => {
-                let endTime = new Date();
-                let spent = new Date().getTime() - startTime.getTime();
-                if (spent < MinPerceivedTime) {
-                    return Promise.resolve(data).delay(MinPerceivedTime - spent);
-                }
-                return data;
-            })
+        let operation = new Operation();
+        operation.start()
+            .then(() => this.props.onClick())
+            .then(data => operation.stop(data))
             .then(data => this.props.onDone(data))
             .finally(() => this.setState({ loading: false }));
     }

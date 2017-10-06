@@ -142,7 +142,7 @@ export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
     }
 
     _renderRecentList() {
-        return this.state.recentProjects.map(p => {
+        return this.state.recentProjects.filter(x => x.projectId !== app.id()).map(p => {
             return <section className="main-menu__line" key={p.projectId}>
                 <MainMenuButton onClick={this._goToRecentProject(p)} >
                     <span>{p.projectName}</span>

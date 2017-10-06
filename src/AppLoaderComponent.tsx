@@ -48,10 +48,14 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
 
     componentDidMount() {
         super.componentDidMount();
-        if(app && app.id() !== this.props.params.appId) {
-            app.unload();
-        }
         if (!app.isLoaded) {
+            this.runApp();
+        }
+    }
+
+    componentDidUpdate(prevProps: IAppLoaderComponentProps) {
+        if (prevProps.params.appId !== this.props.params.appId) {
+            app.unload();
             this.runApp();
         }
     }

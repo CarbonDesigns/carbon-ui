@@ -18,15 +18,9 @@
   position: absolute;
   opacity: 0;
   z-index: 100;
-  // filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-  // -webkit-transition: linear 300ms opacity;
-  // -moz-transition: linear 300ms opacity;
-  // -o-transition: linear 300ms opacity;
-  //transition: linear 300ms opacity;
 }
 .antiscroll-scrollbar-shown {
   opacity: 1;
-  //filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
 }
 .antiscroll-scrollbar-horizontal {
   height: 7px;
@@ -99,6 +93,5 @@ html::scrollbar {
 }
 
 html, #viewContainer, .antiscroll-inner, .ReactVirtualized__Grid, .ReactVirtualized__Collection {
-  //hide scrollbars in edge
   -ms-overflow-style: none;
 }

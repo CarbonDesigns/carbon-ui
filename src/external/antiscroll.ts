@@ -1,5 +1,5 @@
 import { util, platform } from "carbon-api";
-let style = require("style-loader/useable!css-loader!./scroller") as any;
+let style = require("./scroller.optional.css") as any;
 
 let isEnabled = platform.deviceOS !== "Mac OS" && platform.deviceType !== "mobile";
 if (isEnabled) {

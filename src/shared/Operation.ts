@@ -1,4 +1,4 @@
-import { MinPerceivedTime } from "../Constants";
+import { MaxPerceivedTime, MinPerceivedTime } from "../Constants";
 
 export class Operation {
     private startTime: Date = null;
@@ -14,9 +14,11 @@ export class Operation {
     stop<T>(data?: T): Promise<T> {
         if (!this.immediate) {
             let spent = new Date().getTime() - this.startTime.getTime();
+            let diff = MaxPerceivedTime - MinPerceivedTime;
+            let currentTime = MinPerceivedTime + (Math.random() * diff) % diff;
             this.startTime = null;
-            if (spent < MinPerceivedTime) {
-                return Promise.resolve(data).delay(MinPerceivedTime - spent);
+            if (spent < currentTime) {
+                return Promise.resolve(data).delay(currentTime - spent);
             }
         }
         return Promise.resolve(data);

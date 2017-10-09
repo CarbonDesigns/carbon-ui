@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import BladePage from "../BladePage";
-import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ISharedResource, ResourceScope } from "carbon-core";
+import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ISharedResource, ResourceScope, IPublishPageResult, Screenshot } from "carbon-core";
 import { Component, dispatchAction } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
@@ -16,6 +16,12 @@ import PublishPageForm from "./PublishPageForm";
 import TabContainer, { TabArea, TabPage } from "../../../shared/TabContainer";
 import { PublishAction } from "./PublishActions";
 import BladeContainer from "../BladeContainer";
+import EditableList from "../../../shared/EditableList";
+import AddButton from "../../../shared/ui/AddButton";
+import { ArtboardSelectorBlade } from "../ArtboardSelectorBlade";
+
+type ScreenshotList = new (props) => EditableList<Screenshot>;
+const ScreenshotList = EditableList as ScreenshotList;
 
 const BoardSize = 3;
 const CoverSide = 300;
@@ -29,9 +35,11 @@ interface IPublishBladeState {
     tiles?: ITile[];
     publishStep: string;
     defaultSetup: ISharedPageSetup;
+    screenshots: Screenshot[];
+    publishedPageId: string;
 }
 
-const EmptySetup: ISharedPageSetup = { name: "", description: "", tags: "", scope: ResourceScope.Public, coverUrl: "" };
+const EmptySetup: ISharedPageSetup = { name: "", description: "", tags: "", scope: ResourceScope.Public, coverUrl: "", screenshots: [] };
 
 export default class PublishBlade extends Component<void, IPublishBladeState> {
     context: {
@@ -43,7 +51,9 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
 
         this.state = {
             publishStep: "1",
-            defaultSetup: EmptySetup
+            defaultSetup: EmptySetup,
+            screenshots: [],
+            publishedPageId: ""
         };
     }
 
@@ -54,7 +64,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         switch (action.type) {
             case "Publish_Published":
                 if (action.response.ok === true) {
-                    this.setState({ publishStep: "2" });
+                    this.setState({ publishStep: "2", publishedPageId: action.response.result.galleryId });
                     this.state.page.setProps({ name: action.response.result.name });
                 }
                 break;
@@ -92,7 +102,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                 this.setState({ defaultSetup: EmptySetup });
             }
             else {
-                this.setState({ defaultSetup: setup, coverUrl: setup.coverUrl });
+                this.setState({ defaultSetup: setup, coverUrl: setup.coverUrl, screenshots: setup.screenshots });
             }
         });
     }
@@ -198,7 +208,32 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                 dpr: Dpr,
                 previewSize: CoverRect
             });
-    };
+    }
+
+    private onAddScreenshot = () => {
+        this.onEditScreenshot(null);
+    }
+    private onEditScreenshot = (screenshot?: Screenshot) => {
+        let artboard = null;
+        if (screenshot) {
+            artboard = app.findNodeByIdBreadthFirst(screenshot.id);
+        }
+        this.context.bladeContainer.addChildBlade(`blade_edit-publish-image`, ArtboardSelectorBlade, "@publish.addScreenshot",
+            {
+                page: this.state.page,
+                artboard,
+                onChosen: this.screenshotEditCompleted,
+                dpr: Dpr
+            });
+
+        return false;
+    }
+    private onDeleteScreenshot = (screenshot: Screenshot) => {
+        let screenshots = this.state.screenshots.slice();
+        let index = screenshots.indexOf(screenshot);
+        screenshots.splice(index, 1);
+        this.setState({ screenshots });
+    }
 
     private imageEditCompleted = (coverUrl?: string) => {
         this.context.bladeContainer.close(2);
@@ -206,6 +241,31 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             this.setState({ coverUrl });
             dispatchAction({ type: "Publish_CoverSelected", coverUrl });
         }
+    }
+
+    private screenshotEditCompleted = (oldArtbard: IArtboard, newArtboard: IArtboard, dataUrl: string) => {
+        let screenshots = this.state.screenshots.slice();
+        let updated = false;
+
+        if (oldArtbard) {
+            let old = screenshots.find(x => x.id === oldArtbard.id());
+            if (old) {
+                old.id = newArtboard.id();
+                old.name = newArtboard.name();
+                old.url = dataUrl;
+                updated = true;
+            }
+        }
+
+        if (!updated) {
+            let existing = screenshots.findIndex(x => x.id === newArtboard.id());
+            if (existing !== -1) {
+                screenshots.splice(existing, 1);
+            }
+
+            screenshots.push({id: newArtboard.id(), name: newArtboard.name(), url: dataUrl});
+        }
+        this.setState({ screenshots });
     }
 
     private close = () => {
@@ -228,7 +288,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
 
                         <MarkupLine mods="stretch">
                             <p className={"gui-input__label"}>
-                                <FormattedMessage id="@publish.choosePage1" defaultMessage="Create your cover" />
+                                <FormattedMessage id="@publish.createCover"  />
                             </p>
                         </MarkupLine>
                         <MarkupLine className="publish__avatar" mods={["stretch", "horizontal"]}>
@@ -251,10 +311,25 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                             </GuiButtonStack>
                         </MarkupLine>
 
-                        <PublishPageForm page={this.state.page} coverUrl={this.state.coverUrl} defaultSetup={this.state.defaultSetup} />
+                        <MarkupLine mods="stretch">
+                            <p className={"gui-input__label"}>
+                                <FormattedMessage id="@publish.screenshots"  />
+                            </p>
+                            <ScreenshotList data={this.state.screenshots} idGetter={x => x.id} nameGetter={x => x.name}
+                                onEdit={this.onEditScreenshot}
+                                onDelete={this.onDeleteScreenshot}/>
+                            <AddButton className="publish__addscreen" onClick={this.onAddScreenshot} caption="@publish.addScreenshot"/>
+                        </MarkupLine>
+
+                        <PublishPageForm page={this.state.page} coverUrl={this.state.coverUrl} defaultSetup={this.state.defaultSetup} screenshots={this.state.screenshots} />
                     </TabPage>
                     <TabPage className="gui-page" tabId="2">
                         <MarkupLine><FormattedMessage id="@publish.done" tagName="p" /></MarkupLine>
+                        <MarkupLine mods="slim">
+                            <a className="publish__link" href={"/library/" + this.state.publishedPageId} target="_blank">
+                                <FormattedMessage tagName="p" id="@publish.viewInGallery" />
+                            </a>
+                        </MarkupLine>
                         <MarkupLine className="publish__avatar">
                             <figure className="publish__avatar-image" style={{ backgroundImage: "url('" + this.state.coverUrl + "')" }} />
                         </MarkupLine>

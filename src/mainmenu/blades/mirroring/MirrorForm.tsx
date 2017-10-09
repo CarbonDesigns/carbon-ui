@@ -4,11 +4,11 @@ import { Component, dispatchAction } from "../../../CarbonFlux";
 import { MarkupLine } from "../../../shared/ui/Markup";
 import { GuiCopyInput } from "../../../shared/ui/GuiCopyInput";
 import { ShareCode, backend, app, ShareRole, MirrorCode } from "carbon-core";
-import { GuiProgressButton } from "../../../shared/ui/GuiProgressButton";
+import { GuiPromiseButton } from "../../../shared/ui/GuiPromiseButton";
 import QRCode from "qrcode.react";
 
-export type AddShareCodeButton = new (props) => GuiProgressButton<MirrorCode>;
-export const AddShareCodeButton = GuiProgressButton as AddShareCodeButton;
+export type AddShareCodeButton = new (props) => GuiPromiseButton<MirrorCode>;
+export const AddShareCodeButton = GuiPromiseButton as AddShareCodeButton;
 
 type MirrorFormProps = {
     code: string;
@@ -76,7 +76,7 @@ export class MirrorForm extends Component<MirrorFormProps, MirrorFormState> {
         return <div>
             <MarkupLine>
                 {this.state.code ?
-                    <GuiProgressButton mods="delete" caption="btn.disableMirroring"
+                    <GuiPromiseButton mods="delete" caption="btn.disableMirroring"
                         onClick={this.onDisableSharingClick} onDone={this.onSharingDisabled} /> :
                     <AddShareCodeButton mods="submit" caption="btn.enableMirroring"
                         onClick={this.onShareClick} onDone={this.onShared} />

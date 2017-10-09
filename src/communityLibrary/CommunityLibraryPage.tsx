@@ -105,14 +105,15 @@ export default class CommunityLibraryPage extends Component<CommunityLibraryPage
 
 function GalleryListItem(props) {
     var item = props.item;
-    return <Link to={{
-        pathname: "/library/" + item.galleryId,
-        state: { data: item }
-    }}
+    return <Link to={{ pathname: "/library/" + item.galleryId, state: { data: item }}}
         key={item.galleryId}
         className={bem("gallery-item")} style={{ backgroundImage: "url('" + item.coverUrl + "')" }}>
-        <div className={bem("gallery-item", "downloads")}>{item.timesUsed}</div>
-        <h2 className={bem("gallery-item", "name")}>{item.name}</h2>
-        <h3 className={bem("gallery-item", "tags")}>{item.tags}</h3>
+        <div className={bem("gallery-item", "overlay")}>
+            <div className={bem("gallery-item", "row")}>
+                <h2 className={bem("gallery-item", "name")}>{item.name}</h2>
+                <div className={bem("gallery-item", "downloads")}>{item.timesUsed}</div>
+            </div>
+            <h3 className={bem("gallery-item", "tags")}>{item.tags}</h3>
+        </div>
     </Link>
 }

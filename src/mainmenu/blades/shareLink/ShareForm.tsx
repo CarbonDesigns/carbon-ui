@@ -4,10 +4,10 @@ import { Component, dispatchAction } from "../../../CarbonFlux";
 import { MarkupLine } from "../../../shared/ui/Markup";
 import { GuiCopyInput } from "../../../shared/ui/GuiCopyInput";
 import { ShareCode, backend, app, ShareRole } from "carbon-core";
-import { GuiProgressButton } from "../../../shared/ui/GuiProgressButton";
+import { GuiPromiseButton } from "../../../shared/ui/GuiPromiseButton";
 
-export type AddShareCodeButton = new (props) => GuiProgressButton<ShareCode>;
-export const AddShareCodeButton = GuiProgressButton as AddShareCodeButton;
+export type AddShareCodeButton = new (props) => GuiPromiseButton<ShareCode>;
+export const AddShareCodeButton = GuiPromiseButton as AddShareCodeButton;
 
 type ShareFormProps = {
     codes: ShareCode[];
@@ -48,7 +48,7 @@ export default class ShareForm extends Component<ShareFormProps, ShareFormState>
         return <div>
             <MarkupLine>
                 {this.state.codes.length ?
-                    <GuiProgressButton mods="delete" caption="@share.disable"
+                    <GuiPromiseButton mods="delete" caption="@share.disable"
                         onClick={this.onDisableSharingClick} onDone={this.onSharingDisabled} /> :
                     <AddShareCodeButton mods="submit" caption="@share.generate"
                         onClick={this.onShareClick} onDone={this.onShared} />

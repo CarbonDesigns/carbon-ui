@@ -48,6 +48,9 @@ export default class BladeContainer extends Component<BladeContainerProps, Blade
             }
         }
     }
+    closeLast() {
+        this.close(this.state.blades.length - 1);
+    }
 
     addChildBlade(id, bladeType, caption, props?, noheader?) {
         if (this.state.blades.length === 0) {

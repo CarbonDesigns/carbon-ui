@@ -1,17 +1,20 @@
 import React from "react";
 import { FormattedMessage } from "react-intl";
-import { IFieldState, GuiValidatedInput, GuiTextArea, GuiButton, GuiRequiredInput, ValidationTrigger } from "../../../shared/ui/GuiComponents";
+import { IFieldState, GuiValidatedInput, GuiTextArea, GuiButton, GuiRequiredInput, ValidationTrigger, GuiButtonBlock } from "../../../shared/ui/GuiComponents";
 import { Component, dispatchAction } from "../../../CarbonFlux";
-import { backend, IPage, app, ISharedPageSetup, ResourceScope } from "carbon-core";
+import { backend, IPage, app, ISharedPageSetup, ResourceScope, Screenshot } from "carbon-core";
 import { PublishAction } from "./PublishActions";
 import { MarkupLine } from "../../../shared/ui/Markup";
 import electronEndpoint from "electronEndpoint";
 import TabContainer, { TabArea, TabPage } from "../../../shared/TabContainer";
 import ResourceSharer from "../../../library/ResourceSharer";
+import { Operation } from "../../../shared/Operation";
+import { GuiProgressButton } from "../../../shared/ui/GuiProgressButton";
 
 interface IPublishPageFormProps {
     page: IPage;
     coverUrl: string;
+    screenshots: Screenshot[];
     defaultSetup: ISharedPageSetup;
 }
 interface IPublishPageFormState {
@@ -22,6 +25,7 @@ interface IPublishPageFormState {
     scope: ResourceScope;
     confirm: boolean;
     publishStep: string;
+    loading: boolean;
 }
 export default class PublishPageForm extends Component<IPublishPageFormProps, IPublishPageFormState> {
     refs: {
@@ -40,7 +44,8 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
             description: props.defaultSetup.description,
             tags: props.defaultSetup.tags,
             confirm: false,
-            publishStep: "1"
+            publishStep: "1",
+            loading: false
         }
     }
 
@@ -147,23 +152,47 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
             return;
         }
 
-        // TODO: show progress bar here
-        ResourceSharer.exportPage(this.props.page)
-            .then(data => backend.shareProxy.publishPage({
-                name: this.refs.name.getValue(),
-                description: this.refs.description.getValue(),
-                tags: this.refs.tags.getValue(),
-                scope: this.state.scope,
-                pageData: JSON.stringify(data),
-                coverUrl: this.props.coverUrl
-            }))
+        let operation = new Operation();
+        operation.start();
+
+        this.setState({ loading: true });
+
+        let tasks = [ResourceSharer.exportPage(this.props.page)];
+        for (let i = 0; i < this.props.screenshots.length; ++i) {
+            tasks.push(backend.fileProxy.uploadPublicImage({ content: this.props.screenshots[i].url }));
+        }
+
+        Promise.all(tasks)
+            .then(results => operation.stop(results))
+            .then(results => {
+                let pageData = results[0];
+                let screenshots = [];
+                for (let i = 1; i < results.length; ++i) {
+                    screenshots.push({
+                        id: this.props.screenshots[i - 1].id,
+                        name: this.props.screenshots[i - 1].name,
+                        url: results[i].url
+                    });
+                }
+
+                return backend.shareProxy.publishPage({
+                    name: this.refs.name.getValue(),
+                    description: this.refs.description.getValue(),
+                    tags: this.refs.tags.getValue(),
+                    scope: this.state.scope,
+                    pageData: JSON.stringify(pageData),
+                    coverUrl: this.props.coverUrl,
+                    screenshots
+                })
+            })
             .then(response => {
                 if (response.ok === true) {
                     this.props.page.setProps({ galleryId: response.result.galleryId });
                 }
 
                 dispatchAction({ type: "Publish_Published", response: response });
-            });
+            })
+            .finally(() => this.setState({ loading: false }));
     };
 
     private saveToDisk() {
@@ -193,7 +222,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
             <TabArea className="gui-pages">
                 <TabPage className="gui-page" tabId="1">
                     <MarkupLine>
-                        <GuiButton mods="submit" onClick={this.onPublishButtonClick} caption="btn.publish" icon={true} disabled={!this.props.page} />
+                        <GuiProgressButton mods="submit" onClick={this.onPublishButtonClick} caption="btn.publish" disabled={!this.props.page} loading={this.state.loading} />
                     </MarkupLine>
                 </TabPage>
                 <TabPage className="gui-page" tabId="2">
@@ -201,8 +230,10 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                         <FormattedMessage id="@publish.confirm" tagName="p" />
                     </MarkupLine>
                     <MarkupLine>
-                        <GuiButton mods="submit" onClick={this.publishPage} caption="@update" icon={true} />
-                        <GuiButton mods="hover-white" onClick={this.onConfirmationCancelled} caption="@cancel" icon={true} />
+                        <GuiButtonBlock>
+                            <GuiProgressButton mods="submit" onClick={this.publishPage} caption="@update" loading={this.state.loading} />
+                            <GuiButton mods="hover-white" onClick={this.onConfirmationCancelled} caption="@cancel" />
+                        </GuiButtonBlock>
                     </MarkupLine>
                 </TabPage>
             </TabArea>

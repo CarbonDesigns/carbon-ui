@@ -6,7 +6,7 @@ import ScrollContainer from "./ScrollContainer";
 import EnterInput from "./EnterInput";
 import { Component, handles, Dispatcher } from "../CarbonFlux";
 import { richApp } from "../RichApp";
-import { PropertyTracker, Page } from "carbon-core";
+import { PropertyTracker, Page, IArtboard } from "carbon-core";
 import bem from '../utils/commonUtils';
 
 const b = "editable-list";
@@ -19,6 +19,7 @@ interface EditableListProps<T> extends ISimpleReactElementProps {
     editingItem?: T;
 
     onClick?: (item: T) => void;
+    onEdit?: (item: T) => boolean;
     onRename?: (name: string, item: T) => void;
     onDelete?: (item: T) => void;
     canDelete?: boolean | ((item: T) => boolean);
@@ -64,6 +65,9 @@ export default class EditableList<T = any> extends Component<EditableListProps<T
 
     private onBeginEditName = (e: React.MouseEvent<HTMLElement>) => {
         let item = this.getItemFromEvent(e);
+        if (this.props.onEdit && !this.props.onEdit(item)) {
+            return;
+        }
         this.setState({
             editingItem: item,
             controlsOpenItem: item
@@ -212,3 +216,9 @@ export default class EditableList<T = any> extends Component<EditableListProps<T
         scrolling: true
     }
 }
+
+export type EditableStringList = new (props) => EditableList<string>;
+export const EditableStringList = EditableList as EditableStringList;
+
+export type EditableArtboardList = new (props) => EditableList<IArtboard>;
+export const EditableArtboardList = EditableList as EditableArtboardList;

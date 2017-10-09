@@ -2,7 +2,7 @@ import React from "react";
 import { Component } from "../../CarbonFlux";
 import bem from "../../utils/commonUtils";
 import { GuiSpinner } from "./GuiComponents";
-import { MinPerceivedTime } from "../../Constants";
+import { MaxPerceivedTime } from "../../Constants";
 
 export interface GuiContentLoaderProps<T> {
     onRenderContent: (data: T) => JSX.Element;
@@ -31,8 +31,8 @@ export class GuiContentLoader<T> extends Component<GuiContentLoaderProps<T>, Gui
             .then(data => {
                 let endTime = new Date();
                 let spent = new Date().getTime() - startTime.getTime();
-                if (spent < MinPerceivedTime) {
-                    return Promise.resolve(data).delay(MinPerceivedTime - spent);
+                if (spent < MaxPerceivedTime) {
+                    return Promise.resolve(data).delay(MaxPerceivedTime - spent);
                 }
                 return data;
             })

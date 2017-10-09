@@ -356,6 +356,9 @@ export default
 
         "publishpage.caption": "Publish current page", //
         "@publish.choosePage": "Choose the page to publish",
+        "@publish.createCover": "Create your cover",
+        "@publish.screenshots": "Choose screenshots",
+        "@publish.addScreenshot": "Add screenshot",
         "@publish.name": "Symbol kit name",
         "@publish.nameHint": "Give it a memorable name",
         "@publish.description": "Description",
@@ -365,6 +368,7 @@ export default
         "@publish.privacy": "Privacy",
         "@publish.confirm": "The symbols with this name already exist",
         "@publish.done": "The symbols have been published to the gallery.",
+        "@publish.viewInGallery": "View in library",
 
         "@import": "Import",
         "@import.header": "Import symbols",

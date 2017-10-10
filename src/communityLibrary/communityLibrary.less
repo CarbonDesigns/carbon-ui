@@ -350,13 +350,19 @@
 }
 .resource-details__bg {
     .abs;
-    width: 120%;
-    height: 120%;
-    margin: -10%;
-    filter: blur(15px);
     background-size: cover;
     background-repeat: no-repeat;
-    overflow: hidden;
+    background-position: center center;
+    width: 100%;
+    height: 100%;
+
+    &&_hasScreens {
+        width: 120%;
+        height: 120%;
+        margin: -10%;
+        filter: blur(15px);
+        overflow: hidden;
+    }
 }
 
 .resource-details__screen-container {

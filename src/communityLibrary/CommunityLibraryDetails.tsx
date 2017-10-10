@@ -35,26 +35,24 @@ interface CommunityLibraryDetailsState {
 }
 
 export default class CommunityLibraryDetails extends Component<CommunityLibraryDetailsProps, CommunityLibraryDetailsState>{
-    static contextTypes = {
-        router: PropTypes.any,
-        intl: PropTypes.object
-    }
-
-    constructor(props) {
+    constructor(props: CommunityLibraryDetailsProps) {
         super(props);
-        if (props.location && props.location.state && props.location.state.data) {
-            this.state = { data: props.location.state.data };
-        }
-        else {
-            this.state = { data: null };
-            backend.galleryProxy.resource(props.resourceId).then(data => {
-                this.setState({ data: data });
-            })
-        }
+
+        this.state = this.getStateFromProps(props);
     }
 
-    componentDidMount() {
-        super.componentDidMount();
+    componentWillReceiveProps(nextProps: CommunityLibraryDetailsProps) {
+        this.setState(this.getStateFromProps(nextProps));
+    }
+
+    private getStateFromProps(props: CommunityLibraryDetailsProps) {
+        let state: CommunityLibraryDetailsState = { data: props.data };
+        if (!state.data) {
+            backend.galleryProxy.resource(props.resourceId).then(data => {
+                this.setState({ data });
+            });
+        }
+        return state;
     }
 
     renderTags(tagsString) {
@@ -75,7 +73,7 @@ export default class CommunityLibraryDetails extends Component<CommunityLibraryD
         var data = this.state.data;
         return <div className="resource-page">
             <section className="resource-details-container">
-                {this.renderImage("side")}
+                {this.renderImage({ side: true })}
                 <div className="resource-details">
                     <h3 className={bem("resource-details", "symbol")}>{buildSymbol(data.name)}</h3>
                     <h1 className={bem("resource-details", "header")}>{data.name}</h1>
@@ -83,7 +81,7 @@ export default class CommunityLibraryDetails extends Component<CommunityLibraryD
                     <article className={bem("resource-details", "description")}>
                         {data.description.split("\n").map((x, i) => <p key={i} className={bem("resource_details", "par")}>{x}</p>)}
                     </article>
-                    {this.renderImage("column")}
+                    {this.renderImage({ column: true })}
                     <label className={bem("resource-details", "dblabel")}>Designed by</label>
                     <div className={bem("resource-details", "designedby")}>{data.authorName || "carbonium"}</div>
 
@@ -100,17 +98,18 @@ export default class CommunityLibraryDetails extends Component<CommunityLibraryD
         </div>;
     }
 
-    private renderImage(mods: "side" | "column") {
+    private renderImage(mods: { side?: boolean, column?: boolean }) {
+        mods = Object.assign({}, mods, { hasScreens: this.state.data.screenshots.length > 0 });
         return <figure className={bem("resource-details", "image", mods)}>
             <div className={bem("resource-details", "bg-container")}>
-                <div className={bem("resource-details", "bg")} style={{ backgroundImage: "url('" + this.state.data.coverUrl + "')" }}></div>
+                <div className={bem("resource-details", "bg", mods)} style={{ backgroundImage: "url('" + this.state.data.coverUrl + "')" }}></div>
             </div>
             <div className={bem("resource-details", "screen-container")}>
                 {this.state.data.screenshots.map((x, i) =>
-                    <img className={bem("resource-details", "screen")} src={x.url} title={x.name} key={i}/>
+                    <img className={bem("resource-details", "screen")} src={x.url} title={x.name} key={i} />
                 )}
                 {/* Workaround for a issue with flex, auto-sized images and righmost padding */}
-                <div className={bem("resource-details", "last")}/>
+                <div className={bem("resource-details", "last")} />
             </div>
         </figure>
     }

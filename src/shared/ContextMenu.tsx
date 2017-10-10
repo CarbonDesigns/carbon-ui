@@ -25,7 +25,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
 
     private onClick(event) {
         if (!this.props.item.disabled) {
-            app.actionManager.invoke(this.props.item.actionId);
+            app.actionManager.invoke(this.props.item.actionId, this.props.item.actionArg);
         }
         dispatch(FlyoutActions.hide());
     }
@@ -46,14 +46,15 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
         }
 
         if (this.props.item.items) {
-            return <li className={b('item', null)} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+            return <li className={b('item', "padded")} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
                 {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
-                <span className={b("label")}>{this.formatLabel(item.name)}</span>
+                <span className={b("label", "with-submenu")}>{this.formatLabel(item.name)}</span>
                 <div className={b('item-arrow')}></div>
                 {this.state.submenuVisible && <SubMenu className={b("submenu", { disabled: item.disabled })} items={this.props.item.items} onCancelled={this.onSubmenuCancelled} />}
             </li>
         }
-        return <li className={b("item", { disabled: this.props.item.disabled, "with-icon": item.icon })} onMouseDown={stopPropagationHandler} onClick={this.onClick.bind(this)}>
+        return <li className={b("item", { disabled: this.props.item.disabled, "padded": !item.icon && this.props.hasIcons})}
+            onMouseDown={stopPropagationHandler} onClick={this.onClick.bind(this)}>
             {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
             <span className={b("label")}>{this.formatLabel(this.props.item.name)}</span>
             <span className={b("shortcut")}>{workspace.shortcutManager.getActionHotkey(item.actionId)}</span>
@@ -89,8 +90,9 @@ class SubMenu extends Component<SubMenuProps> implements ICancellationHandler {
     }
 
     render() {
+        let hasIcons = this.props.items.some(x => x.icon);
         return <ul className={this.props.className}>
-            {this.props.items.map(item => <ContextMenuItem item={item} key={item.name} />)}
+            {this.props.items.map(item => <ContextMenuItem item={item} key={item.name} hasIcons={hasIcons} />)}
         </ul>
     }
 }
@@ -211,14 +213,10 @@ export default class ContextMenu extends Component<any, any> {
         document.removeEventListener("click", this.onDocumentClick);
     }
 
-    _renderMenuItem = (item, ind) => {
-        // console.log(ind, item, arguments);
-        return <ContextMenuItem item={item} key={'u' + item.name + ind} />
-    };
-
     renderMenu(menu) {
+        let hasIcons = menu.items.some(x => x.icon);
         return <ul className="context-menu txt">
-            {menu.items.map(this._renderMenuItem)}
+            {menu.items.map((item, i) => <ContextMenuItem item={item} key={'u' + item.name + i} hasIcons={hasIcons} />)}
         </ul>;
     }
 

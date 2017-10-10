@@ -39,7 +39,7 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
         var config = this.state.config;
         if (!config || !config.groups.length) {
             if (this.state.dirtyConfig) {
-                return <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>;
+                return <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary} loading={!!this.state.operation}/>;
             }
 
             return <Markup>
@@ -57,7 +57,7 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
             onCategoryChanged={this.onCategoryChanged}
             config={config}>
 
-            <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>
+            <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary} loading={!!this.state.operation}/>
 
             <SpriteView config={config} configVersion={this.state.configVersion}
                 changedId={this.state.changedId}

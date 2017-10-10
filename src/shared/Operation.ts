@@ -27,4 +27,10 @@ export class Operation {
     inProgress(): boolean {
         return !!this.startTime;
     }
+
+    static start() {
+        let operation = new Operation();
+        operation.start();
+        return operation;
+    }
 }

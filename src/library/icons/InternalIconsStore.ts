@@ -6,6 +6,7 @@ import { util, IArtboard, Image, Brush, ContentSizing, ArtboardType, UIElementFl
 import Toolbox from "../Toolbox";
 import { IToolboxStore, StencilInfo, ToolboxConfig, ToolboxGroup, Stencil, SpriteStencilInfo, PageSpriteCacheItem, SpriteStencil } from "../LibraryDefs";
 import IconSetSpriteManager from "../IconSetSpriteManager";
+import { Operation } from "../../shared/Operation";
 
 export type InternalIconsStoreState = {
     config: ToolboxConfig<SpriteStencil>;
@@ -14,6 +15,7 @@ export type InternalIconsStoreState = {
     changedId: string | null;
     activeCategory: any;
     lastScrolledCategory: any;
+    operation: Operation;
 }
 
 type ArtboardState = {
@@ -39,7 +41,8 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             dirtyConfig: false,
             changedId: null,
             lastScrolledCategory: null,
-            activeCategory: null
+            activeCategory: null,
+            operation: null
         };
     }
 
@@ -164,7 +167,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         if (this.artboardStates.length) {
             if (this.areSameArtboardStates(this.artboardStates, newStates) || !this.hasDirtyArtboards()) {
                 let config = this.buildToolboxConfig(pages);
-                this.setState({ dirtyConfig: false, config, configVersion: ++this.state.configVersion });
+                this.setState({ dirtyConfig: false, config, configVersion: ++this.state.configVersion, operation: null });
                 this.artboardStates = newStates;
             }
             else {
@@ -250,6 +253,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             return;
         }
 
+        this.setState({ operation: Operation.start() });
         app.beginUpdate();
 
         let promises = [];
@@ -289,6 +293,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                     artboard.parent().patchProps(PatchType.Insert, "iconSpriteCache", result);
                 }
             })
+            .then(() => this.state.operation.stop())
             .finally(() => app.endUpdate());
     }
 

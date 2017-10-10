@@ -63,6 +63,7 @@ var _get_caption = function (props) {
 
 interface IPanelButtonProps extends IReactElementProps<HTMLButtonElement>{
     actionId: string;
+    actionArg: string;
     icon?: string;
     label?: string;
     disabled?: boolean;
@@ -77,10 +78,10 @@ export class PaneButton extends React.Component<IPanelButtonProps>  {
     render() {
         var cn = _render_full_classname("pane-button", this.props);
         var caption = _get_caption(this.props);
-        var {children, className, onClick, icon, label, disabled, actionId, ...rest} = this.props;
+        var {children, className, onClick, icon, label, disabled, actionId, actionArg, ...rest} = this.props;
         var title = workspace.shortcutManager.getActionHotkey(actionId);
         return (
-            <div className={cn} onClick={this.onClick} data-action={actionId} title={title}>
+            <div className={cn} onClick={this.onClick} data-action={actionId} data-action-arg={actionArg} title={title}>
                 {_get_icon(this.props)}
                 {caption}
             </div>
@@ -102,11 +103,11 @@ export class PaneListItem extends React.Component<any>  {
         var cn = _render_full_classname("pane-list__item", this.props);
         var icon    = _get_icon(this.props);
         var caption = _get_caption(this.props);
-        var {children, className, actionId} = this.props;
+        var {children, className, actionId, actionArg} = this.props;
         var title = workspace.shortcutManager.getActionHotkey(actionId);
 
         return (
-            <div className={cn} onClick={this.onClick} data-action={actionId} title={title}>
+            <div className={cn} onClick={this.onClick} data-action={actionId} data-action-arg={actionArg} title={title}>
                 {icon}
                 {caption}
             </div>

@@ -33,7 +33,7 @@
             top:50%;
         }
 
-        &:not(&_with-icon) {
+        &&_padded {
             @iconSize: 14px;
             padding-left: @iconSize + @line_air + @air_half;
         }
@@ -65,6 +65,10 @@
 
     &__label {
         flex-grow: 1;
+
+        &&_with-submenu {
+            margin-right: @air_double;
+        }
     }
 
     &__shortcut {

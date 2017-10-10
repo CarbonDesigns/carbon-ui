@@ -326,6 +326,11 @@ export default
         "resources.my": "Published by me",
         "resources.public": "Published by community",
 
+        "@guides.deleteOne": "Delete guide",
+        "@guides.deleteAll": "Delete all guides",
+        "@guides.onArtboard": "On current artboard",
+        "@guides.onPage": "On current page",
+
         "@folders.my": "My Projects",
         "@folders.shared": "Shared with me",
         "@folders.deleted": "Deleted",

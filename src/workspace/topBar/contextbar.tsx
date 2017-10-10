@@ -33,11 +33,11 @@ export class ContextButton extends React.Component<any, any> {
             renderedCaption = (<span className="contextbar__cap">{this.props.children}</span>);
         }
 
-        let {children, icon, actionId, ...rest} = this.props;
+        let {children, icon, actionId, actionArg, ...rest} = this.props;
         let title = workspace.shortcutManager.getActionHotkey(actionId);
 
         return (
-            <div className="contextbar__button" data-action={actionId} title={title} onClick={this.props.onClick}>
+            <div className="contextbar__button" data-action={actionId} data-action-arg={actionArg} title={title} onClick={this.props.onClick}>
                 {renderedIcon}
                 {renderedCaption}
             </div>
@@ -106,12 +106,13 @@ export default class ContextBar extends Component<any, any> {
 
     private static onClick(e: React.MouseEvent<HTMLElement>) {
         let actionId = e.currentTarget.dataset.action;
-        app.actionManager.invoke(actionId);
+        let actionArg = e.currentTarget.dataset.actionArg;
+        app.actionManager.invoke(actionId, actionArg);
     }
 
     _renderItem(item) {
         if (!item.items) {
-            return <ContextButton key={item.name} onClick={ContextBar.onClick} icon={item.icon} actionId={item.actionId}><CarbonLabel id={item.name} /></ContextButton>;
+            return <ContextButton key={item.name} onClick={ContextBar.onClick} icon={item.icon} actionId={item.actionId} actionArg={item.actionArg}><CarbonLabel id={item.name} /></ContextButton>;
         }
 
         if (item.items.every(a => a.disabled)) {
@@ -122,7 +123,7 @@ export default class ContextBar extends Component<any, any> {
             return <ContextDropdown key={item.name} icon={item.icon} label={item.name}>
                 <Pane>
                     <PaneList>
-                        {item.items.map(a => <PaneListItem key={item.name + a.name} onClick={ContextBar.onClick} icon={a.icon} disabled={a.disabled} actionId={a.actionId}>
+                        {item.items.map(a => <PaneListItem key={item.name + a.name} onClick={ContextBar.onClick} icon={a.icon} disabled={a.disabled} actionId={a.actionId} actionArg={a.actionArg}>
                             <CarbonLabel id={a.name} />
                             <span className="pane-shortcut">{workspace.shortcutManager.getActionHotkey(a.actionId)}</span>
                         </PaneListItem>)}
@@ -135,7 +136,7 @@ export default class ContextBar extends Component<any, any> {
         return <ContextDropdown icon={item.icon} label={item.name} key={item.name}>
             <Pane>
                 {item.rows.map((r, i) => {
-                    var rowItems = item.items.filter(a => a.row === i).map(a => <PaneButton key={a.name} onClick={ContextBar.onClick} icon={a.icon} label={a.name} disabled={a.disabled} actionId={a.actionId} />);
+                    var rowItems = item.items.filter(a => a.row === i).map(a => <PaneButton key={a.name} onClick={ContextBar.onClick} icon={a.icon} label={a.name} disabled={a.disabled} actionId={a.actionId} actionArg={a.actionArg} />);
                     if (!rowItems.length) {
                         return null;
                     }

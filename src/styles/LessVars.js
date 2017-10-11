@@ -8,5 +8,6 @@ export default {
     iconStencilHeight: 50,
     layerItemHeight: 32,
     layerOverlayHeight: 6,
-    tabTransitionTime: 800
+    tabTransitionTime: 800,
+    stencilAnimationTime: 500
 }

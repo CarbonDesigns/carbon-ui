@@ -119,6 +119,9 @@
     flex-wrap: wrap;
 
     &__name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         padding: @line_air;
         flex-basis: 100%;
     }
@@ -139,6 +142,7 @@
 
     &__image{
         .norepeat;
+        flex: 0 0 auto;
     }
 
     i {
@@ -292,6 +296,11 @@
 }
 
 .dragging{
+    transition-property: transform, opacity;
+    transition-duration: 500ms;
+    transition-timing-function: @ease-out-cubic;
+    transform-origin: top left;
+
     &.icon {
         width: 36px;
         height: 36px;

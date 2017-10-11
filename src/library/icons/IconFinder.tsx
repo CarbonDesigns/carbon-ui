@@ -3,12 +3,12 @@ import ReactDom from "react-dom";
 import cx from "classnames";
 import { Component, handles, dispatch, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import Search from "../../shared/Search";
-import { domUtil } from "carbon-core";
 import IconsActions from './IconsActions';
 import iconFinderStore, { IconFinderStoreState, IconFinderStore } from "./IconFinderStore";
 import InfiniteGrid from "../../shared/collections/InfiniteGrid";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
+import { onCssTransitionEnd } from "../../utils/domUtil";
 
 const IconSize = 40;
 
@@ -28,7 +28,7 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
         var page = ReactDom.findDOMNode(this.refs.page);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
-        domUtil.onCssTransitionEnd(page, () => this.refs.search.focus(), 800);
+        onCssTransitionEnd(page, () => this.refs.search.focus(), 800);
     }
 
     private onLoadMore = (start, stop) => {

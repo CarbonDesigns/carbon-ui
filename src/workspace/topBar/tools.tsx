@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import { app, domUtil, Selection, WorkspaceTool, workspace } from "carbon-core";
+import { app, Selection, WorkspaceTool, workspace } from "carbon-core";
 import AppStore from "../../AppStore";
 import AppActions from "../../RichAppActions";
 import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../../CarbonFlux";
@@ -74,7 +74,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         if (this.state.data.activeMode !== AppStore.state.activeMode) {
             this.mergeStateData({ changingActiveMode: true });
 
-            //domUtil.onCssTransitionEnd(this.refs.tools, ()=> {
+            //onCssTransitionEnd(this.refs.tools, ()=> {
             // this.setState({activeMode: AppStore.state.activeMode, changingActiveMode:false});
             //}, 500)
         }

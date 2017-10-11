@@ -4,9 +4,6 @@ import PropTypes from "prop-types";
 import immutable from 'immutable';
 import LayoutActions from './LayoutActions';
 import {richApp, app} from "../RichApp";
-import {domUtil} from "carbon-core";
-
-
 import cx from 'classnames';
 import bem_mod from '../utils/commonUtils';
 import {FormattedMessage} from "react-intl";

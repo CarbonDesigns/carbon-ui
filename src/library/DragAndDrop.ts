@@ -1,6 +1,5 @@
 import interact from "interact.js";
-import {domUtil} from "carbon-core";
-import {findTransformProp} from "utils/domUtil";
+import {findTransformProp, nodeOffset} from "utils/domUtil";
 
 export class DragAndDrop {
     private _stencilInteraction: Interact.Interactable = null;
@@ -54,9 +53,9 @@ export class DragAndDrop {
             });
     }
 
-    cloneNode(parent){
+    cloneNode(parent): HTMLElement {
         var node = parent.childNodes[0];
-        var offset = domUtil.offset(node);
+        var offset = nodeOffset(node);
         var helperNode = node.cloneNode(true);
         helperNode.style.zIndex = 1000;
         helperNode.style.position = "absolute";

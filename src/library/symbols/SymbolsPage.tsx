@@ -2,7 +2,6 @@ import React from "react";
 import Symbols from "./Symbols";
 import RecentSymbols from "./RecentSymbols";
 import SearchSymbols from "./SearchSymbols";
-import {domUtil} from "carbon-core";
 import { listenTo, Component, dispatch, dispatchAction } from "../../CarbonFlux";
 // import {default as TabContainer, TabArea, TabHeader, TabPage} from "../../shared/TabContainer";
 import {default as TabContainer, TabTabs, TabArea, TabPage} from "../../shared/TabContainer";

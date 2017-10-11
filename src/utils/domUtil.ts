@@ -67,3 +67,25 @@ function checkIsRetina() {
     return false;
 }
 export const isRetina = checkIsRetina();
+
+const transitionEvents = ["transitionend", "webkitTransitionEnd", "oTransitionEnd", "otransitionend", "MSTransitionEnd"];
+export function onCssTransitionEnd(element, func, maxDelay) {
+    var timer = 0;
+    var onEnd = function () {
+        if (timer) {
+            clearTimeout(timer);
+        }
+        for (var i = 0; i < transitionEvents.length; i++) {
+            var event = transitionEvents[i];
+            element.removeEventListener(event, onEnd);
+        }
+        func();
+    };
+    for (var i = 0; i < transitionEvents.length; i++) {
+        var event = transitionEvents[i];
+        element.addEventListener(event, onEnd);
+    }
+    if (maxDelay) {
+        timer = setTimeout(onEnd, maxDelay);
+    }
+}

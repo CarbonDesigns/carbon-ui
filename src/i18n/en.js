@@ -15,6 +15,7 @@ export default
         "@undo": "Undo",
         "@redo": "Redo",
         "@save": "Save",
+        "@select": "Select",
 
         "zoomOut": "Zoom out",
         "zoomIn": "Zoom in",

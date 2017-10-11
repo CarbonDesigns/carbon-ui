@@ -2,8 +2,7 @@ import React from "react";
 import ReactDom from "react-dom";
 import interact from "interact.js";
 import { Component } from "../../CarbonFlux";
-import { domUtil } from "carbon-core";
-import { findTransformProp } from "../../utils/domUtil";
+import { findTransformProp, nodeOffset } from "../../utils/domUtil";
 
 type SortableProps<T> = {
     data: T[];
@@ -131,7 +130,7 @@ export default class Sortable<T> extends Component<SortableProps<T>> {
     }
 
     private cloneNode(node: HTMLElement){
-        var offset = domUtil.offset(node);
+        var offset = nodeOffset(node);
         var helperNode = node.cloneNode(true) as HTMLElement;
         helperNode.style.zIndex = "1000";
         helperNode.style.position = "absolute";

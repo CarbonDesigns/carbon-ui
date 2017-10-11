@@ -8,7 +8,7 @@ import cx from 'classnames';
 import VirtualList from "../shared/collections/VirtualList";
 import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";
-import { app, Invalidate, Selection, Environment, IArtboardPage, domUtil, LayerType, IIsolationLayer } from "carbon-core";
+import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
 import { say } from "../shared/Utils";
 import bem from "bem";
 import { MarkupLine } from "../shared/ui/Markup";

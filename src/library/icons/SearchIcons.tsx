@@ -4,7 +4,6 @@ import { Component, listenTo, dispatchAction, StoreComponent } from "../../Carbo
 import Search from "../../shared/Search";
 import ScrollContainer from "../../shared/ScrollContainer";
 import SpriteView from "../SpriteView";
-import { domUtil } from "carbon-core";
 import searchIconsStore, { SearchIconsStoreState } from "./SearchIconsStore";
 import Navigatable from "../../shared/Navigatable";
 import bem from "../../utils/commonUtils";
@@ -13,6 +12,7 @@ import LessVars from "../../styles/LessVars";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
 import { GuiButton } from "../../shared/ui/GuiComponents";
+import { onCssTransitionEnd } from "../../utils/domUtil";
 
 export default class SearchIcons extends StoreComponent<{}, SearchIconsStoreState>{
     refs: {
@@ -30,7 +30,7 @@ export default class SearchIcons extends StoreComponent<{}, SearchIconsStoreStat
         var page = ReactDom.findDOMNode(this.refs.page);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
-        domUtil.onCssTransitionEnd(page, () => this.refs.search.focus(), LessVars.tabTransitionTime);
+        onCssTransitionEnd(page, () => this.refs.search.focus(), LessVars.tabTransitionTime);
     }
 
     private onSearch = (q) => {

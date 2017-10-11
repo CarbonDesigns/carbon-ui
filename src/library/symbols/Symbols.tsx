@@ -74,7 +74,7 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
                 onCategoryChanged={this.onCategoryChanged}
                 config={config}>
 
-                <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary}/>
+                <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary} loading={!!this.state.operation}/>
 
                 <SpriteView
                     config={config}

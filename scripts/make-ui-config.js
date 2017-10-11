@@ -246,6 +246,11 @@ function getLoaders(settings) {
         }
     ];
 
+    loaders.push({
+        test: /\.optional\.css$/,
+        loaders: ["style-loader/useable", "css"]
+    });
+
     if (settings.minimize) {
         loaders.push({
             test: /\.less$/,

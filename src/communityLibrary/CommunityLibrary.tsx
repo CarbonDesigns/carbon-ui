@@ -4,6 +4,7 @@ import { Component, dispatchAction } from "../CarbonFlux";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import CommunityLibraryDetails from "./CommunityLibraryDetails";
 import CommunityLibraryPage from "./CommunityLibraryPage";
+import { ISharedResource } from "carbon-core";
 
 interface CommunityLibraryProps extends IRouteComponentProps {
     params: {
@@ -14,7 +15,9 @@ interface CommunityLibraryProps extends IRouteComponentProps {
         query: {
             s?: string;
         };
-        state: object;
+        state: {
+            data?: ISharedResource;
+        }
     };
 }
 
@@ -56,7 +59,7 @@ export default class CommunityLibrary extends RouteComponent<CommunityLibraryPro
     }
     private renderDetails() {
         if (this.props.params.resourceId) {
-            return <CommunityLibraryDetails resourceId={this.props.params.resourceId} />
+            return <CommunityLibraryDetails resourceId={this.props.params.resourceId} data={this.props.location.state.data} />
         }
         return null;
     }

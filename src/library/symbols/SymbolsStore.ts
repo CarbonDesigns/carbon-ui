@@ -5,6 +5,7 @@ import { SymbolsAction } from "./SymbolsActions";
 import ToolboxConfiguration from "../ToolboxConfiguration";
 import Toolbox from "../Toolbox";
 import { IToolboxStore, StencilInfo, ToolboxConfig, SpriteStencil, SpriteStencilInfo } from "../LibraryDefs";
+import { Operation } from "../../shared/Operation";
 
 export type SymbolsStoreState = {
     dirtyConfig: boolean;
@@ -14,6 +15,7 @@ export type SymbolsStoreState = {
     currentPage: IPage;
     activeCategory: any;
     lastScrolledCategory: any;
+    operation: Operation;
 };
 
 class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxStore {
@@ -28,7 +30,8 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
             changedId: null,
             dirtyConfig: false,
             activeCategory: null,
-            lastScrolledCategory: null
+            lastScrolledCategory: null,
+            operation: null
         };
     }
 
@@ -71,12 +74,20 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                         activeCategory = action.config.groups[0];
                     }
 
-                    this.setState({ config: action.config, dirtyConfig: false, changedId: null, activeCategory, configVersion: ++this.state.configVersion });
+                    this.setState({
+                        config: action.config,
+                        dirtyConfig: false,
+                        changedId: null,
+                        activeCategory,
+                        configVersion: ++this.state.configVersion,
+                        operation: null });
                 }
                 return;
             case "Carbon_PropsChanged":
                 if (action.element instanceof Page && action.props.toolboxConfigUrl) {
+                    this.setState({ operation: Operation.start() });
                     ToolboxConfiguration.getConfigForPage(action.element as IPage)
+                        .then(config => this.state.operation.stop(config))
                         .then(config => {
                             dispatchAction({ type: "Symbols_Loaded", page: action.element as IPage, config, async: true });
                         });
@@ -175,7 +186,9 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
     }
 
     private refreshLibrary() {
+        this.setState({ operation: Operation.start() });
         ToolboxConfiguration.buildToolboxConfig(this.state.currentPage)
+            .then(config => this.state.operation.stop(config))
             .then(config => {
                 // If new config is empty and the old one is already invalidated, dispatch the action to update the panel.
                 // Scenario: add symbols, modify, delete symbol artboard, refresh toolbox.

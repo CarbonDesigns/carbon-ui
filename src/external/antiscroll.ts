@@ -1,7 +1,12 @@
-import { util } from "carbon-api";
+import { util, platform } from "carbon-api";
+let style = require("./scroller.optional.css") as any;
+
+let isEnabled = platform.deviceOS !== "Mac OS" && platform.deviceType !== "mobile";
+if (isEnabled) {
+    style.use();
+}
 
 export type AntiscrollOptions = {
-    notOnMac: boolean;
     initialDisplay: boolean;
     autoHide: boolean;
     autoHideTimeout: number;
@@ -12,7 +17,6 @@ export type AntiscrollOptions = {
 }
 
 const DefaultOptions: AntiscrollOptions = {
-    notOnMac: false,
     autoHideTimeout: 1500,
     autoHide: true,
     initialDisplay: false,
@@ -44,7 +48,7 @@ export default class Antiscroll {
     constructor(public wrapperElement: HTMLElement, options: Partial<AntiscrollOptions>) {
         this.options = Object.assign({}, DefaultOptions, options);
 
-        if (this.options.notOnMac && (navigator.platform.substr(0, 3) === 'Mac')) {
+        if (!isEnabled) {
             return;
         }
 
@@ -83,6 +87,10 @@ export default class Antiscroll {
     }
 
     refresh() {
+        if (!isEnabled) {
+            return;
+        }
+
         if (this.options.debug) {
             console.group('Antiscroll.refresh');
         }
@@ -126,6 +134,10 @@ export default class Antiscroll {
     }
 
     destroy() {
+        if (!isEnabled) {
+            return;
+        }
+
         if (this.options.debug) {
             console.group('Antiscroll.destroy');
         }

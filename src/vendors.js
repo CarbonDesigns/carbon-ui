@@ -16,7 +16,6 @@ require("react-pure-render");
 require("react-router");
 require("react-virtualized");
 require("prop-types");
-require("velocity-animate");
 require('unsplash-js');
 require("webfontloader");
 //require("whatwg-fetch");

@@ -1,5 +1,5 @@
 import React from "react";
-import { domUtil, Container, IContainer, IUIElement, Selection, Shape, Image } from "carbon-core";
+import { Container, IContainer, IUIElement, Selection, Shape, Image } from "carbon-core";
 import interact from "interact.js";
 import layersStore, { LayerNode } from "./LayersStore";
 import { dispatchAction } from "../CarbonFlux";

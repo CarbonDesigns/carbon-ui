@@ -1,12 +1,13 @@
-import velocity from "velocity-animate";
 import dragAndDrop from "./DragAndDrop";
 import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
 import { richApp } from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
-import { app, Symbol, Environment, Rect, IDropElementData, IUIElement } from "carbon-core";
+import { app, Point, Symbol, Environment, Rect, IDropElementData, IUIElement } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection } from "carbon-core";
 import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
+import { nodeOffset, onCssTransitionEnd } from "../utils/domUtil";
+import LessVars from "../styles/LessVars";
 
 interface Interaction {
     dropElement: HTMLElement;
@@ -68,21 +69,23 @@ export class Toolbox extends CarbonStore<ToolboxState>{
             y = location.y;
         }
 
-        var screenPoint = Environment.view.pointToScreen({ x: x * scale, y: y * scale });
+        var p1 = nodeOffset(e.currentTarget);
+        var p2 = Environment.view.pointToScreen({ x: x * scale, y: y * scale });
         var node = dragAndDrop.cloneNode(e.currentTarget);
-        document.body.appendChild(node);
-        velocity(node, { left: screenPoint.x, top: screenPoint.y, width: w * scale, height: h * scale, opacity: .1 }, {
-            duration: 500,
-            easing: 'easeOutCubic',
-            complete: () => {
-                document.body.removeChild(node);
+        var nodeScaleX = w * scale/e.currentTarget.clientWidth;
+        var nodeScaleY = h * scale/e.currentTarget.clientHeight;
 
+        document.body.appendChild(node);
+        //set attributes in the new cycle to kick off css animation
+        setTimeout(() => {
+            node.style.transform = `translateX(${p2.x - p1.left}px) translateY(${p2.y - p1.top}px) scale(${nodeScaleX}, ${nodeScaleY})`;
+            node.style.opacity = ".2";
+            onCssTransitionEnd(node, () => {
+                document.body.removeChild(node);
                 Environment.controller.insertAndSelect([element], location.parent, x, y);
                 this.onElementAdded(stencil);
-
-                //analytics.event("Toolbox", "Single-click", templateId);
-            }
-        });
+            }, LessVars.stencilAnimationTime);
+        }, 1);
     }
 
     onDragStart = (event, interaction: Interaction) => {
@@ -148,7 +151,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         assertNever(source);
     }
 
-    private fitToViewportIfNeeded(element) {
+    private fitToViewportIfNeeded(element: IUIElement) {
         var viewport = Environment.view.viewportRect();
         var bounds = new Rect(0, 0, viewport.width * .8, viewport.height * .8);
         var current = new Rect(0, 0, element.width(), element.height());
@@ -160,7 +163,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         }
 
         if (fit.width !== current.width || fit.height !== current.height) {
-            element.prepareAndSetProps({ br: element.boundaryRect().withSize(Math.round(fit.width), Math.round(fit.height)) });
+            element.applyScaling(new Point(fit.width/current.width, fit.height/current.height), Point.Zero);
         }
     }
 

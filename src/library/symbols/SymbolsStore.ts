@@ -1,5 +1,5 @@
 import { CarbonStore, dispatchAction } from "../../CarbonFlux";
-import { IPage, app, IDisposable, ArtboardType, Symbol, Page } from "carbon-core";
+import { IPage, app, IDisposable, ArtboardType, Symbol, Page, IArtboard } from "carbon-core";
 import { CarbonAction } from "../../CarbonActions";
 import { SymbolsAction } from "./SymbolsActions";
 import ToolboxConfiguration from "../ToolboxConfiguration";
@@ -44,6 +44,11 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         return null;
     }
     createElement(stencil: SpriteStencil) {
+        let artboard = app.findNodeByIdBreadthFirst<IArtboard>(stencil.id);
+        if (artboard.props.insertAsContent) {
+            return artboard.children[0].clone();
+        }
+
         var element = new Symbol();
         element.source({ pageId: stencil.pageId, artboardId: stencil.id });
         return element;

@@ -81,11 +81,6 @@ declare module 'react-color/lib/components/sketch/SketchPresetColors' {
     export default function SketchPresetColors();
 }
 
-declare module "velocity-animate"{
-    function velocity(node: HTMLElement, props: any, options: any);
-    export = velocity;
-}
-
 declare module "unsplash-js"{
     interface IUnsplash{
         photos: any;

@@ -4,7 +4,6 @@ import { Component, listenTo, dispatchAction, StoreComponent } from "../../Carbo
 import Search from "../../shared/Search";
 import ScrollContainer from "../../shared/ScrollContainer";
 import SpriteView from "../SpriteView";
-import { domUtil } from "carbon-core";
 import searchImagesStore, { SearchImagesStoreState } from "./SearchImagesStore";
 import Navigatable from "../../shared/Navigatable";
 import bem from "../../utils/commonUtils";
@@ -16,6 +15,7 @@ import { GuiButton } from "../../shared/ui/GuiComponents";
 import VirtualList from "../../shared/collections/VirtualList";
 import { UserImageStencil } from "./UserImagesStore";
 import { UserImage, getUserImageHeight } from "./UserImage";
+import { onCssTransitionEnd } from "../../utils/domUtil";
 
 type ImageList = new (props) => VirtualList<UserImageStencil>;
 const ImageList = VirtualList as ImageList;
@@ -36,7 +36,7 @@ export default class SearchImages extends StoreComponent<{}, SearchImagesStoreSt
         var page = ReactDom.findDOMNode(this.refs.page);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
-        domUtil.onCssTransitionEnd(page, () => this.refs.search.focus(), LessVars.tabTransitionTime);
+        onCssTransitionEnd(page, () => this.refs.search.focus(), LessVars.tabTransitionTime);
     }
 
     private onSearch = (q) => {

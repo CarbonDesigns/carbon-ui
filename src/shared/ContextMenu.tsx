@@ -48,7 +48,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
         if (this.props.item.items) {
             return <li className={b('item', "padded")} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
                 {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
-                <span className={b("label", "with-submenu")}>{this.formatLabel(item.name)}</span>
+                <span className={b("label", "with-submenu")}>{this.props.item.label || this.formatLabel(item.name)}</span>
                 <div className={b('item-arrow')}></div>
                 {this.state.submenuVisible && <SubMenu className={b("submenu", { disabled: item.disabled })} items={this.props.item.items} onCancelled={this.onSubmenuCancelled} />}
             </li>
@@ -56,7 +56,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
         return <li className={b("item", { disabled: this.props.item.disabled, "padded": !item.icon && this.props.hasIcons})}
             onMouseDown={stopPropagationHandler} onClick={this.onClick.bind(this)}>
             {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
-            <span className={b("label")}>{this.formatLabel(this.props.item.name)}</span>
+            <span className={b("label")}>{this.props.item.label || this.formatLabel(this.props.item.name)}</span>
             <span className={b("shortcut")}>{workspace.shortcutManager.getActionHotkey(item.actionId)}</span>
         </li>
     }

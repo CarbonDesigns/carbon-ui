@@ -3,7 +3,6 @@ import cx from "classnames";
 import ReactDom from "react-dom";
 import { Component, listenTo, dispatch, handles, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import Search from "../../shared/Search";
-import { domUtil } from "carbon-core";
 import ImagesActions from './ImagesActions';
 import LayoutActions from '../../layout/LayoutActions';
 import unsplashStore, { UnsplashStoreState, UnsplashStore, UnsplashStencil } from "./UnsplashStore";
@@ -12,6 +11,7 @@ import { ImagePortraitHeight, ImageLandscapeHeight } from "../LibraryDefs";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
 import { getUnsplashImageHeight, UnsplashImage } from "./UnsplashImage";
+import { onCssTransitionEnd } from "../../utils/domUtil";
 
 type UnsplashList = new (props) => InfiniteList<UnsplashStencil>;
 const UnsplashList = InfiniteList as UnsplashList;
@@ -32,7 +32,7 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
         var page = ReactDom.findDOMNode(this.refs.page);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
-        domUtil.onCssTransitionEnd(page, () => this.refs.search.focus(), 800);
+        onCssTransitionEnd(page, () => this.refs.search.focus(), 800);
     }
 
     private onLoadMore = (start, stop) => {

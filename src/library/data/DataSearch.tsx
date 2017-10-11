@@ -4,8 +4,8 @@ import { StoreComponent, dispatchAction } from "../../CarbonFlux";
 import dataSearchStore, { DataSearchStoreState } from "./DataSearchStore";
 import CatalogView from "./CatalogView";
 import Search from "../../shared/Search";
-import { domUtil } from "carbon-core";
 import LessVars from "../../styles/LessVars";
+import { onCssTransitionEnd } from "../../utils/domUtil";
 
 export default class DataSearch extends StoreComponent<{}, DataSearchStoreState> {
     refs: {
@@ -23,7 +23,7 @@ export default class DataSearch extends StoreComponent<{}, DataSearchStoreState>
         var page = ReactDom.findDOMNode(this.refs.page);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
-        domUtil.onCssTransitionEnd(page, () => this.refs.search.focus(), LessVars.tabTransitionTime);
+        onCssTransitionEnd(page, () => this.refs.search.focus(), LessVars.tabTransitionTime);
     }
 
     private onSearch = (q) => {

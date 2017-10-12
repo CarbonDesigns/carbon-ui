@@ -9,7 +9,7 @@ import { say } from "../../../shared/Utils";
 import separatorOr from "../../../shared/SeparatorOr";
 import CropEditor from "./CropEditor";
 import bem from "../../../utils/commonUtils";
-import { IUIElement, IPage, IArtboard, app, IRect, workspace, backend } from "carbon-core";
+import { IUIElement, IPage, IArtboard, app, IRect, workspace, backend, renderer } from "carbon-core";
 import { FormattedMessage } from "react-intl";
 import { ArtboardSelect } from "../../../shared/ui/GuiSelect";
 import { BladeBody } from "../BladePage";
@@ -93,7 +93,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
     private getImageUrl(result: EditImageResult) {
         switch (result.type) {
             case "element":
-                return workspace.view.renderElementToDataUrl(result.element, this.props.previewSize, this.props.dpr);
+                return renderer.elementToDataUrlScaled(result.element, this.props.previewSize, this.props.dpr);
             case "dataUrl":
                 return result.dataUrl;
             case "url":

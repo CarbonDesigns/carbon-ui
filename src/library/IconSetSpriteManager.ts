@@ -1,4 +1,4 @@
-import { ArtboardType, UIElementFlags, TileSize, app, Matrix, backend, ContextPool, IUIElement } from "carbon-core";
+import { ArtboardType, UIElementFlags, TileSize, app, Matrix, backend, ContextPool, IUIElement, RenderEnvironment, RenderFlags } from "carbon-core";
 import { PageSpriteCacheItem } from "./LibraryDefs";
 
 export default class IconSetSpriteManager {
@@ -31,7 +31,13 @@ export default class IconSetSpriteManager {
         let width: number = elements.length * iconSize;
         let context = ContextPool.getContext(width, height, contextScale, true);
         context.clearRect(0, 0, context.width, context.height);
-        let env = { finalRender: true, setupContext: () => { }, contextScale: contextScale, offscreen: true, view: { scale: () => 1, contextScale, focused: () => false } };
+        let env: RenderEnvironment = {
+            flags: RenderFlags.Final | RenderFlags.Offscreen,
+            setupContext: () => { },
+            contextScale,
+            scale: 1,
+            pageMatrix: Matrix.Identity
+        };
         let taskPromises = [];
 
         for (let element of elements) {
@@ -50,7 +56,7 @@ export default class IconSetSpriteManager {
             });
     }
 
-    static _performRenderTask(t, element, context, contextScale, env): Promise<any> {
+    static _performRenderTask(t, element, context, contextScale, env: RenderEnvironment): Promise<any> {
         let fontTasks = app.fontManager.getPendingTasks();
 
         if (fontTasks.length) {

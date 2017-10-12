@@ -1,4 +1,4 @@
-import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup } from "carbon-core";
+import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup, renderer, RenderEnvironment, RenderFlags } from "carbon-core";
 import { ToolboxConfig, SpriteStencil, ToolboxGroup } from "./LibraryDefs";
 
 let PADDING = 5;
@@ -121,9 +121,15 @@ export default class ToolboxConfiguration {
         }
 
         let width: number = lastX;
-        let context = workspace.contextPool.getContext(width, height, contextScale, true);
+        let context = renderer.contextPool.getContext(width, height, contextScale, true);
         context.clearRect(0, 0, context.width, context.height);
-        let env = { finalRender: true, setupContext: () => { }, contextScale: contextScale, offscreen: true, view: { scale: () => 1, contextScale, focused: () => false } };
+        let env: RenderEnvironment = {
+            flags: RenderFlags.Final | RenderFlags.Offscreen,
+            setupContext: () => { },
+            contextScale,
+            scale: 1,
+            pageMatrix: Matrix.Identity
+        };
         let elementsMap: StencilMap = {};
         let taskPromises = [];
         for (i = 0; i < renderTasks.length; ++i) {
@@ -143,11 +149,11 @@ export default class ToolboxConfiguration {
                 return { imageData, backgroundUrl, size: { width, height } };
             })
             .finally(() => {
-                workspace.contextPool.releaseContext(context);
+                renderer.contextPool.releaseContext(context);
             });
     }
 
-    static _performRenderTask(page: IPage, t, element, elementsMap: StencilMap, context, contextScale, env): Promise<any> {
+    static _performRenderTask(page: IPage, t, element, elementsMap: StencilMap, context, contextScale, env: RenderEnvironment): Promise<any> {
         let w = element.width();
         let h = element.height();
         let scale = t.data.scale;

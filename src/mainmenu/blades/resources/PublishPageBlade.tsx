@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import BladePage from "../BladePage";
-import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ISharedResource, ResourceScope, IPublishPageResult, Screenshot } from "carbon-core";
+import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ISharedResource, ResourceScope, IPublishPageResult, Screenshot, renderer } from "carbon-core";
 import { Component, dispatchAction } from "../../../CarbonFlux";
 import cx from 'classnames';
 import { FormattedMessage } from "react-intl";
@@ -195,7 +195,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
 
     private renderPreview(element: IUIElement) {
         const dpr = 2;
-        return workspace.view.renderElementToDataUrl(element, CoverRect, dpr);
+        return renderer.elementToDataUrlScaled(element, CoverRect, dpr);
     }
 
     private openImageEditor = (ev) => {

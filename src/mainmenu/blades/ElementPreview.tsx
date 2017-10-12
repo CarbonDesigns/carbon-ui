@@ -1,7 +1,7 @@
 import React from "react";
 import { Component } from "../../CarbonFlux";
 import bem from "../../utils/commonUtils";
-import { Rect, IRect, RenderPipeline, workspace } from "carbon-core";
+import { Rect, IRect, renderer, workspace } from "carbon-core";
 import { IUIElement } from "carbon-model";
 
 function b(a, b?, c?) { return bem("edit-image", a, b, c) }
@@ -76,7 +76,7 @@ export class ElementPreview extends Component<ElementPreviewProps> {
             this._context.restore();
         };
 
-        image.src = RenderPipeline.elementToDataUrl(this.props.element, this.props.dpr);
+        image.src = renderer.elementToDataUrl(this.props.element, this.props.dpr);
         this._image = image;
     }
 

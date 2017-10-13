@@ -36,7 +36,9 @@ export default class IconSetSpriteManager {
             setupContext: () => { },
             contextScale,
             scale: 1,
-            pageMatrix: Matrix.Identity
+            pageMatrix: Matrix.Identity,
+            fill: null,
+            stroke: null
         };
         let taskPromises = [];
 

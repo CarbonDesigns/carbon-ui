@@ -11,5 +11,6 @@ export function loadCore(cb: () => void): void{
     var script = document.createElement("script");
     script.async = true;
     script.src = carbon.coreScript;
+    script.crossOrigin = "anonymous";
     document.body.appendChild(script);
 }

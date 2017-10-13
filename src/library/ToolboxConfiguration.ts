@@ -128,7 +128,9 @@ export default class ToolboxConfiguration {
             setupContext: () => { },
             contextScale,
             scale: 1,
-            pageMatrix: Matrix.Identity
+            pageMatrix: Matrix.Identity,
+            fill: null,
+            stroke: null
         };
         let elementsMap: StencilMap = {};
         let taskPromises = [];
@@ -176,13 +178,7 @@ export default class ToolboxConfiguration {
         env.pageMatrix = matrix;
         matrix.applyToContext(context);
 
-        try {
-            element.standardBackground(false);
-            element.draw(context, env);
-        }
-        finally {
-            element.standardBackground(true);
-        }
+        element.draw(context, env);
 
         context.restore();
 

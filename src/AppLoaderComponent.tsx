@@ -2,10 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Component, dispatchAction } from "./CarbonFlux";
 
-import { app, logger, backend } from "carbon-core";
+import { app, logger, backend, workspace } from "carbon-core";
 import RouteComponent, { IRouteComponentProps } from "./RouteComponent";
 import { LoginRequiredError } from "./Constants";
 import { CarbonAction } from "./CarbonActions";
+
+require("./dialogs/FatalDialog");
 
 export interface IAppLoaderComponentProps extends IRouteComponentProps{
     params: {
@@ -48,6 +50,9 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
 
     componentDidMount() {
         super.componentDidMount();
+
+        workspace.fatalErrorOccurred.bind(this.onFatalError);
+
         if (!app.isLoaded) {
             this.runApp();
         }
@@ -63,6 +68,7 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
     componentWillUnmount() {
         super.componentWillUnmount();
         app.unload();
+        workspace.fatalErrorOccurred.unbind(this.onFatalError);
     }
 
     _resolveCompanyId(app) {
@@ -122,6 +128,10 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
                 }
             })
             .catch(() => this.goToError("unknownCompany"));
+    }
+
+    private onFatalError() {
+        dispatchAction({ type: "Dialog_Show", dialogType: "FatalDialog" });
     }
 
     private getAppUrlPath(companyName: string) {

@@ -580,6 +580,11 @@ export default
         "@idle.message": "You haven't been active for a while. Please click the button to resume connection.",
         "@idle.resume": "Resume",
 
+        "@fatal.header": "Bugs, bugs, bugs...",
+        "@fatal.message": "Whatever can go wrong, will go wrong. ™",
+        "@fatal.message2": "You have found an unrecoverable error and the only thing left to do is to reload the window. We are already notified and we sincerely apologize for this accident.",
+        "@fatal.reload": "Reload window",
+
         "@symbols": "Symbols",
         "@palette": "Palette",
         "@symbols.create": "Create symbol",

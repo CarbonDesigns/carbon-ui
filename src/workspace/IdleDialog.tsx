@@ -7,11 +7,24 @@ import { FormattedMessage } from "react-intl";
 import { backend, IDisposable } from "carbon-core";
 import { ConnectionState } from "carbon-api";
 import { Markup, MarkupLine } from "../shared/ui/Markup";
+import { GuiProgressButton } from "../shared/ui/GuiProgressButton";
 
-export default class IdleDialog extends Dialog {
+type IdleDialogState = {
+    loading: boolean;
+}
+
+export default class IdleDialog extends Dialog<{}, IdleDialogState> {
     _connectionToken: IDisposable;
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: false
+        }
+    }
+
     private resume = () => {
+        this.setState({ loading: true });
         backend.startConnection();
     };
 
@@ -48,7 +61,7 @@ export default class IdleDialog extends Dialog {
                 <FormattedMessage id="@idle.message" tagName="p"/>
             </MarkupLine>
             <MarkupLine>
-                <GuiButton onClick={this.resume} caption="@idle.resume" mods="hover-white"/>
+                <GuiProgressButton loading={this.state.loading} onClick={this.resume} caption="@idle.resume" mods="hover-white"/>
             </MarkupLine>
         </div>
     }

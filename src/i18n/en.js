@@ -683,6 +683,7 @@ export default
         "@project.open": "Open",
         "@project.opennewtab": "Open new tab",
         "@project.delete": "Delete",
+        "@project.duplicate": "Duplicate",
         "@project.confirmDelete": "Are you sure you want to delete the project?",
 
         "@message.thankyou": "Thank you!",

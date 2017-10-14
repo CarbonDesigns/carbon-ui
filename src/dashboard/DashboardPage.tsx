@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {dispatch, listenTo, Component} from "../CarbonFlux";
 
-import {backend, DashboardProxy} from "carbon-api";
+import {backend} from "carbon-api";
 import FolderTree from "./FolderTree";
 import ProjectList from "./ProjectList";
 import TopMenu from "../shared/TopMenu";
@@ -74,7 +74,7 @@ export default class DashboardPage extends Component<any, any>{
         this._resolveCompanyId()
             .then(data => {
                 this.setState({companyId:data.companyId});
-                return DashboardProxy.dashboard(data.companyId)
+                return backend.dashboardProxy.dashboard(data.companyId)
             })
             .then(data => dispatch(DashboardActions.refresh(data)));
     }

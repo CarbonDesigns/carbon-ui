@@ -2,7 +2,7 @@ import {CarbonStore, dispatch, handles} from "../CarbonFlux";
 import Immutable from "immutable";
 
 import DashboardActions from "./DashboardActions";
-import { DashboardProxy } from "carbon-api";
+import { backend } from "carbon-api";
 
 class DashboardStore extends CarbonStore<any> {
     getInitialState(){
@@ -34,8 +34,13 @@ class DashboardStore extends CarbonStore<any> {
 
     @handles(DashboardActions.deleteProject)
     onDeleteProject({projectId, companyId}){
-        DashboardProxy.deleteProject(companyId, projectId)
-            .then(()=>DashboardProxy.dashboard(companyId))
+        backend.dashboardProxy.deleteProject(companyId, projectId)
+            .then(data => dispatch(DashboardActions.refresh(data)));
+    }
+
+    @handles(DashboardActions.duplicateProject)
+    onDuplicateProject({projectId, companyId}){
+        backend.dashboardProxy.duplicateProject(companyId, projectId)
             .then(data => dispatch(DashboardActions.refresh(data)));
     }
 

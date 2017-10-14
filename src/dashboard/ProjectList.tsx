@@ -54,6 +54,10 @@ class ProjectTile extends Component<any, any>{
         }
     }
 
+    _duplicateProject = () => {
+        dispatch(DashboardActions.duplicateProject(this.props.companyId || this.context.companyId, this.props.id));
+    }
+
     renderDetailsButton() {
         return <div >...</div>;
     }
@@ -73,6 +77,7 @@ class ProjectTile extends Component<any, any>{
                     <ul>
                         <li onClick={this._goToProject} className="project-tile-menu_item"><CarbonLabel id="@project.open" /></li>
                         <li onClick={this._goToProjectNewTab} className="project-tile-menu_item"><CarbonLabel id="@project.opennewtab" /></li>
+                        <li onClick={this._duplicateProject} className="project-tile-menu_item"><CarbonLabel id="@project.duplicate" /></li>
                         <li onClick={this._deleteProject} className="project-tile-menu_item"><CarbonLabel id="@project.delete" /></li>
                     </ul>
                 </div>

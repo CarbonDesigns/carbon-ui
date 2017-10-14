@@ -4,7 +4,7 @@ import ImagesActions from "../library/images/ImagesActions";
 import DropzoneRegistry from "./DropzoneRegistry";
 import { } from "carbon-model";
 import {
-    IUIElement, KeyboardState, createUUID, IDropElementData, RepeatContainer, IImage,
+    IUIElement, createUUID, IDropElementData, RepeatContainer, IImage,
     app, backend, Environment, Selection, SvgParser, Matrix, Image, OriginType, IDisposable,
     IContainer
 } from "carbon-core";
@@ -109,7 +109,6 @@ interface IDropHandler {
     resolveUploaded: (urls: string[]) => void;
 }
 
-var keyboardState: KeyboardState = { ctrlKey: false, altKey: false, shiftKey: false };
 var dropHandler: IDropHandler = {
     imageMap: {},
     resolveDropped: null,
@@ -224,10 +223,6 @@ export default class ImageDrop {
 
                 dispatchAction({ type: "Library_Tab", area: "library", tabId: "3"});
                 dispatchAction({ type: "Library_Tab", area: "images", tabId: "1"});
-
-                keyboardState.ctrlKey = e.ctrlKey || e.metaKey;
-                keyboardState.shiftKey = e.shiftKey;
-                keyboardState.altKey = e.altKey;
 
                 dropHandler.resolveDropped({ e: e, elements: images });
 

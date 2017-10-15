@@ -10,6 +10,7 @@ var resolveCoreModules = require("./resolveCore");
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
 
 var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
@@ -115,6 +116,7 @@ function getPlugins(settings) {
             coreScript: coreScript,
             resourceBundleOptions: resourceBundleOptions
         }),
+        new HtmlWebpackScriptCrossoriginPlugin({}),
 
         new CheckerPlugin()
 

@@ -583,7 +583,9 @@ export default
         "@fatal.header": "Bugs, bugs, bugs...",
         "@fatal.message": "Whatever can go wrong, will go wrong. ™",
         "@fatal.message2": "You have found an unrecoverable error and the only thing left to do is to reload the window. We are already notified and we sincerely apologize for this accident.",
+        "@fatal.reason": "Could you tell us a few words on what you did?",
         "@fatal.reload": "Reload window",
+        "@fatal.sendAndReload": "Send message and reload window",
 
         "@symbols": "Symbols",
         "@palette": "Palette",

@@ -36,7 +36,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./dashboard/DashboardPage"));
-                                }, "carbon-dashboard");
+                                }, "dashboard");
                             }
                         },
                         {
@@ -44,7 +44,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./communityLibrary/CommunityLibrary"));
-                                }, "carbon-library");
+                                }, "library");
                             }
                         },
                         {
@@ -52,7 +52,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./landing/message"));
-                                }, "carbon-thankyou");
+                                }, "thankyou");
                             }
                         },
                         {
@@ -60,7 +60,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./ErrorPage"));
-                                }, "carbon-other");
+                                }, "other");
                             }
                         },
                         {
@@ -68,7 +68,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./InfoPage"));
-                                }, "carbon-other");
+                                }, "other");
                             }
                         },
 
@@ -77,7 +77,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./account/AccountOverview"));
-                                }, "carbon-account");
+                                }, "account");
                             }
                         },
                         {
@@ -85,7 +85,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./account/ForgotPassword"));
-                                }, "carbon-account");
+                                }, "account");
                             }
                         },
                         {
@@ -93,7 +93,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./account/ResetPassword"));
-                                }, "carbon-account");
+                                }, "account");
                             }
                         },
                         {
@@ -101,7 +101,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./account/LoginPage"));
-                                }, "carbon-account");
+                                }, "account");
                             }
                         },
                         {
@@ -109,7 +109,7 @@ const rootRoute = {
                             getComponent(nextState, cb) {
                                 require.ensure([], (require) => {
                                     cb(null, require("./account/RegistrationPage"));
-                                }, "carbon-account");
+                                }, "account");
                             }
                         },
                     ]
@@ -121,7 +121,7 @@ const rootRoute = {
             getComponent(nextState, cb) {
                 require.ensure([], (require) => {
                     cb(null, require("./landing/LandingPage"));
-                }, "carbon-landing");
+                }, "landing");
             }
         },
         {
@@ -130,7 +130,7 @@ const rootRoute = {
                 loadCore(() => {
                     require.ensure([], (r) => {
                         cb(null, require("./AppStart"));
-                    }, "carbon-app-start");
+                    }, "app-start");
                 });
             }
         },
@@ -140,7 +140,7 @@ const rootRoute = {
             getComponent(nextState, cb) {
                 require.ensure([], (require) => {
                     cb(null, require("./preview/Instructions"));
-                }, "carbon-preview-index");
+                }, "preview-index");
             }
         },
         {
@@ -149,7 +149,7 @@ const rootRoute = {
                 loadCore(() => {
                     require.ensure([], (r) => {
                         cb(null, require("./mirroring/MirroringAppStart"));
-                    }, "carbon-mirroring-app-start");
+                    }, "mirroring-app-start");
                 });
             }
         },
@@ -159,7 +159,7 @@ const rootRoute = {
                 loadCore(() => {
                     require.ensure([], (r) =>{
                         cb(null, require("./mirroring/MirroringAppStart"));
-                    }, "carbon-mirroring-app-code");
+                    }, "mirroring-app-code");
                 });
             }
         },
@@ -169,7 +169,7 @@ const rootRoute = {
                 loadCore(() => {
                     require.ensure([], (r) =>{
                         cb(null, require("./preview/PreviewAppStart"));
-                    }, "carbon-preview-app-start");
+                    }, "preview-app-start");
                 });
             }
         },
@@ -179,7 +179,7 @@ const rootRoute = {
                 loadCore(() => {
                     require.ensure([], (r) => {
                         cb(null, require("./quick/QuickApp"));
-                    }, "carbon-quick-app-start");
+                    }, "quick-app-start");
                 });
             }
         },
@@ -198,7 +198,7 @@ const rootRoute = {
             getComponent(nextState, cb) {
                 require.ensure([], (require) => {
                     cb(null, require("./PageNotFound"));
-                }, "carbon-page-not-found");
+                }, "page-not-found");
             }
         }
     ]

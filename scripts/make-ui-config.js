@@ -49,8 +49,8 @@ function getOutput(settings) {
         publicPath: settings.fullPublicPath + "/"
     };
 
-    output.filename = "[name].js";
-    output.chunkFilename = "[name]-[id].js";
+    output.filename = "carbon-[name].js";
+    output.chunkFilename = "carbon-[name]-[id].js";
     output.path = fullPath("../target/");
 
     return output;

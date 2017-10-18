@@ -18,8 +18,6 @@ export default class WorkspaceStore extends CarbonStore {
                 dispatchAction({type: "Library_Tab", area: "library", tabId: "2", async: true});
             }
         }
-
-        dispatchAction({type: "Dialog_Show", dialogType: "FatalDialog", async: true});
     }
 
     @handles(CarbonActions.inlineEditModeChanged)

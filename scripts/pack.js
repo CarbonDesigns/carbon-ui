@@ -27,7 +27,7 @@ function pack(webpackConfig) {
 
 function hash(){
     var manifest = JSON.parse(fs.readFileSync(fullPath("../target/manifest.json"), 'utf-8'));
-    var promises = [hashFile("index", "index.js")];
+    var promises = [hashFile("index", "carbon-index.js")];
     for (var id in manifest){
         promises.push(hashFile(id, manifest[id]));
     }
@@ -60,7 +60,7 @@ function hash(){
 
         var html = fs.readFileSync(fullPath("../target/index.html"), 'utf8');
         html = html.replace('//manifest', "window.webpackManifest=" + JSON.stringify(manifest) + ";");
-        html = html.replace('/target/index.js', "/target/" + newIndexName);
+        html = html.replace('/target/carbon-index.js', "/target/" + newIndexName);
         fs.writeFileSync(fullPath("../target/index.html"), html, 'utf-8');
 
         console.log("New manifest:", manifest);

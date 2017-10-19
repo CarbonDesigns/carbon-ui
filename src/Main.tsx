@@ -15,7 +15,7 @@ var currentLocale = "en";
 addLocaleData([...en, ...ru]);
 
 import { loadCore } from "./CarbonLoader";
-import { backend } from "carbon-api";
+import { backend, logger } from "carbon-api";
 
 // const {whyDidYouUpdate} = require('why-did-you-update');
 // whyDidYouUpdate(React);
@@ -208,10 +208,15 @@ backend.loginNeeded.bind(isGuest => {
     browserHistory.push("/login");
 });
 
+const onRouterUpdate = () => {
+    logger.trackPageView();
+    window.scrollTo(0, 0);
+}
+
 ReactDom.render((
     <IntlProvider locale={currentLocale} messages={messages}>
         <Root>
-            <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory} routes={rootRoute}/>
+            <Router onUpdate={onRouterUpdate} history={browserHistory} routes={rootRoute}/>
         </Root>
     </IntlProvider>
 ), document.getElementById("reactContainer"));

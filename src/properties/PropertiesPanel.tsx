@@ -12,6 +12,9 @@ import Immutable from 'immutable';
 import TabContainer, { TabPage, TabArea } from "../shared/TabContainer";
 import { PropertiesTab } from "./PropertyActions";
 import SymbolGroupsPanel from "./SymbolGroupsPanel";
+import { MarkupLine, Markup } from "../shared/ui/Markup";
+import { GuiButton } from "../shared/ui/GuiComponents";
+import { FormattedMessage } from "react-intl";
 
 interface IPropertiesPanelProps {
 }
@@ -52,7 +55,6 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
         panel.updateSizeClasses();
     }
 
-
     render() {
         let { children, ...rest } = this.props;
         return (
@@ -63,7 +65,7 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
                             {this.renderProperties()}
                         </TabPage>
                         <TabPage className="gui-page" tabId="2">
-                            <SymbolGroupsPanel/>
+                            <SymbolGroupsPanel />
                         </TabPage>
                     </TabArea>
                 </TabContainer>
@@ -85,6 +87,14 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
                 }
                 return <PropertyGroup e={this.state.element} g={prop_group} key={prop_group.get("label")} />;
             })
+        }
+
+        if (!content || content.isEmpty()) {
+            return <Markup>
+                <MarkupLine mods="center">
+                    <FormattedMessage tagName="p" id="@properties.empty" />
+                </MarkupLine>
+            </Markup>
         }
 
         return <ScrollContainer id="edit__properties" className="thin dark">

@@ -19,6 +19,9 @@ interface IPropertyStoreState {
 }
 
 class PropertyStore extends CarbonStore<IPropertyStoreState> {
+    private app: any;
+    private _emptySelection = new CompositeElement();
+
     constructor(dispatcher) {
         super(dispatcher);
         this.state = {
@@ -34,10 +37,6 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
             tabId: "1"
         };
     }
-
-    private app: any;
-    private _emptySelection: any;
-    private _timerId: any;
 
     hasProperty(propertyName, mustBeVisible: boolean) {
         var exists = this.state.valueMap.hasOwnProperty(propertyName);
@@ -76,7 +75,6 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     @handles(CarbonActions.loaded)
     onLoaded({ app }) {
         this.app = app;
-        this._initEmptySelection(app.activePage.getActiveArtboard());
         PropertyTracker.propertyChanged.bind(this, this._onPropsChanged);
         this.onElementSelected({ selection: this._emptySelection });
     }
@@ -84,27 +82,12 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     @handles(CarbonActions.pageChanged)
     onPageChanged({ newPage }) {
         if (!(newPage === NullPage)) {
-            this._initEmptySelection(newPage.getActiveArtboard());
             this.onElementSelected({ selection: this._emptySelection });
         }
     }
 
-    @handles(CarbonActions.activeArtboardChanged)
-    onActiveArtboardChanged({ newArtboard }) {
-        this._initEmptySelection(newArtboard);
-
-        //two events can happen one after another - artboard changed and new selection made on the new artboard
-        //to avoid updating the panel twice, using a timeout
-        this._timerId = setTimeout(() => dispatch(CarbonActions.elementSelected(this._emptySelection)), 50);
-    }
-
     @handles(CarbonActions.elementSelected)
     onElementSelected({ selection }) {
-        if (this._timerId) {
-            clearTimeout(this._timerId);
-            this._timerId = 0;
-        }
-
         if (selection.count() === 0) {
             selection = this._emptySelection;
         }
@@ -268,16 +251,6 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
             state.descriptorMap[propertyName] = descriptor;
         }
         return metadata;
-    }
-
-    _initEmptySelection(artboard): void {
-        if (this._emptySelection) {
-            this._emptySelection.dispose();
-        }
-        this._emptySelection = new CompositeElement();
-        if (artboard) {
-            this._emptySelection.register(artboard);
-        }
     }
 }
 

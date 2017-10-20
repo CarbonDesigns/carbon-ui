@@ -405,6 +405,9 @@ export default
         "@project.settings": "Project settings",
         "@project.new": "+ New project",
 
+        "@properties.empty": "Nothing is selected",
+        "@properties.selectArtboard": "Select active artboard",
+
         "@tags": "Tags",
         "sharepage.help": "Publish current page to other users ...", //
         "btn.publish": "Publish", //

@@ -132,12 +132,14 @@ export default class MainMenuBlade extends Component<{}, MainMenuBladeState> {
     _goToRecentProject(project : IRecentProject) {
         return () => {
             this.close();
-            this.context.router.push(
-                {
-                    pathname: '/app/' + project.projectId,
-                    state: { companyId: project.companyId }
-                }
-            );
+            let url = null;
+            if (project.companyId === backend.getUserId()) {
+                url = "/app/" + project.projectId;
+            }
+            else {
+                url = "/app/@" + project.companyName + "/" + project.projectId;
+            }
+            location.href = url;
         }
     }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import { Selection, Environment, Invalidate, app, IArtboardPage, Brush, Text, IText } from "carbon-core";
+import { Selection, Environment, Invalidate, app, IArtboardPage, Brush, Text, IText, workspace, Artboard } from "carbon-core";
 import { Component, dispatch, dispatchAction } from "../CarbonFlux";
 import LayersActions from './LayersActions';
 import bem from "../utils/commonUtils";
@@ -69,12 +69,15 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     }
 
     private onIconDoubleClick = (ev) => {
-        (app.activePage as IArtboardPage).setActiveArtboardById(this.props.layer.id);
-        var artboard = app.activePage.getActiveArtboard();
-        if (artboard) {
-            Environment.view.ensureScale([artboard]);
-            Environment.view.ensureCentered([artboard]);
-            Selection.clearSelection();
+        if (this.props.layer.element instanceof Artboard) {
+            var artboard = this.props.layer.element;
+            (app.activePage as IArtboardPage).setActiveArtboardById(artboard.id());
+            if (artboard) {
+                Environment.view.ensureScale([artboard]);
+                Environment.view.ensureCentered([artboard]);
+                Selection.clearSelection();
+                app.actionManager.invoke("pointerTool");
+            }
         }
     }
 
@@ -98,18 +101,17 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
 
     private selectElement = (ev) => {
         let node = layersStore.getLayerNodeFromEvent(ev);
-        var element = LayerItem.findSelectionTarget(node);
         ev.stopPropagation();
+
+        var element = LayerItem.findSelectionTarget(node);
         if (!element || !this.props.layer.canSelect) {
             return;
         }
+
+        let keys = { ctrlKey: ev.ctrlKey || ev.metaKey, altKey: ev.altKey, shiftKey: ev.shiftKey };
         var selected = Selection.isElementSelected(element);
 
-        let mode = Selection.getSelectionMode({
-            ctrlKey: ev.ctrlKey || ev.metaKey,
-            altKey: ev.altKey,
-            shiftKey: ev.shiftKey
-        }, true);
+        let mode = Selection.getSelectionMode(keys, true);
 
         Selection.makeSelection([element], mode);
     }

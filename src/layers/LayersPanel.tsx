@@ -122,6 +122,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
             var artboards = app.activePage.children;
             Environment.view.ensureScale(artboards);
             Environment.view.ensureCentered(artboards);
+            app.actionManager.invoke("artboardTool");
         }
     }
 

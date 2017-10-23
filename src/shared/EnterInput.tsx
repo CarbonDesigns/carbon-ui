@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDom from "react-dom";
 import { Component } from "../CarbonFlux";
+import { platform } from "carbon-api";
 
 interface EnterInputProps extends React.HTMLAttributes<HTMLInputElement> {
     value?: string | number;
     onValueEntered?: (value, valid: boolean) => void;
+    onUndo?: () => void;
+    onRedo?: () => void;
     dataType?: "int" | "float";
     changeOnBlur?: boolean;
     divOnBlur?: boolean;
@@ -77,15 +80,41 @@ export default class EnterInput extends Component<EnterInputProps, EnterInputSta
         }
         this.setState({ focused: false });
     };
-    onKeyDown = (e) => {
+    onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             this.fireOnChange();
             e.currentTarget.select();
         }
+        else if ((e.ctrlKey || e.metaKey) && e.keyCode === 90) {
+            if (e.shiftKey) {
+                this.onRedo();
+            }
+            else {
+                this.onUndo();
+            }
+            e.preventDefault();
+        }
+        else if (e.ctrlKey && e.keyCode === 89) {
+            //just disabling browser's redo on windows
+            e.preventDefault();
+        }
         else if (this.props.onKeyDown) {
             this.props.onKeyDown(e);
         }
-    };
+    }
+    private onUndo() {
+        if (this.state.value !== this.props.value) {
+            this.setState({ value: this.props.value });
+        }
+        else if (this.props.onUndo) {
+            this.props.onUndo();
+        }
+    }
+    private onRedo() {
+        if (this.props.onRedo) {
+            this.props.onRedo();
+        }
+    }
     private onActivated = () => {
         this.setState({ focused: true });
     }
@@ -105,7 +134,7 @@ export default class EnterInput extends Component<EnterInputProps, EnterInputSta
         }
     }
     render() {
-        var { onValueEntered, divOnBlur, value, dataType, changeOnBlur, onKeyDown, ...other } = this.props;
+        var { onValueEntered, divOnBlur, onUndo, onRedo, value, dataType, changeOnBlur, onKeyDown, ...other } = this.props;
 
         if (divOnBlur && !this.state.focused) {
             return <div className={this.props.className} tabIndex={this.props.tabIndex}

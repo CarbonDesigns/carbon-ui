@@ -23,8 +23,7 @@ export default class NameEditor extends StringEditor{
         let element = this.props.e.singleOrSelf();
         let name;
 
-        if(element.allowNameTranslation())
-        {
+        if(element.allowNameTranslation()) {
             name = this.context.intl.formatMessage({id:element.displayType()}, {index:''});
         }
         else {

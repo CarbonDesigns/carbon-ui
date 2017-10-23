@@ -59,7 +59,7 @@ export const WindowsShortcuts: IShortcut[] = [
     { key: "alt+down", action: "moveFinished", type: "keyup" },
 
     { key: "ctrl+z", action: "undo" },
-    { key: "ctrl+y", action: "redo" },
+    { key: "ctrl+shift+z", action: "redo" },
     { key: "shift+z", action: "undoViewport" },
     { key: "alt+shift+z", action: "redoViewport" },
 

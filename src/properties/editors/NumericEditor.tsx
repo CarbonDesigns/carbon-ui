@@ -3,6 +3,7 @@ import EditorComponent, {IEditorProps} from "./EditorComponent";
 import cx from "classnames";
 import {FormattedMessage} from "react-intl";
 import EnterInput from "../../shared/EnterInput";
+import { app } from "carbon-core";
 
 interface INumericEditorProps extends IEditorProps{
     selectOnEnter?: boolean;
@@ -84,7 +85,14 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
         else if (!valid) {
             this.forceUpdate();
         }
-    };
+    }
+
+    static onUndo() {
+        app.actionManager.invoke("undo");
+    }
+    static onRedo() {
+        app.actionManager.invoke("redo");
+    }
 
     onKeyDown = (event) => {
         if (event.keyCode === 38 || event.keyCode === 40){
@@ -93,7 +101,6 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
             var newValue = value + this.getDelta(event) * factor;
             newValue = this.validateNewValue(newValue, !event.altKey);
             this.setState({value: newValue});
-            this.previewValue(newValue);
 
             event.preventDefault();
         }
@@ -166,6 +173,8 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
                 value={value}
                 divOnBlur={true}
                 onValueEntered={this.onValueEntered}
+                onUndo={NumericEditor.onUndo}
+                onRedo={NumericEditor.onRedo}
                 onKeyDown={this.onKeyDown}
                 onKeyUp={this.onKeyUp}
                 tabIndex={1}

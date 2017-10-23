@@ -117,7 +117,8 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         let isolationLayer = Environment.view.getLayer(LayerType.Isolation) as IIsolationLayer;
         if (isolationLayer.isActive) {
             app.actionManager.invoke("cancel");
-        } else {
+        }
+        else {
             (app.activePage as IArtboardPage).setActiveArtboard(null);
             var artboards = app.activePage.children;
             Environment.view.ensureScale(artboards);

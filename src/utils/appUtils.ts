@@ -10,6 +10,7 @@ export function iconType(element) {
         case Types.StateBoard      : return "page";
         case Types.Artboard        : return "page";
         case Types.Image           : return "icon";
+        case Types.ImageContent    : return "icon";
         case Types.Circle          : return "circle";
         case Types.Triangle        : return "triangle";
         case Types.Text            : return "line-text";

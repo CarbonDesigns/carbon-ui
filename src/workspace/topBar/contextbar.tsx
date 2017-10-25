@@ -132,10 +132,11 @@ export default class ContextBar extends Component<any, any> {
         }
 
         if (!item.rows || item.rows.length === 1) {
+            let hasIcons = item.items.some(x => x.icon);
             return <ContextDropdown key={item.name} icon={item.icon} label={item.name}>
                 <Pane>
                     <PaneList>
-                        {item.items.map(a => <PaneListItem key={item.name + a.name} onClick={ContextBar.onClick} icon={a.icon} disabled={a.disabled} actionId={a.actionId} actionArg={a.actionArg}>
+                        {item.items.map(a => <PaneListItem key={item.name + a.name} onClick={ContextBar.onClick} icon={a.icon} disabled={a.disabled} actionId={a.actionId} actionArg={a.actionArg} padded={hasIcons}>
                             <CarbonLabel id={a.name} />
                             <span className="pane-shortcut">{workspace.shortcutManager.getActionHotkey(a.actionId)}</span>
                         </PaneListItem>)}

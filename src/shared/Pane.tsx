@@ -25,6 +25,9 @@ var _render_full_classname = function (base, props) {
     if (props.disabled) {
         cn += ' disabled';
     }
+    if (props.padded && !props.icon) {
+        cn += ' ' + base + '_padded';
+    }
     if (props.className != null) {
         cn += ' ' + props.className;
     }

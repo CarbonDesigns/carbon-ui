@@ -7,10 +7,7 @@ export const WindowsShortcuts: IShortcut[] = [
     { key: "alt+shift+,", action: "fontDecreaseSize1" },
 
     { key: "ctrl+d", action: "duplicate" },
-    { key: "ctrl+g", action: "groupElements" },
-    { key: "ctrl+shift+g", action: "ungroupElements" },
     { key: "ctrl+alt+p", action: "convertToPath" },
-    { key: "ctrl+alt+m", action: "groupWithMask" },
     { key: "del", action: "delete" },
     { key: "backspace", action: "delete" },
 
@@ -26,9 +23,6 @@ export const WindowsShortcuts: IShortcut[] = [
     { key: "ctrl+shift+[", action: "sendToBack" },
     { key: "ctrl+]", action: "bringForward" },
     { key: "ctrl+[", action: "sendBackward" },
-
-    { key: "ctrl+n", action: "newPagePortrait" },
-    { key: "ctrl+shift+n", action: "newPageLandscape" },
 
     { key: "left", action: "moveLeft" },
     { key: "right", action: "moveRight" },
@@ -115,10 +109,7 @@ export const MacShortcuts: IShortcut[] = [
     { key: "alt+shift+,", action: "fontDecreaseSize1" },
 
     { key: "meta+d", action: "duplicate" },
-    { key: "meta+g", action: "groupElements" },
-    { key: "meta+shift+g", action: "ungroupElements" },
     { key: "meta+alt+p", action: "convertToPath" },
-    { key: "meta+alt+m", action: "groupWithMask" },
 
     { key: "backspace", action: "delete" },
     { key: "del", action: "delete" },
@@ -135,9 +126,6 @@ export const MacShortcuts: IShortcut[] = [
     { key: "meta+shift+[", action: "sendToBack" },
     { key: "meta+]", action: "bringForward" },
     { key: "meta+[", action: "sendBackward" },
-
-    { key: "meta+n", action: "newPagePortrait" },
-    { key: "meta+shift+n", action: "newPageLandscape" },
 
     { key: "left", action: "moveLeft" },
     { key: "right", action: "moveRight" },

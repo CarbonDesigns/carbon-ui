@@ -43,15 +43,18 @@
 
             &_stroke {
                 &:after {
-                    .transit();
-                    .bef;
-                    .stretch();
-                    margin: @stroke_shift + @inactive_shift;
-                    .bgc4();
-
-                    box-shadow: 0 0 1px 0 black inset, 0 0 1px 0 rgba(255, 255, 255, 0.58);
-                    z-index: 2;
                 }
+            }
+
+            &_stroke &-body:after {
+                .transit();
+                .bef;
+                .stretch();
+                margin: @stroke_shift;
+                .bgc4();
+
+                box-shadow: 0 0 1px 0 black inset, 0 0 1px 0 rgba(255, 255, 255, 0.58);
+                z-index: 2;
             }
 
             &_fill { }
@@ -68,6 +71,20 @@
                 .stretch;
                 z-index: 1;
                 margin: @inactive_shift*1.2;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            &-locked {
+                .abs;
+                z-index: 10;
+                left: 50%;
+                top: 50%;
+                margin-left: -8px;
+                margin-top: -8px;
+                opacity: .2;
+                transform: scale(.8);
             }
 
             &-color ,

@@ -8,7 +8,6 @@ import BrushEditor from "../BrushEditor";
 import MultiToggleEditor from "../MultiToggleEditor";
 import TextAlignEditor from "../custom/TextAlignEditor";
 import FontFamilyList from './FontFamilyList';
-import PropertyActions from "../../PropertyActions";
 
 import { app, Font, Text, TextAlign, FontScript, FontWeight, FontStyle, UnderlineStyle, Brush } from "carbon-core";
 import { dispatch } from "../../../CarbonFlux";

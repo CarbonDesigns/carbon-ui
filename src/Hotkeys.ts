@@ -63,6 +63,7 @@ export const WindowsShortcuts: IShortcut[] = [
     { key: "shift+z", action: "undoViewport" },
     { key: "alt+shift+z", action: "redoViewport" },
 
+    { key: "x", action: "ui.swapSlots" },
     { key: "shift+x", action: "swapColors" },
 
     { key: "f2", action: "enter" },
@@ -72,7 +73,7 @@ export const WindowsShortcuts: IShortcut[] = [
     { key: "ctrl+alt+i", action: "pathIntersect" },
     { key: "ctrl+alt+x", action: "pathDifference" },
 
-    { key: "/", action: "transparentColor" },
+    { key: "/", action: "ui.transparentColor" },
 
     { key: "p", action: "pathTool" },
     { key: "r", action: "rectangleTool" },
@@ -148,7 +149,7 @@ export const MacShortcuts: IShortcut[] = [
     { key: "ctrl+alt+i", action: "pathIntersect" },
     { key: "ctrl+alt+x", action: "pathDifference" },
 
-    { key: "/", action: "transparentColor" },
+    { key: "/", action: "ui.transparentColor" },
 
     { key: "shift+left", action: "moveLeft10" },
     { key: "shift+right", action: "moveRight10" },
@@ -178,6 +179,7 @@ export const MacShortcuts: IShortcut[] = [
     { key: "shift+z", action: "undoViewport" },
     { key: "alt+shift+z", action: "redoViewport" },
 
+    { key: "x", action: "ui.swapSlots" },
     { key: "shift+x", action: "swapColors" },
 
     { key: "f2", action: "enter" },

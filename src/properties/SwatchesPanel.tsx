@@ -1,15 +1,14 @@
 import React from 'react';
-import { Component, listenTo, dispatch, handles } from "../CarbonFlux";
+import { Component, listenTo, dispatch, handles, dispatchAction, StoreComponent } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'
-import { Brush, app, ChangeMode, Shape, Selection } from "carbon-core";
+import { Brush, app, ChangeMode, Shape, Selection, BrushType } from "carbon-core";
 import bem from '../utils/commonUtils';
 import ScrollContainer from "../shared/ScrollContainer";
 import { Gammas } from "../properties/editors/BrushGammaSelector";
 import ReactDom from "react-dom";
 import propertyStore from "../properties/PropertyStore";
-import swatchesStore from "../properties/SwatchesStore";
-import PropertyActions from "./PropertyActions";
+import { swatchesStore, Slot, SwatchesStoreState } from "../properties/SwatchesStore";
 import FlyoutButton from '../shared/FlyoutButton';
 import BrushSelector from "../properties/editors/BrushSelector";
 import SwatchesActions from "./SwatchesActions"
@@ -33,13 +32,25 @@ function colorToBrush(color) {
     return brush;
 }
 
-class SwatchesSlot extends Component<any, any> {
-    [name: string]: any;
+interface SwatchesSlotProps {
+    slot: Slot;
+    colorSelected: (brush: Brush, norecent: boolean, preview: boolean) => void;
+}
+class SwatchesSlot extends Component<SwatchesSlotProps> {
+    private _lastValue;
+    private _initialValue;
+
+    private onSlotClicked = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        if (this.props.slot.enabled) {
+            dispatchAction({ type: "Swatches_ChangeSlot", active: this.props.slot.name });
+        }
+    }
 
     render() {
         return <FlyoutButton ref="flyout"
-            renderContent={this.props.renderContent}
-            showAction="dblclick"
+            renderContent={this.renderSlot}
+            showAction={this.props.slot.enabled ? "dblclick" : "none"}
             position={{ targetVertical: "bottom", disableAutoClose: true }}
             onOpened={() => {
                 this._initialValue = this.props.slot.brush;
@@ -54,7 +65,7 @@ class SwatchesSlot extends Component<any, any> {
 
             <BrushSelector className="flyout__content" ref="selector"
                 brush={this.props.slot.brush}
-                hasGradient={this.props.hasGradient}
+                hasGradient={this.props.slot.hasGradient}
                 onSelected={(brush) => {
                     this.props.colorSelected(brush.value, true, false);
                     this._lastValue = brush.value;
@@ -70,87 +81,28 @@ class SwatchesSlot extends Component<any, any> {
                 }} />
         </FlyoutButton>
     }
-}
 
-interface ISwatchesPanelState {
-    active?: string;
-    recentColors?: { name: string; colors: string[] };
-    palettes?: any[];
-    fill?: any;
-    stroke?: any;
-    hasGradient?: boolean;
-}
+    private renderSlot = () => {
+        let slot = this.props.slot;
+        let style = Brush.toCss(slot.brush);
+        var body = (<div className={b("slot-body")} style={style}>
+            <div className={b("slot-bg")}></div>
+            <div className={b("slot-color")} style={style}></div>
+            {slot.enabled ? null : <i className={b("slot-locked", null, "ico ico-prop ico-prop_lock")}></i>}
+        </div>);
 
-export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
-    constructor(props) {
-        super(props);
-        var state: ISwatchesPanelState = {
-            active: swatchesStore.state.active,
-            recentColors: { name: '', colors: swatchesStore.state.recentColors },
-            palettes: []
-        };
-        this.state = state;
-    }
-
-    @listenTo(swatchesStore)
-    onSwatchesChanged() {
-        var newState:any = {
-            palettes: swatchesStore.state.palettes,
-            active: swatchesStore.state.active,
-            fill: swatchesStore.state.fill,
-            stroke: swatchesStore.state.stroke
-        };
-
-        if (!this.state.recentColors || this.state.recentColors.colors !== swatchesStore.state.recentColors) {
-            newState.recentColors = {
-                name: '',
-                colors: swatchesStore.state.recentColors
-            };
-        }
-
-        this.setState(newState);
-    }
-
-    @listenTo(propertyStore)
-    onPropertiesUpdated() {
-        //check the real selection since property store shows artboard properties when nothing is selected
-        var selection = Selection.selectComposite();
-        var fillBrush, strokeBrush;
-        let hasGradient = false;
-        if (selection.elements.length) {
-            var isShape = selection.elements.every(x => x instanceof Shape);
-
-            hasGradient = propertyStore.getPropertyOptions('fill').gradient || false;
-
-            if (propertyStore.hasProperty('fill', true)) {
-                fillBrush = propertyStore.getPropertyValue('fill');
-
-                if (isShape) {
-                    app.defaultFill(fillBrush, ChangeMode.Root);
-                }
-            }
-            if (propertyStore.hasProperty('stroke', true)) {
-                strokeBrush = propertyStore.getPropertyValue('stroke');
-                if (isShape) {
-                    app.defaultStroke(strokeBrush, ChangeMode.Root);
-                }
-            }
-        }
-        else {
-            fillBrush = app.defaultFill();
-            strokeBrush = app.defaultStroke();
-        }
-
-        var active = this.state.active;
-
-        var newState: ISwatchesPanelState = {
-            hasGradient: hasGradient
-        };
-
-        this.setState(newState);
-        dispatch(SwatchesActions.changeActiveColors(fillBrush, strokeBrush));
+        return <div key={slot.name}
+            title={`${slot.name} ${slot.brush.type === BrushType.color ? slot.brush.value : ""}`}
+            className={b("slot", [slot.name, slot.active ? "active" : null])}
+            onClick={this.onSlotClicked}
+        >{body}</div>
     };
+}
 
+export default class SwatchesPanel extends StoreComponent<{}, SwatchesStoreState> {
+    constructor(props) {
+        super(props, swatchesStore);
+    }
 
     @listenTo(richApp.layoutStore)
     onLayoutChanged() {
@@ -160,14 +112,13 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         (this.refs['panel'] as Panel).updateSizeClasses();
     }
 
-    _colorSelected(color, norecent, preview) {
+    _colorSelected = (color, norecent, preview) => {
         var brush = colorToBrush(color);
 
-
-        if (!preview && this.state.active === 'fill') {
+        if (!preview && this.state.fillSlot.active) {
             app.defaultFill(brush);
         }
-        else if (!preview && this.state.active === 'stroke' ) {
+        else if (!preview && this.state.strokeSlot.active) {
             app.defaultStroke(brush);
         }
 
@@ -176,19 +127,16 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
         // }
 
         var changes = {};
-        changes[this.state.active] = brush;
+        changes[swatchesStore.getActiveSlotName()] = brush;
 
         var selection = Selection.selectComposite();
         if (selection.elements.length) {
             if (preview) {
-                dispatch(PropertyActions.preview(changes, true));
-            } else {
-                dispatch(PropertyActions.changed(changes, true));
+                dispatchAction({ type: "Properties_Preview", changes, async: true });
             }
-        }
-        else {
-            //since properties are not updated, trigger manual update
-            this.onPropertiesUpdated();
+            else {
+                dispatchAction({ type: "Properties_Changed", changes, async: true });
+            }
         }
     }
 
@@ -214,7 +162,7 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
 
     _renderRecentColors() {
         if (this.state.recentColors) {
-            return this._renderPaletteLine(this.state.recentColors, 'recent', true, true);
+            return this._renderPaletteLine({name: 'recent', colors: this.state.recentColors}, 'recent', true, true);
         }
 
         return;
@@ -233,92 +181,26 @@ export default class SwatchesPanel extends Component<any, ISwatchesPanelState> {
             </ScrollContainer></div>
     }
 
-    _resolveSetActiveSlot(slot_name) {
-        return (ev) => {
-            ev.preventDefault();
-            dispatch(SwatchesActions.changeActiveSlot(slot_name))
-        }
-    };
-
-    _renderSlot = (slot) => {
-        var caption = !slot.caption
-            ? null
-            : (<div className={b("slot-caption")}>{slot.caption}</div>);
-
-        var body = (<div className={b("slot-body")} style={slot.style}>
-            <div className={b("slot-bg")}></div>
-            <div className={b("slot-color")} style={slot.style}></div>
-        </div>);
-
-        return <div key={slot.name}
-            title={`${slot.title}`}
-            className={b("slot", [slot.name, slot.active ? "active" : null])}
-            onClick={this._resolveSetActiveSlot(slot.name)}
-        >{body}{caption}</div>
-    };
-
     _renderFlyoutSlot = (slot) => {
         return <SwatchesSlot
-            key={slot.name}
-            hasGradient={slot.name === 'fill' && this.state.hasGradient}
-            renderContent={this._renderSlot.bind(this, slot)}
             slot={slot}
-            colorSelected={this._colorSelected.bind(this)}
+            colorSelected={this._colorSelected}
         />
     }
 
     _renderCurrent() {
-        var slots = ['fill', 'stroke'].map((slot_name) => {
-            let slot = {
-                name: slot_name,
-                caption: null,
-                title: null,
-                brush: null,
-                style: null,
-                active: null
-            };
-
-            if ((this.state[slot_name])) {
-                slot.brush = this.state[slot_name];
-                slot.style = Brush.toCss(slot.brush);
-                slot.title = slot.brush.value;
-                slot.active = this.state.active === slot_name;
-                return this._renderFlyoutSlot(slot);
-            }
-
-            return null;
-        });
-
         return <div key='current' className={b("current")}>
             <div className={b("slot-group", "main")}>
-                {slots}
+                {this._renderFlyoutSlot(this.state.fillSlot)}
+                {this._renderFlyoutSlot(this.state.strokeSlot)}
             </div>
         </div>
     }
 
-    onKeyPress = (event) => {
-        if (event.keyCode === 120) {
-            if (this.state.active === 'fill') {
-                dispatch(SwatchesActions.changeActiveSlot('stroke'));
-            } else {
-                dispatch(SwatchesActions.changeActiveSlot('fill'));
-            }
-        }
-    }
-
-    componentDidMount() {
-        super.componentDidMount();
-        window.addEventListener('keypress', this.onKeyPress);
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        window.removeEventListener('keypress', this.onKeyPress);
-    }
-
     render() {
+        let {children, ...rest} = this.props;
         return (
-            <Panel ref="panel" {...this.props} header="Swatches" id="swatches-panel">
+            <Panel ref="panel" {...rest} header="Swatches" id="swatches-panel">
                 {this._renderCurrent()}
                 {this._renderPalette()}
             </Panel>

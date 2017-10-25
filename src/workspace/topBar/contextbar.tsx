@@ -9,7 +9,7 @@ import { PaneLabel } from "../../shared/Pane";
 import { PaneButton } from "../../shared/Pane";
 import { PaneList } from "../../shared/Pane";
 import { PaneListItem } from "../../shared/Pane";
-import CarbonActions from "../../CarbonActions";
+import CarbonActions, { CarbonAction } from "../../CarbonActions";
 import { app, Selection, Environment, ContextBarPosition, workspace } from "carbon-core";
 import { handles, Component, CarbonLabel } from "../../CarbonFlux";
 import FlyoutButton from "../../shared/FlyoutButton";
@@ -94,7 +94,19 @@ export default class ContextBar extends Component<any, any> {
         };
     }
 
-    @handles(CarbonActions.elementSelected, CarbonActions.activeLayerChanged)
+    canHandleActions() {
+        return true;
+    }
+
+    onAction(action: CarbonAction) {
+        switch (action.type) {
+            case "Carbon_Selection":
+                this.onElementSelected();
+                return;
+        }
+    }
+
+    @handles(CarbonActions.activeLayerChanged)
     onElementSelected() {
         var menu: any = { items: [] };
         var context = {

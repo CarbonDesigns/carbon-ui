@@ -1,9 +1,10 @@
-import { ILayer, IApp, ArtboardType, IArtboard, IPage, AppSettings, IUIElement, IDataNode } from "carbon-core";
+import { ILayer, IApp, ArtboardType, IArtboard, IPage, AppSettings, IUIElement, IDataNode, ISelectComposite } from "carbon-core";
 
 export type CarbonAction =
     { type: "Carbon_AppLoaded" } |
     { type: "Carbon_AppUpdated" } |
     { type: "Carbon_AppSettingsChanged", settings: AppSettings } |
+    { type: "Carbon_Selection", composite: ISelectComposite } |
     { type: "Carbon_ScaleChanged", scale: number } |
     { type: "Carbon_PropsChanged", element: IDataNode, props: any, oldProps: any } |
     { type: "Carbon_ResourcePageChanged", page: IPage } |
@@ -47,13 +48,6 @@ var CarbonActions = {
         return {
             type:"CARBON_ACTION_PERFORMED",
             name
-        }
-    },
-    elementSelected:(selection, prevSelectedElements?)=> {
-        return {
-            type:"CARBON_ELEMENT_SELECTED",
-            selection,
-            prevSelectedElements
         }
     },
     elementUsed:(element)=> {

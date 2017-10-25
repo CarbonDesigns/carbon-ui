@@ -3,6 +3,7 @@ import Mousetrap from "mousetrap";
 import { dispatchAction } from "./CarbonFlux";
 import { cancellationStack, searchStack } from "./shared/ComponentStack";
 import { DefaultScheme } from "./Hotkeys";
+import { WorkspaceCommand } from "./workspace/WorkspaceAction";
 
 var hotkeyMap: {[key: string]: {action: string, shortcut: IShortcut}} = {};
 var defaults = {
@@ -34,6 +35,9 @@ function onKeyEvent(e, hotkey){
             if (top) {
                 top.onSearch();
             }
+        }
+        else if (handler.action.startsWith("ui.")) {
+            dispatchAction({ type: "Workspace_Command", command: handler.action as WorkspaceCommand });
         }
         else {
             app.actionManager.invoke(handler.action);

@@ -134,9 +134,6 @@ class LinearGradient extends React.Component<any, any> {
 
     componentDidUpdate(prevProps) {
         this._refreshCanvas();
-        if (this.props.gradient !== prevProps.gradient) {
-            this.setState({ gradient: this.props.gradient });
-        }
     }
 
     componentDidMount() {
@@ -146,6 +143,12 @@ class LinearGradient extends React.Component<any, any> {
         canvas.height = line.clientHeight;
         this.ctx = canvas.getContext("2d");
         this._refreshCanvas();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.state.gradient !== nextProps.gradient) {
+            this.setState({ gradient: nextProps.gradient });
+        }
     }
 
     _refreshCanvas() {
@@ -280,6 +283,9 @@ export default class LinearGradientPicker extends Component<any, any> {
     }
 
     render() {
+        if (this.props.brush.type !== BrushType.lineargradient) {
+            return <div></div>;
+        }
         return <div className="linear-gradient-picker" style={this.props.style}>
             <LinearGradient ref="line" gradient={this.props.brush.value} onActivePointChanged={this._onActivePointChanged} onChange={this.onGradientChanged} onPreview={this.onGradientPreview} />
             <ColorPicker display={true} color={this.state.color} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} onMouseDown={this._onMouseDown} presetColors={[]} />

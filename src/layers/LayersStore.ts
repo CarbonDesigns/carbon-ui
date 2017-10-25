@@ -148,6 +148,9 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         super.onAction(action);
 
         switch (action.type) {
+            case "Carbon_Selection":
+                this.onElementSelected(action.composite);
+                return;
             case "Carbon_AppUpdated":
                 this.refreshLayersTree();
                 return;
@@ -180,8 +183,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         this.refreshLayersTree(expanded);// TODO: check if we need to optimize it
     }
 
-    @handles(CarbonActions.elementSelected)
-    onElementSelected({ selection }) {
+    onElementSelected(selection) {
         let selected = {};
         let expanded = this.state.expanded;
         let needsRefresh = false;

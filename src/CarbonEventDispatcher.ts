@@ -51,8 +51,9 @@ export function registerEvents() {
         dispatchAction({ type: "Carbon_AppSettingsChanged", settings });
     });
 
-    Selection.onElementSelected.bindAsync((e, prevSelectedElements) =>
-        dispatch(CarbonActions.elementSelected(e, prevSelectedElements)));
+    Selection.onElementSelected.bindAsync((e) => {
+        dispatchAction({type: "Carbon_Selection", composite: e})
+    });
 
     Environment.detaching.bind(() => {
         workspaceTokens.forEach(x => x.dispose());

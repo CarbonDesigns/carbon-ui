@@ -23,13 +23,10 @@ export interface IEditorProps{
 export default class EditorComponent<T, TProps extends IEditorProps = IEditorProps, TState = {}> extends Component<TProps, TState> {
     private _noPreview: boolean;
     private _setValueTimer: number;
-    public previewValue: any;
+
     constructor(props, context?){
         super(props, context);
-
         this.init(props);
-
-        this.previewValue = util.debounce(this.previewValueImmediate, 100);
     }
     init(props){
         this._noPreview = this.extractOption(props, "noPreview", false);
@@ -43,7 +40,7 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         this.init(nextProps);
     }
 
-    previewValueImmediate(value){
+    previewValue(value){
         if (this.props.onPreviewingValue && this.props.onPreviewingValue(value, this.props.p) === false){
             return;
         }

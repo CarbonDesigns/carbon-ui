@@ -659,6 +659,7 @@ export default
         "@group": "Group",
         "@ungroup": "Ungroup",
         "@grouping": "Grouping",
+        "@group.isolate": "Isolate",
         "@group.vstack": "Vertical stack",
         "@group.hstack": "Horizontal stack",
         "@group.canvas": "Canvas",

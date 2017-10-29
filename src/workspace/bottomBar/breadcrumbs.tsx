@@ -1,6 +1,6 @@
 import React from 'react';
 import { CompositeElement, PrimitiveType } from "carbon-core";
-import { app, Artboard, Selection, Environment, LayerType, IIsolationLayer } from "carbon-core";
+import { app, Artboard, Selection, Environment, LayerType, IIsolationLayer, Invalidate } from "carbon-core";
 import cx from 'classnames';
 import { listenTo, Component } from "../../CarbonFlux";
 import { iconType } from "../../utils/appUtils";
@@ -48,8 +48,8 @@ export default class Breadcrumbs extends Component<any, any> {
                         type: e.t,
                         iconType: iconType(e),
                         id: e.id(),
-                        element:e,
-                        exitIsolation:true
+                        element: e,
+                        exitIsolation: true
                     });
                 }
                 e = e.parent();
@@ -135,18 +135,28 @@ export default class Breadcrumbs extends Component<any, any> {
             return;
         }
 
-        if(element.exitIsolation) {
+        if (element.exitIsolation) {
             app.actionManager.invoke("exitisolation");
             Selection.makeSelection([element.element]);
             return;
         }
+        var e = this._getElement(element);
+        if(e) {
+            Selection.makeSelection([e]);
+        }
+    }
+
+    _getElement(element) {
         if (this.state.selection.count() === 1) {
             var e = this.state.selection.elements[0];
             while (e && e.parent && e.id() !== element.id) {
                 e = e.parent();
             }
-            Selection.makeSelection([e]);
+
+            return e;
         }
+
+        return element;
     }
 
     _arrow(isLast) {
@@ -154,6 +164,17 @@ export default class Breadcrumbs extends Component<any, any> {
             return (<div className="breadcrumb__arrow" key="breadcrumb__arrow"></div>);
         }
         return null;
+    }
+
+    _highlight(element) {
+        if (element) {
+            var e = this._getElement(element);
+            Environment.view._highlightTarget = e;
+        } else {
+            delete Environment.view._highlightTarget;
+        }
+
+        Invalidate.requestInteractionOnly();
     }
 
     _breadcrumbElement(element, isLast, index) {
@@ -171,6 +192,8 @@ export default class Breadcrumbs extends Component<any, any> {
                     breadcrumb_first: index === 0,
                     breadcrumb_last: isLast
                 })}
+                onMouseEnter={() => this._highlight(element)}
+                onMouseLeave={() => this._highlight(null)}
                 onClick={() => this._select(element, isLast)} key={element.id}>
                 <i className={className} />
                 <span className="breadcrumb__caption" >{

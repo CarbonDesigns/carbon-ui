@@ -2,7 +2,6 @@ import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
 import Immutable from "immutable";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import { PropertyAction, PropertiesTab } from "./PropertyActions";
-
 import { PropertyTracker, app, NullPage, Selection, CompositeElement, PropertyMetadata, ChangeMode } from "carbon-core";
 
 interface IPropertyStoreState {
@@ -46,8 +45,8 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         super.onAction(action);
 
         switch (action.type) {
-            case "Carbon_Selection":
-                this.onElementSelected(action.composite);
+            case "Carbon_PropertiesRequested":
+                this.onPropertiesRequested(action.composite);
                 return;
             case "Properties_ChangeTab":
                 this.setState({ tabId: action.tabId });
@@ -86,17 +85,17 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     onLoaded({ app }) {
         this.app = app;
         PropertyTracker.propertyChanged.bind(this, this._onPropsChanged);
-        this.onElementSelected(this._emptySelection);
+        this.onPropertiesRequested(this._emptySelection);
     }
 
     @handles(CarbonActions.pageChanged)
     onPageChanged({ newPage }) {
         if (!(newPage === NullPage)) {
-            this.onElementSelected(this._emptySelection);
+            this.onPropertiesRequested(this._emptySelection);
         }
     }
 
-    onElementSelected(selection) {
+    onPropertiesRequested(selection) {
         if (selection.count() === 0) {
             selection = this._emptySelection;
         }

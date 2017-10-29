@@ -54,6 +54,9 @@ export function registerEvents() {
     Selection.onElementSelected.bindAsync((e) => {
         dispatchAction({type: "Carbon_Selection", composite: e})
     });
+    Selection.propertiesRequested.bindAsync((e) => {
+        dispatchAction({type: "Carbon_PropertiesRequested", composite: e})
+    });
 
     Environment.detaching.bind(() => {
         workspaceTokens.forEach(x => x.dispose());

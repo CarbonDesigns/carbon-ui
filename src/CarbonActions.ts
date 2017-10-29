@@ -5,6 +5,7 @@ export type CarbonAction =
     { type: "Carbon_AppUpdated" } |
     { type: "Carbon_AppSettingsChanged", settings: AppSettings } |
     { type: "Carbon_Selection", composite: ISelectComposite } |
+    { type: "Carbon_PropertiesRequested", composite: ISelectComposite } |
     { type: "Carbon_ScaleChanged", scale: number } |
     { type: "Carbon_PropsChanged", element: IDataNode, props: any, oldProps: any } |
     { type: "Carbon_ResourcePageChanged", page: IPage } |

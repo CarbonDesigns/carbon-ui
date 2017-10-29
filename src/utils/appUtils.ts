@@ -14,6 +14,8 @@ export function iconType(element) {
         case Types.Circle          : return "circle";
         case Types.Triangle        : return "triangle";
         case Types.Text            : return "line-text";
+        case Types.RangeFormatter  : return "line-text";
+        case Types.DefaultFormatter: return "line-text";
 
         case Types.Path            : return "path";
         case Types.Line            : return "line";

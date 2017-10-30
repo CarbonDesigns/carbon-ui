@@ -27,21 +27,20 @@ export default class Breadcrumbs extends Component<any, any> {
         var res = [];
         var view = Environment.view;
         var layer = Environment.view.getLayer(LayerType.Isolation) as IIsolationLayer;
-        while (e) {
-            if (e.canSelect() || e instanceof Artboard) {
-                res.splice(0, 0, {
-                    name: e.displayName(),
-                    type: e.t,
-                    iconType: iconType(e),
-                    id: e.id()
-                });
-            }
-            e = e.parent();
-        }
 
         if (layer.isActive) {
-            e = layer.getOwner();
+            let owner = layer.getOwner();
+            if (e) {
+                e = owner.findNodeByIdBreadthFirst(e.id());
+            }
+            else {
+                e = owner;
+            }
+            let exit = false;
             while (e) {
+                if (e === owner) {
+                    exit = true;
+                }
                 if (e.canSelect() || e instanceof Artboard) {
                     res.splice(0, 0, {
                         name: e.displayName(),
@@ -49,7 +48,21 @@ export default class Breadcrumbs extends Component<any, any> {
                         iconType: iconType(e),
                         id: e.id(),
                         element: e,
-                        exitIsolation: true
+                        exitIsolation: exit
+                    });
+                }
+                e = e.parent();
+            }
+        }
+        else {
+            while (e) {
+                if (e.canSelect() || e instanceof Artboard) {
+                    res.splice(0, 0, {
+                        name: e.displayName(),
+                        type: e.t,
+                        iconType: iconType(e),
+                        element: e,
+                        id: e.id()
                     });
                 }
                 e = e.parent();
@@ -106,6 +119,7 @@ export default class Breadcrumbs extends Component<any, any> {
         }
     }
 
+    //TODO: breadcrumbs should use PropertyTracker instead of synclog
     componentDidMount() {
         app.onLoad(() => {
             this._onElementSelectedSubscribtion = Selection.onElementSelected.bind(this, this.onSelectionMade);
@@ -137,8 +151,6 @@ export default class Breadcrumbs extends Component<any, any> {
 
         if (element.exitIsolation) {
             app.actionManager.invoke("exitisolation");
-            Selection.makeSelection([element.element]);
-            return;
         }
         var e = this._getElement(element);
         if(e) {
@@ -155,7 +167,6 @@ export default class Breadcrumbs extends Component<any, any> {
 
             return e;
         }
-
         return element;
     }
 

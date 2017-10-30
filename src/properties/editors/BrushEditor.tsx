@@ -26,6 +26,10 @@ export default class BrushEditor extends EditorComponent<Brush> {
             this.setValueByCommand(this._initialValue);
         }
     };
+    private onPreview = value => {
+        this.previewValue(value);
+    }
+
     render(){
         var p = this.props.p;
         var classes = cx("prop prop_colorpicker", this.widthClass(this.props.className || "prop_width-1-2"));
@@ -45,7 +49,7 @@ export default class BrushEditor extends EditorComponent<Brush> {
                     brush={this.propertyValue()}
                     hasGradient={showGradient}
                     onSelected={this.setValueByCommand}
-                    onPreview={this.previewValueImmediate.bind(this)}
+                    onPreview={this.onPreview}
                     onCancelled={this.revertChanges}
                 />
             </FlyoutButton>

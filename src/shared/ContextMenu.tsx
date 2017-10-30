@@ -46,7 +46,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
         }
 
         if (this.props.item.items) {
-            return <li className={b('item', "padded")} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+            return <li className={b('item', {"padded": this.props.hasIcons})} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
                 {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
                 <span className={b("label", "with-submenu")}>{this.props.item.label || this.formatLabel(item.name)}</span>
                 <div className={b('item-arrow')}></div>

@@ -1,8 +1,7 @@
-import { handles, CarbonStore, dispatch } from "../CarbonFlux";
+import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
 import Immutable from "immutable";
-import CarbonActions from "../CarbonActions";
-import PropertyActions, { PropertyAction, PropertiesTab } from "./PropertyActions";
-
+import CarbonActions, { CarbonAction } from "../CarbonActions";
+import { PropertyAction, PropertiesTab } from "./PropertyActions";
 import { PropertyTracker, app, NullPage, Selection, CompositeElement, PropertyMetadata, ChangeMode } from "carbon-core";
 
 interface IPropertyStoreState {
@@ -38,24 +37,34 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         };
     }
 
-    hasProperty(propertyName, mustBeVisible: boolean) {
-        var exists = this.state.valueMap.hasOwnProperty(propertyName);
-        if (exists && mustBeVisible && this.state.visibilityMap[propertyName] === false) {
-            exists = false;
-        }
-        return exists;
-    }
-
     getPropertyValue(propertyName) {
         return this.state.valueMap[propertyName];
     }
 
-    onAction(action: PropertyAction) {
+    onAction(action: PropertyAction | CarbonAction) {
         super.onAction(action);
 
         switch (action.type) {
+            case "Carbon_PropertiesRequested":
+                this.onPropertiesRequested(action.composite);
+                return;
             case "Properties_ChangeTab":
                 this.setState({ tabId: action.tabId });
+                return;
+            case "Properties_Changed":
+                this.onChanged(action.changes);
+                return;
+            case "Properties_ChangedExternally":
+                this.onChangedExternally(action.changes);
+                return;
+            case "Properties_Preview":
+                this.previewProperty(action.changes);
+                return;
+            case "Properties_Patched":
+                this.onPatched(action.patchType, action.propertyName, action.value);
+                return;
+            case "Properties_PatchPreview":
+                this.previewPatchProperty(action.patchType, action.propertyName, action.value);
                 return;
         }
     }
@@ -76,18 +85,17 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
     onLoaded({ app }) {
         this.app = app;
         PropertyTracker.propertyChanged.bind(this, this._onPropsChanged);
-        this.onElementSelected({ selection: this._emptySelection });
+        this.onPropertiesRequested(this._emptySelection);
     }
 
     @handles(CarbonActions.pageChanged)
     onPageChanged({ newPage }) {
         if (!(newPage === NullPage)) {
-            this.onElementSelected({ selection: this._emptySelection });
+            this.onPropertiesRequested(this._emptySelection);
         }
     }
 
-    @handles(CarbonActions.elementSelected)
-    onElementSelected({ selection }) {
+    onPropertiesRequested(selection) {
         if (selection.count() === 0) {
             selection = this._emptySelection;
         }
@@ -103,28 +111,23 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
         this.setState(newState);
     }
 
-    @handles(PropertyActions.changed)
-    onChanged({ changes }) {
+    onChanged(changes) {
         this.state.selection.updateDisplayProps(changes);
     }
 
-    @handles(PropertyActions.patched)
-    onPatched({ changeType, propertyName, value }) {
+    onPatched(changeType, propertyName, value) {
         this.state.selection.patchDisplayProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
-    @handles(PropertyActions.previewPatch)
-    previewPatchProperty({ changeType, propertyName, value }) {
+    previewPatchProperty(changeType, propertyName, value) {
         this.state.selection.previewPatchDisplayProps(this.state.selection.elements, propertyName, changeType, value);
     }
 
-    @handles(PropertyActions.changedExternally)
-    onChangedExternally({ changes }) {
+    onChangedExternally(changes) {
         this._updateState(changes);
     }
 
-    @handles(PropertyActions.preview)
-    previewProperty({ changes }) {
+    previewProperty(changes) {
         this.state.selection.previewDisplayProps(changes);
     }
 
@@ -135,7 +138,7 @@ class PropertyStore extends CarbonStore<IPropertyStoreState> {
                 this._updateState(newProps);
             }
             else {
-                dispatch(PropertyActions.changedExternally(newProps))
+                dispatchAction({type: "Properties_ChangedExternally", changes: newProps });
             }
         }
     }

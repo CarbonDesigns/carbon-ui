@@ -45,6 +45,9 @@ class AppStore extends CarbonStore<AppStoreState> {
         super.onAction(action);
 
         switch (action.type) {
+            case "Carbon_Selection":
+                this.onSelectionChanged();
+                return;
             case "Carbon_AppSettingsChanged":
                 this.setState({ appName: action.settings.name, appAvatar: action.settings.avatar });
                 return;
@@ -62,7 +65,6 @@ class AppStore extends CarbonStore<AppStoreState> {
         this.setState({ canUndo, canRedo });
     }
 
-    @handles(CarbonActions.elementSelected)
     onSelectionChanged() {
         this.setState({ selectionCount: Selection.elements.length });
     }

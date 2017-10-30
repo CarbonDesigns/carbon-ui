@@ -1,17 +1,7 @@
-var SwatchesActions = {
-    changeActiveSlot:(slot)=>{
-        return {
-            type:"SwatchesActions_changeActiveSlot",
-            active:slot
-        }
-    },
-    changeActiveColors:(fill, stroke) =>{
-        return {
-            type: "SwatchesActions_changeActiveColors",
-            fill, stroke,
-            async:true
-        }
-    }
-};
+import { Brush } from "carbon-core";
 
-export default SwatchesActions;
+export type SwatchSlotName = "fill" | "stroke";
+
+export type SwatchesAction =
+    { type: "Swatches_ChangeSlot", active: SwatchSlotName} |
+    { type: "Swatches_Update", fill: Brush, stroke: Brush };

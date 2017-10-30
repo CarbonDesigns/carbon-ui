@@ -1,6 +1,5 @@
 import React from 'react';
-import {Component, dispatch} from "../../CarbonFlux";
-import PropertyActions from "../PropertyActions";
+import {Component, dispatch, dispatchAction} from "../../CarbonFlux";
 import {FormattedMessage} from "react-intl";
 import {util, PatchType} from "carbon-core";
 
@@ -24,13 +23,10 @@ export interface IEditorProps{
 export default class EditorComponent<T, TProps extends IEditorProps = IEditorProps, TState = {}> extends Component<TProps, TState> {
     private _noPreview: boolean;
     private _setValueTimer: number;
-    public previewValue: any;
+
     constructor(props, context?){
         super(props, context);
-
         this.init(props);
-
-        this.previewValue = util.debounce(this.previewValueImmediate, 100);
     }
     init(props){
         this._noPreview = this.extractOption(props, "noPreview", false);
@@ -44,7 +40,7 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         this.init(nextProps);
     }
 
-    previewValueImmediate(value){
+    previewValue(value){
         if (this.props.onPreviewingValue && this.props.onPreviewingValue(value, this.props.p) === false){
             return;
         }
@@ -60,7 +56,7 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         var changes = {};
         changes[this.propertyName()] = value;
 
-        dispatch(PropertyActions.preview(changes));
+        dispatchAction({ type: "Properties_Preview", changes, async: false });
     }
 
     setValueByCommand = (value, async = false) => {
@@ -74,22 +70,22 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
         var changes = {};
         changes[this.propertyName()] = value;
 
-        dispatch(PropertyActions.changed(changes, async));
+        dispatchAction({ type: "Properties_Changed", changes, async });
     };
-    patchValueByCommand = (changeType, value, async = false) => {
+    patchValueByCommand = (patchType, value, async = false) => {
         if (this._setValueTimer){
             clearTimeout(this._setValueTimer);
         }
-        if (this.props.onPatchingValue && this.props.onPatchingValue(changeType, value, this.props.p) === false){
+        if (this.props.onPatchingValue && this.props.onPatchingValue(patchType, value, this.props.p) === false){
             return;
         }
 
         var propertyName = this.propertyName();
 
-        dispatch(PropertyActions.patched(changeType, propertyName, value, async));
+        dispatchAction({ type: "Properties_Patched", patchType, propertyName, value, async });
     };
 
-    previewPatchValue(changeType, value){
+    previewPatchValue(patchType, value){
         if (this.props.onPreviewingPatchValue && this.props.onPreviewingPatchValue(value, this.props.p) === false){
             return;
         }
@@ -102,7 +98,7 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
             clearTimeout(this._setValueTimer);
         }
 
-        dispatch(PropertyActions.previewPatch(changeType, this.propertyName(), value));
+        dispatchAction({ type: "Properties_PatchPreview", patchType, propertyName: this.propertyName(), value, async: false });
     }
 
     propertyDescriptor(){

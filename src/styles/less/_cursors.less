@@ -2,44 +2,46 @@
 
 //custom cursors
 
-@cursors: 
-  default_cursor auto, 
-  direct_select_cursor auto, 
-  
-  pointer pointer, 
-  text text, 
-  
-  move_cursor auto, 
-  move_clone auto, 
-  
-  rotate-1 auto, 
-  rotate-2 auto, 
-  rotate-3 auto, 
-  rotate-4 auto, 
-  rotate-5 auto, 
-  rotate-6 auto, 
-  rotate-7 auto, 
-  rotate-8 auto, 
-  
-  pen_add_point auto, 
-  pen_remove_point auto, 
-  pen_close_path auto,   
-  pen_move_handle auto,   
-  pen_move_point auto,   
-  pen_move_segment auto,   
-  pen_point auto,   
-  pen auto,   
-  pen_line auto,   
-  
-  artboard_tool crosshair,   
-  text_tool auto,   
-  
+@cursors:
+  default_cursor auto,
+  direct_select_cursor auto,
+
+  pointer pointer,
+  text text,
+
+  move_cursor auto,
+  move_clone auto,
+
+  rotate-1 auto,
+  rotate-2 auto,
+  rotate-3 auto,
+  rotate-4 auto,
+  rotate-5 auto,
+  rotate-6 auto,
+  rotate-7 auto,
+  rotate-8 auto,
+
+  pen_add_point auto,
+  pen_remove_point auto,
+  pen_close_path auto,
+  pen_move_handle auto,
+  pen_move_point auto,
+  pen_move_segment auto,
+  pen_point auto,
+  pen auto,
+  pen_line auto,
+
+  artboard_tool crosshair,
+  zoom_in auto,
+  zoom_out auto,
+  text_tool auto,
+
   layer_drag_single auto,
   layer_drag_single_into auto,
   layer_drag_multi auto,
   layer_drag_multi_into auto,
   layer_drag_disabled auto,
-  
+
   hand_opened auto,
   hand_closed auto;
 
@@ -47,7 +49,7 @@
   @name: extract(extract(@cursors, @iterator),1);
   @fallback: extract(extract(@cursors, @iterator),2);
   .c-@{name} {
-    cursor: url("../../res/cursors/@{name}.cur"), @fallback;        
+    cursor: url("../../res/cursors/@{name}.cur"), @fallback;
   }
   .c_@{name}{
     &:extend(.c-@{name});

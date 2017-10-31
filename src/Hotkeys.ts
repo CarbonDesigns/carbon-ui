@@ -83,11 +83,12 @@ export const WindowsShortcuts: IShortcut[] = [
     { key: "h", action: "handTool" },
     { key: "space", action: "handTool", repeatable: false },
     { key: "space", action: "handToolRelease", type: "keyup" },
+    { key: "ctrl", action: "handToolRelease", type: "keyup" },
 
     { key: "ctrl+space", action: "zoomTool", repeatable: false },
-    { key: "ctrl+space", action: "zoomToolRelease", type: "keyup" },
+    // { key: "ctrl+space", action: "zoomToolRelease", type: "keyup" },
     { key: "ctrl+alt+space", action: "zoomTool", repeatable: false },
-    { key: "ctrl+alt+space", action: "zoomToolRelease", type: "keyup" },
+    // { key: "ctrl+alt+space", action: "zoomToolRelease", type: "keyup" },
 
     { key: "ctrl+s", action: "save" },
 

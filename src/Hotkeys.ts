@@ -84,6 +84,11 @@ export const WindowsShortcuts: IShortcut[] = [
     { key: "space", action: "handTool", repeatable: false },
     { key: "space", action: "handToolRelease", type: "keyup" },
 
+    { key: "ctrl+space", action: "zoomTool", repeatable: false },
+    { key: "ctrl+space", action: "zoomToolRelease", type: "keyup" },
+    { key: "ctrl+alt+space", action: "zoomTool", repeatable: false },
+    { key: "ctrl+alt+space", action: "zoomToolRelease", type: "keyup" },
+
     { key: "ctrl+s", action: "save" },
 
     { key: "ctrl+alt+s", action: "forceSave" },
@@ -184,6 +189,11 @@ export const MacShortcuts: IShortcut[] = [
     { key: "h", action: "handTool" },
     { key: "space", action: "handTool", repeatable: false },
     { key: "space", action: "handToolRelease", type: "keyup" },
+
+    { key: "meta+space", action: "zoomTool", repeatable: false },
+    { key: "meta+space", action: "zoomToolRelease", type: "keyup" },
+    { key: "meta+alt+space", action: "zoomTool", repeatable: false },
+    { key: "meta+alt+space", action: "zoomToolRelease", type: "keyup" },
 
     { key: "meta+s", action: "save" },
     { key: "meta+alt+s", action: "forceSave" },

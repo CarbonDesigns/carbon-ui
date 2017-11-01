@@ -87,7 +87,7 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                 if (action.element instanceof Page && action.props.toolboxConfigUrl) {
                     this.setState({ operation: Operation.start() });
                     ToolboxConfiguration.getConfigForPage(action.element as IPage)
-                        .then(config => this.state.operation.stop(config))
+                        .then(config => this.state.operation ? this.state.operation.stop(config) : config)
                         .then(config => {
                             dispatchAction({ type: "Symbols_Loaded", page: action.element as IPage, config, async: true });
                         });

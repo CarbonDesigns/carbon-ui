@@ -5,7 +5,7 @@ import DropzoneRegistry from "./DropzoneRegistry";
 import { } from "carbon-model";
 import {
     IUIElement, createUUID, IDropElementData, RepeatContainer, IImage,
-    app, backend, Environment, Selection, SvgParser, Matrix, Image, OriginType, IDisposable,
+    app, backend, Environment, Selection, SvgParser, Matrix, Image, Origin, IDisposable,
     IContainer
 } from "carbon-core";
 
@@ -195,7 +195,7 @@ export default class ImageDrop {
                     let image = new Image();
                     image.size({ width: Image.NewImageSize, height: Image.NewImageSize });
                     image.source(Image.EmptySource);
-                    image.resizeOnLoad(OriginType.TopLeft);
+                    image.resizeOnLoad(Origin.TopLeft);
                     app.assignNewName(image);
 
                     dropHandler.imageMap[e.dataTransfer.files[i].name] = image;

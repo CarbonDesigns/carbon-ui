@@ -92,7 +92,7 @@ class SubMenu extends Component<SubMenuProps> implements ICancellationHandler {
     render() {
         let hasIcons = this.props.items.some(x => x.icon);
         return <ul className={this.props.className}>
-            {this.props.items.map(item => <ContextMenuItem item={item} key={item.name} hasIcons={hasIcons} />)}
+            {this.props.items.map(item => <ContextMenuItem item={item} key={item.name || item.actionArg} hasIcons={hasIcons} />)}
         </ul>
     }
 }

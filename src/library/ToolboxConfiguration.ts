@@ -1,10 +1,10 @@
-import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup, renderer, RenderEnvironment, RenderFlags } from "carbon-core";
+import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup, renderer, RenderEnvironment, RenderFlags, IUIElement, model, Origin } from "carbon-core";
 import { ToolboxConfig, SpriteStencil, ToolboxGroup } from "./LibraryDefs";
 
 let PADDING = 5;
 let _configCache = {};
 
-type StencilMap = {[id: string]: SpriteStencil};
+type StencilMap = { [id: string]: SpriteStencil };
 
 export default class ToolboxConfiguration {
     static chooseTileType(w, h) {
@@ -28,7 +28,7 @@ export default class ToolboxConfiguration {
             data.width = 257;
             data.height = 121;
         }
-        else if (tileType === TileSize.Large ) {
+        else if (tileType === TileSize.Large) {
             data.width = 257;
         }
 
@@ -51,6 +51,10 @@ export default class ToolboxConfiguration {
             data.scale = 1;
         }
 
+        //ideally, image should be scaled relative to the center of the tile, but that does not work for artboards (but works for rects)
+        data.tileX = (data.width - w * data.scale) / 2 + .5 | 0;
+        data.tileY = (data.height - h * data.scale) / 2 + .5 | 0;
+
         return data;
     }
 
@@ -59,7 +63,7 @@ export default class ToolboxConfiguration {
         if (!elements.length) {
             return Promise.resolve({});
         }
-        let elementWithTiles: Array<any> = elements.map(e => {
+        let elementWithTiles: Array<{ element: IUIElement, tileSize: TileSize }> = elements.map(e => {
             let tileSize;
             if (e.props.tileSize === TileSize.Auto) {
                 tileSize = ToolboxConfiguration.chooseTileType(e.width(), e.height());
@@ -82,7 +86,8 @@ export default class ToolboxConfiguration {
         while (i < elementWithTiles.length && elementWithTiles[i].tileSize === TileSize.XLarge) {
             let element = elementWithTiles[i].element;
             let tileSize = elementWithTiles[i].tileSize;
-            let data = ToolboxConfiguration.fitToTile(element.width(), element.height(), tileSize, PADDING);
+            let bb = element.getBoundingBoxGlobal();
+            let data = ToolboxConfiguration.fitToTile(bb.width, bb.height, tileSize, PADDING);
             renderTasks.push({ x, y, data: data });
             x += data.width;
             height = Math.max(height, data.height);
@@ -121,21 +126,15 @@ export default class ToolboxConfiguration {
         }
 
         let width: number = lastX;
+
         let context = renderer.contextPool.getContext(width, height, contextScale, true);
-        context.clearRect(0, 0, context.width, context.height);
-        let env: RenderEnvironment = {
-            flags: RenderFlags.Final | RenderFlags.Offscreen,
-            setupContext: () => { },
-            contextScale,
-            scale: 1,
-            pageMatrix: Matrix.Identity,
-            fill: null,
-            stroke: null
-        };
+        context.clear();
+
         let elementsMap: StencilMap = {};
         let taskPromises = [];
+
         for (i = 0; i < renderTasks.length; ++i) {
-            taskPromises.push(ToolboxConfiguration._performRenderTask(page, renderTasks[i], elementWithTiles[i].element, elementsMap, context, contextScale, env));
+            taskPromises.push(ToolboxConfiguration._performRenderTask(page, renderTasks[i], elementWithTiles[i].element, elementsMap, context, contextScale));
         }
 
         return Promise.all(taskPromises)
@@ -146,8 +145,8 @@ export default class ToolboxConfiguration {
                     }
                 }
 
-                let imageData = context.canvas.toDataURL("image/png");
-                let backgroundUrl = "url(" + imageData  + ")";
+                let imageData = context.canvas.toDataURL();
+                let backgroundUrl = "url(" + imageData + ")";
                 return { imageData, backgroundUrl, size: { width, height } };
             })
             .finally(() => {
@@ -155,39 +154,21 @@ export default class ToolboxConfiguration {
             });
     }
 
-    static _performRenderTask(page: IPage, t, element, elementsMap: StencilMap, context, contextScale, env: RenderEnvironment): Promise<any> {
-        let w = element.width();
-        let h = element.height();
-        let scale = t.data.scale;
-        let matrix = Matrix.Identity.clone();
-        context.save();
-        context.scale(contextScale, contextScale);
-        context.beginPath();
-        context.clearRect(t.x, t.y, t.data.width, t.data.height);
-        context.rect(t.x, t.y, t.data.width, t.data.height);
-        context.clip();
+    static _performRenderTask(page: IPage, t, element: IUIElement, elementsMap: StencilMap, context, contextScale): Promise<any> {
+        let bb = element.getBoundingBoxGlobal();
 
-        env.setupContext = (context) => {
-            context.scale(contextScale, contextScale);
-            env.pageMatrix.applyToContext(context);
-        }
-
-        matrix.translate(t.x + (0 | (t.data.width - w * scale) / 2), t.y + (0 | (t.data.height - h * scale) / 2));
-        matrix.scale(scale, scale);
-        matrix.append(element.viewMatrix().clone().invert());
-        env.pageMatrix = matrix;
-        matrix.applyToContext(context);
-
-        element.draw(context, env);
-
-        context.restore();
+        let tileMatrix = Matrix.allocate();
+        tileMatrix.translate(t.x + t.data.tileX, t.y + t.data.tileY);
+        tileMatrix.scale(t.data.scale, t.data.scale);
+        renderer.elementToContext(element, context, contextScale, tileMatrix);
+        tileMatrix.free();
 
         elementsMap[element.id()] = {
             id: element.id(),
             pageId: page.id(),
-            realHeight: w,
-            realWidth: h,
-            spriteMap: {x : t.x * contextScale, y: t.y * contextScale, width: t.data.width * contextScale, height: t.data.height * contextScale},
+            realHeight: bb.width,
+            realWidth: bb.height,
+            spriteMap: { x: t.x * contextScale, y: t.y * contextScale, width: t.data.width * contextScale, height: t.data.height * contextScale },
             title: element.name(),
             //will be set later
             spriteSize: null,
@@ -201,7 +182,7 @@ export default class ToolboxConfiguration {
         }
 
         return Promise.all(fontTasks)
-            .then(() => ToolboxConfiguration._performRenderTask(page, t, element, elementsMap, context, contextScale, env));
+            .then(() => ToolboxConfiguration._performRenderTask(page, t, element, elementsMap, context, contextScale));
     }
 
     static getConfigForPage(page: IPage) {

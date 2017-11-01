@@ -64,7 +64,7 @@ export class DragAndDrop {
         helperNode.style.cursor = "pointer";
         helperNode.style.width = node.offsetWidth + "px";
         helperNode.style.height = node.offsetHeight + "px";
-        helperNode.classList.add("dragging");
+        helperNode.classList.add("stencil_dragging");
         return helperNode;
     }
 

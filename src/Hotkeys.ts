@@ -69,10 +69,12 @@ export const WindowsShortcuts: IShortcut[] = [
 
     { key: "p", action: "pathTool" },
     { key: "r", action: "rectangleTool" },
+    { key: "m", action: "rectangleTool" },
     { key: "o", action: "circleTool" },
     { key: "v", action: "pointerTool" },
     { key: "d", action: "pointerDirectTool" },
     { key: "l", action: "lineTool" },
+    { key: "\\", action: "lineTool" },
     { key: "y", action: "pencilTool" },
     { key: "a", action: "artboardTool" },
     { key: "shift+o", action: "artboardTool" },
@@ -97,9 +99,15 @@ export const WindowsShortcuts: IShortcut[] = [
     { key: "enter", action: "enter" },
 
     { key: "z", action: "zoomIn" },
+    { key: "=", action: "zoomIn" },
     { key: "alt+z", action: "zoomOut" },
+    { key: "-", action: "zoomOut" },
     { key: "ctrl+0", action: "zoom100" },
     { key: "ctrl+.", action: "zoomFit" },
+
+    { key: "ctrl+shift+l", action: "textAlignLeft" },
+    { key: "ctrl+shift+c", action: "textAlignCenter" },
+    { key: "ctrl+shift+r", action: "textAlignRight" },
 
     { key: "f", action: "toggleFrame" }
 ];
@@ -174,10 +182,12 @@ export const MacShortcuts: IShortcut[] = [
 
     { key: "p", action: "pathTool" },
     { key: "r", action: "rectangleTool" },
+    { key: "m", action: "rectangleTool" },
     { key: "o", action: "circleTool" },
     { key: "v", action: "pointerTool" },
     { key: "d", action: "pointerDirectTool" },
     { key: "l", action: "lineTool" },
+    { key: "\\", action: "lineTool" },
     { key: "y", action: "pencilTool" },
     { key: "a", action: "artboardTool" },
     { key: "shift+o", action: "artboardTool" },
@@ -200,13 +210,19 @@ export const MacShortcuts: IShortcut[] = [
     { key: "enter", action: "enter" },
 
     { key: "z", action: "zoomIn" },
+    { key: "=", action: "zoomIn" },
     { key: "alt+z", action: "zoomOut" },
+    { key: "-", action: "zoomOut" },
     { key: "meta+1", action: "zoom100" },
     { key: "meta+2", action: "zoom2:1" },
     { key: "meta+3", action: "zoom4:1" },
     { key: "meta+4", action: "zoom8:1" },
     { key: "meta+.", action: "zoomFit" },
     { key: "meta+alt+s", action: "zoomSelection" },
+
+    { key: "meta+shift+l", action: "textAlignLeft" },
+    { key: "meta+shift+c", action: "textAlignCenter" },
+    { key: "meta+shift+r", action: "textAlignRight" },
 
     { key: "f", action: "toggleFrame" }
 ];

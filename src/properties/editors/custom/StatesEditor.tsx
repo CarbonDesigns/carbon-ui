@@ -5,7 +5,7 @@ import {richApp} from "../../../RichApp";
 import {FormattedMessage} from "react-intl";
 import StringEditor from "../StringEditor";
 import DropdownEditor from "../DropdownEditor";
-import { PropertyMetadata, Symbol, Artboard, StateBoard, ArtboardState } from "carbon-core";
+import { PropertyMetadata, Symbol, Artboard, ArtboardState, model } from "carbon-core";
 import Immutable from "immutable";
 import EditorComponent from "../EditorComponent";
 import propertyStore from "../../PropertyStore";
@@ -63,7 +63,7 @@ export default class CustomPropertiesEditor extends EditorComponent<any, any, an
 
     _addNewState = ()=> {
         var newState = this.state.artboard.addState("New state " + this.state.artboard._recorder.statesCount());
-        var stateBoard = new StateBoard();
+        var stateBoard = model.createStateboard();
         stateBoard.setProps({
             stateId:newState.id
         });

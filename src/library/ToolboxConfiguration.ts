@@ -1,10 +1,10 @@
-import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup, renderer, RenderEnvironment, RenderFlags, IUIElement, model, Origin } from "carbon-core";
-import { ToolboxConfig, SpriteStencil, ToolboxGroup } from "./LibraryDefs";
+import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup, renderer, RenderEnvironment, RenderFlags, IUIElement, model, Origin, IStateboard, Artboard } from "carbon-core";
+import { ToolboxConfig, SpriteStencil, ToolboxGroup, SymbolStencil } from "./LibraryDefs";
 
 let PADDING = 5;
 let _configCache = {};
 
-type StencilMap = { [id: string]: SpriteStencil };
+type StencilMap = { [id: string]: SymbolStencil };
 
 export default class ToolboxConfiguration {
     static chooseTileType(w, h) {
@@ -58,12 +58,12 @@ export default class ToolboxConfiguration {
         return data;
     }
 
-    static renderElementsToSprite(page: IPage, elements, items, contextScale?): Promise<any> {
+    static renderElementsToSprite(page: IPage, elements: IArtboard[], items, contextScale?): Promise<any> {
         contextScale = contextScale || 1;
         if (!elements.length) {
             return Promise.resolve({});
         }
-        let elementWithTiles: Array<{ element: IUIElement, tileSize: TileSize }> = elements.map(e => {
+        let elementWithTiles: Array<{ element: IArtboard | IStateboard, tileSize: TileSize }> = elements.map(e => {
             let tileSize;
             if (e.props.tileSize === TileSize.Auto) {
                 tileSize = ToolboxConfiguration.chooseTileType(e.width(), e.height());
@@ -134,13 +134,14 @@ export default class ToolboxConfiguration {
         let taskPromises = [];
 
         for (i = 0; i < renderTasks.length; ++i) {
-            taskPromises.push(ToolboxConfiguration._performRenderTask(page, renderTasks[i], elementWithTiles[i].element, elementsMap, context, contextScale));
+            let artboard = elementWithTiles[i].element;
+            taskPromises.push(ToolboxConfiguration._performRenderTask(page, renderTasks[i], artboard, (artboard as IStateboard).props.stateId || null, elementsMap, context, contextScale));
         }
 
         return Promise.all(taskPromises)
             .then(() => {
                 if (items) {
-                    for (i = elements.length - 1; i >= 0; --i) {
+                    for (i = 0; i < elements.length; ++i) {
                         items.push(elementsMap[elements[i].id()]);
                     }
                 }
@@ -154,22 +155,24 @@ export default class ToolboxConfiguration {
             });
     }
 
-    static _performRenderTask(page: IPage, t, element: IUIElement, elementsMap: StencilMap, context, contextScale): Promise<any> {
-        let bb = element.getBoundingBoxGlobal();
+    static _performRenderTask(page: IPage, t, artboard: IArtboard, stateId: string | null, stencilMap: StencilMap, context, contextScale): Promise<any> {
+        let bb = artboard.getBoundingBoxGlobal();
 
         let tileMatrix = Matrix.allocate();
         tileMatrix.translate(t.x + t.data.tileX, t.y + t.data.tileY);
         tileMatrix.scale(t.data.scale, t.data.scale);
-        renderer.elementToContext(element, context, contextScale, tileMatrix);
+        renderer.elementToContext(artboard, context, contextScale, tileMatrix);
         tileMatrix.free();
 
-        elementsMap[element.id()] = {
-            id: element.id(),
+        stencilMap[artboard.id()] = {
+            id: createUUID(),
+            artboardId: artboard instanceof IStateboard ? artboard.props.masterId : artboard.id(),
             pageId: page.id(),
             realHeight: bb.width,
             realWidth: bb.height,
             spriteMap: { x: t.x * contextScale, y: t.y * contextScale, width: t.data.width * contextScale, height: t.data.height * contextScale },
-            title: element.name(),
+            title: artboard.name(),
+            stateId,
             //will be set later
             spriteSize: null,
             spriteUrl: null,
@@ -182,7 +185,7 @@ export default class ToolboxConfiguration {
         }
 
         return Promise.all(fontTasks)
-            .then(() => ToolboxConfiguration._performRenderTask(page, t, element, elementsMap, context, contextScale));
+            .then(() => ToolboxConfiguration._performRenderTask(page, t, artboard, stateId, stencilMap, context, contextScale));
     }
 
     static getConfigForPage(page: IPage) {
@@ -202,24 +205,21 @@ export default class ToolboxConfiguration {
     }
 
     static buildToolboxConfig(page, skipPageUpdate?: boolean): Promise<ToolboxConfig<SpriteStencil>> {
-        let elements = page.getAllResourceArtboards(ArtboardType.Symbol) as IArtboard[];
+        let artboards = page.getAllResourceArtboards(ArtboardType.Symbol) as IArtboard[];
 
-        if (!elements.length) {
+        if (!artboards.length) {
             if (!skipPageUpdate) {
                 page.setProps({ toolboxConfigUrl: null });
             }
             return Promise.resolve({ groups: [] });
         }
 
-        elements.sort((a, b) => {
-            let rect1 = a.getBoundingBox();
-            let rect2 = b.getBoundingBox();
+        let stateboards = ToolboxConfiguration.findStateboards(artboards);
+        for (let i = 0; i < stateboards.length; ++i) {
+            artboards.push(stateboards[i]);
+        }
 
-            if (rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y) {
-                return rect2.x - rect1.x;
-            }
-            return rect2.y - rect1.y;
-        });
+        artboards.sort(ToolboxConfiguration.symbolComparer);
 
         let configId = createUUID();
         let groups = [];
@@ -229,16 +229,19 @@ export default class ToolboxConfiguration {
         for (let i = 0; i < symbolGroups.length; ++i) {
             let group = symbolGroups[i];
             let groupElements = [];
-            for (let j = 0; j < elements.length; ++j) {
-                let e = elements[j];
+            for (let j = 0; j < artboards.length; ++j) {
+                let e = artboards[j];
+                if (e instanceof IStateboard) {
+                    e = e.artboard;
+                }
                 if (e.props.symbolGroup === group.id) {
-                    groupElements.push(e);
+                    groupElements.push(artboards[j]);
                 }
             }
 
             if (group.id === "default") {
-                for (let k = 0; k < elements.length; ++k) {
-                    let e = elements[k];
+                for (let k = 0; k < artboards.length; ++k) {
+                    let e = artboards[k];
                     if (!symbolGroups.find(x => x.id === e.props.symbolGroup)) {
                         groupElements.push(e);
                     }
@@ -308,5 +311,54 @@ export default class ToolboxConfiguration {
         });
 
         return Promise.all([spriteUrlPromise, spriteUrl2xPromise]);
+    }
+
+    private static findStateboards(artboards: IArtboard[]): IArtboard[] {
+        let result: IArtboard[] = [];
+        for (let i = 0; i < artboards.length; ++i) {
+            let stateboards = artboards[i].getStateboards();
+            for (let j = 0; j < stateboards.length; ++j) {
+                result.push(stateboards[j]);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Defines sort order of symbols.
+     * General rule: symbols are sorted by their "grid" position, row by row, column by column.
+     *
+     * Special rule for states: states are considered to be located in the position of their master
+     * so that they are always grouped together.
+     * A master always comes first. The rest of the states follow the general rule.
+     */
+    private static symbolComparer(a: IArtboard, b: IArtboard) {
+        if (a instanceof IStateboard && a.props.masterId === b.id()) {
+            return 1;
+        }
+        else if (b instanceof IStateboard && b.props.masterId === a.id()) {
+            return -1;
+        }
+
+        let artboard1 = a;
+        let artboard2 = b;
+        let sameMaster = a instanceof IStateboard && b instanceof IStateboard && a.props.masterId === b.props.masterId;
+
+        if (!sameMaster) {
+            if (a instanceof IStateboard) {
+                artboard1 = a.artboard;
+            }
+            if (b instanceof IStateboard) {
+                artboard2 = b.artboard;
+            }
+        }
+
+        let rect1 = artboard1.getBoundingBox();
+        let rect2 = artboard2.getBoundingBox();
+
+        if (rect1.y <= rect2.y + rect2.height && rect1.y + rect1.height >= rect2.y) {
+            return rect1.x - rect2.x;
+        }
+        return rect1.y - rect2.y;
     }
 }

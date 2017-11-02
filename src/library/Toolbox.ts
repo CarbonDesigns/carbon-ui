@@ -4,7 +4,7 @@ import { richApp } from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
 import { app, Point, Symbol, Environment, Rect, IDropElementData, IUIElement } from "carbon-core";
-import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection } from "carbon-core";
+import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection, Matrix } from "carbon-core";
 import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 import { nodeOffset, onCssTransitionEnd } from "../utils/domUtil";
 import LessVars from "../styles/LessVars";
@@ -85,7 +85,8 @@ export class Toolbox extends CarbonStore<ToolboxState>{
             node.style.opacity = ".2";
             onCssTransitionEnd(node, () => {
                 document.body.removeChild(node);
-                Environment.controller.insertAndSelect([element], location.parent, x, y);
+                element.setTransform(Matrix.createTranslationMatrix(Math.round(x), Math.round(y)));
+                Environment.controller.insertAndSelect([element], location.parent);
                 this.onElementAdded(info, stencil);
             }, LessVars.stencilAnimationTime);
         }, 1);
@@ -136,7 +137,9 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         var store = this.stores[info.stencilType];
         var element = store.createElement(stencil, info);
 
-        app.assignNewName(element);
+        if (!element.name()) {
+            element.name(app.activePage.nameProvider.createNewName(stencil.title));
+        }
         this.fitToViewportIfNeeded(element);
 
         return element;

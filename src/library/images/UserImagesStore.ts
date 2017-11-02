@@ -38,7 +38,7 @@ class UserImagesStore extends CarbonStore<UserImagesStoreState> implements ITool
         return this.state.images.find(img => img.id === info.stencilId);
     }
 
-    createElement(stencil) {
+    createElement(stencil: UserImageStencil) {
         var element = new Image();
         element.setProps({
             width: stencil.realWidth,

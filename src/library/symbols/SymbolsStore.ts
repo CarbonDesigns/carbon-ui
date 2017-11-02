@@ -50,7 +50,9 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         let page = app.getImmediateChildById(stencil.pageId);
         let artboard = page.findNodeByIdBreadthFirst<IArtboard>(stencil.artboardId);
         if (artboard.props.insertAsContent) {
-            return artboard.children[0].clone();
+            let clone = artboard.children[0].clone();
+            clone.name(null);
+            return clone;
         }
 
         let symbol = new Symbol();

@@ -47,14 +47,17 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         return null;
     }
     createElement(stencil: SpriteStencil) {
-        let artboard = app.findNodeByIdBreadthFirst<IArtboard>(stencil.id);
+        let page = app.getImmediateChildById(stencil.pageId);
+        let artboard = page.findNodeByIdBreadthFirst<IArtboard>(stencil.id);
         if (artboard.props.insertAsContent) {
-            return artboard.children[0].clone();
+            let clone = artboard.children[0].clone();
+            clone.name(null);
+            return clone;
         }
 
-        var element = new Symbol();
-        element.source({ pageId: stencil.pageId, artboardId: stencil.id });
-        return element;
+        let symbol = new Symbol();
+        symbol.source({ pageId: stencil.pageId, artboardId: stencil.id });
+        return symbol;
     }
     elementAdded() {
     }

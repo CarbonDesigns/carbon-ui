@@ -62,7 +62,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         let element = new Image();
         let page = app.getImmediateChildById(stencil.pageId);
         let sourceElement = page.findNodeByIdBreadthFirst(stencil.id);
-        let artboard = sourceElement.findAncestorOfType(Artboard);
+        let artboard = sourceElement.findAncestorOfType<IArtboard>(Artboard);
 
         element.setProps({
             width: stencil.realWidth,

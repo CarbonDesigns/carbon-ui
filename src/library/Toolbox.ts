@@ -137,7 +137,9 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         var store = this.stores[info.stencilType];
         var element = store.createElement(stencil, info);
 
-        app.assignNewName(element);
+        if (!element.name()) {
+            element.name(app.activePage.nameProvider.createNewName(stencil.title));
+        }
         this.fitToViewportIfNeeded(element);
 
         return element;

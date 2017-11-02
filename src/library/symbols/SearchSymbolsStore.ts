@@ -4,7 +4,7 @@ import { handles, CarbonStore, dispatchAction } from "../../CarbonFlux";
 import ToolboxConfiguration from "../ToolboxConfiguration";
 import { CarbonAction } from "../../CarbonActions";
 import { app, Symbol, IPage } from "carbon-core";
-import { ToolboxConfig, SpriteStencil, ToolboxGroup, IToolboxStore, StencilInfo, SpriteStencilInfo } from "../LibraryDefs";
+import { ToolboxConfig, SpriteStencil, ToolboxGroup, IToolboxStore, StencilInfo, SpriteStencilInfo, SymbolStencil } from "../LibraryDefs";
 import Toolbox from "../Toolbox";
 import symbolsStore from "./SymbolsStore";
 
@@ -55,7 +55,7 @@ class SearchSymbolsStore extends CarbonStore<SearchSymbolsStoreState> implements
         return null;
     }
 
-    createElement(stencil: SpriteStencil) {
+    createElement(stencil: SymbolStencil) {
         return symbolsStore.createElement(stencil);
     }
 

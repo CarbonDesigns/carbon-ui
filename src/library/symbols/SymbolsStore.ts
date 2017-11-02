@@ -4,7 +4,7 @@ import { CarbonAction } from "../../CarbonActions";
 import { SymbolsAction } from "./SymbolsActions";
 import ToolboxConfiguration from "../ToolboxConfiguration";
 import Toolbox from "../Toolbox";
-import { IToolboxStore, StencilInfo, ToolboxConfig, SpriteStencil, SpriteStencilInfo } from "../LibraryDefs";
+import { IToolboxStore, StencilInfo, ToolboxConfig, SpriteStencil, SpriteStencilInfo, SymbolStencil } from "../LibraryDefs";
 import { Operation } from "../../shared/Operation";
 
 export type SymbolsStoreState = {
@@ -46,9 +46,9 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         }
         return null;
     }
-    createElement(stencil: SpriteStencil) {
+    createElement(stencil: SymbolStencil) {
         let page = app.getImmediateChildById(stencil.pageId);
-        let artboard = page.findNodeByIdBreadthFirst<IArtboard>(stencil.id);
+        let artboard = page.findNodeByIdBreadthFirst<IArtboard>(stencil.artboardId);
         if (artboard.props.insertAsContent) {
             let clone = artboard.children[0].clone();
             clone.name(null);
@@ -56,7 +56,10 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         }
 
         let symbol = new Symbol();
-        symbol.source({ pageId: stencil.pageId, artboardId: stencil.id });
+        symbol.setProps({
+            source: { pageId: stencil.pageId, artboardId: stencil.artboardId },
+            stateId: stencil.stateId
+        });
         return symbol;
     }
     elementAdded() {

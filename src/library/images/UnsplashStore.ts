@@ -122,12 +122,12 @@ export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IT
             });
     }
 
-    handleResults(data, start: number): IPaginatedResult<any>{
+    handleResults(data, start: number): IPaginatedResult<UnsplashStencil>{
         var page = data.pageData.map(x =>{
             return {
                 id: x.id,
                 type: this.storeType,
-                name: x.width + "x" + x.height + " " + x.categories.map(x => x.title).join(", "),
+                title: x.description || `Image ${x.width}x${x.height}`,
                 thumbUrl: x.urls.small,
                 url: x.urls.full,
                 realWidth: x.width,

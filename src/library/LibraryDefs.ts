@@ -15,6 +15,11 @@ export interface SpriteStencil extends Stencil {
     pageId: string;
 }
 
+export interface SymbolStencil extends SpriteStencil {
+    artboardId: string;
+    stateId?: string;
+}
+
 export interface DataStencil extends Stencil {
     examples: (string | number)[];
 }

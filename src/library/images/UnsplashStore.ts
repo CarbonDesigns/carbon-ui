@@ -127,7 +127,7 @@ export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IT
             return {
                 id: x.id,
                 type: this.storeType,
-                title: x.description || "Image",
+                title: x.description || `Image ${x.width}x${x.height}`,
                 thumbUrl: x.urls.small,
                 url: x.urls.full,
                 realWidth: x.width,

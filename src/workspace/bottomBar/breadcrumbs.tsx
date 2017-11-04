@@ -152,22 +152,7 @@ export default class Breadcrumbs extends Component<any, any> {
         if (element.exitIsolation) {
             app.actionManager.invoke("exitisolation");
         }
-        var e = this._getElement(element);
-        if(e) {
-            Selection.makeSelection([e]);
-        }
-    }
-
-    _getElement(element) {
-        if (this.state.selection.count() === 1) {
-            var e = this.state.selection.elements[0];
-            while (e && e.parent && e.id() !== element.id) {
-                e = e.parent();
-            }
-
-            return e;
-        }
-        return element;
+        Selection.makeSelection([element.element]);
     }
 
     _arrow(isLast) {
@@ -179,8 +164,7 @@ export default class Breadcrumbs extends Component<any, any> {
 
     _highlight(element) {
         if (element) {
-            var e = this._getElement(element);
-            Environment.view._highlightTarget = e;
+            Environment.view._highlightTarget = element.element;
         } else {
             delete Environment.view._highlightTarget;
         }

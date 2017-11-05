@@ -481,6 +481,7 @@ export default
         "type.Y": "Clickspot",
         "type.B": "Box",
         "type.i": "Shadow",
+        "type.isc": "Icon",
         "type.ig": "Container",
         "type.af": "Frame",
         "@frame": "Frame",
@@ -642,6 +643,10 @@ export default
         "@status.tryNow": "Try now",
         "@status.serverless": "Nothing will be saved on the server.",
         "@status.serverless2": "The app is started in the serverless mode. This is used for development.",
+
+        "@rowsCount":"Rows",
+        "@colsCount":"Columns",
+        "@iconCellSize":"Icon size",
 
         "@textMode": "Text mode",
         "@textMode.block": "Block",

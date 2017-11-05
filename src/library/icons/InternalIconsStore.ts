@@ -229,7 +229,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         var elements: IUIElement[] = [];
 
         artboard.applyVisitor(e => {
-            if (e.hasFlags(UIElementFlags.Icon)) {
+            if (e.hasFlags(UIElementFlags.Icon) && e.children && e.children.length) {
                 elements.push(e);
             }
         });

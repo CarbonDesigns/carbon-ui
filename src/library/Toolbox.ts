@@ -4,7 +4,7 @@ import { richApp } from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
 import { app, Point, Symbol, Environment, Rect, IDropElementData, IUIElement } from "carbon-core";
-import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection } from "carbon-core";
+import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection, Matrix } from "carbon-core";
 import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 import { nodeOffset, onCssTransitionEnd } from "../utils/domUtil";
 import LessVars from "../styles/LessVars";
@@ -17,7 +17,8 @@ interface Interaction {
     rejectDrop: (reason?: any) => void;
 
     placeholder: IUIElement;
-    stencil: StencilInfo;
+    stencilInfo: StencilInfo;
+    stencil: Stencil;
 }
 
 interface ToolboxState {
@@ -51,8 +52,9 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         }
     }
 
-    clicked(e: StencilClickEvent, stencil: StencilInfo) {
-        var element = this.elementFromTemplate(stencil);
+    clicked(e: StencilClickEvent, info: StencilInfo) {
+        let stencil = this.findStencil(info);
+        var element = this.elementFromTemplate(info, stencil);
         var scale = Environment.view.scale();
         var location = Environment.controller.choosePasteLocation([element], e.ctrlKey || e.metaKey);
         var w = element.boundaryRect().width;
@@ -75,6 +77,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         var nodeScaleX = w * scale/e.currentTarget.clientWidth;
         var nodeScaleY = h * scale/e.currentTarget.clientHeight;
 
+        node.classList.add("stencil_animate");
         document.body.appendChild(node);
         //set attributes in the new cycle to kick off css animation
         setTimeout(() => {
@@ -82,15 +85,17 @@ export class Toolbox extends CarbonStore<ToolboxState>{
             node.style.opacity = ".2";
             onCssTransitionEnd(node, () => {
                 document.body.removeChild(node);
-                Environment.controller.insertAndSelect([element], location.parent, x, y);
-                this.onElementAdded(stencil);
+                element.setTransform(Matrix.createTranslationMatrix(Math.round(x), Math.round(y)));
+                Environment.controller.insertAndSelect([element], location.parent);
+                this.onElementAdded(info, stencil);
             }, LessVars.stencilAnimationTime);
         }, 1);
     }
 
     onDragStart = (event, interaction: Interaction) => {
-        interaction.stencil = { ...event.target.dataset };
-        var element = this.elementFromTemplate(event.target.dataset);
+        interaction.stencilInfo = { ...event.target.dataset };
+        interaction.stencil = this.findStencil(interaction.stencilInfo);
+        var element = this.elementFromTemplate(interaction.stencilInfo, interaction.stencil);
         interaction.placeholder = element;
         interaction.dropPromise = new Promise<IDropElementData>((resolve, reject) => {
             interaction.resolveDrop = resolve;
@@ -99,13 +104,10 @@ export class Toolbox extends CarbonStore<ToolboxState>{
     };
     onDragEnter = (event, interaction: Interaction) => {
         event.dragEnter.classList.add("dragover"); //#viewport
-        app.activePage.add(interaction.placeholder, ChangeMode.Self);
-        Selection.makeSelection([interaction.placeholder]);
         Environment.controller.beginDragElement(event, interaction.placeholder, interaction.dropPromise);
     };
     onDragLeave = (event, interaction: Interaction) => {
         event.dragLeave.classList.remove("dragover"); //#viewport
-        app.activePage.remove(interaction.placeholder, ChangeMode.Self);
         (interaction.placeholder as any).runtimeProps.ctxl = 2;
         interaction.rejectDrop(event);
         interaction.dropPromise = new Promise((resolve, reject) => {
@@ -119,21 +121,21 @@ export class Toolbox extends CarbonStore<ToolboxState>{
 
         let eventData = Environment.controller.createEventData(event);
 
-        app.activePage.remove(interaction.placeholder, ChangeMode.Self);
         interaction.dropElement.classList.remove("dragover"); //#viewport
 
-        interaction.dropPromise.then(() => this.onElementAdded(interaction.stencil));
+        interaction.dropPromise.then(() => this.onElementAdded(interaction.stencilInfo, interaction.stencil));
         interaction.resolveDrop({ elements: [interaction.placeholder], e: event });
 
         //analytics.event("Toolbox", "Drag-drop", interaction.templateType + "/" + interaction.templateId);
     };
 
-    elementFromTemplate(info: StencilInfo) {
+    elementFromTemplate(info: StencilInfo, stencil: Stencil) {
         var store = this.stores[info.stencilType];
-        var stencil = store.findStencil(info);
         var element = store.createElement(stencil, info);
 
-        app.assignNewName(element);
+        if (!element.name()) {
+            element.name(app.activePage.nameProvider.createNewName(stencil.title));
+        }
         this.fitToViewportIfNeeded(element);
 
         return element;
@@ -167,12 +169,16 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         }
     }
 
-    private onElementAdded(info: StencilInfo) {
-        var store = this.stores[info.stencilType];
-        let stencil = store.findStencil(info);
+    private onElementAdded(info: StencilInfo, stencil: Stencil) {
+        let store = this.stores[info.stencilType];
         store.elementAdded(stencil);
 
         dispatchAction({ type: "Stencils_Added", stencilType: info.stencilType, stencil, async: true });
+    }
+
+    private findStencil(info: StencilInfo) {
+        var store = this.stores[info.stencilType];
+        return store.findStencil(info);
     }
 
     private setupDragAndDrop() {

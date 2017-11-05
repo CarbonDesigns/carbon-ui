@@ -417,10 +417,10 @@ export default
         "@loading": "Loading...", //
         "@empty": "Nothing found", //
         "refresh.toolbox": "Refresh library", //
-        "@tilesize": "Tile size",
-        "@tilesize.small": "Small (1x1)",
-        "@tilesize.large": "Wide (1x2)",
-        "@tilesize.xlarge": "Large (2x2)",
+        "@tilesize": "Thumbnail appearance",
+        "@tilesize.small": "Small tile (1x1)",
+        "@tilesize.large": "Wide tile (1x2)",
+        "@tilesize.xlarge": "Large tile (2x2)",
         "@ascontent": "Insert as content",
         "@groupname": "Group name",
         "@selectedPoint": "Selected point",

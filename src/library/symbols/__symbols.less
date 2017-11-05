@@ -295,10 +295,7 @@
     }
 }
 
-.dragging{
-    transition-property: transform, opacity;
-    transition-duration: 500ms;
-    transition-timing-function: @ease-out-cubic;
+.stencil_dragging{
     transform-origin: top left;
 
     &.icon {
@@ -312,6 +309,12 @@
     &.image {
         background: no-repeat center center;
     }
+}
+
+.stencil_animate {
+    transition-property: transform, opacity;
+    transition-duration: 500ms;
+    transition-timing-function: @ease-out-cubic;
 }
 
 i.custom-stencil{

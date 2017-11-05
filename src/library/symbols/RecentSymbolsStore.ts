@@ -1,7 +1,7 @@
 import { app, Symbol } from "carbon-core";
 import { CarbonStore } from "../../CarbonFlux";
 import { SymbolsAction } from "./SymbolsActions";
-import { ToolboxConfig, SpriteStencil, StencilInfo, SpriteStencilInfo } from "../LibraryDefs";
+import { ToolboxConfig, SpriteStencil, StencilInfo, SpriteStencilInfo, SymbolStencil } from "../LibraryDefs";
 import symbolsStore from "./SymbolsStore";
 import searchSymbolsStore from "./SearchSymbolsStore";
 import Toolbox from "../Toolbox";
@@ -35,7 +35,7 @@ class RecentSymbolsStore extends CarbonStore<RecentSymbolsStoreState> {
         return this.state.recentConfig.groups[0].items.find(x => x.id === info.stencilId && x.pageId === info.pageId);
     }
 
-    createElement(stencil: SpriteStencil) {
+    createElement(stencil: SymbolStencil) {
         return symbolsStore.createElement(stencil);
     }
 

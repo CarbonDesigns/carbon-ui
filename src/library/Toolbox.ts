@@ -104,13 +104,10 @@ export class Toolbox extends CarbonStore<ToolboxState>{
     };
     onDragEnter = (event, interaction: Interaction) => {
         event.dragEnter.classList.add("dragover"); //#viewport
-        app.activePage.add(interaction.placeholder, ChangeMode.Self);
-        Selection.makeSelection([interaction.placeholder]);
         Environment.controller.beginDragElement(event, interaction.placeholder, interaction.dropPromise);
     };
     onDragLeave = (event, interaction: Interaction) => {
         event.dragLeave.classList.remove("dragover"); //#viewport
-        app.activePage.remove(interaction.placeholder, ChangeMode.Self);
         (interaction.placeholder as any).runtimeProps.ctxl = 2;
         interaction.rejectDrop(event);
         interaction.dropPromise = new Promise((resolve, reject) => {
@@ -124,7 +121,6 @@ export class Toolbox extends CarbonStore<ToolboxState>{
 
         let eventData = Environment.controller.createEventData(event);
 
-        app.activePage.remove(interaction.placeholder, ChangeMode.Self);
         interaction.dropElement.classList.remove("dragover"); //#viewport
 
         interaction.dropPromise.then(() => this.onElementAdded(interaction.stencilInfo, interaction.stencil));

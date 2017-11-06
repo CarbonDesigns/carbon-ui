@@ -2,7 +2,7 @@ import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import LayersActions, { LayerAction } from "./LayersActions";
-import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell } from "carbon-core";
+import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell, Primitive, SetPropsPrimitive } from "carbon-core";
 import { iconType } from "../utils/appUtils";
 
 type IdMap = { [id: string]: boolean };
@@ -151,6 +151,9 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             case "Carbon_Selection":
                 this.onElementSelected(action.composite);
                 return;
+            case "Carbon_AppChanged":
+                this.onAppChanged(action.primitives);
+                return;
             case "Carbon_AppUpdated":
                 this.refreshLayersTree();
                 return;
@@ -217,12 +220,11 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         this.setState({ selected, expanded, scrollToLayer });
     }
 
-    @handles(CarbonActions.appChanged)
-    onAppChanged({ primitives }) {
+    onAppChanged(primitives: Primitive[]) {
         let activePageId = app.activePage.id();
         let refreshState = false;
 
-        let propChanges = [];
+        let propChanges: SetPropsPrimitive[] = [];
         let hasTreeChanges = false;
 
         for (let i = 0; i < primitives.length; i++) {

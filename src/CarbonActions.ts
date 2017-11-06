@@ -1,8 +1,9 @@
-import { ILayer, IApp, ArtboardType, IArtboard, IPage, AppSettings, IUIElement, IDataNode, ISelectComposite } from "carbon-core";
+import { ILayer, IApp, ArtboardType, IArtboard, IPage, AppSettings, IUIElement, IDataNode, ISelectComposite, IPrimitive, Primitive } from "carbon-core";
 
 export type CarbonAction =
     { type: "Carbon_AppLoaded" } |
     { type: "Carbon_AppUpdated" } |
+    { type: "Carbon_AppChanged", primitives: Primitive[] } |
     { type: "Carbon_AppSettingsChanged", settings: AppSettings } |
     { type: "Carbon_Selection", composite: ISelectComposite } |
     { type: "Carbon_PropertiesRequested", composite: ISelectComposite } |
@@ -68,12 +69,6 @@ var CarbonActions = {
         return {
             type:"CARBON_LAYER_CHANGED",
             layer
-        }
-    },
-    appChanged:(primitives)=>{
-        return {
-            type:"CARBON_APP_CHANGED",
-            primitives
         }
     },
     recentColorsChanged:(colors)=>{

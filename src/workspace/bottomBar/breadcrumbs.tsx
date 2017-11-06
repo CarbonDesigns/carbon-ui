@@ -1,6 +1,6 @@
 import React from 'react';
 import { CompositeElement, PrimitiveType } from "carbon-core";
-import { app, Artboard, Selection, Environment, LayerType, IIsolationLayer, Invalidate } from "carbon-core";
+import { app, Artboard, Selection, Environment, LayerType, IIsolationLayer, Invalidate, IComposite, Primitive } from "carbon-core";
 import cx from 'classnames';
 import { listenTo, Component } from "../../CarbonFlux";
 import { iconType } from "../../utils/appUtils";
@@ -9,10 +9,9 @@ import {
     FormattedNumber,
     FormattedPlural
 } from "react-intl";
+import { CarbonAction } from "../../CarbonActions";
 
 export default class Breadcrumbs extends Component<any, any> {
-    [name: string]: any;
-
     constructor(props) {
         super(props);
         this.state = {
@@ -20,6 +19,21 @@ export default class Breadcrumbs extends Component<any, any> {
             elements: [],
             selection: null
         };
+    }
+
+    canHandleActions() {
+        return true;
+    }
+
+    onAction(action: CarbonAction) {
+        switch (action.type) {
+            case "Carbon_Selection":
+                this.onElementSelected(action.composite);
+                return;
+            case "Carbon_AppChanged":
+                this.onAppChanged(action.primitives);
+                return;
+        }
     }
 
     _buildBreadcrumbElements(element) {
@@ -76,10 +90,10 @@ export default class Breadcrumbs extends Component<any, any> {
         this.onElementSelected(selection);
     }
 
-    onElementSelected(selection) {
+    onElementSelected(selection: IComposite) {
         var elements = [];
         var parentId = null;
-        if (selection.count() === 1) {
+        if (selection.elements.length === 1) {
             elements = this._buildBreadcrumbElements(selection.elements[0]);
             parentId = selection.elements[0].parent().id();
         } else {
@@ -89,7 +103,7 @@ export default class Breadcrumbs extends Component<any, any> {
         this.setState({ elements, selection, parentId });
     }
 
-    onAppChanged(primitives) {
+    onAppChanged(primitives: Primitive[]) {
         var current = this.state.selection;
         if (!current) {
             return;
@@ -115,28 +129,7 @@ export default class Breadcrumbs extends Component<any, any> {
         }
 
         if (needUpdate) {
-            setTimeout(() => this.onElementSelected(current), 0);
-        }
-    }
-
-    //TODO: breadcrumbs should use PropertyTracker instead of synclog
-    componentDidMount() {
-        app.onLoad(() => {
-            this._onElementSelectedSubscribtion = Selection.onElementSelected.bind(this, this.onSelectionMade);
-            this._syncLogToken = app.changed.bind(this, this.onAppChanged);
-        });
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        if (this._onElementSelectedSubscribtion) {
-            this._onElementSelectedSubscribtion.dispose();
-            delete this._onElementSelectedSubscribtion;
-        }
-
-        if (this._syncLogToken) {
-            this._syncLogToken.dispose();
-            delete this._syncLogToken;
+            this.onElementSelected(current);
         }
     }
 

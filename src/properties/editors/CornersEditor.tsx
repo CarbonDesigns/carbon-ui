@@ -86,20 +86,20 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
                         corner_mods['active'  ] = active;
                         corner_mods['disabled'] = !active;
 
-                        switch ((val+'').length) {
-                            case 0  :
-                            case 1  :
-                            case 2  : value_mods = null    ; break;
-                            case 3  : value_mods = 'triple'; break;
-                            default : value_mods = 'large' ;
+                        if (val > 999) {
+                            value_mods = "large";
                         }
+                        else if (val > 99) {
+                            value_mods = "triple";
+                        }
+
                         return <div key={c} className={b("corner", corner_mods)}>
                                 <div className={b("background")}></div>
                                 <div className={b("value", value_mods)}>
                                     <input
                                         type="text"
                                         className={b("value-input")}
-                                        value={val}
+                                        value={val === undefined ? "" : val + ""}
                                         onChange={this._assignOnChange(c)}
                                         onBlur={  this._assignOnBlur(c)}
                                         onFocus={ this._selectOnFocus}

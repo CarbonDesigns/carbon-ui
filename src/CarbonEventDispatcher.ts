@@ -18,19 +18,19 @@ export function registerEvents() {
     });
 
     app.updated.bind(() => {
-        let token = app.resourceAdded.bindAsync((resourceType, resource) => dispatchAction({type: "Carbon_ResourceAdded", resourceType, resource}));
+        let token = app.resourceAdded.bindAsync((resourceType, resource) => dispatchAction({ type: "Carbon_ResourceAdded", resourceType, resource }));
         frequentTokens.push(token);
 
-        token = app.resourceChanged.bindAsync((resourceType, resource) => dispatchAction({type: "Carbon_ResourceChanged", resourceType, resource}));
+        token = app.resourceChanged.bindAsync((resourceType, resource) => dispatchAction({ type: "Carbon_ResourceChanged", resourceType, resource }));
         frequentTokens.push(token);
 
-        token = app.resourcePageChanged.bindAsync((page) => dispatchAction({type: "Carbon_ResourcePageChanged", page}));
+        token = app.resourcePageChanged.bindAsync((page) => dispatchAction({ type: "Carbon_ResourcePageChanged", page }));
         frequentTokens.push(token);
 
-        token = app.resourceDeleted.bindAsync((resourceType, resource, parent) => dispatchAction({type: "Carbon_ResourceDeleted", resourceType, resource, parent}));
+        token = app.resourceDeleted.bindAsync((resourceType, resource, parent) => dispatchAction({ type: "Carbon_ResourceDeleted", resourceType, resource, parent }));
         frequentTokens.push(token);
 
-        token = app.changed.bindAsync(events => dispatch((CarbonActions.appChanged(events))));
+        token = app.changed.bindAsync(primitives => dispatchAction({ type: "Carbon_AppChanged", primitives }));
         frequentTokens.push(token);
 
         token = app.recentColorsChanged.bindAsync(colors => dispatch((CarbonActions.recentColorsChanged(colors))));
@@ -52,10 +52,10 @@ export function registerEvents() {
     });
 
     Selection.onElementSelected.bindAsync((e) => {
-        dispatchAction({type: "Carbon_Selection", composite: e})
+        dispatchAction({ type: "Carbon_Selection", composite: e })
     });
     Selection.propertiesRequested.bindAsync((e) => {
-        dispatchAction({type: "Carbon_PropertiesRequested", composite: e})
+        dispatchAction({ type: "Carbon_PropertiesRequested", composite: e })
     });
 
     Environment.detaching.bind(() => {
@@ -69,7 +69,7 @@ export function registerEvents() {
             workspaceTokens.push(token);
         }
 
-        if (view.activeLayerChanged){
+        if (view.activeLayerChanged) {
             let token = view.activeLayerChanged.bindAsync(layer => dispatch(CarbonActions.activeLayerChanged(layer)));
             workspaceTokens.push(token);
         }
@@ -95,16 +95,16 @@ export function registerEvents() {
 
     app.actionManager.actionPerformed.bindAsync((name) => dispatch(CarbonActions.actionPerformed(name)));
 
-    backend.requestStarted.bind(url => dispatchAction({type: "Backend_RequestStarted", async: true, url}));
-    backend.requestEnded.bind(url => dispatchAction({type: "Backend_RequestEnded", async: true, url}));
+    backend.requestStarted.bind(url => dispatchAction({ type: "Backend_RequestStarted", async: true, url }));
+    backend.requestEnded.bind(url => dispatchAction({ type: "Backend_RequestEnded", async: true, url }));
 
     backend.connectionStateChanged.bind(state => {
-        if (state.type === "stopped" && state.idle){
-            dispatchAction({type: "Dialog_Show", dialogType: "IdleDialog"});
+        if (state.type === "stopped" && state.idle) {
+            dispatchAction({ type: "Dialog_Show", dialogType: "IdleDialog" });
         }
     });
 
-    CommandManager.stateChanged.bind(this, (e)=> {
+    CommandManager.stateChanged.bind(this, (e) => {
         dispatch(AppActions.canUndoRedo(e.canUndo, e.canRedo));
     });
 }

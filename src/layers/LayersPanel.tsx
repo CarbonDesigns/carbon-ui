@@ -119,6 +119,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
             app.actionManager.invoke("cancel");
         }
         else {
+            Selection.clearSelection();
             (app.activePage as IArtboardPage).setActiveArtboard(null);
             var artboards = app.activePage.children;
             Environment.view.ensureScale(artboards);

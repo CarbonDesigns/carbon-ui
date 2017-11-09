@@ -2,115 +2,22 @@ import Dropzone from "dropzone";
 import { dispatch, dispatchAction } from "../CarbonFlux";
 import ImagesActions from "../library/images/ImagesActions";
 import DropzoneRegistry from "./DropzoneRegistry";
-import { } from "carbon-model";
-import {
-    IUIElement, createUUID, IDropElementData, RepeatContainer, IImage,
-    app, backend, Environment, Selection, SvgParser, Matrix, Image, Origin, IDisposable,
-    IContainer
-} from "carbon-core";
+import { IUIElement, createUUID, RepeatContainer, IImage, app, backend, Environment, Selection, SvgParser, Matrix, Image, Origin, IDisposable, IContainer, model, ChangeMode, workspace, IFileElement, FileType } from "carbon-core";
 
-var hiddenInput = document.createElement("div");
-
+const hiddenInput = document.createElement("div");
 const SvgMimeType = "image/svg+xml";
 
-//an image which is dragged, but never actually dropped
-let dragImage: IImage = null;
-let dragPosition;
-
-function readFromSvgFile(f: File) {
-    return new Promise((resolve, reject) => {
-        var reader = new FileReader();
-        var name = f.name;
-        var extPos = name.lastIndexOf('.');
-        if (extPos !== -1) {
-            name = name.substr(0, extPos);
-        }
-
-        reader.onload = (d: any) => {
-            var text = reader.result;
-
-            SvgParser.loadSVGFromString(text).then((result) => {
-                var pos = (dragImage as any).position();
-                var artboard = app.activePage.getArtboardAtPoint(dragPosition);
-                var m = Matrix.createTranslationMatrix(dragPosition.x, dragPosition.y);
-                m = artboard.globalMatrixToLocal(m);
-                if (result.performArrange) {
-                    result.performArrange();
-                }
-                var box = result.getBoundingBox()
-                result.name(name);
-                result.applyTranslation({ x: m.tx - box.x, y: m.ty - box.y });
-                artboard.add(result);
-                resolve();
-            })
-            .catch(reject);
-        }
-        reader.readAsText(f);
-    });
-}
-function insertSvg(data: DataTransfer, e: MouseEvent) {
-    let promises = [];
-
-    if (data.items.length > 1) {
-        app.beginUpdate();
-    }
-
-    for (var i = 0; i < data.items.length; ++i) {
-        var item = data.items[i];
-        if (item.type === SvgMimeType) {
-            promises.push(readFromSvgFile(item.getAsFile()));
-        }
-    }
-
-    if (data.items.length > 1) {
-        Promise.all(promises).finally(() => app.endUpdate());
-    }
-}
-
-function insertDataUrl(image: IImage, file: File) {
-    var reader = new FileReader();
-    reader.onload = (e) => {
-        var dataUrl = reader.result;
-        image.source(Image.createUrlSource(dataUrl));
-    }
-    reader.readAsDataURL(file);
-}
-
-function tryInsertIntoRepeater(e: MouseEvent, images: IImage[]): boolean {
-    if (images.length <= 1) {
-        return false;
-    }
-
-    var eventData = Environment.controller.createEventData(e);
-    var parent = Environment.controller.getCurrentDropTarget(eventData);
-    var repeater = RepeatContainer.tryFindRepeaterParent(parent);
-    if (!repeater) {
-        return false;
-    }
-
-    //let only one image to resize, others will follow
-    for (var i = 1; i < images.length; ++i) {
-        images[i].resizeOnLoad(null);
-    }
-
-    //image is dragged by its center, think how to do this better
-    eventData.x -= Image.NewImageSize / 2;
-    eventData.y -= Image.NewImageSize / 2;
-    repeater.addDroppedElements(parent as IContainer, images, eventData);
-    return true;
-}
-
 interface IDropHandler {
-    imageMap: { [name: string]: IImage };
+    files: IFileElement[];
 
-    resolveDropped: (data: IDropElementData) => void;
+    resolveDropped: () => void;
     rejectDropped: (reason: Error) => void;
 
     resolveUploaded: (urls: string[]) => void;
 }
 
-var dropHandler: IDropHandler = {
-    imageMap: {},
+const dropHandler: IDropHandler = {
+    files: [],
     resolveDropped: null,
     rejectDropped: null,
     resolveUploaded: null
@@ -140,20 +47,19 @@ export default class ImageDrop {
                 dispatch(ImagesActions.userImagesAdded(response.images));
             },
             successmultiple: function (files: Dropzone.DropzoneFile[], response) {
-                //bug here if image is double clicked while other images are being downloaded
                 if (dropHandler.resolveUploaded) {
                     dropHandler.resolveUploaded(response.images.map(x => x.url));
                     dropHandler.resolveUploaded = null;
                 }
 
                 for (var i = 0; i < files.length; i++) {
-                    var image = dropHandler.imageMap[files[i].name];
-                    image.source(Image.createUrlSource(response.images[i].url));
+                    let fileElement = dropHandler.files.find(x => x.name() === files[i].name);
+                    fileElement.setExternalUrl(response.images[i].url);
                 }
             },
             queuecomplete: function () {
                 dispatch(ImagesActions.queueComplete());
-                dropHandler.imageMap = {};
+                dropHandler.files.length = 0;
             },
             error: function (file: Dropzone.DropzoneFile) {
                 if (file.type !== SvgMimeType) {
@@ -161,24 +67,24 @@ export default class ImageDrop {
                 }
             },
 
-            dragenter: function (e) {
-                dragImage = new Image();
-                dragImage.size({ width: Image.NewImageSize, height: Image.NewImageSize });
-                dragImage.source(Image.EmptySource);
-                Selection.makeSelection([dragImage]);
+            dragenter: function (e: DragEvent) {
+                dropHandler.files.length = 0;
 
-                var dropPromise = new Promise<IDropElementData>((resolve, reject) => {
+                for (let i = 0; i < e.dataTransfer.items.length; ++i){
+                    let item = e.dataTransfer.items[i];
+                    let file = model.createFile({ type: item.type as FileType });
+                    dropHandler.files.push(file);
+                }
+
+                let dropPromise = new Promise<void>((resolve, reject) => {
                     dropHandler.resolveDropped = resolve;
                     dropHandler.rejectDropped = reject;
                 });
-                Environment.controller.beginDragElement(e, dragImage, dropPromise);
+                Environment.controller.beginDragElements(e, dropHandler.files, dropPromise);
             },
             dragover: function (e: MouseEvent) {
                 var eventData = Environment.controller.createEventData(e);
                 Environment.controller.onmousemove(eventData);
-
-                // hack to get coordinates
-                dragPosition = (Environment.controller as any)._draggingElement.position();
             },
             dragleave: function (e) {
                 if (dropHandler.rejectDropped) {
@@ -188,45 +94,46 @@ export default class ImageDrop {
             },
             drop: function (e: DragEvent) {
                 Environment.controller.resetCurrentTool();
-                Selection.makeSelection(Selection.previousElements);
 
-                var images = [];
-                for (let i = 0; i < e.dataTransfer.files.length; ++i) {
-                    let image = new Image();
-                    image.size({ width: Image.NewImageSize, height: Image.NewImageSize });
-                    image.source(Image.EmptySource);
-                    image.resizeOnLoad(Origin.TopLeft);
-                    app.assignNewName(image);
+                const maxItemsForIncrementalUpdate = 5;
+                let data = e.dataTransfer;
+                let elements = [];
+                let promises = [];
 
-                    dropHandler.imageMap[e.dataTransfer.files[i].name] = image;
-                    images.push(image);
+                if (data.items.length > maxItemsForIncrementalUpdate) {
+                    app.beginUpdate();
                 }
 
-                var data: DataTransfer = e.dataTransfer;
-                var type = data.items[0].type;
-                if (type === SvgMimeType) {
-                    insertSvg(data, e);
-                    dropHandler.rejectDropped(new Error("cancelled"));
-                    dropHandler.resolveDropped = null;
-                    return;
-                }
-                else if (tryInsertIntoRepeater(e, images)) {
-                    dropHandler.rejectDropped(new Error("cancelled"));
-                    dropHandler.resolveDropped = null;
-                    return;
-                }
-                else if (app.serverless()) {
-                    for (let i = 0; i < images.length; i++) {
-                        insertDataUrl(images[i], data.items[i].getAsFile());
-                    }
+                for (let i = 0; i < data.files.length; ++i) {
+                    let item = data.items[i];
+                    let file = dropHandler.files[i];
+                    let task = file.drop(item.getAsFile());
+                    promises.push(task);
                 }
 
-                dispatchAction({ type: "Library_Tab", area: "library", tabId: "3"});
-                dispatchAction({ type: "Library_Tab", area: "images", tabId: "1"});
+                // if (elements.length && tryInsertIntoRepeater(e, data.files, elements)) {
+                    // if (elements.length === 0) {
+                    //     dropHandler.rejectDropped(new Error("cancelled"));
+                    //     dropHandler.resolveDropped = null;
+                    //     return;
+                    // }
+                //     elements.length = 0;
+                // }
 
-                dropHandler.resolveDropped({ e: e, elements: images });
+                if (dropHandler.files.some(x => x.isImage())) {
+                    dispatchAction({ type: "Library_Tab", area: "library", tabId: "3" });
+                    dispatchAction({ type: "Library_Tab", area: "images", tabId: "1" });
+                }
 
+                dropHandler.rejectDropped(new Error("cancelled"));
                 dropHandler.resolveDropped = null;
+
+                Promise.all(promises)
+                    .finally(() => {
+                        if (data.items.length > maxItemsForIncrementalUpdate) {
+                            app.endUpdate();
+                        }
+                    });
             }
         };
 
@@ -244,7 +151,7 @@ export default class ImageDrop {
             previewTemplate: "<div></div>",
             clickable: [hiddenInput],
 
-            accept: function(file: Dropzone.DropzoneFile, done: () => void) {
+            accept: function (file: Dropzone.DropzoneFile, done: () => void) {
                 if (file.type !== SvgMimeType) {
                     done();
                 }
@@ -284,6 +191,32 @@ export default class ImageDrop {
             }
         }
     }
+
+    private static tryInsertIntoRepeater(e: MouseEvent, files: FileList, images: IImage[]): boolean {
+        if (images.length <= 1) {
+            return false;
+        }
+
+        var eventData = Environment.controller.createEventData(e);
+        var parent = Environment.controller.getCurrentDropTarget();
+        var repeater = RepeatContainer.tryFindRepeaterParent(parent);
+        if (!repeater) {
+            return false;
+        }
+
+        //let only one image to resize, others will follow
+        for (var i = 1; i < images.length; ++i) {
+            images[i].resizeOnLoad(null);
+        }
+
+        //image is dragged by its center, think how to do this better
+        eventData.x -= Image.NewImageSize / 2;
+        eventData.y -= Image.NewImageSize / 2;
+        let droppedElements = repeater.addDroppedElements(parent as IContainer, images, eventData);
+
+        return true;
+    }
+
 }
 
 function onUploadRequested(e) {

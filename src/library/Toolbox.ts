@@ -3,8 +3,8 @@ import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
 import { richApp } from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
-import { app, Point, Symbol, Environment, Rect, IDropElementData, IUIElement } from "carbon-core";
-import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection, Matrix } from "carbon-core";
+import { app, Point, Symbol, Environment, Rect, IUIElement } from "carbon-core";
+import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection, Matrix, workspace } from "carbon-core";
 import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 import { nodeOffset, onCssTransitionEnd } from "../utils/domUtil";
 import LessVars from "../styles/LessVars";
@@ -12,8 +12,8 @@ import LessVars from "../styles/LessVars";
 interface Interaction {
     dropElement: HTMLElement;
 
-    dropPromise: Promise<IDropElementData>;
-    resolveDrop: (data: IDropElementData) => void;
+    dropPromise: Promise<void>;
+    resolveDrop: () => void;
     rejectDrop: (reason?: any) => void;
 
     placeholder: IUIElement;
@@ -97,20 +97,20 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         interaction.stencil = this.findStencil(interaction.stencilInfo);
         var element = this.elementFromTemplate(interaction.stencilInfo, interaction.stencil);
         interaction.placeholder = element;
-        interaction.dropPromise = new Promise<IDropElementData>((resolve, reject) => {
+        interaction.dropPromise = new Promise<void>((resolve, reject) => {
             interaction.resolveDrop = resolve;
             interaction.rejectDrop = reject;
         });
     };
     onDragEnter = (event, interaction: Interaction) => {
         event.dragEnter.classList.add("dragover"); //#viewport
-        Environment.controller.beginDragElement(event, interaction.placeholder, interaction.dropPromise);
+        Environment.controller.beginDragElements(event, [interaction.placeholder], interaction.dropPromise);
     };
     onDragLeave = (event, interaction: Interaction) => {
         event.dragLeave.classList.remove("dragover"); //#viewport
         (interaction.placeholder as any).runtimeProps.ctxl = 2;
         interaction.rejectDrop(event);
-        interaction.dropPromise = new Promise((resolve, reject) => {
+        interaction.dropPromise = new Promise<void>((resolve, reject) => {
             interaction.resolveDrop = resolve;
             interaction.rejectDrop = reject;
         });
@@ -124,7 +124,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         interaction.dropElement.classList.remove("dragover"); //#viewport
 
         interaction.dropPromise.then(() => this.onElementAdded(interaction.stencilInfo, interaction.stencil));
-        interaction.resolveDrop({ elements: [interaction.placeholder], e: event });
+        interaction.resolveDrop();
 
         //analytics.event("Toolbox", "Drag-drop", interaction.templateType + "/" + interaction.templateId);
     };
@@ -136,37 +136,9 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         if (!element.name()) {
             element.name(app.activePage.nameProvider.createNewName(stencil.title));
         }
-        this.fitToViewportIfNeeded(element);
+        workspace.view.fitToViewportIfNeeded(element);
 
         return element;
-    }
-
-    imageSourceToString(source: ImageSource) {
-        switch (source.type) {
-            case ImageSourceType.Url:
-                return "url " + source.url;
-            case ImageSourceType.Element:
-                return "element " + source.elementId;
-            case ImageSourceType.None:
-                return "none";
-        }
-        assertNever(source);
-    }
-
-    private fitToViewportIfNeeded(element: IUIElement) {
-        var viewport = Environment.view.viewportRect();
-        var bounds = new Rect(0, 0, viewport.width * .8, viewport.height * .8);
-        var current = new Rect(0, 0, element.width(), element.height());
-        var fit = current.fit(bounds, true);
-
-        var artboard = Environment.view.page.getActiveArtboard();
-        if (artboard) {
-            fit = fit.fit(artboard.boundaryRect(), true);
-        }
-
-        if (fit.width !== current.width || fit.height !== current.height) {
-            element.applyScaling(new Point(fit.width/current.width, fit.height/current.height), Point.Zero);
-        }
     }
 
     private onElementAdded(info: StencilInfo, stencil: Stencil) {

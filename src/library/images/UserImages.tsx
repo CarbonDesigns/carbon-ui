@@ -172,7 +172,7 @@ class UploadQueue extends Component<any, any>{
             if (filtered_list.size > 0) {
                 list = [];
                 filtered_list.map((file) => {
-                    list.unshift(<UploadPreview key={file.get('id')} file={file} />)
+                    list.unshift(<UploadPreview key={file.get('name')} file={file} />)
                 })
             }
         }

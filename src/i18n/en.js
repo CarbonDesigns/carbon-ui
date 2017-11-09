@@ -473,6 +473,7 @@ export default
         "type.h": "Canvas",
         "type.V": "Dock",
         "type.v": "Stack",
+        "type.*": "File",
         "type.j": "Default font style",
         "type.J": "Text",
         "type.P": "Page",

@@ -2,7 +2,7 @@ import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import LayersActions, { LayerAction } from "./LayersActions";
-import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell } from "carbon-core";
+import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell, Primitive, SetPropsPrimitive } from "carbon-core";
 import { iconType } from "../utils/appUtils";
 
 type IdMap = { [id: string]: boolean };
@@ -44,8 +44,8 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             let artboard = app.activePage.getActiveArtboard();
             if (artboard) {
                 elements = artboard.children;
-            } else {
-                topLevel = true;
+            }
+            else {
                 elements = app.activePage.children;
             }
         }
@@ -53,14 +53,14 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         //first and last elements are paddings for virtual list, need to handle it better
         let layers = [null];
         for (let i = elements.length - 1; i >= 0; --i) {
-            this.addLayerToList(layers, expandedMap, elements[i], 0, !topLevel);
+            this.addLayerToList(layers, expandedMap, elements[i], 0);
         }
         layers.push(null);
 
         this.setState({ layers: layers });
     }
 
-    addLayerToList(layers: LayerNode[], expandedMap: IdMap, element, indent, recursive = true, nodeMutator = null) {
+    addLayerToList(layers: LayerNode[], expandedMap: IdMap, element, indent, nodeMutator = null) {
         let elementId = element.id();
         let node: LayerNode = {
             indent: indent,
@@ -68,7 +68,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             element: element,
             canSelect: element.canSelect() || element.runtimeProps.selectFromLayersPanel,
             type: iconType(element),
-            hasChildren: element.children && element.children.length && recursive,
+            hasChildren: element.children && element.children.length,
             version: 0
         };
 
@@ -84,14 +84,14 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         if (element.t === Types.RepeatContainer && element.children.length && expandedMap[node.id]) {
             let cell = (element as IRepeatContainer).activeCell();
             for (let i = cell.children.length - 1; i >= 0; --i) {
-                this.addLayerToList(layers, expandedMap, cell.children[i], indent + 1, true, n => {
+                this.addLayerToList(layers, expandedMap, cell.children[i], indent + 1, n => {
                     n.repeater = element;
                 });
             }
         }
         else if (element.children && expandedMap[node.id]) {
             for (let i = element.children.length - 1; i >= 0; --i) {
-                this.addLayerToList(layers, expandedMap, element.children[i], indent + 1, true, nodeMutator);
+                this.addLayerToList(layers, expandedMap, element.children[i], indent + 1, nodeMutator);
             }
         }
     }
@@ -150,6 +150,9 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         switch (action.type) {
             case "Carbon_Selection":
                 this.onElementSelected(action.composite);
+                return;
+            case "Carbon_AppChanged":
+                this.onAppChanged(action.primitives);
                 return;
             case "Carbon_AppUpdated":
                 this.refreshLayersTree();
@@ -217,12 +220,11 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         this.setState({ selected, expanded, scrollToLayer });
     }
 
-    @handles(CarbonActions.appChanged)
-    onAppChanged({ primitives }) {
+    onAppChanged(primitives: Primitive[]) {
         let activePageId = app.activePage.id();
         let refreshState = false;
 
-        let propChanges = [];
+        let propChanges: SetPropsPrimitive[] = [];
         let hasTreeChanges = false;
 
         for (let i = 0; i < primitives.length; i++) {
@@ -269,7 +271,9 @@ class LayersStore extends CarbonStore<LayersStoreState> {
 
     @handles(CarbonActions.activeArtboardChanged)
     onActiveArtboardChanged({ newArtboard }) {
-        this.refreshLayersTree();
+        let expandedMap = {};
+        this.setState({ expanded: expandedMap });
+        this.refreshLayersTree(expandedMap);
     }
 
     @handles(CarbonActions.activeLayerChanged)

@@ -1,22 +1,22 @@
-import React                  from 'react';
-import ReactDom               from 'react-dom';
-import {FormattedMessage} from "react-intl";
-import cx                     from 'classnames';
-import Dots                   from "../../shared/dots";
-import FlyoutButton           from "../../shared/FlyoutButton";
-import FlyoutActions          from "../../FlyoutActions";
-import ScrollContainer        from "../../shared/ScrollContainer";
-import EnterInput             from "../../shared/EnterInput";
+import React from 'react';
+import ReactDom from 'react-dom';
+import { FormattedMessage } from "react-intl";
+import cx from 'classnames';
+import Dots from "../../shared/dots";
+import FlyoutButton from "../../shared/FlyoutButton";
+import FlyoutActions from "../../FlyoutActions";
+import ScrollContainer from "../../shared/ScrollContainer";
+import EnterInput from "../../shared/EnterInput";
 import {
     Component,
     handles,
     Dispatcher
-}                             from "../../CarbonFlux";
-import CarbonActions          from "../../CarbonActions";
-import {richApp}              from "../../RichApp";
+} from "../../CarbonFlux";
+import CarbonActions from "../../CarbonActions";
+import { richApp } from "../../RichApp";
 import { PropertyTracker, Page, app, IPage } from "carbon-core";
 import bem from '../../utils/commonUtils';
-import {GuiButton} from "../../shared/ui/GuiComponents";
+import { GuiButton } from "../../shared/ui/GuiComponents";
 
 import EditableList from "../../shared/EditableList";
 
@@ -141,26 +141,25 @@ const PageList = EditableList as PageList;
 // };
 
 class PagesList extends React.Component<any, any> {
-
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state = {version:0};
+        this.state = { version: 0 };
     }
 
     _pageClicked = (page: IPage) => {
         var pageId = page.id();
         app.setActivePageById(pageId);
-        this.setState({version: this.state.version + 1});
+        this.setState({ version: this.state.version + 1 });
     };
 
     _pageRenamed = (newName: string, page: IPage) => {
-        page.setProps({name:newName});
-        this.setState({version: this.state.version + 1});
+        page.setProps({ name: newName });
+        this.setState({ version: this.state.version + 1 });
     };
 
     _pageDeleted = (page: IPage) => {
         app.removePage(page);
-        this.setState({version: this.state.version + 1});
+        this.setState({ version: this.state.version + 1 });
     };
 
     _newPageClicked = () => {
@@ -176,11 +175,11 @@ class PagesList extends React.Component<any, any> {
         return page.props.name;
     }
 
-    render(){
+    render() {
         return <div className="pagesbar__panel flyout__content">
             <div className="pagesbar__panel-controls">
                 <div className="pagesbar__new-board">
-                    <GuiButton mods={["full", "hover-success"]} onClick={this._newPageClicked} caption="New page" bold icon="new-page"/>
+                    <GuiButton mods={["full", "hover-success"]} onClick={this._newPageClicked} caption="New page" bold icon="new-page" />
                 </div>
             </div>
             <PageList data={app.pages} idGetter={this.pageId} nameGetter={this.pageName}
@@ -197,50 +196,50 @@ class PagesList extends React.Component<any, any> {
 
 export default class PagesBar extends Component<any, any> {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         super.componentDidMount();
         PropertyTracker.propertyChanged.bind(this, this._propsChanged);
         PropertyTracker.elementInserted.bind(this, this._elementInsertedOrDeleted);
         PropertyTracker.elementDeleted.bind(this, this._elementInsertedOrDeleted);
 
         app.pages.forEach(x => x.enablePropsTracking());
-        this.setState({pageName: app.activePage.name()});
+        this.setState({ pageName: app.activePage.name() });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         super.componentWillUnmount();
         PropertyTracker.propertyChanged.unbind(this, this._propsChanged);
         PropertyTracker.elementInserted.unbind(this, this._elementInsertedOrDeleted);
         PropertyTracker.elementDeleted.unbind(this, this._elementInsertedOrDeleted);
     }
 
-    _propsChanged(element, props){
+    _propsChanged(element, props) {
         //render on name change of any page in case the popup is open
-        if (element instanceof Page && props.name !== undefined){
-            this.setState({pageName: app.activePage.name()})
+        if (element instanceof Page && props.name !== undefined) {
+            this.setState({ pageName: app.activePage.name() })
         }
     }
-    _elementInsertedOrDeleted(parent, child){
-        if (child instanceof Page){
-            this.setState({...this.state})
+    _elementInsertedOrDeleted(parent, child) {
+        if (child instanceof Page) {
+            this.setState({ ...this.state })
         }
     }
 
     @handles(CarbonActions.pageChanged)
-    _onPageChanged({newPage}){
-        this.setState({pageName: newPage.name()});
+    _onPageChanged({ newPage }) {
+        this.setState({ pageName: newPage.name() });
     }
 
-    _renderCurrentPage = () =>{
-        if (!this.state){
+    _renderCurrentPage = () => {
+        if (!this.state) {
             return null;
         }
         return [
-            <i className="type-icon inline-ico type-icon_board"/>,
+            <i className="type-icon inline-ico type-icon_board" />,
             <span>{this.state.pageName}</span>
         ];
     };
@@ -252,9 +251,9 @@ export default class PagesBar extends Component<any, any> {
                 <FlyoutButton
                     className="pagesbar__pill"
                     renderContent={this._renderCurrentPage}
-                    position={{targetVertical: "top", disableAutoClose: true}}
+                    position={{ targetVertical: "top", disableAutoClose: true }}
                 >
-                    <PagesList pages={app.pages}/>
+                    <PagesList pages={app.pages} />
                 </FlyoutButton>
             </div>
         )

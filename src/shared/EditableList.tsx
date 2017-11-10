@@ -54,7 +54,9 @@ export default class EditableList<T = any> extends Component<EditableListProps<T
     }
 
     private onClick = (e: React.MouseEvent<HTMLElement>) => {
-        this.props.onClick && this.props.onClick(this.getItemFromEvent(e));
+        if(!this.state.controlsOpenItem) {
+            this.props.onClick && this.props.onClick(this.getItemFromEvent(e));
+        }
     }
 
     private onOpenControls = (e: React.MouseEvent<HTMLElement>) => {

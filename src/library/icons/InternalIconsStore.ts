@@ -228,8 +228,8 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
     private buildIconSet(artboard: IArtboard): IUIElement[] {
         var elements: IUIElement[] = [];
 
-        artboard.applyVisitor(e => {
-            if (e.hasFlags(UIElementFlags.Icon)) {
+        artboard.children.forEach((e:any) => {
+            if (e.hasFlags(UIElementFlags.Icon) && e.children && e.children.length) {
                 elements.push(e);
             }
         });

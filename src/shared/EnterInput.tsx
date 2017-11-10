@@ -43,6 +43,7 @@ export default class EnterInput extends Component<EnterInputProps, EnterInputSta
     focus() {
         this.refs.input.focus();
     }
+
     private getResult() {
         if (this.props.dataType === "int") {
             let value = this.state.value;

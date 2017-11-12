@@ -20,6 +20,7 @@ import SwatchesPanel from './properties/SwatchesPanel';
 
 import Perf from "react-addons-perf";
 import FullScreenApi from "./shared/FullScreenApi";
+import { Splash } from "./Splash";
 window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent {
@@ -35,6 +36,7 @@ export class RichAppContainer extends AppLoaderComponent {
 
     render() {
         return <RichAppRoot>
+            <Splash/>
             <div id="overlays">
                 <div style={{ display: 'none' }} id="overlay-bg"></div>
             </div>

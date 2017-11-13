@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDom from "react-dom";
 import cx from 'classnames';
 import {richApp} from '../../../RichApp'
-import TabContainer from "../../../shared/TabContainer";
+import {TabContainer} from "../../../shared/TabContainer";
 
 import ColumnsSettings    from "./ColumnsSettings";
 import CanvasSettings     from "./CanvasSettings";

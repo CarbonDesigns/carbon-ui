@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Component } from "../../../CarbonFlux";
 import ImageDropzone from "./ImageDropzone";
-import TabContainer, { TabPage, TabArea } from "../../../shared/TabContainer";
+import { TabContainer, TabPage, TabArea } from "../../../shared/TabContainer";
 import { GuiButtonBlock, GuiButtonedInput, GuiInput, GuiButton, GuiValidatedInput } from "../../../shared/ui/GuiComponents";
 import { MarkupSubmit, MarkupLine } from "../../../shared/ui/Markup";
 import { say } from "../../../shared/Utils";

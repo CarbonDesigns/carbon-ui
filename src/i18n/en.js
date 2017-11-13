@@ -505,6 +505,7 @@ export default
         "@story.newname": "Story {index}",
         "@stories.welcome": "Create a new story to start prototyping",
         "@stories.empty": "There are no stories yet",
+        "@story.create":"Create a new story",
         "@story.type": "Type",
         "@flow": "Flow",
         "@prototype": "Prototype",

@@ -215,7 +215,7 @@ export class GuiSwitch extends Component<IGuiSwitchProps> {
 interface IGuiRadioProps {
     checked: boolean;
     mod?: string;
-    mods?: string;
+    mods?: any;
     className?: string;
     name?: string;
     label?: string;
@@ -445,14 +445,18 @@ export type GuiInputMod = "small" |
     "right" |
     "center" |
     "slim" |
+    "wide" |
     "fill";
+
 export interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement>, IHasMods<GuiInputMod> {
     label?: any;
     caption?: string;
     defaultMessage?: string;
     suffix?: any;
+    value?:any;
     selectOnFocus?: boolean;
     component?: string;
+    onChange?:(e:any)=>void;
 }
 
 export class GuiInput extends Component<IGuiInputProps>{
@@ -517,7 +521,8 @@ export class GuiInput extends Component<IGuiInputProps>{
 interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAreaElement>, IHasMods<
     "resize-v" |
     "small" |
-    "fill"
+    "fill" |
+    "wide"
     > {
     label?: any;
     caption?: string;

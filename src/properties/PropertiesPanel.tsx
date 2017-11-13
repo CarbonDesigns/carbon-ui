@@ -9,7 +9,7 @@ import { PropertyGroup } from "./PropertyGroup";
 
 import PropertyStore from "./PropertyStore";
 import Immutable from 'immutable';
-import TabContainer, { TabPage, TabArea } from "../shared/TabContainer";
+import { TabContainer, TabPage, TabArea } from "../shared/TabContainer";
 import { PropertiesTab } from "./PropertyActions";
 import SymbolGroupsPanel from "./SymbolGroupsPanel";
 import { MarkupLine, Markup } from "../shared/ui/Markup";

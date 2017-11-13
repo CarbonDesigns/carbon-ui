@@ -6,7 +6,7 @@ import Unsplash from "./Unsplash";
 //import SearchIcons from "./SearchIcons";
 import {richApp} from "../../RichApp";
 import { listenTo, Component, dispatch, dispatchAction } from "../../CarbonFlux";
-import {default as TabContainer, TabTabs, TabArea, TabPage} from "../../shared/TabContainer";
+import {TabContainer, TabTabs, TabArea, TabPage} from "../../shared/TabContainer";
 import bem from '../../utils/commonUtils';
 
 import libraryTabStore from "../LibraryTabStore";

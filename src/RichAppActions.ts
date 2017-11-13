@@ -4,6 +4,13 @@ var RichAppActions = {
             type: 'RichAppActions_progressHideDelayed'
         }
     },
+    splashAction(progress, message?) {
+        return {
+            type: 'RichAppActions_splashAction',
+            progress,
+            message
+        }
+    },
     showMainMenu: ()=> {
         return {
             type: 'RichAppActions_showMainMenu'

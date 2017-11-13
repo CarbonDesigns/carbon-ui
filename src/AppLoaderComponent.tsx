@@ -27,7 +27,6 @@ export interface IAppLoaderComponentProps extends IRouteComponentProps{
     }
 }
 export default class AppLoaderComponent extends RouteComponent<IAppLoaderComponentProps>{
-
     canHandleActions() {
         return true;
     }
@@ -49,13 +48,13 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
-        workspace.fatalErrorOccurred.bind(this.onFatalError);
-
         if (!app.isLoaded) {
             this.runApp();
         }
+
+        super.componentDidMount();
+
+        workspace.fatalErrorOccurred.bind(this.onFatalError);
     }
 
     componentWillUnmount() {

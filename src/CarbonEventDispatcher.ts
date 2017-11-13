@@ -44,6 +44,10 @@ export function registerEvents() {
         dispatchAction({ type: "Carbon_AppUpdated" });
     });
 
+    app.onsplash.bindAsync(data=> {
+        dispatch(AppActions.splashAction(data.progress, data.message));
+    })
+
     app.modeChanged.bindAsync(mode => {
         dispatch((CarbonActions.modeChanged(mode)));
     });

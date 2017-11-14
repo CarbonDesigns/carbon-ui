@@ -78,6 +78,7 @@ class AppStore extends CarbonStore<AppStoreState> {
         else if (mode === "prototype") {
             app.actionManager.invoke("protoTool" as WorkspaceTool);
         }
+
         dispatch(LayoutActions.setLayout(mode, RichPanelConfig[mode]));
     }
 

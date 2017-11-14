@@ -98,7 +98,7 @@
 .drop__item {
     .tleft;
     .nowrap;
-    padding: 0 @line_air;
+    padding: @line_air/2 @line_air;
     display: flex;
     align-items: center;
     flex-direction: row;
@@ -214,18 +214,22 @@
     .drop-slider._dragging & {.bgsel()}
 }
 
+.drop_down {
+    position: relative;
+}
 
 .drop__content {
     .abs;
     .tleft;
     .box-shadow(0 1px 5px @shadow_color1);
-    max-height: 1000px;
+    max-height: 0px;
     min-width: 100%;
     width: auto;
 
     //making more specific since max-height depends on the order of selectors
     &&_open,
     .drop_open &  {
+        max-height: 1000px;
         .transition(~"max-height 0.4s @{cubic_bezier1} 0s");
     }
 

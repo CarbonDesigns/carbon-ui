@@ -90,7 +90,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
                     <div className="panel__name">
                         <FormattedMessage id={this.props.header} tagName="h3" defaultMessage={this.props.header}/>
                     </div>
-                    <div className="panel__settings-pill" ><i></i></div>
+                    {/* <div className="panel__settings-pill" ><i></i></div> */}
                     <div className="panel__closer" onClick={this._resolveOnGroupCloseClick({index : this.props.index})}><i></i></div>
                 </div>
 

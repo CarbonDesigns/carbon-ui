@@ -14,7 +14,8 @@ import {
     Circle,
     Brush,
     Invalidate,
-    ContextType
+    ContextType,
+    ContextLayerSource
 } from "carbon-core";
 import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../CarbonFlux";
 import PreviewStore from "./PreviewStore";
@@ -107,7 +108,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         this._canvas1Opacity = 1;
         this._canvas2Opacity = 1;
 
-        Invalidate.requested.bind(this, this._onInvalidateRequested);
+        this._invalidateToken = Invalidate.requested.bind(this, this._onInvalidateRequested);
     }
 
     _onInvalidateRequested = () => {
@@ -153,7 +154,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         }
         this._setupPositionBeforeAnimation(animation);
 
-        this.view.context = this.activeContext;
+        this.view.contexts = [this.activeContext];
+        this.view.context = new ContextLayerSource(this.view.contexts);
 
         this._setPage(nextPage);
         this.ensureCanvasSize();
@@ -314,7 +316,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     }
 
     draw() {
-        if (this.previewProxy != null) {
+        if (this.previewProxy) {
             this.ensureCanvasSize();
             this.view.draw();
         }
@@ -495,7 +497,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         });
 
         this.view = view;
-        view.setupRendering(this.activeContext, redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
+        view.setupRendering([this.activeContext], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
         view.contextScale = this.contextScale;
 
         this.previewProxy = previewProxy;
@@ -521,6 +523,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         if (this._displayClickSpotsToken) {
             this._displayClickSpotsToken.dispose();
             this._displayClickSpotsToken = null;
+        }
+        if(this._invalidateToken) {
+            this._invalidateToken.dispose();
+            this._invalidateToken = null;
         }
 
         window.removeEventListener("resize", this.onresize);

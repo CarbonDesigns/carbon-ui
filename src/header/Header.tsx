@@ -210,10 +210,10 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                     }
                 </div>
 
-                {/* Stories in preview*/}
+                {/* Stories in preview
                 { (this.state.activeMode === "preview")
                     &&  <StoriesSelector name=""/>
-                }
+                }*/}
 
                 { /*   Userbar / Signup   */ }
                 <div className="statusbar">

@@ -212,6 +212,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             activeLeft = 0;
             inactiveLeft = 0;
         }
+
         this.canvas1.style.transitionDuration = 0;
         this.canvas2.style.transitionDuration = 0;
 

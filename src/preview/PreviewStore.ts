@@ -2,13 +2,14 @@ import PreviewActions from './PreviewActions';
 import {Range, Map, List, fromJS, Record} from 'immutable';
 import {handles, CarbonStore, listenTo, Dispatcher} from "../CarbonFlux";
 import LayoutActions from "../layout/LayoutActions";
-import {Environment, Devices} from "carbon-core";
+import {Environment, Devices, PreviewDisplayMode} from "carbon-core";
 
 var State = Record({
     frameVisible: false,
-    deviceWidth: Devices[0].w,
-    deviceHeight: Devices[0].h,
-    responsive:false,
+    // deviceWidth: Devices[0].w,
+    // deviceHeight: Devices[0].h,
+    // responsive:false,
+    displayMode: PreviewDisplayMode.OriginalSize,
     previewActive: true,
     activePage: null,
     activeDevice:0
@@ -49,10 +50,10 @@ class PreviewStore extends CarbonStore<any> {
     onChangeDevice({device}) {
         var d = Devices[device];
         this.state = this.state.withMutations(m=>{
-            m.set("activeDevice", device);
-            m.set("deviceWidth", d.w);
-            m.set("deviceHeight", d.h);
-            m.set("responsive", d.w == undefined);
+            // m.set("activeDevice", device);
+            // m.set("deviceWidth", d.w);
+            // m.set("deviceHeight", d.h);
+            // m.set("responsive", d.w == undefined);
         })
     }
 }

@@ -72,12 +72,12 @@ class AppStore extends CarbonStore<AppStoreState> {
     _switchMode(mode) {
         this.setState({ activeMode: mode });
 
-        if (mode === "edit") {
-            Environment.controller.resetCurrentTool();
-        }
-        else if (mode === "prototype") {
-            app.actionManager.invoke("protoTool" as WorkspaceTool);
-        }
+        // if (mode === "edit") {
+        //     Environment.controller.resetCurrentTool();
+        // }
+        // else if (mode === "prototype") {
+        //     app.actionManager.invoke("protoTool" as WorkspaceTool);
+        // }
 
         dispatch(LayoutActions.setLayout(mode, RichPanelConfig[mode]));
     }

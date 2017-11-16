@@ -55,10 +55,16 @@ export default {
         direction: LayoutDirection.Row,
         fixed: true,
         children: [
+            // {
+            //     width: 300,
+            //     panelName: 'stories',
+            //     collapseDirection:LayoutDockPosition.Left,
+            // },
             {
-                width: 300,
-                panelName: 'stories',
-                collapseDirection:LayoutDockPosition.Left,
+                panelName: 'layers',
+                width: 250,
+                collapsed: true,
+                collapseDirection:LayoutDockPosition.Left
             },
             {
                 panelName: 'designer',

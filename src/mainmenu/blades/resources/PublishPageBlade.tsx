@@ -13,7 +13,7 @@ import bem from "../../../utils/commonUtils";
 import EditImageBlade, { EditImageResult } from "../imageEdit/EditImageBlade";
 import Tiler, { ITile } from "./Tiler";
 import PublishPageForm from "./PublishPageForm";
-import TabContainer, { TabArea, TabPage } from "../../../shared/TabContainer";
+import { TabContainer, TabArea, TabPage } from "../../../shared/TabContainer";
 import { PublishAction } from "./PublishActions";
 import BladeContainer from "../BladeContainer";
 import EditableList from "../../../shared/EditableList";

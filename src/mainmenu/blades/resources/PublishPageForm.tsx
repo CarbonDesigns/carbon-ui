@@ -6,7 +6,7 @@ import { backend, IPage, app, ISharedPageSetup, ResourceScope, Screenshot } from
 import { PublishAction } from "./PublishActions";
 import { MarkupLine } from "../../../shared/ui/Markup";
 import electronEndpoint from "electronEndpoint";
-import TabContainer, { TabArea, TabPage } from "../../../shared/TabContainer";
+import { TabContainer, TabArea, TabPage } from "../../../shared/TabContainer";
 import ResourceSharer from "../../../library/ResourceSharer";
 import { Operation } from "../../../shared/Operation";
 import { GuiProgressButton } from "../../../shared/ui/GuiProgressButton";

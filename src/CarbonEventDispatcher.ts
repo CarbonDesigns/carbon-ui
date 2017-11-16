@@ -44,7 +44,7 @@ export function registerEvents() {
         dispatchAction({ type: "Carbon_AppUpdated" });
     });
 
-    app.onsplash.bindAsync(data=> {
+    app.onsplash.bindAsync(data => {
         dispatch(AppActions.splashAction(data.progress, data.message));
     })
 
@@ -82,10 +82,12 @@ export function registerEvents() {
             dispatch(CarbonActions.activeArtboardChanged(oldArtboard, newArtboard)));
         workspaceTokens.push(token);
 
-        token = controller.currentToolChanged.bindAsync((tool) => {
-            dispatch(CarbonActions.toolChanged(tool));
-        });
-        workspaceTokens.push(token);
+        if (controller.currentToolChanged) {
+            token = controller.currentToolChanged.bindAsync((tool) => {
+                dispatch(CarbonActions.toolChanged(tool));
+            });
+            workspaceTokens.push(token);
+        }
 
         if (view.scaleChanged) {
             let token = view.scaleChanged.bindAsync(scale => dispatchAction({ type: "Carbon_ScaleChanged", scale }));

@@ -2,13 +2,15 @@
 @import '../styles/less/_projectMixins';
 
 .transition-dialog {
-    min-width: 25rem;
+    min-width: 20rem;
     height:auto;
     padding: @line_air;
     .bgc(@bg_inner1);
     color: @font_color;
     //.f10();
-
+    .drop__pill {
+        background: none;
+    }
     .drop__pill > .ico-triangle {
         bottom: 0;
         right: 0;
@@ -16,14 +18,14 @@
         .op70;
         border: 3px solid ;
         border-color: transparent @font_color @font_color transparent;
-        //border-style: solid;
     }
+
     .transition-dialog__intro {
         .f16;
     }
 
     .transition-dialog__line {
-        margin-top: @line_air;
+        margin-top: @line_air/2;
     }
 
     .transition-dialog__animation {
@@ -62,13 +64,13 @@
                 .wbg(5);
             }
             .bl;
-            width: 12rem;
+            width: 100%;
             color: fadeout(@font_color, 20%);
             &:focus {
                 color: fadeout(@font_color, 10%);
             }
-            padding: @line_air*0.6 0 @line_air*0.6 @line_air*0.6;
-            text-align: right;
+            padding: @line_air*0.6 0 @line_air*0.6 0;
+            text-align: left;
 
             flex-grow: 1;
             line-height: .8;
@@ -85,20 +87,18 @@
 
 .tile-editor {
     width: 100%;
-    .wbg(5);
+    //.wbg(5);
     .rel;
     padding: @line_air*0.6 @line_air*0.6;
 
     &__label {
-        .f12;
+        .f08;
         .upp(50);
         color: fadeout(@font_color, 20%);
         margin-bottom: @line_air * 0.5;
     }
     &__value {
-        .f16;
-        text-align: right;
-
+        .f20;
     }
 
 }

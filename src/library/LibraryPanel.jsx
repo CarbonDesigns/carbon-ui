@@ -3,7 +3,7 @@ import SymbolsPage from "./symbols/SymbolsPage";
 import IconsPage from "./icons/IconsPage";
 import ImagesPage from "./images/ImagesPage";
 import DataPage from "./data/DataPage";
-import {default as TabContainer, TabTabs, TabArea, TabHeader, TabPage} from "../shared/TabContainer";
+import {TabContainer, TabTabs, TabArea, TabHeader, TabPage} from "../shared/TabContainer";
 import Progress from "../shared/Progress";
 import Panel from '../layout/Panel'
 import {richApp} from "../RichApp";

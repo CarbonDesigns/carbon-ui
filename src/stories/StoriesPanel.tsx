@@ -1,16 +1,21 @@
+import React, { PropTypes } from 'react';
 import { Component, listenTo, dispatch, CarbonLabel } from '../CarbonFlux';
-import PropTypes from "prop-types";
-import React from 'react';
 import Panel from '../layout/Panel'
+import { TabContainer, TabPage, TabArea } from "../shared/TabContainer";
 import { FormattedMessage } from "react-intl";
 import StoriesStore from "./StoriesStore";
 import StoriesActions from "./StoriesActions";
 import StoriesList from "./StoriesList";
-import { app, PatchType, createUUID, StoryType, util } from "carbon-core";
+import { app, PatchType, createUUID, util, StoryType } from "carbon-core";
 import ScrollContainer from "../shared/ScrollContainer";
-import { default as TabContainer, TabArea, TabPage } from "../shared/TabContainer";
 import { GuiButton, GuiRadio, GuiInput, GuiTextArea } from "../shared/ui/GuiComponents";
-import { MarkupLine } from "../shared/ui/Markup";
+import { MarkupLine, Markup } from "../shared/ui/Markup";
+import { FormHeading, FormLine, FormGroup } from "../shared/FormComponents"
+
+let buggg = TabContainer.prototype;
+let buggg2 = TabPage.prototype;
+let buggg3 = TabArea.prototype;
+let buggg4 = StoriesList.prototype;
 
 function _selectStory(item) {
     var story = app.getImmediateChildById(item.id);
@@ -33,7 +38,10 @@ function _saveNewStory(state) {
 }
 
 
-class StoryDetails extends Component {
+class StoryDetails extends Component<any, any> {
+    private _saveFunc: () => void;
+    private _saved: boolean;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -86,20 +94,20 @@ class StoryDetails extends Component {
         var heading = null;
 
         if (this.props.newStory) {
-            renderedType = (<MarkupLine>
-                <FormattedMessage tagName="span" id="@story.type" />
-                <p>
-                    <GuiRadio onChange={this._onFlowClicked} checked={this.state.type === StoryType.Flow} label="@flow" />
-                    <GuiRadio onChange={this._onPrototypeClicked} checked={this.state.type === StoryType.Prototype} label="@prototype" />
-                </p>
-            </MarkupLine>);
+            renderedType = (
+                    <MarkupLine>
+                        <FormattedMessage tagName="h3" id="@story.type"/>
+                        <GuiRadio mods={["line", "space"]} onChange={this._onFlowClicked} checked={this.state.type === StoryType.Flow} label="@flow" />
+                        <GuiRadio mods={["line", "space"]} onChange={this._onPrototypeClicked} checked={this.state.type === StoryType.Prototype} label="@prototype" />
+                    </MarkupLine>
+                );
 
             renderedSubmit = <div className="gui-btn-block">
                 <GuiButton mods="submit" onClick={this._saveNew} caption="@story.create" icon={true} />
                 <GuiButton mods="hover-cancel" onClick={this.props.goBack} caption="@cancel" icon={true} />
             </div>
 
-            heading = "Create a new story";
+            heading = "@story.create";
         }
         else {
             renderedSubmit = <div className="gui-btn-block">
@@ -110,7 +118,7 @@ class StoryDetails extends Component {
             var type = this.state.type === StoryType.Flow ? "Flow" : "Prototype";
             renderedType = null;
 
-            heading = "@edit " + (type);
+            heading = "@edit." + (type);
         }
 
         return <ScrollContainer className="wrap thin" boxClassName="story-details">
@@ -119,7 +127,7 @@ class StoryDetails extends Component {
             </MarkupLine>
 
             <MarkupLine>
-                <FormattedMessage tagName="h3" id={heading} />
+                <FormattedMessage tagName="h2" id={heading} />
             </MarkupLine>
 
             {renderedType}
@@ -127,13 +135,19 @@ class StoryDetails extends Component {
             <MarkupLine>
                 <GuiInput
                     caption="@story.name"
+                    mods="wide"
                     value={this.state.name}
                     onChange={this._onNameChange}
                 />
             </MarkupLine>
 
             <MarkupLine>
-                <GuiTextArea caption="@story.description" style={{ width: '100%', height: 141 }} value={this.state.description} onChange={this._onDescriptionChange} />
+                <GuiTextArea
+                    caption="@story.description"
+                    mods="wide"
+                    style={{ width: '100%', height: 141 }}
+                    value={this.state.description}
+                    onChange={this._onDescriptionChange} />
             </MarkupLine>
 
             <MarkupLine>{renderedSubmit}</MarkupLine>
@@ -142,10 +156,15 @@ class StoryDetails extends Component {
     }
 }
 
-export default class StoriesPanel extends Component {
+export default class StoriesPanel extends Component<any, any> {
     static contextTypes = {
         intl: PropTypes.object
     };
+
+    refs: {
+        container: any;
+        details: any;
+    }
 
     constructor(props) {
         super(props);
@@ -180,7 +199,7 @@ export default class StoriesPanel extends Component {
         this.setState({ details: null });
         this.refs.container.changeTabById("1");
 
-        if (this.refs.details != null) {
+        if (this.refs.details) {
             this.refs.details._save();
         }
     }
@@ -191,7 +210,7 @@ export default class StoriesPanel extends Component {
         let prevName = null;
         while (true) {
             name = this.context.intl.formatMessage({ id: "@story.newname" }, { index: index });
-            if (prevName == name) {
+            if (prevName === name) {
                 break;
             }
             if (!this.state.data.stories.find(s => s.name === name)) {
@@ -210,16 +229,33 @@ export default class StoriesPanel extends Component {
         this.refs.container.changeTabById("3");
     }
 
+    _renderEmptyMessage() {
+        if (this.state.data.stories.count() === 0) {
+            return <div className="markup">
+                <div className="markup-line markup-line_center markup-line__stories">
+                    <p> <FormattedMessage id="@stories.welcome" /></p>
+                </div>
+            </div>
+        }
+
+        return null;
+    }
+
     render() {
         return (
             <Panel  {...this.props} ref="panel" header="Stories" id="stories-panel">
                 <TabContainer ref="container" id="stories-container">
                     <TabArea className="gui-pages">
                         <TabPage tabId="1" className="gui-page">
-                            <div className="stories-panel__controls">
-                                <GuiButton mods={["full", "hover-success"]} onClick={this._newStoryClicked} caption="@story.new" bold icon="new-page" />
+                            {this._renderEmptyMessage()}
+                            <div className="stories-panel__controls markup">
+                                <div className="markup-line markup-line_center">
+                                    <GuiButton
+                                        mods={["full", "hover-success"]}
+                                        onClick={this._newStoryClicked}
+                                        caption="@story.new" bold icon="new-page" />
+                                </div>
                             </div>
-
                             <StoriesList
                                 stories={this.state.data.stories}
                                 viewDetails={this._viewDetails}

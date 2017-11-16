@@ -6,7 +6,7 @@ import DialogRegistry from "../dialogs/DialogRegistry";
 import Dialog from "../dialogs/Dialog";
 import { FormattedMessage } from "react-intl";
 import { app, backend, IDisposable, ISharedResource, IPaginatedResult, ResourceScope } from "carbon-core";
-import { default as TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../shared/TabContainer";
+import { TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../shared/TabContainer";
 import { Markup, MarkupLine, MarkupSubmit } from "../shared/ui/Markup";
 import Search from "../shared/Search";
 import ResourceSharer from "../library/ResourceSharer";

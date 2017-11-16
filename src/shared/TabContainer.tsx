@@ -5,17 +5,17 @@ import LessVars from "../styles/LessVars";
 import cx from "classnames";
 import bem from '../utils/commonUtils';
 
-interface ITabContainerProps extends IReactElementProps{
+interface ITabContainerProps extends IReactElementProps {
     currentTabId?: string;
     onTabChanged?: (tabId: string, oldTabId?: string) => void;
     type?: string;
     defaultTabId?: string;
 }
-interface ITabContainerState{
+interface ITabContainerState {
     tabId: string;
     oldTabId: string;
 }
-export default class TabContainer extends Component<ITabContainerProps, ITabContainerState> {
+export class TabContainer extends Component<ITabContainerProps, ITabContainerState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -55,9 +55,11 @@ export default class TabContainer extends Component<ITabContainerProps, ITabCont
     getTabs() {
         var tabs = [];
 
-        for (var ref in this.refs) if (this.refs.hasOwnProperty(ref)) {
-            if (ref.indexOf("tab") === 0) {
-                tabs.push(this.refs[ref]);
+        for (var ref in this.refs) {
+            if (this.refs.hasOwnProperty(ref)) {
+                if (ref.indexOf("tab") === 0) {
+                    tabs.push(this.refs[ref]);
+                }
             }
         }
 
@@ -81,13 +83,13 @@ export default class TabContainer extends Component<ITabContainerProps, ITabCont
     }
 
     static childContextTypes = {
-        activeTabId  : PropTypes.string,
-        oldTabId     : PropTypes.string,
-        tabContainer : PropTypes.any
+        activeTabId: PropTypes.string,
+        oldTabId: PropTypes.string,
+        tabContainer: PropTypes.any
     }
 }
 
-interface ITabHeaderProps extends IReactElementProps{
+interface ITabHeaderProps extends IReactElementProps {
     activeClassName: string;
     tabId: string;
 }
@@ -111,13 +113,13 @@ export class TabHeader extends React.Component<ITabHeaderProps> {
     }
 
     static contextTypes = {
-        activeTabId  : PropTypes.string,
-        oldTabId     : PropTypes.string,
-        tabContainer : PropTypes.any
+        activeTabId: PropTypes.string,
+        oldTabId: PropTypes.string,
+        tabContainer: PropTypes.any
     }
 }
 
-interface ITabPageProps extends IReactElementProps{
+interface ITabPageProps extends IReactElementProps {
     tabId: string;
 }
 //derived from react component on purpose, tabs must re-render when tab container changes
@@ -130,19 +132,19 @@ export class TabPage extends React.Component<ITabPageProps> {
     }
 
     static contextTypes = {
-        activeTabId  : PropTypes.string,
-        oldTabId     : PropTypes.string,
-        tabContainer : PropTypes.any
+        activeTabId: PropTypes.string,
+        oldTabId: PropTypes.string,
+        tabContainer: PropTypes.any
     };
 }
 
 
-interface ITabAreaProps extends IReactElementProps{
+interface ITabAreaProps extends IReactElementProps {
 }
 //derived from react component on purpose, tab area must re-render when tab container changes
 export class TabArea extends React.Component<ITabAreaProps> {
     render() {
-        return <div {...this.props} data-current-tab={this.context.activeTabId}/>
+        return <div {...this.props} data-current-tab={this.context.activeTabId} />
     }
 
     static contextTypes = { activeTabId: PropTypes.string, oldTabId: PropTypes.string, tabContainer: PropTypes.any }
@@ -162,8 +164,8 @@ interface ITabTabsProps extends IReactElementProps, ITabMods<"nogrow" | "level2"
 export class TabTabs extends React.Component<ITabTabsProps> {
     render() {
         var { items, tabsClassName, tabClassName, tabActiveClassName, tabMods, insertBefore, insertAfter, children, ...rest } = this.props;
-        var tabs_cn       = cx("gui-tabs", tabsClassName);
-        var tab_cn        = bem("gui-tabs", "tab", tabMods, tabClassName);
+        var tabs_cn = cx("gui-tabs", tabsClassName);
+        var tab_cn = bem("gui-tabs", "tab", tabMods, tabClassName);
         var active_tab_cn = cx("gui-tabs__tab_active", tabActiveClassName);
         var newChildren = items.map((item, ind) => {
             return <TabHeader key={"tab" + (ind + 1)} className={tab_cn} tabId={ind + 1 + ""} activeClassName={active_tab_cn}>
@@ -178,11 +180,11 @@ export class TabTabs extends React.Component<ITabTabsProps> {
     }
 
     static contextTypes = {
-        items              : PropTypes.array,
-        tabsClassName      : PropTypes.string,
-        tabClassName       : PropTypes.string,
-        tabActiveClassName : PropTypes.string,
-        tabMods            : PropTypes.any, //array or object or string
-        insertBefore       : PropTypes.node
+        items: PropTypes.array,
+        tabsClassName: PropTypes.string,
+        tabClassName: PropTypes.string,
+        tabActiveClassName: PropTypes.string,
+        tabMods: PropTypes.any, //array or object or string
+        insertBefore: PropTypes.node
     };
 }

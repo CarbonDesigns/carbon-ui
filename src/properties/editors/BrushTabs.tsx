@@ -1,6 +1,6 @@
 import React from "react";
 import ColorPicker from "../../shared/ui/ColorPicker";
-import { default as TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../../shared/TabContainer";
+import { TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../../shared/TabContainer";
 import { BrushGammaSelector, Gammas } from "./BrushGammaSelector";
 import { richApp } from '../../RichApp';
 import { Component } from '../../CarbonFlux';

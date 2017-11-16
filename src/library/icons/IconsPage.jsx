@@ -5,7 +5,7 @@ import RecentIcons from "./RecentIcons";
 import IconFinder from "./IconFinder";
 import SearchIcons from "./SearchIcons";
 import {listenTo, Component, dispatch, dispatchAction} from '../../CarbonFlux';
-import {default as TabContainer, TabArea, TabTabs, TabPage} from "../../shared/TabContainer";
+import {TabContainer, TabArea, TabTabs, TabPage} from "../../shared/TabContainer";
 import bem from '../../utils/commonUtils';
 import libraryTabStore from "../LibraryTabStore";
 import InternalIconsStore from "./InternalIconsStore";

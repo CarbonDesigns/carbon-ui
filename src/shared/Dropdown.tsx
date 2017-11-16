@@ -3,6 +3,7 @@ import ReactDom from "react-dom";
 import { Component } from "../CarbonFlux";
 import cx from 'classnames';
 import { default as bem, join_bem_mods } from '../utils/commonUtils';
+import { nodeOffset, ensureElementVisible } from "../utils/domUtil";
 
 function stopPropagation(e) {
     if (e) {
@@ -34,6 +35,11 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
         };
     }
 
+    refs: {
+        content:any,
+        dropContainer:any
+    }
+
     selectItem = (e) => {
         var dropContainer = ReactDom.findDOMNode(this.refs.dropContainer);
         // item is the number of dropContainer DOM child
@@ -45,21 +51,23 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
             }
         }
     };
+
     open = () => {
         if (!this.state.open) {
             this.toggle();
         }
     };
+
     close = () => {
         if (this.state.open) {
             this.toggle();
         }
     };
+
     toggle = (event = null) => {
         this.setState({ open: !this.state.open });
         stopPropagation(event);
     };
-
 
     onKeyDown = (e) => {
         //TODO: handle ESC
@@ -71,7 +79,6 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
         }
     };
 
-
     _renderSelectedItem() {
         var selectedItemIndex = this.props.selectedItem;
 
@@ -79,17 +86,34 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
             return this.props.renderSelected(selectedItemIndex);
         }
 
-        if (selectedItemIndex != null) {
+        if (selectedItemIndex) {
             var children = React.Children.toArray(this.props.children);
             return React.cloneElement(children[selectedItemIndex] as React.DOMElement<any, any>, { key: selectedItemIndex + "_selected" });
         }
 
-        if (this.props.renderEmpty != null) {
+        if (this.props.renderEmpty) {
             return this.props.renderEmpty();
         }
 
         return null;
     };
+
+    ensurePosition() {
+        var content = this.refs["content"] as HTMLElement;
+        if(content) {
+            ensureElementVisible(content, document.documentElement);
+        }
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        this.ensurePosition();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+        this.ensurePosition();
+    }
 
     _renderContent() {
         const selectedItemIndex = this.props.selectedItem;
@@ -133,7 +157,7 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
                 <i className="ico ico-triangle" />
             </div>
 
-            <div className="drop__content drop-content_auto-width">
+            <div ref="content" className="drop__content drop-content_auto-width">
                 <div className="drop__list" ref="dropContainer">
                     {options}
                 </div>

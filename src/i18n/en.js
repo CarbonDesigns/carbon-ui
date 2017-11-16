@@ -292,7 +292,7 @@ export default
         "transition.target": "Target",
         "transition.type": "Transition type",
         "transition.easing": "Easing",
-        "transition.duration": "Duration",
+        "transition.duration": "Duration (s)",
         "transitionType.slideleft": "Slide Left",
         "transitionType.slideright": "Slide Right",
         "transitionType.slideup": "Slide Up",
@@ -505,6 +505,7 @@ export default
         "@story.newname": "Story {index}",
         "@stories.welcome": "Create a new story to start prototyping",
         "@stories.empty": "There are no stories yet",
+        "@story.create":"Create a new story",
         "@story.type": "Type",
         "@flow": "Flow",
         "@prototype": "Prototype",
@@ -534,6 +535,8 @@ export default
         "@constraints.topAndBottom": "Top & Bottom",
         "@constraints.center": "Center",
         "@constraints.scale": "Scale",
+
+        "@animation.header":"Transition",
 
         "@account.joinMessage": "Join Carbonium Community!",
         "@account.loginMessage": "Welcome Back!",

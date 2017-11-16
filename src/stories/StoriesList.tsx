@@ -70,11 +70,6 @@ export default class StoriesList extends Component<any, any> {
 
     render() {
         var emptyMessage = null;
-        if (this.props.stories.count() === 0) {
-            emptyMessage = <p>
-                <FormattedMessage id="@stories.welcome"/>;
-            </p>
-        }
 
         let activeStoryId = null;
         if(this.props.activeStory){

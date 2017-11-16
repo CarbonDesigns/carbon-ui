@@ -5,7 +5,7 @@ import Navigatable from "../../shared/Navigatable";
 import { FormattedMessage, defineMessages } from 'react-intl';
 import CustomProviders from './CustomProviders';
 import CatalogView from './CatalogView';
-import { default as TabContainer, TabTabs, TabArea, TabPage } from "../../shared/TabContainer";
+import { TabContainer, TabTabs, TabArea, TabPage } from "../../shared/TabContainer";
 import bem from '../../utils/commonUtils';
 import { GuiButton } from "../../shared/ui/GuiComponents";
 import libraryTabStore from "../LibraryTabStore";

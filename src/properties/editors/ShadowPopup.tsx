@@ -3,7 +3,7 @@ import ReactDom from "react-dom";
 import ColorPicker from "../../shared/ui/ColorPicker";
 import FlyoutActions from "../../FlyoutActions";
 import {Component, dispatch} from "../../CarbonFlux";
-import {default as TabContainer, TabTabs, TabPage, TabArea} from "../../shared/TabContainer";
+import {TabContainer, TabTabs, TabPage, TabArea} from "../../shared/TabContainer";
 import bem from "../../utils/commonUtils";
 import { GuiInput, GuiSlider, GuiInputMod } from "../../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";

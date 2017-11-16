@@ -15,7 +15,10 @@ import {
     Brush,
     Invalidate,
     ContextType,
-    ContextLayerSource
+    ContextLayerSource,
+    PreviewDisplayMode,
+    ISize,
+    Matrix
 } from "carbon-core";
 import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../CarbonFlux";
 import PreviewStore from "./PreviewStore";
@@ -128,9 +131,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             this._currentCanvas = (this._currentCanvas + 1) % 2;
 
             var nextPage = this.previewProxy.getScreenById(newData.activePage.artboardId, {
-                width: this.state.data.deviceWidth || this.refs.viewport.clientWidth,
-                height: this.state.data.deviceHeight || this.refs.viewport.clientHeight
-            });
+                width: this.refs.viewport.clientWidth,
+                height: this.refs.viewport.clientHeight
+            }, this.state.data.displayMode);
+
             this._updateActivePage(nextPage, newData.activePage.animation);
         }
 
@@ -300,20 +304,19 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     _addClickSpot(layer, x, y) {
         var circle = new Circle();
         circle.setProps({
-            x: x - 50,
-            y: y - 50,
             width: 100,
             height: 100,
             stroke: Brush.Empty,
             fill: Brush.createFromColor("rgba(100,120,230,0.3)")
         });
+        circle.setTransform(Matrix.createTranslationMatrix(x - 50, y - 50));
         layer.add(circle);
-        return circle.animate({ x: x, y: y, width: 10, height: 10 }, 450, {}, () => {
+        return circle.animate({ width: 10, height: 10 }, 450, {}, () => {
+            circle.setTransform(Matrix.createTranslationMatrix(x - circle.width() / 2, y - circle.height() / 2));
             layer && layer.invalidate();
-        })
-            .then(() => {
-                circle.parent().remove(circle);
-            });
+        }).then(() => {
+            circle.parent().remove(circle);
+        });
     }
 
     draw() {
@@ -377,57 +380,101 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         return page.children[0];
     }
 
+    _findDeviceSize(viewportSize: ISize, artboardSize: ISize, previewDisplayMode: PreviewDisplayMode): ISize {
+        switch (previewDisplayMode) {
+            case PreviewDisplayMode.Responsive:
+                return viewportSize;
+            case PreviewDisplayMode.Fill:
+                return viewportSize;
+            case PreviewDisplayMode.Fit:
+                return viewportSize;
+            case PreviewDisplayMode.OriginalSize:
+                return { width: Math.min(viewportSize.width, artboardSize.width), height: Math.min(viewportSize.height, artboardSize.height) };
+        }
+
+        assertNever(previewDisplayMode);
+    }
+
+    _findDeviceScale(deviceSize: ISize, artboardSize: ISize, previewDisplayMode: PreviewDisplayMode): number {
+        switch (previewDisplayMode) {
+            case PreviewDisplayMode.Responsive:
+                return 1;
+            case PreviewDisplayMode.Fill:
+                return 1; // TODO
+            case PreviewDisplayMode.Fit:
+                return Math.min(1, fitRectToRect(deviceSize, artboardSize))
+            case PreviewDisplayMode.OriginalSize:
+                return 1;
+        }
+
+        assertNever(previewDisplayMode);
+    }
+
     ensureCanvasSize(data?) {
         if (!this._attached || !this.refs.viewport) {
             return;
         }
 
-        var viewport = this.refs.viewport;
-        data = data || this.state.data;
-        var margin = ViewportMargin;
-        var deviceWidth;
-        var deviceHeight;
+        let previewDisplayMode = PreviewDisplayMode.OriginalSize;
 
-        var drawFrame = false;
-        var artboard = this._getCurrentArtboard();
-        var frame;
-        if (artboard) {
-            frame = artboard.frame;
-            if (app.showFrames() && frame) {
-                deviceWidth = frame.runtimeProps.cloneScreenWidth;
-                deviceHeight = frame.runtimeProps.cloneScreenHeight;
-                drawFrame = true;
-            } else {
-                deviceWidth = artboard.width();
-                deviceHeight = artboard.height();
-            }
+        let viewport = this.refs.viewport;
+
+        let viewportSize = {
+            width: viewport.clientWidth - ViewportMargin,
+            height: viewport.clientHeight - ViewportMargin
+        };
+        let artboard = this._getCurrentArtboard();
+        if (!artboard) { // TODO: check what we should do in this case
+            return;
         }
 
-        if (deviceWidth && deviceHeight) {
-            var viewportSize = {
-                width: viewport.clientWidth - ViewportMargin,
-                height: viewport.clientHeight - ViewportMargin
-            };
-            var deviceSize = { width: deviceWidth, height: deviceHeight };
-        } else {
-            viewportSize = {
-                width: viewport.clientWidth,
-                height: viewport.clientHeight
-            };
-            deviceSize = { width: viewport.clientWidth, height: viewport.clientHeight };
-            margin = 0;
-        }
+        let artboardSize = this.previewProxy.activePage.originalSize;//{ width: artboard.width(), height: artboard.height() };
 
-        var deviceScale = Math.min(1, fitRectToRect(viewportSize, deviceSize));
+        let deviceSize = this._findDeviceSize(viewportSize, artboardSize, previewDisplayMode);
+        let deviceScale = this._findDeviceScale(deviceSize, artboardSize, previewDisplayMode);
+        let margin = ViewportMargin;
 
-        var scale = this.view.scale(deviceScale);
-        var resized = false;
+        // data = data || this.state.data;
+
+        // var deviceWidth;
+        // var deviceHeight;
+
+        // var drawFrame = false;
+
+        // var frame;
+        // if (artboard) {
+        //     frame = artboard.frame;
+        //     if (app.showFrames() && frame) {
+        //         deviceWidth = frame.runtimeProps.cloneScreenWidth;
+        //         deviceHeight = frame.runtimeProps.cloneScreenHeight;
+        //         drawFrame = true;
+        //     } else {
+        //         deviceWidth = artboard.width();
+        //         deviceHeight = artboard.height();
+        //     }
+        // }
+
+        // if (deviceWidth && deviceHeight) {
+        //     var deviceSize = { width: deviceWidth, height: deviceHeight };
+        // } else {
+        //     viewportSize = {
+        //         width: viewport.clientWidth,
+        //         height: viewport.clientHeight
+        //     };
+        //     deviceSize = { width: viewport.clientWidth, height: viewport.clientHeight };
+        //     margin = 0;
+        // }
+
+        // var deviceScale = Math.min(1, fitRectToRect(viewportSize, deviceSize));
+
+        let scale = this.view.scale(deviceScale);
+        let resized = false;
 
         var canvasWidth = this._screenWidth = deviceSize.width * deviceScale;
         var canvasHeight = this._screenHeight = deviceSize.height * deviceScale;
 
         var needResize = false;
-        if (!this._oldViewportSize || this._oldViewportSize.width !== viewportSize.width || this._oldViewportSize.height != viewportSize.height) {
+        if (!this._oldViewportSize || this._oldViewportSize.width !== viewportSize.width || this._oldViewportSize.height !== viewportSize.height) {
             needResize = true;
         }
 
@@ -436,29 +483,33 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var device = this.refs.device;
         if (needResize || canvas.width !== (0 | (canvasWidth * this.contextScale))) {
             canvas.width = canvasWidth * this.contextScale;
-            device.style.width = canvas.style.width = canvasWidth + "px";
-            device.style.left = (margin / 2 + (viewportSize.width - canvasWidth) / 2 | 0) + "px";
-            resized = true;
-        }
-        if (needResize || canvas.height !== (0 | (canvasHeight * this.contextScale))) {
-            canvas.height = canvasHeight * this.contextScale;
-            device.style.height = canvas.style.height = canvasHeight + "px";
-            device.style.top = (margin / 2 + (viewportSize.height - canvasHeight) / 2 | 0) + "px";
+            canvas.style.width = canvasWidth + "px";
             resized = true;
         }
 
-        if (drawFrame) {
-            frameCanvas.width = frame.width() * scale * this.contextScale;
-            frameCanvas.height = frame.height() * scale * this.contextScale;
-            frameCanvas.style.left = ((margin / 2 + (viewportSize.width - canvasWidth) / 2 | 0) + frame.runtimeProps.frameX) + 'px';
-            frameCanvas.style.top = ((margin / 2 + (viewportSize.height - canvasHeight) / 2 | 0) + frame.runtimeProps.frameY) + 'px';
-            this._renderFrameIfAvailiable();
-            frameCanvas.style.display = 'block';
+        if (needResize || canvas.height !== (0 | (canvasHeight * this.contextScale))) {
+            canvas.height = canvasHeight * this.contextScale;
+            canvas.style.height = canvasHeight + "px";
+            resized = true;
+        }
+
+        device.style.width = canvasWidth + "px";
+        device.style.left = (margin / 2 + (viewportSize.width - canvasWidth) / 2 | 0) + "px";
+        device.style.height = canvasHeight + "px";
+        device.style.top = (margin / 2 + (viewportSize.height - canvasHeight) / 2 | 0) + "px";
+
+        if (/*drawFrame*/false) {
+            // frameCanvas.width = frame.width() * scale * this.contextScale;
+            // frameCanvas.height = frame.height() * scale * this.contextScale;
+            // frameCanvas.style.left = ((margin / 2 + (viewportSize.width - canvasWidth) / 2 | 0) + frame.runtimeProps.frameX) + 'px';
+            // frameCanvas.style.top = ((margin / 2 + (viewportSize.height - canvasHeight) / 2 | 0) + frame.runtimeProps.frameY) + 'px';
+            // this._renderFrameIfAvailiable();
+            // frameCanvas.style.display = 'block';
         } else {
             frameCanvas.style.display = 'none';
         }
 
-        this.previewProxy.resizeActiveScreen(deviceSize, scale);
+        this.previewProxy.resizeActiveScreen(artboardSize, scale);
 
         this._scale = scale;
 
@@ -473,6 +524,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         if (this.activeContext && !this._attached) {
             var view = new PreviewView(app);
             view.setup({ Layer: Page });
+            view.viewContainerElement = this.refs.viewport;
             var previewProxy = new PreviewProxy(app);
             var controller = new PreviewController(app, view, previewProxy);
             Environment.set(view, controller);
@@ -525,7 +577,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             this._displayClickSpotsToken.dispose();
             this._displayClickSpotsToken = null;
         }
-        if(this._invalidateToken) {
+        if (this._invalidateToken) {
             this._invalidateToken.dispose();
             this._invalidateToken = null;
         }

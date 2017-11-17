@@ -73,6 +73,17 @@ function fitRectToRect(outer, inner) {
     return scale;
 }
 
+function fillRectInRect(outer, inner) {
+    var scale = outer.width / inner.width;
+
+    var newHeight = inner.height * scale;
+    if (newHeight < outer.height) {
+        scale = outer.height / inner.height;
+    }
+
+    return scale;
+}
+
 const ViewportMargin = 40;
 
 function easeTypeToClassName(type) {
@@ -133,16 +144,19 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             return null;
         }
 
+        if (data.activePage !== newData.activePage) {
+            this._currentCanvas = (this._currentCanvas + 1) % 2;
+
+            var nextPage = this.previewProxy.getScreenById(newData.activePage.artboardId, {
+                width: this.refs.viewport.clientWidth,
+                height: this.refs.viewport.clientHeight
+            }, this.state.data.displayMode);
+
+            this._updateActivePage(nextPage, page.animation);
+        }
+
         if (data.displayMode !== newData.displayMode) {
-            // this._currentCanvas = (this._currentCanvas + 1) % 2;
-
-            // var nextPage = this.previewProxy.getScreenById(page.artboardId, {
-            //     width: this.refs.viewport.clientWidth,
-            //     height: this.refs.viewport.clientHeight
-            // }, this.state.data.displayMode);
-
-            // this._updateActivePage(nextPage, page.animation);
-            this.ensureCanvasSize(newData);
+            this.ensureCanvasSize();
         }
     }
 
@@ -323,7 +337,19 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     draw() {
         if (this.previewProxy) {
-            this.ensureCanvasSize();
+            let viewport = this.refs.viewport;
+            if (!viewport) {
+                return;
+            }
+            let viewportSize = {
+                width: viewport.clientWidth - ViewportMargin,
+                height: viewport.clientHeight - ViewportMargin
+            };
+            if (!this._oldViewportSize
+                || (viewportSize.height !== this._oldViewportSize.height)
+                || (viewportSize.width !== this._oldViewportSize.width)) {
+                this.ensureCanvasSize(viewportSize);
+            }
             this.view.draw();
         }
     }
@@ -389,7 +415,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             case PreviewDisplayMode.Fill:
                 return viewportSize;
             case PreviewDisplayMode.Fit:
-                return viewportSize;
+                {
+                    let scale = fitRectToRect(viewportSize, artboardSize);
+                    return { width: artboardSize.width * scale, height: artboardSize.height * scale };
+                }
             case PreviewDisplayMode.OriginalSize:
                 return { width: Math.min(viewportSize.width, artboardSize.width), height: Math.min(viewportSize.height, artboardSize.height) };
         }
@@ -402,7 +431,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             case PreviewDisplayMode.Responsive:
                 return 1;
             case PreviewDisplayMode.Fill:
-                return 1; // TODO
+                return fillRectInRect(deviceSize, artboardSize);
             case PreviewDisplayMode.Fit:
                 return Math.min(1, fitRectToRect(deviceSize, artboardSize))
             case PreviewDisplayMode.OriginalSize:
@@ -412,7 +441,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         assertNever(previewDisplayMode);
     }
 
-    ensureCanvasSize(data?) {
+    ensureCanvasSize(viewportSize?) {
         if (!this._attached || !this.refs.viewport) {
             return;
         }
@@ -424,10 +453,11 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         let viewport = this.refs.viewport;
 
-        let viewportSize = {
+        viewportSize = viewportSize || {
             width: viewport.clientWidth - ViewportMargin,
             height: viewport.clientHeight - ViewportMargin
         };
+
         let artboard = this._getCurrentArtboard();
         if (!artboard) { // TODO: check what we should do in this case
             return;
@@ -475,8 +505,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         let scale = this.view.scale(deviceScale);
         let resized = false;
 
-        var canvasWidth = this._screenWidth = deviceSize.width * deviceScale;
-        var canvasHeight = this._screenHeight = deviceSize.height * deviceScale;
+        var canvasWidth = this._screenWidth = deviceSize.width;
+        var canvasHeight = this._screenHeight = deviceSize.height;
 
         var needResize = false;
         if (!this._oldViewportSize || this._oldViewportSize.width !== viewportSize.width || this._oldViewportSize.height !== viewportSize.height) {

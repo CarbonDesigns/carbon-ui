@@ -9,6 +9,7 @@ var BundleResourcesPlugin = require("./BundleResourcesPlugin");
 var resolveCoreModules = require("./resolveCore");
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
 
@@ -100,6 +101,12 @@ function getPlugins(settings) {
     var plugins = [
         //breaks incremental updates in watch mode...
         //new webpack.optimize.DedupePlugin(),
+        new CopyWebpackPlugin([
+            {
+                from: fullPath('../node_modules/monaco-editor/min/vs/**/*'),
+                to: 'vs',
+            }
+        ]),
 
         new BundleResourcesPlugin({
             cdn: settings.authority,
@@ -313,7 +320,7 @@ module.exports = function (settings) {
                         }
                     },
                     {
-                        from: /^((?!\.(png|cur|js|ts|tsx|woff|ttf|eot|svg|json|gif)).)*$/g,
+                        from: /^((?!\.(png|cur|js|ts|tsx|woff|ttf|eot|svg|json|gif|css)).)*$/g,
                         to: settings.publicPath + '/index.html'
                     }
                 ]

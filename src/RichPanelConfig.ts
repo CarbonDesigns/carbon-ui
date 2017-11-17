@@ -67,6 +67,12 @@ export default {
                 collapseDirection:LayoutDockPosition.Left
             },
             {
+                panelName: 'editor',
+                width: 400,
+                collapsed: false,
+                collapseDirection:LayoutDockPosition.Left
+            },
+            {
                 panelName: 'designer',
                 fill:true,
                 fixed:true

@@ -46,6 +46,7 @@ class PreviewStore extends CarbonStore<any> {
     onNavigateBack() {
 
     }
+
     @handles(PreviewActions.changeDevice)
     onChangeDevice({device}) {
         var d = Devices[device];
@@ -55,6 +56,10 @@ class PreviewStore extends CarbonStore<any> {
             // m.set("deviceHeight", d.h);
             // m.set("responsive", d.w == undefined);
         })
+    }
+    @handles(PreviewActions.changePreviewDisplayMode)
+    onChangePreviewDisplayMode({mode}) {
+        this.state = this.state.set("displayMode", mode);
     }
 }
 

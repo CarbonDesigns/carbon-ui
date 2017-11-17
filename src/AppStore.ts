@@ -3,7 +3,7 @@ import CarbonActions, { CarbonAction } from "./CarbonActions"
 import { handles, CarbonStore, Dispatcher, dispatch } from './CarbonFlux';
 import RichPanelConfig from './RichPanelConfig';
 import LayoutActions from './layout/LayoutActions';
-import { Selection, app, CommandManager, Environment, IDisposable, backend, WorkspaceTool } from "carbon-core";
+import { Selection, app, CommandManager, Environment, IDisposable, backend, WorkspaceTool, PreviewDisplayMode } from "carbon-core";
 import { ProjectAvatars } from "./Constants";
 
 type AppStoreState = {

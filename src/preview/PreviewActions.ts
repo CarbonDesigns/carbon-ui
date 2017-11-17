@@ -15,5 +15,11 @@ export default {
             type:'PreviewActions_changeDevice',
             device
         }
+    },
+    changePreviewDisplayMode:(mode) =>{
+        return {
+            type:'PreviewActions_changePreviewDisplayMode',
+            mode
+        }
     }
 }

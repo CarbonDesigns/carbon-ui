@@ -536,6 +536,11 @@ export default
         "@constraints.center": "Center",
         "@constraints.scale": "Scale",
 
+        "@preview.originalsize": "100%",
+        "@preview.fit": "Fit",
+        "@preview.fill": "Fill",
+        "@preview.responsive": "Responsive",
+
         "@animation.header":"Transition",
 
         "@account.joinMessage": "Join Carbonium Community!",

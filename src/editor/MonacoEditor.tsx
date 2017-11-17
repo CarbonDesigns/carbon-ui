@@ -1,9 +1,6 @@
-/// <reference path="../../node_modules/monaco-editor/monaco.d.ts" />
-
 import * as React from 'react';
-var storagedef = require("./model/storage.txt");
-
-declare const require: any;
+import { ensureMonacoLoaded } from './MonacoLoader';
+import EditorStore from "./EditorStore";
 
 interface Props {
     value: string;
@@ -13,38 +10,10 @@ interface Props {
 
 export class MonacoEditor extends React.Component<Props, {}> {
     editor: monaco.editor.IStandaloneCodeEditor;
-    _loadPromise: Promise<void>;
-    _loaded: boolean;
 
     constructor(props, context) {
         super(props, context);
-        this._loadPromise = new Promise<void>(resolve => {
-            // Fast path - monaco is already loaded
-            if (typeof ((window as any).monaco) === 'object') {
-                resolve();
-                return;
-            }
 
-            const onGotAmdLoader = () => {
-                // Load monaco
-                (window as any)["require"].config({ paths: { 'vs': '/target/vs' } });
-                (window as any)["require"](['vs/editor/editor.main'], () => {
-                    this._loaded = true;
-                    resolve();
-                });
-            };
-
-            // Load AMD loader if necessary
-            if (!(window as any)["require"]) {
-                const loaderScript = document.createElement('script');
-                loaderScript.type = 'text/javascript';
-                loaderScript.src = '/target/vs/loader.js';
-                loaderScript.addEventListener('load', onGotAmdLoader);
-                document.body.appendChild(loaderScript);
-            } else {
-                onGotAmdLoader();
-            }
-        });
     }
 
     render(): JSX.Element {
@@ -52,68 +21,15 @@ export class MonacoEditor extends React.Component<Props, {}> {
     }
 
     componentDidMount() {
-        this._loadPromise.then(() => {
-            //monaco.editor
-
-            monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-                allowJs: false,
-                noLib: true,
-                alwaysStrict: true,
-                allowNonTsExtensions: true
-            });
-
-
-            let dd = monaco.languages.typescript.typescriptDefaults.addExtraLib([
-                'declare class Facts {',
-                '    /**',
-                '     * Returns the next fact',
-                '     */',
-                '    static next():string',
-                '}',
-            ].join('\n'), 'filename/facts.d.ts');
-
-            let dd2 = monaco.languages.typescript.typescriptDefaults.addExtraLib(storagedef, 'filename/storage.d.ts');
-
-            var model = monaco.editor.createModel(`
-                    export class Model2 {
-                        run() {
-                            let a = new Facts();
-                        }
-                    }
-                `, "typescript", monaco.Uri.parse("model.ts"));
-
-
+        ensureMonacoLoaded().then(() => {
             this.editor = monaco.editor.create(this.refs['editor'] as HTMLDivElement, {
                 language: "typescript",
-                lineNumbers: "off",
+                lineNumbers: "on",
                 theme: "vs-dark",
                 automaticLayout: true
             });
 
-            this.editor.setModel(model);
-
-            // setTimeout(function () {
-            //     alert('test');
-            //     // dd.dispose();
-            //     // monaco.languages.typescript.typescriptDefaults.addExtraLib([
-            //     //     'declare class Facts {',
-            //     //     '    /**',
-            //     //     '     * Returns the next fact',
-            //     //     '     */',
-            //     //     '    static next2():string;',
-            //     //     '    foo():string;',
-            //     //     '}',
-            //     // ].join('\n'), 'filename/facts.d.ts');
-
-            //     monaco.languages.typescript.getTypeScriptWorker().then(worker => {
-            //         worker(model.uri).then(client => {
-            //             client.getEmitOutput(model.uri.toString()).then(result => {
-            //                 alert(result);
-            //             });
-            //         });
-            //     });
-            // }, 15000)
-
+            EditorStore.initialize(this.editor);
 
             this.editor.onDidChangeModelContent(event => {
                 this.props.onChange(this.editor.getValue());

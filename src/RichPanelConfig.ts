@@ -1,6 +1,6 @@
 import { LayoutDirection, LayoutDockPosition } from "carbon-core";
 
-const version = 3; // update version if layout has to changed on the client
+const version = 4; // update version if layout has to changed on the client
 
 export default {
     edit: {
@@ -84,6 +84,11 @@ export default {
         direction: LayoutDirection.Row,
         fixed: true,
         children: [
+            {
+                width: 400,
+                panelName: 'editor',
+                collapseDirection:LayoutDockPosition.Left
+            },
             {
                 panelName: 'preview',
                 fill:true,

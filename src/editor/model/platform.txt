@@ -1,0 +1,18 @@
+declare var Storage = {
+    static LocalStorage:any;
+    static RemoteStorage:any;
+}
+
+declare interface IUIElement {
+    readonly name:string;
+    width:number;
+    height:number;
+}
+
+declare interface IRectangle extends IUIElement {
+
+}
+
+declare interface IPath extends IUIElement {
+    points:any[];
+}

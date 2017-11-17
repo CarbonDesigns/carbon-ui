@@ -4,60 +4,60 @@ import DropButtonItem from '../shared/DropButtonItem';
 import ActionButton from './ActionButton';
 import UserBar from "./UserBar";
 import FlyoutButton from "../shared/FlyoutButton";
-import {app} from "carbon-core";
+import { app, PreviewDisplayMode } from "carbon-core";
 import { listenTo, Component, ComponentWithImmutableState, CarbonLabel, dispatch } from '../CarbonFlux';
 import AppActions from '../RichAppActions';
 import cx from "classnames";
 import bem from '../utils/commonUtils';
-import {FormattedMessage, defineMessages} from 'react-intl';
-import {Record} from "immutable";
+import { FormattedMessage, defineMessages } from 'react-intl';
+import { Record } from "immutable";
 import Dropdown from "../shared/Dropdown";
 import PreviewActions from "../preview/PreviewActions";
 import PreviewStore from "../preview/PreviewStore";
-import {StoriesPopupList, StoriesListItem}  from "../stories/StoriesList";
+import { StoriesPopupList, StoriesListItem } from "../stories/StoriesList";
 import StoriesStore from "../stories/StoriesStore";
 import AppStatus from "./AppStatus";
 import appStore from "../AppStore";
 
 var State = Record({
-    canUndo        : false,
-    canRedo        : false,
-    activeMode     : null,
-    activeDevice   : 0
+    canUndo: false,
+    canRedo: false,
+    activeMode: null,
+    activeDevice: 0
 });
 
 interface StoriesSelectorProps {
-    name?:string;
+    name?: string;
 }
 
 interface StoriesSelectorState {
-    data:any;
+    data: any;
 }
 
 
 class StoriesSelector extends Component<StoriesSelectorProps, StoriesSelectorState> {
     constructor(props) {
         super(props);
-        this.state = {data: StoriesStore.state};
+        this.state = { data: StoriesStore.state };
     }
 
-    public refs:{
-        flyout:FlyoutButton;
+    public refs: {
+        flyout: FlyoutButton;
     }
 
     @listenTo(StoriesStore)
     onChange() {
         if (this.state.data !== StoriesStore.state) {
-            this.setState({data: StoriesStore.state});
+            this.setState({ data: StoriesStore.state });
         }
     }
 
     _prevStory(event) {
         var story = app.activeStory();
         var stories = app.stories;
-        var index = stories.findIndex(s=>s.props.id == story.props.id);
+        var index = stories.findIndex(s => s.props.id === story.props.id);
 
-        if(index > 0) {
+        if (index > 0) {
             let newStory = stories[index - 1];
             app.activeStory(newStory);
         }
@@ -68,9 +68,9 @@ class StoriesSelector extends Component<StoriesSelectorProps, StoriesSelectorSta
     _nextStory(event) {
         var story = app.activeStory();
         var stories = app.stories;
-        var index = stories.findIndex(s=>s.props.id == story.props.id);
+        var index = stories.findIndex(s => s.props.id === story.props.id);
 
-        if(index >=0 && index < stories.length - 1) {
+        if (index >= 0 && index < stories.length - 1) {
             let newStory = stories[index + 1];
             app.activeStory(newStory);
         }
@@ -78,10 +78,10 @@ class StoriesSelector extends Component<StoriesSelectorProps, StoriesSelectorSta
         event.stopPropagation();
     }
 
-    _renderSelectedStory = ()=> {
+    _renderSelectedStory = () => {
         var story = app.activeStory();
-        if (story == null){
-            return <CarbonLabel id="@storyselector.empty" /> ;
+        if (!story) {
+            return <CarbonLabel id="@storyselector.empty" />;
         }
 
         var name = story.props.name;
@@ -89,7 +89,7 @@ class StoriesSelector extends Component<StoriesSelectorProps, StoriesSelectorSta
         return <div>{name}</div>
     }
 
-    _changeCurrentStory=(story) => {
+    _changeCurrentStory = (story) => {
         this.refs.flyout.close();
         app.setActiveStoryById(story.id);
     }
@@ -99,16 +99,16 @@ class StoriesSelector extends Component<StoriesSelectorProps, StoriesSelectorSta
         var activeStory = app.activeStory();;
         var storyIndex = -1;
         let storiesCount = 0;
-        if(stories && stories.count()) {
+        if (stories && stories.count()) {
             storiesCount = stories.count();
-            storyIndex = stories.findIndex(s=>s.id === activeStory.props.id);
+            storyIndex = stories.findIndex(s => s.id === activeStory.props.id);
         }
 
         return (
-            <div className="preview__story-selector" onClick={this._nextStory }>
+            <div className="preview__story-selector" onClick={this._nextStory}>
                 <FlyoutButton ref="flyout"
                     className="preview__story-dropdown light"
-                    position={{targetVertical:'bottom', disableAutoClose:true}}
+                    position={{ targetVertical: 'bottom', disableAutoClose: true }}
                     renderContent={this._renderSelectedStory}>
                     <StoriesPopupList
                         stories={this.state.data.stories}
@@ -119,8 +119,8 @@ class StoriesSelector extends Component<StoriesSelectorProps, StoriesSelectorSta
                     />
                 </FlyoutButton>
 
-                <div className={bem("preview", "story-switcher", {prev: true, disabled: storyIndex<=0 })} onClick={this._prevStory }></div>
-                <div className={bem("preview", "story-switcher", {next: true, disabled: storyIndex<0 || storyIndex >= storiesCount - 1})} onClick={this._nextStory }></div>
+                <div className={bem("preview", "story-switcher", { prev: true, disabled: storyIndex <= 0 })} onClick={this._prevStory}></div>
+                <div className={bem("preview", "story-switcher", { next: true, disabled: storyIndex < 0 || storyIndex >= storiesCount - 1 })} onClick={this._nextStory}></div>
             </div>
         );
     }
@@ -128,13 +128,14 @@ class StoriesSelector extends Component<StoriesSelectorProps, StoriesSelectorSta
 }
 
 interface HeaderProps {
-    isLoggedIn?:boolean;
+    isLoggedIn?: boolean;
 }
 type HeaderState = {
     activeMode: string;
     activeDevice?: any;
     appName: string;
     appAvatar: string;
+    displayMode?: PreviewDisplayMode;
 }
 
 export default class Header extends Component<HeaderProps, HeaderState> {
@@ -143,7 +144,8 @@ export default class Header extends Component<HeaderProps, HeaderState> {
         this.state = {
             activeMode: appStore.state.activeMode,
             appName: appStore.state.appName,
-            appAvatar: appStore.state.appAvatar
+            appAvatar: appStore.state.appAvatar,
+            displayMode: PreviewStore.state.displayMode
         }
     }
 
@@ -159,11 +161,12 @@ export default class Header extends Component<HeaderProps, HeaderState> {
     @listenTo(PreviewStore)
     onChangePreview() {
         this.setState({
-            activeDevice: PreviewStore.state.activeDevice
+            activeDevice: PreviewStore.state.activeDevice,
+            displayMode: PreviewStore.state.displayMode
         });
     }
 
-    changeDevice(i){
+    changeDevice(i) {
         dispatch(PreviewActions.changeDevice(i))
     }
 
@@ -171,19 +174,40 @@ export default class Header extends Component<HeaderProps, HeaderState> {
         dispatch(AppActions.showMainMenu());
     }
 
+    changeDisplayMode = (value: PreviewDisplayMode) => {
+        // this.setState({ displayMode: value });
+        dispatch(PreviewActions.changePreviewDisplayMode(value))
+    }
+
+    renderDisplayMode = () => {
+        let id = "@preview.originalsize";
+        switch (this.state.displayMode) {
+            case PreviewDisplayMode.Fill:
+                id = "@preview.fill"
+                break;
+            case PreviewDisplayMode.Fit:
+                id = "@preview.fit"
+                break;
+            case PreviewDisplayMode.Responsive:
+                id = "@preview.responsive"
+                break;
+        }
+        return <FormattedMessage id={id} tagName="div" />;
+    }
+
     render() {
-        const {isLoggedIn} = this.props;
+        const { isLoggedIn } = this.props;
 
         var that = this;
 
         return (
             <div className="layout__header">
                 <div className="projectbar">
-                        { this.state.appAvatar && <div className="projectbar__pic" onClick={Header.onProjectClick}>
-                              <div className="projectbar__project-avatar" style={{ backgroundImage: "url('" + this.state.appAvatar + "')" }} onClick={Header.onProjectClick}></div>
-                            </div>
-                        }
-                    <div className={ bem("projectbar", "name", {big: this.state.appName.length > 10}) } onClick={Header.onProjectClick}>
+                    {this.state.appAvatar && <div className="projectbar__pic" onClick={Header.onProjectClick}>
+                        <div className="projectbar__project-avatar" style={{ backgroundImage: "url('" + this.state.appAvatar + "')" }} onClick={Header.onProjectClick}></div>
+                    </div>
+                    }
+                    <div className={bem("projectbar", "name", { big: this.state.appName.length > 10 })} onClick={Header.onProjectClick}>
                         <h2>{this.state.appName}</h2>
                     </div>
                 </div>
@@ -199,10 +223,10 @@ export default class Header extends Component<HeaderProps, HeaderState> {
 
                             return (
                                 <div className={classname} key={item}
-                                     onClick={()=>app.setMode(item)}>
+                                    onClick={() => app.setMode(item)}>
                                     <div className="big-icon"></div>
                                     <div className="pill-cap">
-                                        <FormattedMessage id={'mode.' + item}/>
+                                        <FormattedMessage id={'mode.' + item} />
                                     </div>
                                 </div>
                             )
@@ -214,14 +238,28 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                 { (this.state.activeMode === "preview")
                     &&  <StoriesSelector name=""/>
                 }*/}
+                {/* Stories in preview*/}
+                {(this.state.activeMode === "preview")
+                    && (<Dropdown
+                        autoClose={true}
+                        className="drop_down_fixed80"
+                        selectedItem={this.state.displayMode}
+                        onSelect={this.changeDisplayMode}
+                        renderSelected={this.renderDisplayMode}>
+                        <p>Original size</p>
+                        <p>Fit</p>
+                        <p>Fill</p>
+                        <p>Responsive</p>
+                    </Dropdown>)
+                }
 
-                { /*   Userbar / Signup   */ }
+                { /*   Userbar / Signup   */}
                 <div className="statusbar">
-                    <AppStatus/>
-                    <UserBar/>
+                    <AppStatus />
+                    <UserBar />
                 </div>
 
-                { /* Help   */ }
+                { /* Help   */}
                 {/*<DropButton key="helpbar" id="helpbar" caption="Help">
                     <DropButtonItem key="feedback"  id="action-button_feedback"  >Leave a feedback</DropButtonItem>
                     <DropButtonItem key="bugreport" id="action-button_bugreport" >Found a bug?</DropButtonItem>

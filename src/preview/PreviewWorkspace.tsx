@@ -127,21 +127,23 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             return;
         }
 
-        if (data.activePage !== newData.activePage) {
-            this._currentCanvas = (this._currentCanvas + 1) % 2;
-
-            var nextPage = this.previewProxy.getScreenById(newData.activePage.artboardId, {
-                width: this.refs.viewport.clientWidth,
-                height: this.refs.viewport.clientHeight
-            }, this.state.data.displayMode);
-
-            this._updateActivePage(nextPage, newData.activePage.animation);
+        var page = this.previewProxy.activePage;
+        this.setState({ data: newData });
+        if (!page) {
+            return null;
         }
 
-        this.setState({ data: newData });
-        this.ensureCanvasSize(newData);
+        if (data.displayMode !== newData.displayMode) {
+            // this._currentCanvas = (this._currentCanvas + 1) % 2;
 
+            // var nextPage = this.previewProxy.getScreenById(page.artboardId, {
+            //     width: this.refs.viewport.clientWidth,
+            //     height: this.refs.viewport.clientHeight
+            // }, this.state.data.displayMode);
 
+            // this._updateActivePage(nextPage, page.animation);
+            this.ensureCanvasSize(newData);
+        }
     }
 
     _updateActivePage(nextPage, animation?) {
@@ -415,7 +417,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             return;
         }
 
-        let previewDisplayMode = PreviewDisplayMode.OriginalSize;
+        let previewDisplayMode = PreviewStore.state.displayMode;
+        // if(data) {
+        //     previewDisplayMode = data.displayMode;
+        // }
 
         let viewport = this.refs.viewport;
 
@@ -509,7 +514,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             frameCanvas.style.display = 'none';
         }
 
-        this.previewProxy.resizeActiveScreen(artboardSize, scale);
+        this.previewProxy.resizeActiveScreen(deviceSize, scale, previewDisplayMode);
 
         this._scale = scale;
 

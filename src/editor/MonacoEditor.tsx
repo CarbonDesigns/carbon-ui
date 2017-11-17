@@ -1,6 +1,7 @@
 /// <reference path="../../node_modules/monaco-editor/monaco.d.ts" />
 
 import * as React from 'react';
+var storagedef = require("./model/storage.txt");
 
 declare const require: any;
 
@@ -71,6 +72,8 @@ export class MonacoEditor extends React.Component<Props, {}> {
                 '}',
             ].join('\n'), 'filename/facts.d.ts');
 
+            let dd2 = monaco.languages.typescript.typescriptDefaults.addExtraLib(storagedef, 'filename/storage.d.ts');
+
             var model = monaco.editor.createModel(`
                     export class Model2 {
                         run() {
@@ -89,27 +92,27 @@ export class MonacoEditor extends React.Component<Props, {}> {
 
             this.editor.setModel(model);
 
-            setTimeout(function () {
-                alert('test');
-                // dd.dispose();
-                // monaco.languages.typescript.typescriptDefaults.addExtraLib([
-                //     'declare class Facts {',
-                //     '    /**',
-                //     '     * Returns the next fact',
-                //     '     */',
-                //     '    static next2():string;',
-                //     '    foo():string;',
-                //     '}',
-                // ].join('\n'), 'filename/facts.d.ts');
+            // setTimeout(function () {
+            //     alert('test');
+            //     // dd.dispose();
+            //     // monaco.languages.typescript.typescriptDefaults.addExtraLib([
+            //     //     'declare class Facts {',
+            //     //     '    /**',
+            //     //     '     * Returns the next fact',
+            //     //     '     */',
+            //     //     '    static next2():string;',
+            //     //     '    foo():string;',
+            //     //     '}',
+            //     // ].join('\n'), 'filename/facts.d.ts');
 
-                monaco.languages.typescript.getTypeScriptWorker().then(worker => {
-                    worker(model.uri).then(client => {
-                        client.getEmitOutput(model.uri.toString()).then(result => {
-                            alert(result);
-                        });
-                    });
-                });
-            }, 15000)
+            //     monaco.languages.typescript.getTypeScriptWorker().then(worker => {
+            //         worker(model.uri).then(client => {
+            //             client.getEmitOutput(model.uri.toString()).then(result => {
+            //                 alert(result);
+            //             });
+            //         });
+            //     });
+            // }, 15000)
 
 
             this.editor.onDidChangeModelContent(event => {

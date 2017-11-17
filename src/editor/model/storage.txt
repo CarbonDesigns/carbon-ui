@@ -1,0 +1,4 @@
+declare var Storage = {
+    static LocalStorage:any;
+    static RemoteStorage:any;
+}

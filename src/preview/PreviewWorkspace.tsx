@@ -133,16 +133,19 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             return null;
         }
 
+        if (data.activePage !== newData.activePage) {
+            this._currentCanvas = (this._currentCanvas + 1) % 2;
+
+            var nextPage = this.previewProxy.getScreenById(newData.activePage.artboardId, {
+                width: this.refs.viewport.clientWidth,
+                height: this.refs.viewport.clientHeight
+            }, this.state.data.displayMode);
+
+            this._updateActivePage(nextPage, page.animation);
+        }
+
         if (data.displayMode !== newData.displayMode) {
-            // this._currentCanvas = (this._currentCanvas + 1) % 2;
-
-            // var nextPage = this.previewProxy.getScreenById(page.artboardId, {
-            //     width: this.refs.viewport.clientWidth,
-            //     height: this.refs.viewport.clientHeight
-            // }, this.state.data.displayMode);
-
-            // this._updateActivePage(nextPage, page.animation);
-            this.ensureCanvasSize(newData);
+            this.ensureCanvasSize();
         }
     }
 

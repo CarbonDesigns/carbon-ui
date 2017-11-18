@@ -30,7 +30,6 @@ export class MonacoEditor extends React.Component<Props, {}> {
             });
 
             EditorStore.initialize(this.editor);
-
             this.editor.onDidChangeModelContent(event => {
                 this.props.onChange(this.editor.getValue());
             });

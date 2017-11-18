@@ -9,7 +9,7 @@ var State = Record({
     // deviceWidth: Devices[0].w,
     // deviceHeight: Devices[0].h,
     // responsive:false,
-    displayMode: PreviewDisplayMode.OriginalSize,
+    displayMode: PreviewDisplayMode.Fit,
     previewActive: true,
     activePage: null,
     activeDevice:0

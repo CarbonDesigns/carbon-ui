@@ -11,8 +11,10 @@ import ScrollContainer from "../shared/ScrollContainer";
 import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
 import { say } from "../shared/Utils";
 import bem from "bem";
-import {MonacoEditor} from "./MonacoEditor"
+import { MonacoEditor } from "./MonacoEditor"
+import EditorToolbar from './EditorToolbar';
 
+let et = EditorToolbar.prototype;
 let dd = MonacoEditor.prototype;
 // TODO: inherited visibility and lock style
 function b(a, b?, c?) { return bem('editor', a, b, c) }
@@ -28,21 +30,22 @@ export class EditorPanel extends Component<any, any> {
 
     componentDidMount() {
         super.componentDidMount();
-       // alert(monaco);
+        // alert(monaco);
     }
 
     componentWillUnmout() {
         super.componentWillUnmount();
     }
 
-    onChange(text:string) {
+    onChange(text: string) {
 
     }
 
     render() {
         let { children, ...rest } = this.props;
         return <Panel ref="panel" header="Editor" id="editor_panel" {...rest}>
-            <MonacoEditor value="test" language="ts" onChange={this.onChange}/>
+            <EditorToolbar />
+            <MonacoEditor value="test" language="ts" onChange={this.onChange} />
         </Panel>;
     }
 }

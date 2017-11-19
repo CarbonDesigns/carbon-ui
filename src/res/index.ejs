@@ -60,6 +60,37 @@
             carbon.coreCallback();
         }
     }
+    window.__sandboxEval = function(__code, proxy) {
+        let Object = null;
+        let XMLHttpRequest = null;
+        let Function = null;
+        let Boolean = null;
+        let Symbol = null;
+        let Error = null;
+        let EvalError = null;
+        let InternalError = null;
+        let RangeError = null;
+        let Proxy = null;
+        let ReferenceError = null;
+        let SyntaxError = null;
+        let TypeError = null;
+        let URIError = null;
+        let window = null;
+        let document = null;
+        let screen = null;
+        let location = null;
+        let history = null;
+        let navigator = null;
+        let localStorage = null;
+        let fetch = null;
+
+        with(proxy) {
+            eval(
+                "let eval = null;"+
+                __code
+            );
+        }
+    }
 </script>
 
 <!-- needed for mobile safari -->

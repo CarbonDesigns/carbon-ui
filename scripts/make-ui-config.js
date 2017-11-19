@@ -10,6 +10,7 @@ var resolveCoreModules = require("./resolveCore");
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
 
 var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
@@ -100,6 +101,11 @@ function getPlugins(settings) {
     var plugins = [
         //breaks incremental updates in watch mode...
         //new webpack.optimize.DedupePlugin(),
+        // new CopyWebpackPlugin([{
+        //     from:fullPath("../src/editor/model/platform.d.ts"),
+        //     to:fullPath("../src/editor/model/platform.txt"),
+        //     toType:'file'
+        // }]),
 
         new BundleResourcesPlugin({
             cdn: settings.authority,

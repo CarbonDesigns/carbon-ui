@@ -1,13 +1,23 @@
-declare var Storage = {
-    static LocalStorage:any;
-    static RemoteStorage:any;
-}
+// declare var Storage = {
+//     static LocalStorage:any;
+//     static RemoteStorage:any;
+// }
+
+type AnimationProps = {[name:string]:number};
 
 declare interface IUIElement {
     readonly name:string;
+    readonly x:number;
+    readonly y:number;
     width:number;
     height:number;
+    visible:boolean;
+    angle:number;
+
+    animate(props:AnimationProps, duration?:number):Promise<void>;
 }
+
+declare function alert(text:number|string);
 
 declare interface IRectangle extends IUIElement {
 
@@ -15,4 +25,27 @@ declare interface IRectangle extends IUIElement {
 
 declare interface IPath extends IUIElement {
     points:any[];
+}
+
+
+// system
+
+/**
+ * Represents the completion of an asynchronous operation
+ */
+interface Promise<T> {
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
 }

@@ -250,7 +250,7 @@ export class SwatchesStore extends CarbonStore<SwatchesStoreState> {
                 }
             }
         });
-        return { id: element.id(), name: element.name(), colors: colors, pageId: element.primitiveRoot().id() };
+        return { id: element.id(), name: element.name, colors: colors, pageId: element.primitiveRoot().id() };
     }
 
     private onTransparentColor() {

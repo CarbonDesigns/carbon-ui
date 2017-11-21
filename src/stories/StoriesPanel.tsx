@@ -23,7 +23,7 @@ function _selectStory(item) {
 }
 
 function _createEmptyStory(name) {
-    return { name: name, description: "", type: StoryType.Flow, pageName: app.activePage.name(), pageId: app.activePage.id() };
+    return { name: name, description: "", type: StoryType.Flow, pageName: app.activePage.name, pageId: app.activePage.id() };
 }
 
 function _saveNewStory(state) {

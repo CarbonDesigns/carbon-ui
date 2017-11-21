@@ -46,7 +46,7 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
         //TODO: add possibility to add page icons?
         return <p key={page.id()}>
             {/* <i className="ico inline-ico ico-stencil-set" /> */}
-            <span>{page.name()}</span>
+            <span>{page.name}</span>
         </p>
     }
 

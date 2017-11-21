@@ -198,7 +198,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                 let artboard = page.getImmediateChildById<IArtboard>(cacheItem.id);
                 let elements = this.buildIconSet(artboard);
                 let group: ToolboxGroup<SpriteStencil> = {
-                    name: artboard.name(),
+                    name: artboard.name,
                     items: []
                 }
 
@@ -210,7 +210,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                         realWidth: IconSize,
                         realHeight: IconSize,
                         spriteMap: { x, y: 0, width: IconSize, height: IconSize },
-                        title: element.name(),
+                        title: element.name,
                         spriteSize: cacheItem.spriteSize,
                         spriteUrl: cacheItem.spriteUrl,
                         spriteUrl2x: cacheItem.spriteUrl2x,

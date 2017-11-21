@@ -66,7 +66,7 @@ export default class ToolboxConfiguration {
         let elementWithTiles: Array<{ element: IArtboard | IStateboard, tileSize: TileSize }> = elements.map(e => {
             let tileSize;
             if (e.props.tileSize === TileSize.Auto) {
-                tileSize = ToolboxConfiguration.chooseTileType(e.width(), e.height());
+                tileSize = ToolboxConfiguration.chooseTileType(e.width, e.height);
             } else {
                 tileSize = e.props.tileSize;
             }
@@ -109,7 +109,7 @@ export default class ToolboxConfiguration {
                 y = 0;
             }
 
-            let data = ToolboxConfiguration.fitToTile(element.width(), element.height(), tileSize, PADDING);
+            let data = ToolboxConfiguration.fitToTile(element.width, element.height, tileSize, PADDING);
             renderTasks.push({ x, y, data: data });
             height = Math.max(height, data.height);
             if ((counter + 1) % countOnLine === 1) {
@@ -171,7 +171,7 @@ export default class ToolboxConfiguration {
             realHeight: bb.width,
             realWidth: bb.height,
             spriteMap: { x: t.x * contextScale, y: t.y * contextScale, width: t.data.width * contextScale, height: t.data.height * contextScale },
-            title: artboard.name(),
+            title: artboard.name,
             stateId,
             //will be set later
             spriteSize: null,

@@ -1,9 +1,10 @@
 import { CarbonStore, dispatch, handles } from "../CarbonFlux";
 import Immutable from "immutable";
-import platformCodeDefinition from "./model/platform.txt";
-var emptyCode: any = require("./model/empty.txt");
+var runtimeCodeDefinition: string = require("raw!../../../carbon-core/mylibs/definitions/carbon-runtime.d.ts") as any;
+var platformCodeDefinition: string = require("raw!./model/platform.d.ts") as any;
+var emptyCode: string = require("./model/empty.txt") as any;
 
-import { IDisposable, IArtboard, app, Environment, ArtboardProxyGenerator, Sandbox } from "carbon-core";
+import { IDisposable, IArtboard, app, Environment, ArtboardProxyGenerator, Sandbox, PreviewProxy } from "carbon-core";
 import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
 
@@ -27,6 +28,8 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
 
     private proxyGenerator = new ArtboardProxyGenerator();
 
+    private _onPageChangedBinding: IDisposable;
+
     initialize(editor: monaco.editor.IStandaloneCodeEditor) {
         if (this.editor !== editor) {
             this.editorDisposables.forEach(e => e.dispose());
@@ -48,8 +51,9 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
                 }));
             }
         }
+        let previewProxy = (Environment.controller as any).previewProxy;
 
-        if (this.initialized) {
+        if (this.initialized || !previewProxy) {
             return;
         }
 
@@ -63,22 +67,57 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
             noImplicitThis: true,
             noImplicitReturns: true,
             noImplicitUseStrict: true,
-            removeComments:true,
-            strictNullChecks:true,
-            alwaysStrict:true,
+            removeComments: true,
+            strictNullChecks: true,
+            alwaysStrict: true,
             target: monaco.languages.typescript.ScriptTarget.ES2016
         });
 
+        // this.storeDisposables.push(
+        //     monaco.editor.createModel(runtimeCodeFefinition as string, "typescript", monaco.Uri.parse("carbon-runtime.d.ts"))
+        // );
+        runtimeCodeDefinition = runtimeCodeDefinition.replace(/^.+export /gm, "");
+        runtimeCodeDefinition = runtimeCodeDefinition.replace('declare module "carbon-runtime" {', '');
+        let idx = runtimeCodeDefinition.lastIndexOf('}');
+        runtimeCodeDefinition = runtimeCodeDefinition.substr(0, idx - 1);
         this.storeDisposables.push(
-            monaco.languages.typescript.typescriptDefaults.addExtraLib(platformCodeDefinition as string, 'filename/storage.d.ts')
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(runtimeCodeDefinition as string, 'carbon-runtime.d.ts')
+        );
+        this.storeDisposables.push(
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(platformCodeDefinition as string, 'platform.d.ts')
         );
         this.initialized = true;
-        this.changeArtboard(app.activePage.getActiveArtboard());
-        this.storeDisposables.push(
-            Environment.controller.onArtboardChanged.bind((artboard, oldArtboard) => {
-                this.changeArtboard(artboard);
-            })
-        );
+        // this.changeArtboard(app.activePage.getActiveArtboard());
+        // this.storeDisposables.push(
+        //     Environment.controller.onArtboardChanged.bind((artboard, oldArtboard) => {
+        //         this.changeArtboard(artboard);
+        //     })
+        // );
+
+        Environment.detaching.bind(() => {
+            if (this._onPageChangedBinding) {
+                this._onPageChangedBinding.dispose();
+                this._onPageChangedBinding = null;
+            }
+        })
+        this.changeArtboard(previewProxy.activeArtboard);
+        this._onPageChangedBinding = previewProxy.onPageChanged.bind((page) => {
+            this.changeArtboard(previewProxy.activeArtboard);
+        });
+
+        Environment.attached.bind((view, controller) => {
+            let previewProxy = (controller as any).previewProxy;
+            if (this._onPageChangedBinding) {
+                this._onPageChangedBinding.dispose();
+                this._onPageChangedBinding = null;
+            }
+
+            if (previewProxy) {
+                this._onPageChangedBinding = previewProxy.onPageChanged.bind((page) => {
+                    this.changeArtboard(previewProxy.activeArtboard);
+                });
+            }
+        })
     }
 
     getArtboardFileName(artboard: IArtboard) {
@@ -97,7 +136,7 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
                 code = emptyCode;
             }
 
-            codeModel = monaco.editor.createModel(code, "typescript", monaco.Uri.parse(artboard.name() + ".ts"));
+            codeModel = monaco.editor.createModel(code, "typescript", monaco.Uri.parse(artboard.name + ".ts"));
             this.codeCache[artboard.id()] = codeModel;
         }
         this.currentEditorModel = codeModel;
@@ -138,6 +177,7 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
         if (!this.currentArtboard || (!force && this.activeProxyVersion === this.currentArtboard.version)) {
             return;
         }
+
         this.activeProxyVersion = this.currentArtboard.version;
         this.getActiveArtboardProxyModel().then((model) => {
             // do not dispose active model before new one is ready
@@ -147,7 +187,9 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
             }
 
             if (model) {
-                this.activeProxyModelDisposable = monaco.languages.typescript.typescriptDefaults.addExtraLib(model.proxyDefinition, 'filename/proxy.d.ts');
+
+                this.activeProxyModelDisposable = monaco.editor.createModel(model.proxyDefinition, "typescript", monaco.Uri.parse("proxy.d.ts"));
+                //this.activeProxyModelDisposable = monaco.languages.typescript.typescriptDefaults.addExtraLib(model.proxyDefinition, 'proxy.d.ts');
             }
         });
     }

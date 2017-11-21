@@ -228,7 +228,7 @@ function getLoaders(settings) {
             loaders: [babelLoader, "react-map-styles"]
         },
         {
-            test: /\.txt$/,
+            test: /\.(txt)$/,
             loaders: ['raw-loader']
         },
         {
@@ -242,7 +242,7 @@ function getLoaders(settings) {
             exclude: excludes
         },
         {
-            test: /\.ts$/,
+            test: /[^\.]\w(?!\.d)\.ts$/,
             loaders: [babelLoader, "awesome-typescript-loader"],
             exclude: /node_modules/
         },

@@ -3,29 +3,7 @@
 //     static RemoteStorage:any;
 // }
 
-type AnimationProps = {[name:string]:number};
-
-declare interface IUIElement {
-    readonly name:string;
-    readonly x:number;
-    readonly y:number;
-    width:number;
-    height:number;
-    visible:boolean;
-    angle:number;
-
-    animate(props:AnimationProps, duration?:number):Promise<void>;
-}
-
 declare function alert(text:number|string);
-
-declare interface IRectangle extends IUIElement {
-
-}
-
-declare interface IPath extends IUIElement {
-    points:any[];
-}
 
 
 // system

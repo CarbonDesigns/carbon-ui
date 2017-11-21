@@ -138,9 +138,9 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     private renderTitle() {
         if (this.state.editing) {
             return <EnterInput className={b("input")}
-                defaultValue={this.props.layer.element.name()}
+                defaultValue={this.props.layer.element.name}
                 onValueEntered={value => {
-                    this.props.layer.element.name(value);
+                    this.props.layer.element.name = (value);
                     this.setState({editing: false});
                 }}
                 autoFocus/>
@@ -153,7 +153,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     render() {
         var layer = this.props.layer;
         let locked = layer.element.locked();
-        let visible = layer.element.visible();
+        let visible = layer.element.visible;
 
         let layerClassNames = b(null, {
             "lock-0": !locked,

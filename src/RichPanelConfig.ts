@@ -1,6 +1,6 @@
 import { LayoutDirection, LayoutDockPosition } from "carbon-core";
 
-const version = 4; // update version if layout has to changed on the client
+const version = 5; // update version if layout has to changed on the client
 
 export default {
     edit: {
@@ -64,12 +64,6 @@ export default {
                 panelName: 'layers',
                 width: 250,
                 collapsed: true,
-                collapseDirection:LayoutDockPosition.Left
-            },
-            {
-                panelName: 'editor',
-                width: 400,
-                collapsed: false,
                 collapseDirection:LayoutDockPosition.Left
             },
             {

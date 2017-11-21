@@ -251,7 +251,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             let old = screenshots.find(x => x.id === oldArtbard.id());
             if (old) {
                 old.id = newArtboard.id();
-                old.name = newArtboard.name();
+                old.name = newArtboard.name;
                 old.url = dataUrl;
                 updated = true;
             }
@@ -263,7 +263,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                 screenshots.splice(existing, 1);
             }
 
-            screenshots.push({id: newArtboard.id(), name: newArtboard.name(), url: dataUrl});
+            screenshots.push({id: newArtboard.id(), name: newArtboard.name, url: dataUrl});
         }
         this.setState({ screenshots });
     }
@@ -350,7 +350,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             className="drop_down"
             selectedItem={this.state.page}
             items={pages}
-            renderItem={page => <p>{page.name()}</p>}
+            renderItem={page => <p>{page.name}</p>}
             caption={caption}
             onSelect={this.pageSelected}>
         </PageSelect>;

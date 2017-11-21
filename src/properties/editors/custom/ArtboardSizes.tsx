@@ -349,7 +349,7 @@ export default class ArtboardSizes extends EditorComponent<any, any, any>{
             var section = {name:t.name, children:children};
             for(var j = 0; j < t.children.length; ++j){
                 var c = t.children[j];
-                children.push({name:c.name(), w:c.width(), h:c.height(), i:c});
+                children.push({name:c.name, w:c.width, h:c.height, i:c});
             }
             screenSizes.push(section);
         }

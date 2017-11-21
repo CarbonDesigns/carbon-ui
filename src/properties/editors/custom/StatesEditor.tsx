@@ -81,7 +81,7 @@ export default class CustomPropertiesEditor extends EditorComponent<any, any, an
                 this.setValueByCommand(newValue);
                 this.setState({newProperty: false});
                 //this.buildMetadata is undefined
-                //PropertyMetadata.replaceForNamedType(this.props.e.first().name(), Symbol, this.buildMetadata(newValue));
+                //PropertyMetadata.replaceForNamedType(this.props.e.first().name, Symbol, this.buildMetadata(newValue));
                 return;
             }
         }

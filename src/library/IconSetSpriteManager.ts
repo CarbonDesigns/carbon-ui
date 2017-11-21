@@ -43,7 +43,7 @@ export default class IconSetSpriteManager {
         let taskPromises = [];
 
         for (let element of elements) {
-            let data = IconSetSpriteManager.fitToSize(element.width(), element.height(), iconSize);
+            let data = IconSetSpriteManager.fitToSize(element.width, element.height, iconSize);
             let renderTask = { x, y: 0, data: data };
             x += iconSize;
             taskPromises.push(IconSetSpriteManager._performRenderTask(renderTask, element, context, contextScale, env));
@@ -73,8 +73,8 @@ export default class IconSetSpriteManager {
             element = clone;
         }
 
-        let w = element.width();
-        let h = element.height();
+        let w = element.width;
+        let h = element.height;
         let scale = t.data.scale;
         let matrix = Matrix.Identity.clone();
         context.save();

@@ -328,7 +328,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         circle.setTransform(Matrix.createTranslationMatrix(x - 50, y - 50));
         layer.add(circle);
         return circle.animate({ width: 10, height: 10 }, 450, {}, () => {
-            circle.setTransform(Matrix.createTranslationMatrix(x - circle.width() / 2, y - circle.height() / 2));
+            circle.setTransform(Matrix.createTranslationMatrix(x - circle.width / 2, y - circle.height / 2));
             layer && layer.invalidate();
         }).then(() => {
             circle.parent().remove(circle);
@@ -463,7 +463,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             return;
         }
 
-        let artboardSize = this.previewProxy.activePage.originalSize;//{ width: artboard.width(), height: artboard.height() };
+        let artboardSize = this.previewProxy.activePage.originalSize;
 
         let deviceSize = this._findDeviceSize(viewportSize, artboardSize, previewDisplayMode);
         let deviceScale = this._findDeviceScale(deviceSize, artboardSize, previewDisplayMode);
@@ -484,8 +484,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         //         deviceHeight = frame.runtimeProps.cloneScreenHeight;
         //         drawFrame = true;
         //     } else {
-        //         deviceWidth = artboard.width();
-        //         deviceHeight = artboard.height();
+        //         deviceWidth = artboard.width;
+        //         deviceHeight = artboard.height;
         //     }
         // }
 

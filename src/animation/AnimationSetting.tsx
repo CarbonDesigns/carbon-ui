@@ -35,7 +35,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
     constructor(props) {
         super(props);
         this._artboards = [{ name: () => "Previous artboard", id: () => "-1" }]
-            .concat(app.activePage.getAllArtboards().map(x => { return { id: () => x.id(), name: () => x.name() } }));
+            .concat(app.activePage.getAllArtboards().map(x => { return { id: () => x.id(), name: () => x.name } }));
         var artboardIndex = 0;
         for (var i = 0; i < this._artboards.length; i++) {
             if (this._artboards[i].id() === this.props.action.targetArtboardId) {
@@ -85,7 +85,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
     renderTarget = (selectedItemIndex) => {
         const __target = <FormattedMessage id="transition.target" />;
 
-        const current = this._artboards[selectedItemIndex].name();
+        const current = this._artboards[selectedItemIndex].name;
 
         return <div className="tile-editor">
             <div className="tile-editor__label">{__target}</div>
@@ -137,7 +137,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
                     onSelect={this.changeArtboard}
                     renderSelected={this.renderTarget}
                 >
-                    {this._artboards.map(a => <p key={a.id()}><span>{a.name()}</span></p>)}
+                    {this._artboards.map(a => <p key={a.id()}><span>{a.name}</span></p>)}
                 </Dropdown>
             </div>
 

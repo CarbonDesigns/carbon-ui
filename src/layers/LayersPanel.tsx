@@ -74,10 +74,10 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
 
     private onHide = (node: LayerNode, selected: boolean) => {
         if (!selected) {
-            node.element.visible(!node.element.visible());
+            node.element.visible = (!node.element.visible);
             return;
         }
-        if (!node.element.visible()) {
+        if (!node.element.visible) {
             Selection.show();
         }
         else {
@@ -141,11 +141,11 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         }
 
         if (isolationLayer && isolationLayer.isActive) {
-            name = isolationLayer.getOwner().name();
+            name = isolationLayer.getOwner().name;
         } else {
             var artboard = app.activePage.getActiveArtboard();
             if (artboard) {
-                name = artboard.name();
+                name = artboard.name;
             } else {
                 return;
             }

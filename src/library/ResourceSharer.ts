@@ -55,7 +55,7 @@ export class ResourceSharer {
                     // TODO: add all states if needed
 
                     // calculate position for the next element
-                    posY += clone.height() + delta;
+                    posY += clone.height + delta;
 
                     // replace source for the referencing control
                     e.source({pageId:pageId, artboardId:clone.id()});

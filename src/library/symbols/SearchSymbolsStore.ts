@@ -127,7 +127,7 @@ class SearchSymbolsStore extends CarbonStore<SearchSymbolsStoreState> implements
 
     private findOrCreateGroup(searchConfig: ToolboxConfig<SpriteStencil>, sourceConfig: ToolboxConfig<SpriteStencil>, sourceGroup: ToolboxGroup<SpriteStencil>, pageId: string) {
         let page = app.getImmediateChildById<IPage>(pageId);
-        let pageName = page.name();
+        let pageName = page.name;
 
         for (let i = 0; i < searchConfig.groups.length; i++) {
             let group = searchConfig.groups[i];

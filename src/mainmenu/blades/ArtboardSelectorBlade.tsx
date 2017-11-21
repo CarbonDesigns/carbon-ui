@@ -69,7 +69,7 @@ export class ArtboardSelectorBlade extends Blade<ArtboardSelectorBladeProps, Art
                         caption="@chooseArtboard"
                         items={this.getArtboards()}
                         selectedItem={this.state.artboard}
-                        renderItem={artboard => <p>{artboard.name()}</p>}
+                        renderItem={artboard => <p>{artboard.name}</p>}
                         onSelect={this.artboardChosen}>
                     </ArtboardSelect>
                 </div>

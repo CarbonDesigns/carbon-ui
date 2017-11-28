@@ -187,14 +187,19 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
     }
 
     getActiveArtboardProxyModel(): Promise<IArtboardModel> {
-        var artboard = this.state.currentArtboard;
+        // var artboard = this.state.currentArtboard;
+        let previewModel = (Environment.controller as any).previewModel;
+        if (!previewModel) {
+            return Promise.resolve(null);
+        }
+        var artboard:IArtboard = previewModel.sourceArtboard;
         if (!artboard) {
             return Promise.resolve(null);
         }
 
         let version = artboard.version;
 
-        let currentModel = this.modelsCache[artboard.id];
+        let currentModel:IArtboardModel = this.modelsCache[artboard.id];
         if (currentModel && currentModel.version === version) {
             return Promise.resolve(currentModel);
         }

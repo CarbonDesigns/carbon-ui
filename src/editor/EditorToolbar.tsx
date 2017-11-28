@@ -21,7 +21,12 @@ export default class EditorToolbar extends Component<any, any> {
 
     @listenTo(EditorStore)
     onEditorStoreChanged() {
-        let currentIndex = EditorStore.state.artboards.findIndex(a=>a.id === EditorStore.state.currentArtboard.id);
+        let id = null;
+        if(EditorStore.state.currentArtboard) {
+            id = EditorStore.state.currentArtboard.id;
+        }
+
+        let currentIndex = EditorStore.state.artboards.findIndex(a=>a.id === id);
         this.setState({
             artboards: EditorStore.state.artboards,
             artboardIndex: Math.max(0, currentIndex)

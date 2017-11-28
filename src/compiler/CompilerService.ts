@@ -35,6 +35,10 @@ export class CompilerService implements IDisposable {
         this._worker.postMessage({ fileName, text });
     }
 
+    addLib(fileName, text) {
+        this._addFile(fileName, text);
+    }
+
     compile(fileName: string, text: string): Promise<string> {
         let promise = new Promise<string>((resolve, reject) => {
             this._tasks.set(fileName, { resolve, reject });

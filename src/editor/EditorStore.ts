@@ -199,7 +199,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
             return Promise.resolve(currentModel);
         }
 
-        let res = { version, proxyDefinition: artboard.declaration(), name: artboard.name };
+        let res = { version, proxyDefinition: artboard.declaration(false), name: artboard.name };
         this.modelsCache[artboard.id] = res;
         return Promise.resolve(res);
     }
@@ -223,7 +223,6 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
         });
     }
 
-    @handles(EditorActions.restart)
     restartModel() {
         let model = this.currentEditorModel;
         if (!model) {

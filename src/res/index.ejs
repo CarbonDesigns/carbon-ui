@@ -60,7 +60,7 @@
             carbon.coreCallback();
         }
     }
-    window.__sandboxEval = function(__code, proxy) {
+    window.__sandboxEval = function(name, __code, proxy) {
         let Object = null;
         let XMLHttpRequest = null;
         let Function = null;
@@ -83,9 +83,12 @@
         let navigator = null;
         let localStorage = null;
         let fetch = null;
+        let setTimeout = null;
+        let setInterval = null;
 
         with(proxy) {
             eval(
+                'var ' + name + ' = proxy;'+
                 "let eval = null;"+
                 __code
             );

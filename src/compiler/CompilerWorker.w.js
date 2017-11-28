@@ -4,8 +4,10 @@ var files = {};
 
 var options = {
     target: 1,
-    module: 0,
+    module: 5,
     noLib: true,
+    inlineSourceMap:true,
+    inlineSources:true,
     allowJs: false,
     noEmitOnError: true,
     allowNonTsExtensions: true,

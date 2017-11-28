@@ -212,7 +212,7 @@ function getLoaders(settings) {
     var babelLoader = "babel?" + JSON.stringify(babelSettings);
 
     var excludedFolders = ["node_modules", "libs", "generated"];
-    var excludedFiles = ["carbon-core-.*", "carbon-api-.*"];
+    var excludedFiles = ["carbon-core-.*", "carbon-api-.*", "CompilerWorker.w.js"];
     var excludes = new RegExp(
         excludedFolders.map(x => "[\/\\\\]" + x + "[\/\\\\]").join("|")
         + "|" + excludedFiles.join("|"));
@@ -256,6 +256,13 @@ function getLoaders(settings) {
             loaders: [util.format("file?name=[path][name]%s.[ext]", settings.hashPattern)],
             exclude: excludes
         }
+        // ,
+        // {
+        //     test:  /\.w.js$/,
+        //     loaders: ["worker-loader"],
+        //     options:{inline:true},
+        //     exclude: excludes
+        // }
     ];
 
     loaders.push({

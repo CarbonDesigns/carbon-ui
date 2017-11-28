@@ -45,7 +45,7 @@ export default class Breadcrumbs extends Component<any, any> {
         if (layer.isActive) {
             let owner = layer.getOwner();
             if (e) {
-                e = owner.findNodeByIdBreadthFirst(e.id());
+                e = owner.findNodeByIdBreadthFirst(e.id);
             }
             else {
                 e = owner;
@@ -60,7 +60,7 @@ export default class Breadcrumbs extends Component<any, any> {
                         name: e.displayName(),
                         type: e.t,
                         iconType: iconType(e),
-                        id: e.id(),
+                        id: e.id,
                         element: e,
                         exitIsolation: exit
                     });
@@ -76,7 +76,7 @@ export default class Breadcrumbs extends Component<any, any> {
                         type: e.t,
                         iconType: iconType(e),
                         element: e,
-                        id: e.id()
+                        id: e.id
                     });
                 }
                 e = e.parent();
@@ -95,7 +95,7 @@ export default class Breadcrumbs extends Component<any, any> {
         var parentId = null;
         if (selection.elements.length === 1) {
             elements = this._buildBreadcrumbElements(selection.elements[0]);
-            parentId = selection.elements[0].parent().id();
+            parentId = selection.elements[0].parent().id;
         } else {
             elements = this._buildBreadcrumbElements(null);
         }
@@ -109,7 +109,7 @@ export default class Breadcrumbs extends Component<any, any> {
             return;
         }
 
-        var pageId = app.activePage.id();
+        var pageId = app.activePage.id;
         var elements = this.state.elements;
 
         for (var i = 0; i < primitives.length; i++) {

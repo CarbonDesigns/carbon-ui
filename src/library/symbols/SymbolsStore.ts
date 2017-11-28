@@ -112,13 +112,13 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                 return;
             case "Carbon_ResourceChanged":
                 if (action.resourceType === ArtboardType.Symbol && action.resource.parent() === this.state.currentPage) {
-                    this.setState({ dirtyConfig: true, changedId: action.resource.id() });
+                    this.setState({ dirtyConfig: true, changedId: action.resource.id });
                     action.resource.parent().setProps({ toolboxConfigUrl: null });
                 }
                 return;
             case "Carbon_ResourceDeleted":
                 if (action.resourceType === ArtboardType.Symbol && action.parent === this.state.currentPage) {
-                    this.setState({ dirtyConfig: true, changedId: action.resource.id() });
+                    this.setState({ dirtyConfig: true, changedId: action.resource.id });
                     action.parent.setProps({ toolboxConfigUrl: null });
                 }
                 return;
@@ -185,10 +185,10 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         }
 
         let pages = app.pagesWithSymbols();
-        return pages.find(x => x.id() === pageId);
+        return pages.find(x => x.id === pageId);
     }
     private saveCurrentSymbolsPage(page?: IPage) {
-        app.setUserSetting("symbolsPageId", page.id());
+        app.setUserSetting("symbolsPageId", page.id);
     }
 
     private refreshLibrary() {

@@ -168,7 +168,7 @@ export class LayersDragController {
             let parent = this.performDrop(layersStore.state.layers[layerIndex].element, dropPosition);
             Selection.refreshSelection();
 
-            dispatchAction({ type: "Layers_dropped", targetId: parent && parent.id(), targetIndex: layerIndex });
+            dispatchAction({ type: "Layers_dropped", targetId: parent && parent.id, targetIndex: layerIndex });
         }
 
         this.draggedElements.length = 0;

@@ -38,7 +38,7 @@ export class ResourceSharer {
 
     private expandNestedControls(page){
         var rect = page.getContentOuterSize();
-        var pageId = page.id();
+        var pageId = page.id;
         var delta = 100;
         var posY = rect.y + rect.height + delta;
         var found = false;
@@ -58,7 +58,7 @@ export class ResourceSharer {
                     posY += clone.height + delta;
 
                     // replace source for the referencing control
-                    e.source({pageId:pageId, artboardId:clone.id()});
+                    e.source({pageId:pageId, artboardId:clone.id});
                     found = true;
                 }
             }

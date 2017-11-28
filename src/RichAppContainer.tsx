@@ -4,7 +4,7 @@ import LayoutContainer from "./layout/Layout";
 // import Header from './header/Header';
 import RichAppRoot from './RichAppRoot';
 import AppLoaderComponent from './AppLoaderComponent';
-import { app, backend } from "carbon-core";
+import { app, backend, Services } from "carbon-core";
 import AppActions from "./RichAppActions";
 
 import Workspace from './workspace/DesignerWorkspace';
@@ -22,12 +22,19 @@ import Perf from "react-addons-perf";
 import FullScreenApi from "./shared/FullScreenApi";
 import { Splash } from "./Splash";
 import { EditorPanel } from "./editor/EditorPanel";
+import { CompilerService } from "./compiler/CompilerService";
 window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent {
     componentDidMount() {
         super.componentDidMount();
         document.body.classList.add("noscroll");
+        if(Services.compiler) {
+            Services.compiler.clear();
+        }
+        else {
+            Services.compiler = new CompilerService();
+        }
     }
 
     componentWillUnmount() {

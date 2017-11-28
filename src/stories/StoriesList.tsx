@@ -73,7 +73,7 @@ export default class StoriesList extends Component<any, any> {
 
         let activeStoryId = null;
         if(this.props.activeStory){
-            activeStoryId = this.props.activeStory.id();
+            activeStoryId = this.props.activeStory.id;
         }
 
         var stories = this.props.stories.map(story =>

@@ -212,7 +212,7 @@ export class SwatchesStore extends CarbonStore<SwatchesStoreState> {
 
         let inserted = false;
         for (var i = 0; i < palettes.length; ++i) {
-            if (palettes[i].id === element.id()) {
+            if (palettes[i].id === element.id) {
                 palettes.splice(i, 1, palette);
                 inserted = true;
                 break;
@@ -231,7 +231,7 @@ export class SwatchesStore extends CarbonStore<SwatchesStoreState> {
             return;
         }
 
-        var index = this.state.palettes.findIndex(p => p.id === element.id());
+        var index = this.state.palettes.findIndex(p => p.id === element.id);
         if (index !== -1) {
             let palettes = this.state.palettes.slice();
             palettes.splice(index, 1);
@@ -250,7 +250,7 @@ export class SwatchesStore extends CarbonStore<SwatchesStoreState> {
                 }
             }
         });
-        return { id: element.id(), name: element.name, colors: colors, pageId: element.primitiveRoot().id() };
+        return { id: element.id, name: element.name, colors: colors, pageId: element.primitiveRoot().id };
     }
 
     private onTransparentColor() {

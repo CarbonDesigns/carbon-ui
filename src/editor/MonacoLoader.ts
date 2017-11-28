@@ -9,7 +9,7 @@ export function ensureMonacoLoaded():Promise<void> {
 
         const onGotAmdLoader = () => {
             (window as any)["require"].config({ paths: { 'vs': '/target/vs' } });
-            (window as any)["require"](['vs/editor/editor.main'], () => {
+            (window as any)["require"](['vs/editor/editor.main'], (editor) => {
                 resolve();
             });
         };

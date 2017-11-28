@@ -44,7 +44,7 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
 
     private renderPageItem = (page: IPage) => {
         //TODO: add possibility to add page icons?
-        return <p key={page.id()}>
+        return <p key={page.id}>
             {/* <i className="ico inline-ico ico-stencil-set" /> */}
             <span>{page.name}</span>
         </p>
@@ -84,7 +84,7 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
                     onScrolledToCategory={this.onScrolledToCategory}
                     overscanCount={SymbolsOverscanCount}
                     columnWidth={SymbolsColumnWidth}
-                    sourceId={page.id()}
+                    sourceId={page.id}
                     borders={true}
                     templateType={SymbolsStore.storeType}/>
             </Navigatable>

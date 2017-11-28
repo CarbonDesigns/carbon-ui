@@ -67,7 +67,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
     private _displayClickSpotsToken:IDisposable;
 
 
-    previewProxy:any;
+    previewModel:any;
 
 
     refs:{
@@ -195,11 +195,11 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
 
             // if(app.activePage === NullPage){
             //     var pageChangedToken = app.pageChanged.bind(()=>{
-            //         this._initialize(view, previewProxy, controller);
+            //         this._initialize(view, previewModel, controller);
             //         pageChangedToken.dispose();
             //     })
             // } else {
-            //     this._initialize(view, previewProxy, controller);
+            //     this._initialize(view, previewModel, controller);
             // }
             this._initialize(view);
         }
@@ -212,7 +212,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
         view.setupRendering([this.context], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
 
 
-        // var page = previewProxy.getCurrentScreen({
+        // var page = previewModel.getCurrentScreen({
         //     width: this.state.data.deviceWidth || this.refs.viewport.clientWidth,
         //     height: this.state.data.deviceHeight || this.refs.viewport.clientHeight
         // });
@@ -241,7 +241,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
     }
 
     _setPage(page) {
-        this.previewProxy.page = page;
+        this.previewModel.page = page;
         this.view.setActivePage(page);
     }
 

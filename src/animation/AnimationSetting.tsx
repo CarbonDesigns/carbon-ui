@@ -5,7 +5,8 @@ import flyoutStore from '../FlyoutStore';
 import { richApp } from '../RichApp';
 import { Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import Dropdown from "../shared/Dropdown";
-import { RequestAnimationSettings, app, ActionType, AnimationType, EasingType } from "carbon-core";
+import { RequestAnimationSettings, app, ActionType } from "carbon-core";
+import { AnimationType, EasingType } from "carbon-runtime";
 import { FormattedMessage, defineMessages } from 'react-intl';
 
 var TransitionTypeValues = [
@@ -35,10 +36,10 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
     constructor(props) {
         super(props);
         this._artboards = [{ name: () => "Previous artboard", id: () => "-1" }]
-            .concat(app.activePage.getAllArtboards().map(x => { return { id: () => x.id(), name: () => x.name } }));
+            .concat(app.activePage.getAllArtboards().map(x => { return { id: () => x.id, name: () => x.name } }));
         var artboardIndex = 0;
         for (var i = 0; i < this._artboards.length; i++) {
-            if (this._artboards[i].id() === this.props.action.targetArtboardId) {
+            if (this._artboards[i].id === this.props.action.targetArtboardId) {
                 artboardIndex = i;
                 break;
             }
@@ -60,7 +61,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
     changeArtboard = (i) => {
         this.setState({ artboardIndex: i });
         if (i >= 0) {
-            this.props.newAction.targetArtboardId = this._artboards[i].id();
+            this.props.newAction.targetArtboardId = this._artboards[i].id;
         } else {
             delete this.props.newAction.targetArtboardId;
             this.props.newAction.type = ActionType.GoBack;
@@ -137,7 +138,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
                     onSelect={this.changeArtboard}
                     renderSelected={this.renderTarget}
                 >
-                    {this._artboards.map(a => <p key={a.id()}><span>{a.name}</span></p>)}
+                    {this._artboards.map(a => <p key={a.id}><span>{a.name}</span></p>)}
                 </Dropdown>
             </div>
 

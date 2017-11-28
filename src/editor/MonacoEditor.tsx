@@ -37,8 +37,10 @@ export class MonacoEditor extends React.Component<Props, {}> {
     }
 
     componentWillUnmount() {
-        this.editor.dispose();
-        this.editor = null;
+        if (this.editor) {
+            this.editor.dispose();
+            this.editor = null;
+        }
     }
 
     componentDidUpdate(prevProps: Props) {

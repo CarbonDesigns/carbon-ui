@@ -5,11 +5,9 @@ import {
     Page,
     NullPage,
     PreviewView,
-    PreviewProxy,
+    PreviewModel,
     Context,
     Environment,
-    AnimationType,
-    EasingType,
     Layer,
     Circle,
     Brush,
@@ -20,10 +18,16 @@ import {
     ISize,
     Matrix
 } from "carbon-core";
-import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../CarbonFlux";
+import {
+    AnimationType,
+    EasingType
+} from "carbon-runtime";
+
+import { listenTo, Component, ComponentWithImmutableState, dispatch, handles } from "../CarbonFlux";
 import PreviewStore from "./PreviewStore";
 import PreviewActions from './PreviewActions';
 import cx from "classnames";
+import EditorActions from "../editor/EditorActions";
 
 // TODO:
 
@@ -102,6 +106,8 @@ function easeTypeToClassName(type) {
 export default class PreviewWorkspace extends ComponentWithImmutableState<any, any> {
     [x: string]: any;
 
+    private previewModel: any;
+
     refs: {
         viewport: HTMLDivElement;
         canvas0: HTMLCanvasElement;
@@ -129,6 +135,25 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         this.draw();
     }
 
+    @handles(EditorActions.restart)
+    restart() {
+        let id;
+        if (this.state.data.activePage) {
+            id = this.state.data.activePage.artboardId;
+        } else if (this.previewModel.sourceArtboard) {
+            id = this.previewModel.sourceArtboard.id;
+        } else {
+            return;
+        }
+
+        this.previewModel.getScreenById(id, {
+            width: this.state.data.deviceWidth || this.refs.viewport.clientWidth,
+            height: this.state.data.deviceHeight || this.refs.viewport.clientHeight
+        }, this.state.data.displayMode).then((nextPage) => {
+            this._updateActivePage(nextPage);
+        })
+    }
+
     @listenTo(PreviewStore)
     onChange() {
         var data = this.state.data;
@@ -138,7 +163,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             return;
         }
 
-        var page = this.previewProxy.activePage;
+        var page = this.previewModel.activePage;
         this.setState({ data: newData });
         if (!page) {
             return null;
@@ -147,12 +172,12 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         if (data.activePage !== newData.activePage) {
             this._currentCanvas = (this._currentCanvas + 1) % 2;
 
-            var nextPage = this.previewProxy.getScreenById(newData.activePage.artboardId, {
+            this.previewModel.getScreenById(newData.activePage.artboardId, {
                 width: this.refs.viewport.clientWidth,
                 height: this.refs.viewport.clientHeight
-            }, this.state.data.displayMode);
-
-            this._updateActivePage(nextPage, page.animation);
+            }, this.state.data.displayMode).then((nextPage) => {
+                this._updateActivePage(nextPage, page.animation);
+            })
         }
 
         if (data.displayMode !== newData.displayMode) {
@@ -161,21 +186,25 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     }
 
     _updateActivePage(nextPage, animation?) {
-        if (this._currentCanvas === 0) {
-            this.activeCanvas = this.canvas1;
-            this.activeContext = this.context1;
-            this.inactiveCanvas = this.canvas2;
-            this.inactiveContext = this.context2;
-        } else {
-            this.activeCanvas = this.canvas2;
-            this.activeContext = this.context2;
-            this.inactiveCanvas = this.canvas1;
-            this.inactiveContext = this.context1;
+        if (animation) {
+            if (this._currentCanvas === 0) {
+                this.activeCanvas = this.canvas1;
+                this.activeContext = this.context1;
+                this.inactiveCanvas = this.canvas2;
+                this.inactiveContext = this.context2;
+            } else {
+                this.activeCanvas = this.canvas2;
+                this.activeContext = this.context2;
+                this.inactiveCanvas = this.canvas1;
+                this.inactiveContext = this.context1;
+            }
+            this._setupPositionBeforeAnimation(animation);
         }
-        this._setupPositionBeforeAnimation(animation);
 
-        this.view.contexts = [this.activeContext];
-        this.view.context = new ContextLayerSource(this.view.contexts);
+        if (animation || !this.view.context) {
+            this.view.contexts = [this.activeContext];
+            this.view.context = new ContextLayerSource(this.view.contexts);
+        }
 
         this._setPage(nextPage);
         this.ensureCanvasSize();
@@ -193,7 +222,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         if (!frame) {
             return;
         }
-        var env = this.view._getEnv(this.previewProxy.activePage, 1, true);
+        var env = this.view._getEnv(this.previewModel.activePage, 1, true);
         frame.draw(this.frameContext, env);
     }
 
@@ -305,7 +334,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         view._registerLayer(interactionLayer);
 
-        var elements = this.previewProxy.allElementsWithActions();
+        var elements = this.previewModel.allElementsWithActions();
         var promises = [];
         for (var e of elements) {
             var rect = e.getBoundaryRectGlobal();
@@ -336,7 +365,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     }
 
     draw() {
-        if (this.previewProxy) {
+        if (this.previewModel) {
             let viewport = this.refs.viewport;
             if (!viewport) {
                 return;
@@ -399,7 +428,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     _getCurrentArtboard() {
         var frame;
-        var page = this.previewProxy.activePage;
+        var page = this.previewModel.activePage;
 
         if (!page) {
             return null;
@@ -416,7 +445,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
                 return viewportSize;
             case PreviewDisplayMode.Fit:
                 {
-                    let scale = fitRectToRect(viewportSize, artboardSize);
+                    let scale = Math.min(1, fitRectToRect(viewportSize, artboardSize));
                     return { width: artboardSize.width * scale, height: artboardSize.height * scale };
                 }
             case PreviewDisplayMode.OriginalSize:
@@ -463,7 +492,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             return;
         }
 
-        let artboardSize = this.previewProxy.activePage.originalSize;
+        let artboardSize = this.previewModel.activePage.originalSize;
 
         let deviceSize = this._findDeviceSize(viewportSize, artboardSize, previewDisplayMode);
         let deviceScale = this._findDeviceScale(deviceSize, artboardSize, previewDisplayMode);
@@ -503,6 +532,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         // var deviceScale = Math.min(1, fitRectToRect(viewportSize, deviceSize));
 
         let scale = this.view.scale(deviceScale);
+        this.view.updateViewportSize(deviceSize);
         let resized = false;
 
         var canvasWidth = this._screenWidth = deviceSize.width;
@@ -544,7 +574,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             frameCanvas.style.display = 'none';
         }
 
-        this.previewProxy.resizeActiveScreen(deviceSize, scale, previewDisplayMode);
+        this.previewModel.resizeActiveScreen(deviceSize, scale, previewDisplayMode);
 
         this._scale = scale;
 
@@ -560,27 +590,27 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             var view = new PreviewView(app);
             view.setup({ Layer: Page });
             view.viewContainerElement = this.refs.viewport;
-            var previewProxy = new PreviewProxy(app);
-            var controller = new PreviewController(app, view, previewProxy);
+            var previewModel = new PreviewModel(app);
+            var controller = new PreviewController(app, view, previewModel);
             Environment.set(view, controller);
 
             if (view.page === NullPage) {
                 var pageChangedToken = app.pageChanged.bind(() => {
-                    this._initialize(view, previewProxy, controller);
+                    this._initialize(view, previewModel, controller);
                     pageChangedToken.dispose();
                 })
             } else {
-                this._initialize(view, previewProxy, controller);
+                this._initialize(view, previewModel, controller);
             }
         }
     }
 
-    _initialize(view, previewProxy, controller) {
+    _initialize(view, previewModel, controller) {
         app.platform.detachEvents();
         app.platform.attachEvents(this.refs.viewport);
 
         this._displayClickSpotsToken = view.displayClickSpots.bind(this, this.onDisplayClikSpots);
-        this._navigateToPageToken = previewProxy.navigateToPage.bind(this, function (artboardId, animation) {
+        this._navigateToPageToken = previewModel.navigateToPage.bind(this, function (artboardId, animation) {
             dispatch(PreviewActions.navigateTo(artboardId, animation));
         });
 
@@ -588,17 +618,17 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         view.setupRendering([this.activeContext], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
         view.contextScale = this.contextScale;
 
-        this.previewProxy = previewProxy;
+        this.previewModel = previewModel;
 
-        var page = previewProxy.getCurrentScreen({
+        previewModel.getCurrentScreen({
             width: this.state.data.deviceWidth || this.refs.viewport.clientWidth,
             height: this.state.data.deviceHeight || this.refs.viewport.clientHeight
-        });
+        }).then(page => {
+            this._updateActivePage(page);
 
-        this._updateActivePage(page);
-
-        this._attached = true;
-        this.ensureCanvasSize();
+            this._attached = true;
+            this.ensureCanvasSize();
+        })
     }
 
     componentWillUnmount() {
@@ -621,7 +651,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     }
 
     _setPage(page) {
-        this.previewProxy.activePage = page;
+        this.previewModel.activePage = page;
         this.view.setActivePage(page);
     }
 

@@ -151,7 +151,7 @@ export default class GuidesSettings extends Component<any, any> {
     _renderArtboardsList (){
         return app.activePage.getAllArtboards().map((artboard)=>{
             var guides_amount = artboard.props.guidesX.length + artboard.props.guidesX.length;
-            return <div key={artboard.id()} data-artboard-id={artboard.id()}><span>{artboard.name}</span> <span>({guides_amount})</span></div>
+            return <div key={artboard.id} data-artboard-id={artboard.id}><span>{artboard.name}</span> <span>({guides_amount})</span></div>
         });
     };
 

@@ -15,6 +15,8 @@ try
     gci target -Exclude fonts,carbon-core*,carbon-api*,*.d.ts | ri -recurse
     copy .\fonts\ .\target\ -Recurse
     copy .\img\ .\target\ -Recurse
+    copy .\node_modules\monaco-editor\min\vs\ .\target\ -Recurse
+    copy .\node_modules\typescript\lib\typescript.js .\target\
 
     if ($CopyCore)
     {

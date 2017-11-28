@@ -121,7 +121,7 @@ class CustomProperty extends Component<any, any> {
             options: {
                 items: function () {
                     return that.props.e.getChildControlList().map(e=> {
-                        return {name: e.displayName(), value: e.id(), element: e}
+                        return {name: e.displayName(), value: e.id, element: e}
                     });
                 }
             }
@@ -227,7 +227,7 @@ class CustomPropertiesEditor extends EditorComponent<any, any, any> {
         var customProperties = this.state.artboard.getCustomProperties();
 
         return (
-            <div key={"prop_editor_"+this.state.artboard.id()}>
+            <div key={"prop_editor_"+this.state.artboard.id}>
                 {customProperties.map(p=><CustomProperty p={p} key={p.name} e={this.props.e.first()}
                                                          onCompleteEditing={(item)=>{this._onChange(item, p)}}/>)}
                 {this._renderNewProperty()}

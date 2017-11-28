@@ -92,3 +92,11 @@ declare module "unsplash-js"{
     export default Unsplash;
     export function toJson(value: any): any;
 }
+
+declare module "*.w.js" {
+    class WebpackWorker extends Worker {
+      constructor();
+    }
+
+    export = WebpackWorker;
+  }

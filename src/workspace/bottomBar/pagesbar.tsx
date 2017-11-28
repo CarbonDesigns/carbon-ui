@@ -147,7 +147,7 @@ class PagesList extends React.Component<any, any> {
     }
 
     _pageClicked = (page: IPage) => {
-        var pageId = page.id();
+        var pageId = page.id;
         app.setActivePageById(pageId);
         this.setState({ version: this.state.version + 1 });
     };

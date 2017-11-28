@@ -13,7 +13,7 @@ export default class NotReady extends Component<any, any> {
     }
 
     _subscribe=()=>{
-        backend.activityProxy.subscribeForFeature(app.companyId(), app.id(), this.props.feature).then(()=>{
+        backend.activityProxy.subscribeForFeature(app.companyId(), app.id, this.props.feature).then(()=>{
             this.setState({notified:true})
         });
     };

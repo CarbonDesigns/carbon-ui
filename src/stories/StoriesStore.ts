@@ -50,7 +50,7 @@ class StoriesStore extends CarbonStore<any> {
     onPageChanged({ newPage }) {
         var story = null;
         if (newPage) {
-            story = this.state.stories.find(s => s.pageId === newPage.id());
+            story = this.state.stories.find(s => s.pageId === newPage.id);
             if (story) {
                 story = app.findNodeByIdBreadthFirst(story.id);
             }
@@ -60,7 +60,7 @@ class StoriesStore extends CarbonStore<any> {
 
     @handles(CarbonActions.pageRemoved)
     onPageRemoved({ page }) {
-        var stories = this.state.stories.filter(s => s.pageId === page.id());
+        var stories = this.state.stories.filter(s => s.pageId === page.id);
         for(var s of stories) {
             var story = app.findNodeByIdBreadthFirst(s.id);
             app.removeStory(story);
@@ -89,7 +89,7 @@ class StoriesStore extends CarbonStore<any> {
 
     @handles(StoriesActions.removed)
     onRemoved({ item }) {
-        var index = this.state.stories.findIndex(x=>x.id === item.id());
+        var index = this.state.stories.findIndex(x=>x.id === item.id);
         if (index >= 0) {
             var newStories = this.state.stories.delete(index);
             this.state = this.state.set("stories", newStories);

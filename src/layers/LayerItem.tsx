@@ -71,7 +71,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     private onIconDoubleClick = (ev) => {
         if (this.props.layer.element instanceof Artboard) {
             var artboard = this.props.layer.element;
-            (app.activePage as IArtboardPage).setActiveArtboardById(artboard.id());
+            (app.activePage as IArtboardPage).setActiveArtboardById(artboard.id);
             if (artboard) {
                 Environment.view.ensureScale([artboard]);
                 Environment.view.ensureCentered([artboard]);

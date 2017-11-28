@@ -1,19 +1,27 @@
 import { CarbonStore, dispatch, handles } from "../CarbonFlux";
 import Immutable from "immutable";
-var runtimeCodeDefinition: string = require("raw!../../../carbon-core/mylibs/definitions/carbon-runtime.d.ts") as any;
+// var RuntimeTSDefinition: string = require("raw!../../../carbon-core/mylibs/definitions/carbon-runtime.d.ts") as any;
 var platformCodeDefinition: string = require("raw!./model/platform.d.ts") as any;
 var emptyCode: string = require("./model/empty.txt") as any;
 
-import { IDisposable, IArtboard, app, Environment, ArtboardProxyGenerator, Sandbox, PreviewProxy } from "carbon-core";
+import { RuntimeTSDefinition, CompiledCodeProvider, IDisposable, IArtboard, app, Environment, Sandbox, PreviewModel, util } from "carbon-core";
 import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
+import { CompilerService } from "../compiler/CompilerService";
+
 
 interface IArtboardModel {
     version: number;
+    name: string;
     proxyDefinition: string;
 }
 
-class EditorStore extends CarbonStore<any> implements IDisposable {
+interface IEditorStoreState {
+    currentArtboard?: IArtboard;
+    artboards?: { name: string, id: string }[];
+}
+
+class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable {
     private initialized: boolean = false;
     private editor: monaco.editor.IStandaloneCodeEditor;
     private activeProxyModel: IArtboardModel;
@@ -22,38 +30,28 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
     private modelsCache: { [id: string]: IArtboardModel }[] = [];
     private codeCache: { [id: string]: monaco.editor.IModel }[] = [];
     private currentEditorModel: monaco.editor.IModel;
-    private currentArtboard: IArtboard;
     private editorDisposables: IDisposable[] = [];
     private storeDisposables: IDisposable[] = [];
 
-    private proxyGenerator = new ArtboardProxyGenerator();
-
     private _onPageChangedBinding: IDisposable;
 
+    private _restartModel: () => void;
+    constructor(dispatcher?) {
+        super(dispatcher);
+        this._restartModel = util.debounce(this.restartModel, 200);
+        this.state = { currentArtboard: null, artboards: [] };
+    }
+
     initialize(editor: monaco.editor.IStandaloneCodeEditor) {
-        if (this.editor !== editor) {
-            this.editorDisposables.forEach(e => e.dispose());
-            this.editorDisposables = [];
+        this._setEditor(editor);
 
-            if (this.editor) {
-                this.editor.setModel(null); // detach current model if any
-            }
-            this.editor = editor;
-            if (editor) {
-                this.editor.setModel(this.currentEditorModel); // detach current model if any
-                this.refreshProxyModel();
-                this.editorDisposables.push(editor.onKeyDown(() => {
-                    this.refreshProxyModel();
-                }));
-
-                this.editorDisposables.push(editor.onMouseDown(() => {
-                    this.refreshProxyModel();
-                }));
-            }
+        let previewModel = (Environment.controller as any).previewModel;
+        if (!previewModel) {
+            return;
         }
-        let previewProxy = (Environment.controller as any).previewProxy;
+        this.setState({ currentArtboard: previewModel.activeArtboard, artboards: this._artboardsMetainfo() });
 
-        if (this.initialized || !previewProxy) {
+        if (this.initialized) {
             return;
         }
 
@@ -73,51 +71,82 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
             target: monaco.languages.typescript.ScriptTarget.ES2016
         });
 
-        // this.storeDisposables.push(
-        //     monaco.editor.createModel(runtimeCodeFefinition as string, "typescript", monaco.Uri.parse("carbon-runtime.d.ts"))
-        // );
-        runtimeCodeDefinition = runtimeCodeDefinition.replace(/^.+export /gm, "");
-        runtimeCodeDefinition = runtimeCodeDefinition.replace('declare module "carbon-runtime" {', '');
-        let idx = runtimeCodeDefinition.lastIndexOf('}');
-        runtimeCodeDefinition = runtimeCodeDefinition.substr(0, idx - 1);
+        let code = RuntimeTSDefinition;
         this.storeDisposables.push(
-            monaco.languages.typescript.typescriptDefaults.addExtraLib(runtimeCodeDefinition as string, 'carbon-runtime.d.ts')
+            monaco.languages.typescript.typescriptDefaults.addExtraLib(code as string, 'carbon-runtime.d.ts')
         );
         this.storeDisposables.push(
             monaco.languages.typescript.typescriptDefaults.addExtraLib(platformCodeDefinition as string, 'platform.d.ts')
         );
         this.initialized = true;
-        // this.changeArtboard(app.activePage.getActiveArtboard());
-        // this.storeDisposables.push(
-        //     Environment.controller.onArtboardChanged.bind((artboard, oldArtboard) => {
-        //         this.changeArtboard(artboard);
-        //     })
-        // );
 
         Environment.detaching.bind(() => {
             if (this._onPageChangedBinding) {
                 this._onPageChangedBinding.dispose();
                 this._onPageChangedBinding = null;
             }
-        })
-        this.changeArtboard(previewProxy.activeArtboard);
-        this._onPageChangedBinding = previewProxy.onPageChanged.bind((page) => {
-            this.changeArtboard(previewProxy.activeArtboard);
+        });
+
+        this.changeArtboard(previewModel.activeArtboard);
+        this._onPageChangedBinding = previewModel.onPageChanged.bind((page) => {
+            dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
         });
 
         Environment.attached.bind((view, controller) => {
-            let previewProxy = (controller as any).previewProxy;
+            let previewModel = (controller as any).previewModel;
             if (this._onPageChangedBinding) {
                 this._onPageChangedBinding.dispose();
                 this._onPageChangedBinding = null;
             }
 
-            if (previewProxy) {
-                this._onPageChangedBinding = previewProxy.onPageChanged.bind((page) => {
-                    this.changeArtboard(previewProxy.activeArtboard);
+            if (previewModel) {
+                this._onPageChangedBinding = previewModel.onPageChanged.bind((page) => {
+                    dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
                 });
             }
-        })
+        });
+
+        // TODO: bind on event to refresh list of artboards
+    }
+
+    private _artboardsMetainfo() {
+        return app.activePage.getAllArtboards().reverse().map(a => { return { id: a.id, name: a.name } });
+    }
+
+    @handles(EditorActions.changeArtboard)
+    onChangeArtboard({ artboard }) {
+        this.changeArtboard(artboard);
+    }
+
+    _contentChanged = (event: monaco.editor.IModelContentChangedEvent) => {
+        let previewModel = (Environment.controller as any).previewModel;
+        previewModel.sourceArtboard.code(this.currentEditorModel.getValue());
+        this._restartModel();
+    }
+
+    _setEditor(editor: monaco.editor.IStandaloneCodeEditor) {
+        if (this.editor !== editor) {
+            this.editorDisposables.forEach(e => e.dispose());
+            this.editorDisposables = [];
+
+            if (this.editor) {
+                this.editor.setModel(null); // detach current model if any
+            }
+            this.editor = editor;
+            if (editor) {
+                this.editor.setModel(this.currentEditorModel); // detach current model if any
+                this.refreshProxyModel();
+                this.editorDisposables.push(editor.onKeyDown(() => {
+                    this.refreshProxyModel();
+                }));
+
+                this.editorDisposables.push(editor.onMouseDown(() => {
+                    this.refreshProxyModel();
+                }));
+
+                this.editorDisposables.push(this.editor.onDidChangeModelContent(util.debounce(this._contentChanged, 1000)));
+            }
+        }
     }
 
     getArtboardFileName(artboard: IArtboard) {
@@ -129,56 +158,58 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
             this.editor && this.editor.setModel(null);
             return;
         }
-        let codeModel = this.codeCache[artboard.id()];
+        let codeModel: monaco.editor.IModel = this.codeCache[artboard.id];
         if (!codeModel) {
             let code = artboard.code();
             if (!code) {
                 code = emptyCode;
             }
 
-            codeModel = monaco.editor.createModel(code, "typescript", monaco.Uri.parse(artboard.name + ".ts"));
-            this.codeCache[artboard.id()] = codeModel;
+            codeModel = monaco.editor.createModel(code, "typescript", monaco.Uri.parse(artboard.id + ".ts"));
+            let range = new monaco.Range(1, 0, 99999, 0);
+            (codeModel as any).setEditableRange(range);
+
+            this.codeCache[artboard.id] = codeModel;
         }
         this.currentEditorModel = codeModel;
         this.editor && this.editor.setModel(codeModel);
     }
 
     changeArtboard(artboard: IArtboard) {
-        if (artboard === this.currentArtboard) {
+        if (artboard === this.state.currentArtboard) {
             return;
         }
-        this.currentArtboard = artboard;
+
+        this.setState({ currentArtboard: artboard });
 
         this._setModelFromArtboard(artboard);
         this.refreshProxyModel(true);
     }
 
     getActiveArtboardProxyModel(): Promise<IArtboardModel> {
-        var artboard = app.activePage.getActiveArtboard();
+        var artboard = this.state.currentArtboard;
         if (!artboard) {
             return Promise.resolve(null);
         }
 
         let version = artboard.version;
 
-        let currentModel = this.modelsCache[artboard.id()];
+        let currentModel = this.modelsCache[artboard.id];
         if (currentModel && currentModel.version === version) {
             return Promise.resolve(currentModel);
         }
 
-        return this.proxyGenerator.generate(artboard).then((text) => {
-            let res = { version, proxyDefinition: text };
-            this.modelsCache[artboard.id()] = res;
-            return res;
-        });
+        let res = { version, proxyDefinition: artboard.declaration(), name: artboard.name };
+        this.modelsCache[artboard.id] = res;
+        return Promise.resolve(res);
     }
 
     refreshProxyModel(force?) {
-        if (!this.currentArtboard || (!force && this.activeProxyVersion === this.currentArtboard.version)) {
+        if (!this.state.currentArtboard || (!force && this.activeProxyVersion === this.state.currentArtboard.version)) {
             return;
         }
 
-        this.activeProxyVersion = this.currentArtboard.version;
+        this.activeProxyVersion = this.state.currentArtboard.version;
         this.getActiveArtboardProxyModel().then((model) => {
             // do not dispose active model before new one is ready
             if (this.activeProxyModelDisposable) {
@@ -187,15 +218,13 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
             }
 
             if (model) {
-
-                this.activeProxyModelDisposable = monaco.editor.createModel(model.proxyDefinition, "typescript", monaco.Uri.parse("proxy.d.ts"));
-                //this.activeProxyModelDisposable = monaco.languages.typescript.typescriptDefaults.addExtraLib(model.proxyDefinition, 'proxy.d.ts');
+                this.activeProxyModelDisposable = monaco.languages.typescript.typescriptDefaults.addExtraLib(model.proxyDefinition, 'proxy.d.ts');
             }
         });
     }
 
-    @handles(EditorActions.run)
-    onRun() {
+    @handles(EditorActions.restart)
+    restartModel() {
         let model = this.currentEditorModel;
         if (!model) {
             return;
@@ -220,9 +249,10 @@ class EditorStore extends CarbonStore<any> implements IDisposable {
                         });
                     }
                 }).then((code) => {
-                    if (code) {
-                        new Sandbox().runOnArtboard(this.currentArtboard, code);
-                    }
+                    // if (code) {
+                    //     new Sandbox().runOnElement(this.currentArtboard, code);
+                    // }
+                    dispatch(EditorActions.restart());
                 })
             });
         });

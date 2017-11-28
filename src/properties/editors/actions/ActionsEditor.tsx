@@ -14,7 +14,7 @@ function actionProperty(action) {
         value: action.artboardId,
         options: {
             items: app.activePage.getAllArtboards().map(a=> {
-                return {name: a.name, value:a.id()}
+                return {name: a.name, value:a.id}
             })
         }
     });

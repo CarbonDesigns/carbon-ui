@@ -13,7 +13,7 @@ const MirrorCodeLoader = GuiContentLoader as MirrorCodeLoader;
 
 export default class MirroringBlade extends Component {
     private onLoad = () => {
-        return backend.shareProxy.mirrorCode(app.companyId(), app.id(), false);
+        return backend.shareProxy.mirrorCode(app.companyId(), app.id, false);
     }
 
     private renderContent = (data: MirrorCode) => {

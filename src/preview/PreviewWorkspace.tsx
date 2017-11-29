@@ -163,12 +163,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             return;
         }
 
-        var page = this.previewModel.activePage;
-        this.setState({ data: newData });
+        var page = newData.activePage;
         if (!page) {
             return null;
         }
-
         if (data.activePage !== newData.activePage) {
             this._currentCanvas = (this._currentCanvas + 1) % 2;
 
@@ -176,6 +174,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
                 width: this.refs.viewport.clientWidth,
                 height: this.refs.viewport.clientHeight
             }, this.state.data.displayMode).then((nextPage) => {
+                this.setState({ data: newData });
                 this._updateActivePage(nextPage, page.animation);
             })
         }
@@ -361,6 +360,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             layer && layer.invalidate();
         }).then(() => {
             circle.parent().remove(circle);
+            layer && layer.invalidate();
         });
     }
 

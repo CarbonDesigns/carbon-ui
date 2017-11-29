@@ -1,10 +1,4 @@
-// declare var Storage = {
-//     static LocalStorage:any;
-//     static RemoteStorage:any;
-// }
-
 declare function alert(text:number|string);
-
 
 // system
 

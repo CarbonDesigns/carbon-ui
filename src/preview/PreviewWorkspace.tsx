@@ -238,19 +238,19 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             activeZIndex = 1,
             inactiveZIndex = 0;
 
-        if (!animation || animation.segue === AnimationType.SlideLeft) {
+        if (!animation || animation.type === AnimationType.SlideLeft) {
             activeLeft = this._screenWidth;
             inactiveLeft = -this._screenWidth;
-        } else if (animation.segue === AnimationType.SlideRight) {
+        } else if (animation.type === AnimationType.SlideRight) {
             activeLeft = -this._screenWidth;
             inactiveLeft = this._screenWidth;
-        } else if (animation.segue === AnimationType.SlideUp) {
+        } else if (animation.type === AnimationType.SlideUp) {
             activeTop = this._screenHeight;
             inactiveTop = -this._screenHeight;
-        } else if (animation.segue === AnimationType.SlideDown) {
+        } else if (animation.type === AnimationType.SlideDown) {
             activeTop = -this._screenHeight;
             inactiveTop = this._screenHeight;
-        } else if (animation.segue === AnimationType.Dissolve) {
+        } else if (animation.type === AnimationType.Dissolve) {
             activeTop = 0;
             inactiveTop = 0;
             activeZIndex = 0;
@@ -267,7 +267,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         if (this._currentCanvas === 0) {
             this.canvas1.style.left = activeLeft + "px";
             this.canvas1.style.top = activeTop + "px";
-            if (animation && animation.segue === AnimationType.Dissolve) {
+            if (animation && animation.type === AnimationType.Dissolve) {
                 this.canvas2.style.left = activeLeft + "px";
                 this.canvas2.style.top = activeTop + "px";
             }
@@ -285,7 +285,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         } else {
             this.canvas2.style.left = activeLeft + "px";
             this.canvas2.style.top = activeTop + "px";
-            if (animation && animation.segue === AnimationType.Dissolve) {
+            if (animation && animation.type === AnimationType.Dissolve) {
                 this.canvas1.style.left = activeLeft + "px";
                 this.canvas1.style.top = activeTop + "px";
             }
@@ -675,7 +675,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     render() {
         var data = this.state.data;
-        var classNames = cx("animate", (!this.state.data.activePage) ? "" : easeTypeToClassName(this.state.data.activePage.animation.easing));
+        var classNames = cx("animate", (!this.state.data.activePage) ? "" : easeTypeToClassName(this.state.data.activePage.animation.curve));
 
         return (
             <div id="viewport" ref="viewport" key="viewport" name="viewport">

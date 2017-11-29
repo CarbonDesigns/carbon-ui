@@ -1,20 +1,19 @@
 import { CarbonStore, dispatch, handles } from "../CarbonFlux";
 import Immutable from "immutable";
-// var RuntimeTSDefinition: string = require("raw!../../../carbon-core/mylibs/definitions/carbon-runtime.d.ts") as any;
-var platformCodeDefinition: string = require("raw!./model/platform.d.ts") as any;
+
 var emptyCode: string = require("./model/empty.txt") as any;
 
-import { RuntimeTSDefinition, CompiledCodeProvider, IDisposable, IArtboard, app, Environment, Sandbox, PreviewModel, util, ArtboardProxyGenerator, AutoDisposable } from "carbon-core";
+import { IDisposable, IArtboard, app, Environment, Sandbox, PreviewModel, util, AutoDisposable } from "carbon-core";
 import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
 import { CompilerService } from "../compiler/CompilerService";
 
 
-interface IArtboardModel {
-    version: number;
-    name: string;
-    proxyDefinition: string;
-}
+// interface IArtboardModel {
+//     version: number;
+//     name: string;
+//     proxyDefinition: string;
+// }
 
 interface IEditorStoreState {
     currentArtboard?: IArtboard;
@@ -24,15 +23,14 @@ interface IEditorStoreState {
 class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable {
     private initialized: boolean = false;
     private editor: monaco.editor.IStandaloneCodeEditor;
-    private activeProxyModel: IArtboardModel;
-    private proxyModelDisposable: AutoDisposable = new AutoDisposable();
+    // private activeProxyModel: IArtboardModel;
+    private proxyModelDisposable = new AutoDisposable();
+    private storeDisposables = new AutoDisposable();
     private activeProxyVersion: number;
-    private modelsCache: { [id: string]: IArtboardModel }[] = [];
+    // private modelsCache: { [id: string]: IArtboardModel }[] = [];
     private codeCache: { [id: string]: monaco.editor.IModel }[] = [];
     private currentEditorModel: monaco.editor.IModel;
     private editorDisposables: IDisposable[] = [];
-    private storeDisposables: IDisposable[] = [];
-
 
     private _onPageChangedBinding: IDisposable;
 
@@ -72,13 +70,14 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
             target: monaco.languages.typescript.ScriptTarget.ES2016
         });
 
-        let code = RuntimeTSDefinition;
-        this.storeDisposables.push(
-            monaco.languages.typescript.typescriptDefaults.addExtraLib(code as string, 'carbon-runtime.d.ts')
-        );
-        this.storeDisposables.push(
-            monaco.languages.typescript.typescriptDefaults.addExtraLib(platformCodeDefinition as string, 'platform.d.ts')
-        );
+        var staticLibs = previewModel.codeProvider.getStaticLibs();
+        var libNames = Object.keys(staticLibs);
+        for(var lib of libNames) {
+            this.storeDisposables.add(
+                monaco.languages.typescript.typescriptDefaults.addExtraLib(staticLibs[lib].text(), lib)
+            );
+        }
+
         this.initialized = true;
 
         Environment.detaching.bind(() => {
@@ -189,44 +188,65 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
         this.refreshProxyModel(true);
     }
 
-    getActiveArtboardProxyModel(): Promise<IArtboardModel> {
-        // var artboard = this.state.currentArtboard;
-        let previewModel = (Environment.controller as any).previewModel;
-        if (!previewModel) {
-            return Promise.resolve(null);
-        }
-        var artboard: IArtboard = previewModel.sourceArtboard;
-        if (!artboard) {
-            return Promise.resolve(null);
-        }
+    // getActiveArtboardProxyModel(): Promise<IArtboardModel> {
+    //     // var artboard = this.state.currentArtboard;
+    //     let previewModel = (Environment.controller as any).previewModel;
+    //     if (!previewModel) {
+    //         return Promise.resolve(null);
+    //     }
+    //     var artboard: IArtboard = previewModel.sourceArtboard;
+    //     if (!artboard) {
+    //         return Promise.resolve(null);
+    //     }
 
-        let version = artboard.version;
+    //     let version = artboard.version;
 
-        let currentModel: IArtboardModel = this.modelsCache[artboard.id];
-        if (currentModel && currentModel.version === version) {
-            return Promise.resolve(currentModel);
-        }
+    //     let currentModel: IArtboardModel = this.modelsCache[artboard.id];
+    //     if (currentModel && currentModel.version === version) {
+    //         return Promise.resolve(currentModel);
+    //     }
 
-        let res = { version, proxyDefinition: artboard.declaration(false), name: artboard.name };
-        this.modelsCache[artboard.id] = res;
-        return Promise.resolve(res);
-    }
+    //     let res = { version, proxyDefinition: artboard.declaration(false), name: artboard.name };
+    //     this.modelsCache[artboard.id] = res;
+    //     return Promise.resolve(res);
+    // }
 
     refreshProxyModel(force?) {
         if (!this.state.currentArtboard || (!force && this.activeProxyVersion === this.state.currentArtboard.version)) {
             return;
         }
 
-        this.activeProxyVersion = this.state.currentArtboard.version;
-        this.getActiveArtboardProxyModel().then((model) => {
-            // do not dispose active model before new one is ready
-            this.proxyModelDisposable.dispose();
+        let previewModel = (Environment.controller as any).previewModel;
+        if(!previewModel) {
+            return;
+        }
 
-            if (model) {
-                this.proxyModelDisposable.add(monaco.languages.typescript.typescriptDefaults.addExtraLib(ArtboardProxyGenerator.generateRuntimeNames(app.activePage), 'carbon-runtime-names.d.ts'));
-                this.proxyModelDisposable.add(monaco.languages.typescript.typescriptDefaults.addExtraLib(model.proxyDefinition, 'proxy.d.ts'));
-            }
-        });
+        var artboard: IArtboard = previewModel.sourceArtboard;
+        if (!artboard) {
+            return;
+        }
+
+        this.activeProxyVersion = this.state.currentArtboard.version;
+        this.proxyModelDisposable.dispose();
+
+        let dynamicLibs = previewModel.codeProvider.getDynamicLibs(artboard, false);
+        let libNames = Object.keys(dynamicLibs);
+        for(let libName of libNames) {
+            this.proxyModelDisposable.add(
+                monaco.languages.typescript.typescriptDefaults.addExtraLib(dynamicLibs[libName].text(), libName)
+            );
+        }
+        // this.getActiveArtboardProxyModel().then((model) => {
+        //     // do not dispose active model before new one is ready
+
+
+        //     if (model) {
+
+
+        //         this.proxyModelDisposable.add(monaco.languages.typescript.typescriptDefaults.addExtraLib(ArtboardProxyGenerator.generateRuntimeNames(app.activePage), 'carbon-runtime-names.d.ts'));
+        //         this.proxyModelDisposable.add(monaco.languages.typescript.typescriptDefaults.addExtraLib(model.proxyDefinition, 'proxy.d.ts'));
+        //     }
+        // });
     }
 
     restartModel() {
@@ -265,9 +285,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
     }
 
     dispose() {
-        if (this.storeDisposables) {
-            this.storeDisposables.forEach(e => e.dispose());
-        }
+        this.storeDisposables.dispose();
     }
 }
 

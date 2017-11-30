@@ -1,7 +1,8 @@
-import { IDisposable, CompiledCodeProvider } from "carbon-core";
+import { IDisposable, CompiledCodeProvider, CompilationResult} from "carbon-core";
 
 var CompilerWorker: any = require("worker-loader!./CompilerWorker.w");
 var defaultLib = require("raw-loader!../../node_modules/typescript/lib/lib.d.ts");
+
 
 export class CompilerService implements IDisposable {
     _worker: Worker = new CompilerWorker();
@@ -17,7 +18,7 @@ export class CompilerService implements IDisposable {
                 if (e.data.error) {
                     callbacks.reject(e.data);
                 } else {
-                    callbacks.resolve(e.data.text);
+                    callbacks.resolve({text:e.data.text, exports:e.data.exports});
                 }
             }
         }
@@ -43,8 +44,8 @@ export class CompilerService implements IDisposable {
         this._addFile(fileName, text);
     }
 
-    compile(fileName: string, text: string): Promise<string> {
-        let promise = new Promise<string>((resolve, reject) => {
+    compile(fileName: string, text: string): Promise<CompilationResult> {
+        let promise = new Promise<CompilationResult>((resolve, reject) => {
             this._tasks.set(fileName, { resolve, reject });
             this._addFile(fileName, text);
         });

@@ -46,8 +46,8 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
         }
         var DEFAULT_ANIMATION_DURATION = .2;
         var animation = this.props.action.animation;
-        var segueIndex = TransitionTypeValues.findIndex(s => s.value === animation.segue);
-        var easingIndex = EasingValues.findIndex(s => s.value === animation.easing);
+        var segueIndex = TransitionTypeValues.findIndex(s => s.value === animation.type);
+        var easingIndex = EasingValues.findIndex(s => s.value === animation.curve);
         var duration = animation.duration == undefined ? DEFAULT_ANIMATION_DURATION : animation.duration;
 
         this.state = {
@@ -70,12 +70,12 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
 
     changeTransitionType = (i) => {
         this.setState({ segueIndex: i });
-        this.props.newAction.animation.segue = TransitionTypeValues[i].value;
+        this.props.newAction.animation.type = TransitionTypeValues[i].value;
     }
 
     changeEasing = (i) => {
         this.setState({ easingIndex: i });
-        this.props.newAction.animation.easing = EasingValues[i].value;
+        this.props.newAction.animation.curve = EasingValues[i].value;
     }
 
     changeDuration = (event) => {

@@ -1,12 +1,12 @@
-import { IDisposable, RuntimeTSDefinition } from "carbon-core";
+import { IDisposable, CompiledCodeProvider, CompilationResult} from "carbon-core";
 
 var CompilerWorker: any = require("worker-loader!./CompilerWorker.w");
 var defaultLib = require("raw-loader!../../node_modules/typescript/lib/lib.d.ts");
-var platformLib = require("raw-loader!../editor/model/platform.d.ts");
 
 
 export class CompilerService implements IDisposable {
     _worker: Worker = new CompilerWorker();
+    codeProvider = new CompiledCodeProvider();
     _tasks = new Map<string, { resolve: (e: any) => void, reject: (e: any) => void }>();
 
     _onCompilerMessage = (e: MessageEvent) => {
@@ -18,7 +18,7 @@ export class CompilerService implements IDisposable {
                 if (e.data.error) {
                     callbacks.reject(e.data);
                 } else {
-                    callbacks.resolve(e.data.text);
+                    callbacks.resolve({text:e.data.text, exports:e.data.exports});
                 }
             }
         }
@@ -27,8 +27,13 @@ export class CompilerService implements IDisposable {
     constructor() {
         this._worker.onmessage = this._onCompilerMessage;
         this._addFile("lib.d.ts", defaultLib);
-        this._addFile("carbon-runtime.d.ts", RuntimeTSDefinition);
-        this._addFile("platform.d.ts", platformLib);
+        let staticLibs = this.codeProvider.getStaticLibs();
+        let libNames = Object.keys(staticLibs);
+        for(let libName of libNames) {
+            this._addFile(libName, staticLibs[libName].text());
+        }
+
+        // this._addFile("platform.d.ts", platformLib);
     }
 
     private _addFile(fileName, text) {
@@ -39,8 +44,8 @@ export class CompilerService implements IDisposable {
         this._addFile(fileName, text);
     }
 
-    compile(fileName: string, text: string): Promise<string> {
-        let promise = new Promise<string>((resolve, reject) => {
+    compile(fileName: string, text: string): Promise<CompilationResult> {
+        let promise = new Promise<CompilationResult>((resolve, reject) => {
             this._tasks.set(fileName, { resolve, reject });
             this._addFile(fileName, text);
         });

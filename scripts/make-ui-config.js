@@ -100,12 +100,6 @@ function getPlugins(settings) {
     let resourceBundleOptions = {resourceFile: null};
     var plugins = [
         //breaks incremental updates in watch mode...
-        //new webpack.optimize.DedupePlugin(),
-        // new CopyWebpackPlugin([{
-        //     from:fullPath("../src/editor/model/platform.d.ts"),
-        //     to:fullPath("../src/editor/model/platform.txt"),
-        //     toType:'file'
-        // }]),
 
         new BundleResourcesPlugin({
             cdn: settings.authority,

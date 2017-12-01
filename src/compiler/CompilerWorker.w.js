@@ -6,8 +6,8 @@ var options = {
     target: 1,
     module: 5,
     noLib: true,
-    inlineSourceMap:true,
-    inlineSources:true,
+    inlineSourceMap: true,
+    inlineSources: true,
     allowJs: false,
     noEmitOnError: true,
     allowNonTsExtensions: true,
@@ -58,16 +58,55 @@ addEventListener('message', function (e) {
     }
 });
 
+function getExportedSymbols(fileName) {
+    let program = services.getProgram();
+    let sourceFile = program.getSourceFile(fileName);
+    let checker = program.getTypeChecker();
+    let exports = undefined;
+    function visit(node) {
+        // Only consider exported nodes
+        if (isNodeExported(node)) {
+            if (node.name) {
+                let symbol = node.symbol;
+                if (symbol && node.name.text) {
+                    var type = checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration))
+                    if (!type.startsWith('typeof ')) {
+                        exports = exports || {};
+                        exports[node.name.text] = type;
+                    }
+                }
+            }
+        }
+        // todo: need to optimize if statement here to avoid traversing all nodes
+        //if (ts.isNamespaceBody(node) || ts.isModuleOrEnumDeclaration(node)) {
+        ts.forEachChild(node, visit);
+        // }
+    }
+
+    ts.forEachChild(sourceFile, visit);
+
+    return exports;
+}
+
 function emitFile(fileName) {
     var output = services.getEmitOutput(fileName);
 
     if (output.emitSkipped) {
         logErrors(fileName);
+        return;
     }
 
+    let exports = getExportedSymbols(fileName);
+
     output.outputFiles.forEach(function (o) {
-        postMessage({ fileName: fileName, resultFileName: o.name, error: false, text: o.text });
+        postMessage({ fileName: fileName, resultFileName: o.name, exports: exports, error: false, text: o.text });
     });
+}
+
+
+/** True if this is visible outside this file, false otherwise */
+function isNodeExported(node) {
+    return (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Export) !== 0 || (!!node.parent && node.parent.kind === ts.SyntaxKind.SourceFile);
 }
 
 function logErrors(fileName) {

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -9,12 +10,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="msapplication-tap-highlight" content="no" />
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
-    <link rel="shortcut icon"                    href="<%= require('./icons/apple-touch-icon.png') %>" type="image/x-icon" />
+    <link rel="shortcut icon" href="<%= require('./icons/apple-touch-icon.png') %>" type="image/x-icon" />
     <title>Carbonium</title>
-    <link rel="apple-touch-icon"                 href="<%= require('./icons/apple-touch-icon.png') %>" />
-    <link rel="apple-touch-icon" sizes="57x57"   href="<%= require('./icons/apple-touch-icon-57x57.png') %>" />
-    <link rel="apple-touch-icon" sizes="72x72"   href="<%= require('./icons/apple-touch-icon-72x72.png') %>" />
-    <link rel="apple-touch-icon" sizes="76x76"   href="<%= require('./icons/apple-touch-icon-76x76.png') %>" />
+    <link rel="apple-touch-icon" href="<%= require('./icons/apple-touch-icon.png') %>" />
+    <link rel="apple-touch-icon" sizes="57x57" href="<%= require('./icons/apple-touch-icon-57x57.png') %>" />
+    <link rel="apple-touch-icon" sizes="72x72" href="<%= require('./icons/apple-touch-icon-72x72.png') %>" />
+    <link rel="apple-touch-icon" sizes="76x76" href="<%= require('./icons/apple-touch-icon-76x76.png') %>" />
     <link rel="apple-touch-icon" sizes="114x114" href="<%= require('./icons/apple-touch-icon-114x114.png') %>" />
     <link rel="apple-touch-icon" sizes="120x120" href="<%= require('./icons/apple-touch-icon-120x120.png') %>" />
     <link rel="apple-touch-icon" sizes="144x144" href="<%= require('./icons/apple-touch-icon-144x144.png') %>" />
@@ -23,87 +24,97 @@
 
     <link href="https://fonts.googleapis.com/css?family=Inconsolata|Poppins" rel="stylesheet">
 </head>
+
 <body>
-<div id="reactContainer"></div>
-<script type="text/javascript">
-    //auto-generated
-    window.endpoints = {
-        services: '',
-        storage: '',
-        cdn: '',
-        file: '',
-        error: ''
-    };
-    window.telemetryKey = '';
-    window.appBuild = '1.0.0';
+    <div id="reactContainer"></div>
+    <script type="text/javascript">
+        //auto-generated
+        window.endpoints = {
+            services: '',
+            storage: '',
+            cdn: '',
+            file: '',
+            error: ''
+        };
+        window.telemetryKey = '';
+        window.appBuild = '1.0.0';
 
-    window.c = {
-        coreCallback: null,
-        coreLoaded: false,
-        apiLoaded: false,
-        api: null,
-        core: null,
-        coreScript: "<%=htmlWebpackPlugin.options.coreScript%>",
-        resourceFile: "<%=htmlWebpackPlugin.options.resourceBundleOptions.resourceFile%>"
-    };
+        window.c = {
+            coreCallback: null,
+            coreLoaded: false,
+            apiLoaded: false,
+            api: null,
+            core: null,
+            coreScript: "<%=htmlWebpackPlugin.options.coreScript%>",
+            resourceFile: "<%=htmlWebpackPlugin.options.resourceBundleOptions.resourceFile%>"
+        };
 
-    window.__carbonapi = function(api){
-        var carbon = window.c;
-        carbon.apiLoaded = true;
-        carbon.api = api;
-    }
-    window.__carboncore = function(core){
-        var carbon = window.c;
-        carbon.coreLoaded = true;
-        carbon.core = core;
-        if (carbon.coreCallback){
-            carbon.coreCallback();
+        window.__carbonapi = function (api) {
+            var carbon = window.c;
+            carbon.apiLoaded = true;
+            carbon.api = api;
         }
-    }
-    window.__sandboxEval = function(name, __code, proxy) {
-        let Object = null;
-        let XMLHttpRequest = null;
-        let Function = null;
-        let Boolean = null;
-        let Symbol = null;
-        let Error = null;
-        let EvalError = null;
-        let InternalError = null;
-        let RangeError = null;
-        let Proxy = null;
-        let ReferenceError = null;
-        let SyntaxError = null;
-        let TypeError = null;
-        let URIError = null;
-        let window = null;
-        let document = null;
-        let screen = null;
-        let location = null;
-        let history = null;
-        let navigator = null;
-        let localStorage = null;
-        let fetch = null;
-        let setTimeout = null;
-        let setInterval = null;
-
-        with(proxy) {
-            eval(
-                'var ' + name + ' = proxy;'+
-                "let eval = null;"+
-                __code
-            );
+        window.__carboncore = function (core) {
+            var carbon = window.c;
+            carbon.coreLoaded = true;
+            carbon.core = core;
+            if (carbon.coreCallback) {
+                carbon.coreCallback();
+            }
         }
-    }
-</script>
+        window.__sandboxEval = function (name, __code, proxy) {
+            // let clearContext = keys.map((n)=> {
+            //     return 'let '+ n + ' = null;'
+            // }).join('\n');
 
-<!-- needed for mobile safari -->
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl,fetch" crossorigin="anonymous"></script>
+            // let clearContext = {window:null};
+            // let target = window;
+            // while(target){
+            //     for(var v in target) {
+            //         if(v !== 'name' && v!=='alert') {
+            //             clearContext[v] = null;
+            //         }
+            //     }
+            //     target = Object.getPrototypeOf(target);
+            // }
+            // target = null;
+            let handler = {
+                get: function () {
+                    return undefined;
+                },
 
-<script>
+                has: function (target, name) {
+                    if (name === "proxy"
+                        || name == "name"
+                        || name === "__code"
+                        || name === "eval"
+                        || name === "alert") {
+                        return false;
+                    }
+                    return true
+                }
+            }
+
+            with (new Proxy({}, handler)) {
+                with (proxy) {
+                    eval(
+                        'var ' + name + ' = proxy;' +
+                        "let eval = null;" +
+                        __code
+                    );
+                }
+            }
+        }
+    </script>
+
+    <!-- needed for mobile safari -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl,fetch" crossorigin="anonymous"></script>
+
+    <script>
     //manifest
-</script>
+    </script>
 
-<script src="<%=htmlWebpackPlugin.options.vendorsScript%>" crossorigin="anonymous"></script>
-<script src="<%=htmlWebpackPlugin.options.apiScript%>" crossorigin="anonymous"></script>
+    <script src="<%=htmlWebpackPlugin.options.vendorsScript%>" crossorigin="anonymous"></script>
+    <script src="<%=htmlWebpackPlugin.options.apiScript%>" crossorigin="anonymous"></script>
 
 </body>

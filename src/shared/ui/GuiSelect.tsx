@@ -87,7 +87,8 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
             }));
         }
 
-        return <div className={bem('drop', 'content', this.props.mods, this.props.className)}>
+        let mods = Object.assign({open: true}, this.props.mods);
+        return <div className={bem('drop', 'content', mods, this.props.className)}>
             <ScrollContainer
                 boxClassName="drop__list"
                 insideFlyout={true}

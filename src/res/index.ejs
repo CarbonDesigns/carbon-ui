@@ -62,49 +62,6 @@
                 carbon.coreCallback();
             }
         }
-        window.__sandboxEval = function (name, __code, proxy) {
-            // let clearContext = keys.map((n)=> {
-            //     return 'let '+ n + ' = null;'
-            // }).join('\n');
-
-            // let clearContext = {window:null};
-            // let target = window;
-            // while(target){
-            //     for(var v in target) {
-            //         if(v !== 'name' && v!=='alert') {
-            //             clearContext[v] = null;
-            //         }
-            //     }
-            //     target = Object.getPrototypeOf(target);
-            // }
-            // target = null;
-            let handler = {
-                get: function () {
-                    return undefined;
-                },
-
-                has: function (target, name) {
-                    if (name === "proxy"
-                        || name == "name"
-                        || name === "__code"
-                        || name === "eval"
-                        || name === "alert") {
-                        return false;
-                    }
-                    return true
-                }
-            }
-
-            with (new Proxy({}, handler)) {
-                with (proxy) {
-                    eval(
-                        'var ' + name + ' = proxy;' +
-                        "let eval = null;" +
-                        __code
-                    );
-                }
-            }
-        }
     </script>
 
     <!-- needed for mobile safari -->

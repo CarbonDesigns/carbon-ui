@@ -16,7 +16,7 @@ var options = {
     noImplicitReturns: true,
     removeComments: true,
     strictNullChecks: true,
-    alwaysStrict: true,
+    alwaysStrict: true
 };
 
 // Create the language service host to allow the LS to communicate with the host

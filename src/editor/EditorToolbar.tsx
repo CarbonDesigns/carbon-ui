@@ -1,11 +1,12 @@
 import React from "react";
-import { dispatch, Component, listenTo } from "../CarbonFlux";
+import { dispatch, Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import EditorActions from "./EditorActions";
 import Dropdown from "../shared/Dropdown";
 import { FormattedMessage } from "react-intl";
 import { app, PreviewDisplayMode, IArtboard } from "carbon-core";
 import PreviewActions from "../preview/PreviewActions";
 import EditorStore from "./EditorStore";
+import PreviewStore from "../preview/PreviewStore";
 
 export default class EditorToolbar extends Component<any, any> {
     _onRestart = (e) => {
@@ -22,15 +23,20 @@ export default class EditorToolbar extends Component<any, any> {
     @listenTo(EditorStore)
     onEditorStoreChanged() {
         let id = null;
-        if(EditorStore.state.currentArtboard) {
+        if (EditorStore.state.currentArtboard) {
             id = EditorStore.state.currentArtboard.id;
         }
 
-        let currentIndex = EditorStore.state.artboards.findIndex(a=>a.id === id);
+        let currentIndex = EditorStore.state.artboards.findIndex(a => a.id === id);
         this.setState({
             artboards: EditorStore.state.artboards,
             artboardIndex: Math.max(0, currentIndex)
         });
+    }
+
+    @listenTo(PreviewStore)
+    onChange() {
+        this.setState({ displayMode: PreviewStore.state.displayMode });
     }
 
     componentDidMount() {
@@ -71,7 +77,7 @@ export default class EditorToolbar extends Component<any, any> {
     }
 
     changeArtboard = (index) => {
-        let artboard:IArtboard = this.state.artboards[index];
+        let artboard: IArtboard = this.state.artboards[index];
         if (artboard) {
             dispatch(PreviewActions.navigateTo(artboard.id, {}));
         }
@@ -97,10 +103,10 @@ export default class EditorToolbar extends Component<any, any> {
                 selectedItem={this.state.displayMode}
                 onSelect={this.changeDisplayMode}
                 renderSelected={this.renderDisplayMode}>
-                <p>Original size</p>
-                <p>Fit</p>
-                <p>Fill</p>
-                <p>Responsive</p>
+                <p><CarbonLabel id="@preview.originalsize" /></p>
+                <p><CarbonLabel id="@preview.fit" /></p>
+                <p><CarbonLabel id="@preview.fill" /></p>
+                <p><CarbonLabel id="@preview.responsive" /></p>
             </Dropdown>
         </div>
     }

@@ -166,7 +166,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var page = newData.activePage;
         if (!page) {
             return null;
+        } else if(newData.displayMode !== this.state.data.displayMode) {
+            this.restart();
         }
+
         if (data.activePage !== newData.activePage) {
             this._currentCanvas = (this._currentCanvas + 1) % 2;
 
@@ -359,7 +362,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             circle.setTransform(Matrix.createTranslationMatrix(x - circle.width / 2, y - circle.height / 2));
             layer && layer.invalidate();
         }).then(() => {
-            circle.parent().remove(circle);
+            circle.parent.remove(circle);
             layer && layer.invalidate();
         });
     }

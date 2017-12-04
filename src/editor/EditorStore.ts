@@ -8,13 +8,6 @@ import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
 import { CompilerService } from "../compiler/CompilerService";
 
-
-// interface IArtboardModel {
-//     version: number;
-//     name: string;
-//     proxyDefinition: string;
-// }
-
 interface IEditorStoreState {
     currentArtboard?: IArtboard;
     artboards?: { name: string, id: string }[];
@@ -188,29 +181,6 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
         this.refreshProxyModel(true);
     }
 
-    // getActiveArtboardProxyModel(): Promise<IArtboardModel> {
-    //     // var artboard = this.state.currentArtboard;
-    //     let previewModel = (Environment.controller as any).previewModel;
-    //     if (!previewModel) {
-    //         return Promise.resolve(null);
-    //     }
-    //     var artboard: IArtboard = previewModel.sourceArtboard;
-    //     if (!artboard) {
-    //         return Promise.resolve(null);
-    //     }
-
-    //     let version = artboard.version;
-
-    //     let currentModel: IArtboardModel = this.modelsCache[artboard.id];
-    //     if (currentModel && currentModel.version === version) {
-    //         return Promise.resolve(currentModel);
-    //     }
-
-    //     let res = { version, proxyDefinition: artboard.declaration(false), name: artboard.name };
-    //     this.modelsCache[artboard.id] = res;
-    //     return Promise.resolve(res);
-    // }
-
     refreshProxyModel(force?) {
         if (!this.state.currentArtboard || (!force && this.activeProxyVersion === this.state.currentArtboard.version)) {
             return;
@@ -236,17 +206,6 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
                 monaco.languages.typescript.typescriptDefaults.addExtraLib(dynamicLibs[libName].text(), libName)
             );
         }
-        // this.getActiveArtboardProxyModel().then((model) => {
-        //     // do not dispose active model before new one is ready
-
-
-        //     if (model) {
-
-
-        //         this.proxyModelDisposable.add(monaco.languages.typescript.typescriptDefaults.addExtraLib(ArtboardProxyGenerator.generateRuntimeNames(app.activePage), 'carbon-runtime-names.d.ts'));
-        //         this.proxyModelDisposable.add(monaco.languages.typescript.typescriptDefaults.addExtraLib(model.proxyDefinition, 'proxy.d.ts'));
-        //     }
-        // });
     }
 
     restartModel() {

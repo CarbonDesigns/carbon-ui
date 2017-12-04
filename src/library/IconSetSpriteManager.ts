@@ -69,7 +69,7 @@ export default class IconSetSpriteManager {
         if (!element.shouldApplyViewMatrix() && element.commitMatrixChanges) {
             let clone = element.clone();
             clone.commitMatrixChanges();
-            clone.parent(element.parent());
+            clone.parent = element.parent;
             element = clone;
         }
 

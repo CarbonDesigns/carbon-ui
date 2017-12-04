@@ -101,19 +101,19 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                 return;
             case "Carbon_ResourceAdded":
                 if (action.resourceType === ArtboardType.Symbol) {
-                    if (this.state.currentPage !== action.resource.parent()) {
-                        this.loadConfig(action.resource.parent());
+                    if (this.state.currentPage !== action.resource.parent) {
+                        this.loadConfig(action.resource.parent);
                     }
-                    else if (action.resource.parent() === this.state.currentPage) {
+                    else if (action.resource.parent === this.state.currentPage) {
                         this.setState({ dirtyConfig: true });
-                        action.resource.parent().setProps({ toolboxConfigUrl: null });
+                        action.resource.parent.setProps({ toolboxConfigUrl: null });
                     }
                 }
                 return;
             case "Carbon_ResourceChanged":
-                if (action.resourceType === ArtboardType.Symbol && action.resource.parent() === this.state.currentPage) {
+                if (action.resourceType === ArtboardType.Symbol && action.resource.parent === this.state.currentPage) {
                     this.setState({ dirtyConfig: true, changedId: action.resource.id });
-                    action.resource.parent().setProps({ toolboxConfigUrl: null });
+                    action.resource.parent.setProps({ toolboxConfigUrl: null });
                 }
                 return;
             case "Carbon_ResourceDeleted":

@@ -198,13 +198,13 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             }
             selected[element.id] = true;
 
-            let current = element.parent();
+            let current = element.parent;
             while (current) {
                 if (!expanded.hasOwnProperty(current.id)) {
                     needsRefresh = true;
                 }
                 expanded[current.id] = true;
-                current = current.parent();
+                current = current.parent;
             }
         });
 
@@ -299,12 +299,12 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         var selected = !!this.state.selected[layer.id];
 
         if (!selected) {
-            let parent = layer.element.parent();
+            let parent = layer.element.parent;
             while (parent) {
                 if (this.state.selected[parent.id]) {
                     return true;
                 }
-                parent = parent.parent();
+                parent = parent.parent;
             }
         }
 

@@ -125,7 +125,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             return;
         }
 
-        this.markArtboardAsDirty(artboard.parent().id, artboard.id);
+        this.markArtboardAsDirty(artboard.parent.id, artboard.id);
 
         if (!this.state.config) {
             this.updateDirtySets();
@@ -140,7 +140,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             return;
         }
 
-        this.markArtboardAsDirty(artboard.parent().id, artboard.id);
+        this.markArtboardAsDirty(artboard.parent.id, artboard.id);
         this.setState({ dirtyConfig: true });
     }
 
@@ -287,10 +287,10 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                 for (let i = 0; i < results.length; ++i) {
                     let result = results[i];
                     let artboard = artboards[i];
-                    artboard.parent().patchProps(PatchType.Remove, "iconSpriteCache", {
+                    artboard.parent.patchProps(PatchType.Remove, "iconSpriteCache", {
                         id: artboard.id
                     });
-                    artboard.parent().patchProps(PatchType.Insert, "iconSpriteCache", result);
+                    artboard.parent.patchProps(PatchType.Insert, "iconSpriteCache", result);
                 }
             })
             .then(() => this.state.operation.stop())

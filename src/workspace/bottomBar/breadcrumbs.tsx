@@ -65,7 +65,7 @@ export default class Breadcrumbs extends Component<any, any> {
                         exitIsolation: exit
                     });
                 }
-                e = e.parent();
+                e = e.parent;
             }
         }
         else {
@@ -79,7 +79,7 @@ export default class Breadcrumbs extends Component<any, any> {
                         id: e.id
                     });
                 }
-                e = e.parent();
+                e = e.parent;
             }
         }
 
@@ -95,7 +95,7 @@ export default class Breadcrumbs extends Component<any, any> {
         var parentId = null;
         if (selection.elements.length === 1) {
             elements = this._buildBreadcrumbElements(selection.elements[0]);
-            parentId = selection.elements[0].parent().id;
+            parentId = selection.elements[0].parent.id;
         } else {
             elements = this._buildBreadcrumbElements(null);
         }

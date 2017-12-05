@@ -183,7 +183,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
     }
 
     refreshProxyModel(force?) {
-        if (!this.state.currentArtboard || (!force && this.activeProxyVersion === this.state.currentArtboard.version)) {
+        if (!this.state.currentArtboard || (this.state.currentArtboard as any).isDisposed() || (!force && this.activeProxyVersion === this.state.currentArtboard.version)) {
             return;
         }
 

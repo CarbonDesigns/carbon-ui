@@ -147,6 +147,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         }
         if(this.previewModel.activePage) {
             this.view.animationController.reset();
+            this.view.setActivePage(NullPage);
             this.previewModel.recycleCurrentPage();
         }
         this.previewModel.getScreenById(id, {

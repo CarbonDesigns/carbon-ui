@@ -244,7 +244,7 @@ export class SwatchesStore extends CarbonStore<SwatchesStoreState> {
         var palette;
         element.applyVisitor(e => {
             if (e.hasFlags(UIElementFlags.PaletteItem)) {
-                var fill = e.fill();
+                var fill = e.fill;
                 if (fill && fill.value) {
                     colors.push(fill.value);
                 }

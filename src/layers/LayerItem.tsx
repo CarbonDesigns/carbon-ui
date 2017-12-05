@@ -184,8 +184,8 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
             colorsCss.borderColor = colorsCss.backgroundColor;
         }
         else {
-            colorsCss.borderColor = this.displayColor(layer.element.stroke(), 'transparent');
-            colorsCss.backgroundColor = this.displayColor(layer.element.fill(), 'transparent');
+            colorsCss.borderColor = this.displayColor(layer.element.stroke, 'transparent');
+            colorsCss.backgroundColor = this.displayColor(layer.element.fill, 'transparent');
         }
 
         var layer_body = (<section

@@ -26,6 +26,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
     private editorDisposables: IDisposable[] = [];
 
     private _onPageChangedBinding: IDisposable;
+    private _ignoreChange:boolean = false;
 
     private _restartModel: () => void;
     constructor(dispatcher?) {
@@ -65,7 +66,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
 
         var staticLibs = previewModel.codeProvider.getStaticLibs();
         var libNames = Object.keys(staticLibs);
-        for(var lib of libNames) {
+        for (var lib of libNames) {
             this.storeDisposables.add(
                 monaco.languages.typescript.typescriptDefaults.addExtraLib(staticLibs[lib].text(), lib)
             );
@@ -187,7 +188,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
         }
 
         let previewModel = (Environment.controller as any).previewModel;
-        if(!previewModel) {
+        if (!previewModel) {
             return;
         }
 
@@ -201,7 +202,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
 
         let dynamicLibs = previewModel.codeProvider.getDynamicLibs(artboard, false);
         let libNames = Object.keys(dynamicLibs);
-        for(let libName of libNames) {
+        for (let libName of libNames) {
             this.proxyModelDisposable.add(
                 monaco.languages.typescript.typescriptDefaults.addExtraLib(dynamicLibs[libName].text(), libName)
             );

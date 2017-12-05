@@ -145,7 +145,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         } else {
             return;
         }
-
+        if(this.previewModel.activePage) {
+            this.view.animationController.reset();
+            this.previewModel.recycleCurrentPage();
+        }
         this.previewModel.getScreenById(id, {
             width: this.state.data.deviceWidth || this.refs.viewport.clientWidth,
             height: this.state.data.deviceHeight || this.refs.viewport.clientHeight
@@ -165,9 +168,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         var page = newData.activePage;
         if (!page) {
-            return null;
-        } else if(newData.displayMode !== this.state.data.displayMode) {
-            this.restart();
+            if(newData.displayMode !== this.state.data.displayMode) {
+                this.restart();
+            }
+            return;
         }
 
         if (data.activePage !== newData.activePage) {

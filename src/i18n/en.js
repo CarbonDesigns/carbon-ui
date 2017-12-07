@@ -661,6 +661,9 @@ export default
         "@textMode.block": "Block",
         "@textMode.label": "Label",
         "@wrap": "wrap",
+        "@behaviorProps": "Behavior",
+        "@textProp.editable": "Editable in preview",
+
         "@saveImage": "Save image",
         "@changeImage": "Change image",
 

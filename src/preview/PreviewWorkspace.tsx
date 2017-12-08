@@ -28,6 +28,8 @@ import PreviewStore from "./PreviewStore";
 import PreviewActions from './PreviewActions';
 import cx from "classnames";
 import EditorActions from "../editor/EditorActions";
+import { TouchEmulator } from './TouchEmulator';
+
 
 // TODO:
 
@@ -116,9 +118,11 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         device: HTMLDivElement;
     }
 
+    private touchEmulator = new TouchEmulator();
+
     constructor(props) {
         super(props);
-        this.state = { data: PreviewStore.state, currentCanvas: 0 };
+        this.state = { data: PreviewStore.state, currentCanvas: 0, emulateTouch:false };
         this._renderingRequestId = 0;
         this._currentCanvas = 0;
         this._canvas1Left = -1;
@@ -432,6 +436,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         this.attachToView();
         window.addEventListener("resize", this.onresize);
+        if(this.state.emulateTouch) {
+            this.touchEmulator.enable(this.refs.viewport, true);
+        }
     }
 
     _getCurrentArtboard() {
@@ -656,6 +663,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         }
 
         window.removeEventListener("resize", this.onresize);
+        this.touchEmulator.disable();
     }
 
     _setPage(page) {
@@ -686,7 +694,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var classNames = cx("animate", (!this.state.data.activePage) ? "" : easeTypeToClassName(this.state.data.activePage.animation.curve));
 
         return (
-            <div id="viewport" ref="viewport" key="viewport" name="viewport">
+            <div id="viewport" ref="viewport" key="viewport" className="viewport" name="viewport">
                 <canvas ref="canvas0" className={classNames}
                     style={{
                         position: 'absolute'

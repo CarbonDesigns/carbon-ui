@@ -694,7 +694,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var classNames = cx("animate", (!this.state.data.activePage) ? "" : easeTypeToClassName(this.state.data.activePage.animation.curve));
 
         return (
-            <div id="viewport" ref="viewport" key="viewport" className="viewport" name="viewport">
+            <div id="viewport" ref="viewport" key="viewport" className="viewport" name="viewport"  tabIndex={1}>
                 <canvas ref="canvas0" className={classNames}
                     style={{
                         position: 'absolute'

@@ -81,6 +81,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         }
     }
 
+
     static addToSelection = (ev) => {
         ev.stopPropagation();
 

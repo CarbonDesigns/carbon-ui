@@ -8,12 +8,18 @@ import {Brush} from "carbon-core";
 
 import {FormattedMessage} from "react-intl";
 
-export default class BrushSelector extends Component<any, any> {
+interface IBrushSelectorState {
+    newStyle?:any;
+    initialStyle?:any;
+}
+
+export default class BrushSelector extends Component<any, IBrushSelectorState> {
     constructor(props){
         super(props);
-        this.state = {};
-        this.state.newStyle = Brush.toCss(props.brush);
-        this.state.initialStyle = this.state.newStyle;
+        this.state = {
+            newStyle: Brush.toCss(props.brush),
+            initialStyle : this.state.newStyle
+        };
     }
 
     selectBrush = brush => {

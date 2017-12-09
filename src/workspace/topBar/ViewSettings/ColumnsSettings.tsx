@@ -34,7 +34,7 @@ export default class ColumnsSettings extends Component<any, any> {
         var setup;
         var active_artboard = app.activePage.getActiveArtboard();
 
-        if (active_artboard != null && active_artboard.props.layoutGridSettings != null) {
+        if (active_artboard != null && active_artboard.props.layoutGridSettings) {
             setup = active_artboard.props.layoutGridSettings;
         }
         else {
@@ -194,7 +194,7 @@ export default class ColumnsSettings extends Component<any, any> {
     }
 
     componentDidUpdate() {
-        this.state.message = ""; //reset for next update
+        (this.state as any).message = ""; //reset for next update
     }
 
     render() {

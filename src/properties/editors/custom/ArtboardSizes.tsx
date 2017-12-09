@@ -318,7 +318,7 @@ class ScreenTypeGroup extends React.Component<any, any> {
         if(this.state.collapsed){
             return null;
         }
-        return <div>{this.props.children.map(c=><div key={c.name} className="screen screen-group-item" onClick={()=>this._createItem(c)}>
+        return <div>{(this.props.children as any[]).map(c=><div key={c.name} className="screen screen-group-item" onClick={()=>this._createItem(c)}>
                         <span className="name">{c.name}</span>
                         <span className="size">{c.w +"x" +c.h}</span>
                     </div>)}</div>;

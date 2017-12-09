@@ -263,7 +263,7 @@ export class LayersDragController {
      * It's inconvenient to drop into shapes and images from layers, therefore these
      * are specifically excluded in order not to introduce more options for canAccept.
      */
-    private canDropInside(target: IUIElement) {
+    private canDropInside(target: any) {
         return !(target instanceof Shape || target instanceof Image);
     }
 

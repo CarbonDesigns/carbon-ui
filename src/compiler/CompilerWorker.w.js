@@ -45,9 +45,9 @@ var servicesHost = {
 var services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry())
 
 addEventListener('message', function (e) {
-    let fileName = e.data.fileName;
+    var fileName = e.data.fileName;
     if (fileName && e.data.text) {
-        let version = 0;
+        var version = 0;
         if (files[fileName]) {
             version = files[fileName].version || 0;
         }
@@ -59,15 +59,15 @@ addEventListener('message', function (e) {
 });
 
 function getExportedSymbols(fileName) {
-    let program = services.getProgram();
-    let sourceFile = program.getSourceFile(fileName);
-    let checker = program.getTypeChecker();
-    let exports = undefined;
+    var program = services.getProgram();
+    var sourceFile = program.getSourceFile(fileName);
+    var checker = program.getTypeChecker();
+    var exports = undefined;
     function visit(node) {
         // Only consider exported nodes
         if (isNodeExported(node)) {
             if (node.name) {
-                let symbol = node.symbol;
+                var symbol = node.symbol;
                 if (symbol && node.name.text) {
                     var type = checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration))
                     if (!type.startsWith('typeof ')) {
@@ -96,7 +96,7 @@ function emitFile(fileName) {
         return;
     }
 
-    let exports = getExportedSymbols(fileName);
+    var exports = getExportedSymbols(fileName);
 
     output.outputFiles.forEach(function (o) {
         postMessage({ fileName: fileName, resultFileName: o.name, exports: exports, error: false, text: o.text });

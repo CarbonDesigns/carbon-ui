@@ -42,7 +42,7 @@ export default class SubscribeForm extends Component<TopMenuProps, any>{
         })
     }
 
-    protected validateEmail = (email: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    protected validateEmail = (email: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => {
         if (email && email.indexOf('@') < 0) {
             return state.set("status", "error").set("error", this.formatLabel("@account.badEmail"));
         }

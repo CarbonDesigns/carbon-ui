@@ -20,8 +20,6 @@ declare interface IReactElementProps<T extends HTMLElement = HTMLElement> extend
     children?:any[]|any;
 }
 
-declare type ImmutableRecord<T> = Immutable.Record.Instance<T>;
-
 declare module "bem"{
     function bem(block, element?, mods?, mix?): string;
     export = bem;

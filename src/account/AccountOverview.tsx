@@ -87,7 +87,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
         }
     }
 
-    private validateUsername = (username: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    private validateUsername = (username: string, state: any, force?: boolean) => {
         var username = this.refs.username.getValue();
         if (username) {
             return state.set("status", "notReady");
@@ -97,7 +97,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
         }
         return state.set("status", "notReady");
     }
-    private validateEmail = (email: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    private validateEmail = (email: string, state: any, force?: boolean) => {
         if (email) {
             if (email.indexOf('@') < 0) {
                 return state.set("status", "error").set("error", this.formatLabel("@account.badEmail"));
@@ -178,7 +178,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
         </form>;
     }
 
-    private validatePassword = (password: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    private validatePassword = (password: string, state: any, force?: boolean) => {
         if (password || force) {
             if (password.length >= 6) {
                 return state.set("status", "ok").set("error", "");

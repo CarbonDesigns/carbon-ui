@@ -77,7 +77,7 @@ export default class ResetPassword extends RouteComponent<IResetPasswordProps, I
         this.setState({ status: "error" });
     };
 
-    private validatePassword = (password: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    private validatePassword = (password: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => {
         if (password || force) {
             if (password.length >= MinPasswordLength){
                 return state.set("status", "ok").set("error", "");

@@ -61,7 +61,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
     }
 
     addLayerToList(layers: LayerNode[], expandedMap: IdMap, element, indent, nodeMutator = null) {
-        let elementId = element.id();
+        let elementId = element.id;
         let node: LayerNode = {
             indent: indent,
             id: elementId,
@@ -196,15 +196,15 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             if (repeater && this.state.layers.findIndex(x => x && x.element === element) === -1) {
                 needsRefresh = true;
             }
-            selected[element.id()] = true;
+            selected[element.id] = true;
 
-            let current = element.parent();
+            let current = element.parent;
             while (current) {
-                if (!expanded.hasOwnProperty(current.id())) {
+                if (!expanded.hasOwnProperty(current.id)) {
                     needsRefresh = true;
                 }
-                expanded[current.id()] = true;
-                current = current.parent();
+                expanded[current.id] = true;
+                current = current.parent;
             }
         });
 
@@ -221,7 +221,7 @@ class LayersStore extends CarbonStore<LayersStoreState> {
     }
 
     onAppChanged(primitives: Primitive[]) {
-        let activePageId = app.activePage.id();
+        let activePageId = app.activePage.id;
         let refreshState = false;
 
         let propChanges: SetPropsPrimitive[] = [];
@@ -299,12 +299,12 @@ class LayersStore extends CarbonStore<LayersStoreState> {
         var selected = !!this.state.selected[layer.id];
 
         if (!selected) {
-            let parent = layer.element.parent();
+            let parent = layer.element.parent;
             while (parent) {
-                if (this.state.selected[parent.id()]) {
+                if (this.state.selected[parent.id]) {
                     return true;
                 }
-                parent = parent.parent();
+                parent = parent.parent;
             }
         }
 

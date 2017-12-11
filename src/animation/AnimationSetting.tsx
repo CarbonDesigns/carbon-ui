@@ -5,7 +5,8 @@ import flyoutStore from '../FlyoutStore';
 import { richApp } from '../RichApp';
 import { Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import Dropdown from "../shared/Dropdown";
-import { RequestAnimationSettings, app, ActionType, AnimationType, EasingType } from "carbon-core";
+import { RequestAnimationSettings, app, ActionType } from "carbon-core";
+import { AnimationType, EasingType } from "carbon-runtime";
 import { FormattedMessage, defineMessages } from 'react-intl';
 
 var TransitionTypeValues = [
@@ -35,7 +36,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
     constructor(props) {
         super(props);
         this._artboards = [{ name: () => "Previous artboard", id: () => "-1" }]
-            .concat(app.activePage.getAllArtboards().map(x => { return { id: () => x.id(), name: () => x.name() } }));
+            .concat(app.activePage.getAllArtboards().map(x => { return { id: () => x.id, name: () => x.name } }));
         var artboardIndex = 0;
         for (var i = 0; i < this._artboards.length; i++) {
             if (this._artboards[i].id() === this.props.action.targetArtboardId) {
@@ -45,8 +46,8 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
         }
         var DEFAULT_ANIMATION_DURATION = .2;
         var animation = this.props.action.animation;
-        var segueIndex = TransitionTypeValues.findIndex(s => s.value === animation.segue);
-        var easingIndex = EasingValues.findIndex(s => s.value === animation.easing);
+        var segueIndex = TransitionTypeValues.findIndex(s => s.value === animation.type);
+        var easingIndex = EasingValues.findIndex(s => s.value === animation.curve);
         var duration = animation.duration == undefined ? DEFAULT_ANIMATION_DURATION : animation.duration;
 
         this.state = {
@@ -69,12 +70,12 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
 
     changeTransitionType = (i) => {
         this.setState({ segueIndex: i });
-        this.props.newAction.animation.segue = TransitionTypeValues[i].value;
+        this.props.newAction.animation.type = TransitionTypeValues[i].value;
     }
 
     changeEasing = (i) => {
         this.setState({ easingIndex: i });
-        this.props.newAction.animation.easing = EasingValues[i].value;
+        this.props.newAction.animation.curve = EasingValues[i].value;
     }
 
     changeDuration = (event) => {

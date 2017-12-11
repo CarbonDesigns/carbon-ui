@@ -24,7 +24,7 @@ export interface IQueueFile{
     dropzoneType: DropzoneType
 }
 
-export let QueueFile = Immutable.Record<IQueueFile>({
+export let QueueFile = Immutable.Record({
     status: UploadStatus.added,
     name: "",
     added_at: 0,
@@ -36,7 +36,7 @@ export let QueueFile = Immutable.Record<IQueueFile>({
 });
 
 interface IImageUploadQueueStoreState{
-    queue: Immutable.OrderedMap<string, Immutable.Record.Instance<IQueueFile>>
+    queue: Immutable.OrderedMap<string, any/*Immutable.Record<IQueueFile>*/>
 }
 class ImageUploadQueueStore extends CarbonStore<IImageUploadQueueStoreState>{
     _clearTimeout: number;

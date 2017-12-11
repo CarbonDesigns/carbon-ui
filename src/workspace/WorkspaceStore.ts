@@ -7,7 +7,7 @@ import { app, ArtboardType } from "carbon-core";
 export default class WorkspaceStore extends CarbonStore {
     @handles(CarbonActions.loaded)
     onLoaded(){
-        if (!app.serverless() && !app.id()) {
+        if (!app.serverless() && !app.id) {
             let hasSymbols = app.getAllResourceArtboards(ArtboardType.Symbol);
             let hasIcons = app.getAllResourceArtboards(ArtboardType.IconSet);
 

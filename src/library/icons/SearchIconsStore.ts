@@ -87,7 +87,7 @@ class SearchIconsStore extends CarbonStore<SearchIconsStoreState> implements ITo
         let page = app.getImmediateChildById<IPage>(pageId);
         let element = page.findNodeByIdBreadthFirst(elementId);
         let artboard = element.findAncestorOfType<IArtboard>(Artboard);
-        let artboardName = artboard.name();
+        let artboardName = artboard.name;
 
         for (let i = 0; i < searchConfig.groups.length; i++) {
             let group = searchConfig.groups[i];

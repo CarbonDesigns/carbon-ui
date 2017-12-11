@@ -33,7 +33,7 @@ export class MirrorForm extends Component<MirrorFormProps, MirrorFormState> {
 
     //handlers
     private onShareClick = () => {
-        return backend.shareProxy.mirrorCode(app.companyId(), app.id(), true);
+        return backend.shareProxy.mirrorCode(app.companyId(), app.id, true);
     }
     private onShared = (data: MirrorCode) => {
         this.setState({ code: data.code });
@@ -41,7 +41,7 @@ export class MirrorForm extends Component<MirrorFormProps, MirrorFormState> {
     }
 
     private onDisableSharingClick = () => {
-        return backend.shareProxy.disableMirroring(app.companyId(), app.id());
+        return backend.shareProxy.disableMirroring(app.companyId(), app.id);
     }
     private onSharingDisabled = () => {
         this.setState({ code: null });

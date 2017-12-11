@@ -20,8 +20,6 @@ declare interface IReactElementProps<T extends HTMLElement = HTMLElement> extend
     children?:any[]|any;
 }
 
-declare type ImmutableRecord<T> = Immutable.Record.Instance<T>;
-
 declare module "bem"{
     function bem(block, element?, mods?, mix?): string;
     export = bem;
@@ -92,3 +90,11 @@ declare module "unsplash-js"{
     export default Unsplash;
     export function toJson(value: any): any;
 }
+
+declare module "*.w.js" {
+    class WebpackWorker extends Worker {
+      constructor();
+    }
+
+    export = WebpackWorker;
+  }

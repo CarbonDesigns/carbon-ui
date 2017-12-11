@@ -71,7 +71,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     private onIconDoubleClick = (ev) => {
         if (this.props.layer.element instanceof Artboard) {
             var artboard = this.props.layer.element;
-            (app.activePage as IArtboardPage).setActiveArtboardById(artboard.id());
+            (app.activePage as IArtboardPage).setActiveArtboardById(artboard.id);
             if (artboard) {
                 Environment.view.ensureScale([artboard]);
                 Environment.view.ensureCentered([artboard]);
@@ -80,6 +80,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
             }
         }
     }
+
 
     static addToSelection = (ev) => {
         ev.stopPropagation();
@@ -138,9 +139,9 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     private renderTitle() {
         if (this.state.editing) {
             return <EnterInput className={b("input")}
-                defaultValue={this.props.layer.element.name()}
+                defaultValue={this.props.layer.element.name}
                 onValueEntered={value => {
-                    this.props.layer.element.name(value);
+                    this.props.layer.element.name = (value);
                     this.setState({editing: false});
                 }}
                 autoFocus/>
@@ -153,7 +154,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     render() {
         var layer = this.props.layer;
         let locked = layer.element.locked();
-        let visible = layer.element.visible();
+        let visible = layer.element.visible;
 
         let layerClassNames = b(null, {
             "lock-0": !locked,
@@ -184,8 +185,8 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
             colorsCss.borderColor = colorsCss.backgroundColor;
         }
         else {
-            colorsCss.borderColor = this.displayColor(layer.element.stroke(), 'transparent');
-            colorsCss.backgroundColor = this.displayColor(layer.element.fill(), 'transparent');
+            colorsCss.borderColor = this.displayColor(layer.element.stroke, 'transparent');
+            colorsCss.backgroundColor = this.displayColor(layer.element.fill, 'transparent');
         }
 
         var layer_body = (<section

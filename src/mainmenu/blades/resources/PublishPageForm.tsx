@@ -92,7 +92,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         }
     }
 
-    private validateName = (name: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    private validateName = (name: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => {
         if (name) {
             if (name !== this.state.validatedName && state.get("status") !== "checking") {
                 backend.shareProxy.validatePageName({ name, scope: this.state.scope })

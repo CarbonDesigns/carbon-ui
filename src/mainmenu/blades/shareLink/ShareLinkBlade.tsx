@@ -13,7 +13,7 @@ export const ShareCodesLoader = GuiContentLoader as ShareCodesLoader;
 
 export default class ShareLinkBlade extends Component {
     private onLoad = () => {
-        return backend.shareProxy.getCodes(app.companyId(), app.id());
+        return backend.shareProxy.getCodes(app.companyId(), app.id);
     }
 
     private renderContent = (data: {codes: ShareCode[]}) => {

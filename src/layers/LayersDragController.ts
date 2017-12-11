@@ -99,7 +99,7 @@ export class LayersDragController {
         let newPosition = this.detectDropPosition(event, targetElement);
         let oldPosition = this.currentDropPositions[layerIndex];
 
-        if (newPosition !== DropPosition.None && targetElement.parent() !== this.draggedElements[0].parent()
+        if (newPosition !== DropPosition.None && targetElement.parent !== this.draggedElements[0].parent
             || newPosition === DropPosition.Inside
         ) {
             this.container.classList.add("into");
@@ -168,7 +168,7 @@ export class LayersDragController {
             let parent = this.performDrop(layersStore.state.layers[layerIndex].element, dropPosition);
             Selection.refreshSelection();
 
-            dispatchAction({ type: "Layers_dropped", targetId: parent && parent.id(), targetIndex: layerIndex });
+            dispatchAction({ type: "Layers_dropped", targetId: parent && parent.id, targetIndex: layerIndex });
         }
 
         this.draggedElements.length = 0;
@@ -182,8 +182,8 @@ export class LayersDragController {
         }
 
         if (dropPosition === DropPosition.Below || dropPosition === DropPosition.Above) {
-            let parent = target.parent();
-            let sameParent = parent === this.draggedElements[0].parent();
+            let parent = target.parent;
+            let sameParent = parent === this.draggedElements[0].parent;
             let index = parent.children.indexOf(target);
 
             if (sameParent) {
@@ -249,7 +249,7 @@ export class LayersDragController {
             }
         }
 
-        if (!targetElement.parent().canAccept(this.draggedElements, false, true)) {
+        if (!targetElement.parent.canAccept(this.draggedElements, false, true)) {
             return DropPosition.None;
         }
 
@@ -263,7 +263,7 @@ export class LayersDragController {
      * It's inconvenient to drop into shapes and images from layers, therefore these
      * are specifically excluded in order not to introduce more options for canAccept.
      */
-    private canDropInside(target: IUIElement) {
+    private canDropInside(target: any) {
         return !(target instanceof Shape || target instanceof Image);
     }
 

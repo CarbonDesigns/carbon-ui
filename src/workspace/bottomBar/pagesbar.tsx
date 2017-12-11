@@ -147,7 +147,7 @@ class PagesList extends React.Component<any, any> {
     }
 
     _pageClicked = (page: IPage) => {
-        var pageId = page.id();
+        var pageId = page.id;
         app.setActivePageById(pageId);
         this.setState({ version: this.state.version + 1 });
     };
@@ -207,7 +207,7 @@ export default class PagesBar extends Component<any, any> {
         PropertyTracker.elementDeleted.bind(this, this._elementInsertedOrDeleted);
 
         app.pages.forEach(x => x.enablePropsTracking());
-        this.setState({ pageName: app.activePage.name() });
+        this.setState({ pageName: app.activePage.name });
     }
 
     componentWillUnmount() {
@@ -220,7 +220,7 @@ export default class PagesBar extends Component<any, any> {
     _propsChanged(element, props) {
         //render on name change of any page in case the popup is open
         if (element instanceof Page && props.name !== undefined) {
-            this.setState({ pageName: app.activePage.name() })
+            this.setState({ pageName: app.activePage.name })
         }
     }
     _elementInsertedOrDeleted(parent, child) {
@@ -231,7 +231,7 @@ export default class PagesBar extends Component<any, any> {
 
     @handles(CarbonActions.pageChanged)
     _onPageChanged({ newPage }) {
-        this.setState({ pageName: newPage.name() });
+        this.setState({ pageName: newPage.name });
     }
 
     _renderCurrentPage = () => {

@@ -10,6 +10,7 @@ var resolveCoreModules = require("./resolveCore");
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
 
 var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
@@ -99,7 +100,6 @@ function getPlugins(settings) {
     let resourceBundleOptions = {resourceFile: null};
     var plugins = [
         //breaks incremental updates in watch mode...
-        //new webpack.optimize.DedupePlugin(),
 
         new BundleResourcesPlugin({
             cdn: settings.authority,
@@ -206,7 +206,7 @@ function getLoaders(settings) {
     var babelLoader = "babel?" + JSON.stringify(babelSettings);
 
     var excludedFolders = ["node_modules", "libs", "generated"];
-    var excludedFiles = ["carbon-core-.*", "carbon-api-.*"];
+    var excludedFiles = ["carbon-core-.*", "carbon-api-.*", "CompilerWorker.w.js"];
     var excludes = new RegExp(
         excludedFolders.map(x => "[\/\\\\]" + x + "[\/\\\\]").join("|")
         + "|" + excludedFiles.join("|"));
@@ -222,6 +222,10 @@ function getLoaders(settings) {
             loaders: [babelLoader, "react-map-styles"]
         },
         {
+            test: /\.(txt)$/,
+            loaders: ['raw-loader']
+        },
+        {
             test: /\.jsx$/,
             loaders: ["react-hot", babelLoader],
             exclude: excludes
@@ -232,7 +236,7 @@ function getLoaders(settings) {
             exclude: excludes
         },
         {
-            test: /\.ts$/,
+            test: /[^\.]\w(?!\.d)\.ts$/,
             loaders: [babelLoader, "awesome-typescript-loader"],
             exclude: /node_modules/
         },
@@ -246,6 +250,13 @@ function getLoaders(settings) {
             loaders: [util.format("file?name=[path][name]%s.[ext]", settings.hashPattern)],
             exclude: excludes
         }
+        // ,
+        // {
+        //     test:  /\.w.js$/,
+        //     loaders: ["worker-loader"],
+        //     options:{inline:true},
+        //     exclude: excludes
+        // }
     ];
 
     loaders.push({
@@ -313,7 +324,7 @@ module.exports = function (settings) {
                         }
                     },
                     {
-                        from: /^((?!\.(png|cur|js|ts|tsx|woff|ttf|eot|svg|json|gif)).)*$/g,
+                        from: /^((?!\.(png|cur|js|ts|tsx|woff|ttf|eot|svg|json|gif|css|txt)).)*$/g,
                         to: settings.publicPath + '/index.html'
                     }
                 ]

@@ -28,7 +28,7 @@ export default class ShareForm extends Component<ShareFormProps, ShareFormState>
 
     //handlers
     private onShareClick = () => {
-        return backend.shareProxy.addCode(app.companyId(), app.id(), ShareRole.Edit);
+        return backend.shareProxy.addCode(app.companyId(), app.id, ShareRole.Edit);
     }
     private onShared = (code: ShareCode) => {
         let codes = this.state.codes.slice();
@@ -37,7 +37,7 @@ export default class ShareForm extends Component<ShareFormProps, ShareFormState>
     }
 
     private onDisableSharingClick = () => {
-        return backend.shareProxy.deleteAllCodes(app.companyId(), app.id());
+        return backend.shareProxy.deleteAllCodes(app.companyId(), app.id);
     }
     private onSharingDisabled = () => {
         this.setState({ codes: [] });

@@ -9,7 +9,7 @@ var State = Record({
     // deviceWidth: Devices[0].w,
     // deviceHeight: Devices[0].h,
     // responsive:false,
-    displayMode: PreviewDisplayMode.OriginalSize,
+    displayMode: PreviewDisplayMode.Fit,
     previewActive: true,
     activePage: null,
     activeDevice:0
@@ -20,7 +20,6 @@ class PreviewStore extends CarbonStore<any> {
 
     constructor(dispatcher){
         super(dispatcher);
-        this._navigationStack = [];
     }
 
     getInitialState() {
@@ -36,9 +35,6 @@ class PreviewStore extends CarbonStore<any> {
 
     @handles(PreviewActions.navigateTo)
     onNavigateToPage({artboardId, animation}) {
-        if(this.state.activePage){
-            this._navigationStack.push(this.state.activePage);
-        }
         this.state = this.state.set("activePage",{artboardId, animation});
     }
 

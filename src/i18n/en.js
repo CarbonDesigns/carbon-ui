@@ -175,7 +175,7 @@ export default
         "Show qr code": "Show qr code", //
         "Share by email": "Share by email", //
 
-        "mode.preview": "Preview", //
+        "mode.preview": "Code", //
         "mode.prototype": "Prototype", //
         "mode.edit": "Design", //
 
@@ -661,6 +661,9 @@ export default
         "@textMode.block": "Block",
         "@textMode.label": "Label",
         "@wrap": "wrap",
+        "@behaviorProps": "Behavior",
+        "@textProp.editable": "Editable in preview",
+
         "@saveImage": "Save image",
         "@changeImage": "Change image",
 

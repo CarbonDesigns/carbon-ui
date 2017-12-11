@@ -66,7 +66,7 @@ export default class ToolboxConfiguration {
         let elementWithTiles: Array<{ element: IArtboard | IStateboard, tileSize: TileSize }> = elements.map(e => {
             let tileSize;
             if (e.props.tileSize === TileSize.Auto) {
-                tileSize = ToolboxConfiguration.chooseTileType(e.width(), e.height());
+                tileSize = ToolboxConfiguration.chooseTileType(e.width, e.height);
             } else {
                 tileSize = e.props.tileSize;
             }
@@ -109,7 +109,7 @@ export default class ToolboxConfiguration {
                 y = 0;
             }
 
-            let data = ToolboxConfiguration.fitToTile(element.width(), element.height(), tileSize, PADDING);
+            let data = ToolboxConfiguration.fitToTile(element.width, element.height, tileSize, PADDING);
             renderTasks.push({ x, y, data: data });
             height = Math.max(height, data.height);
             if ((counter + 1) % countOnLine === 1) {
@@ -142,7 +142,7 @@ export default class ToolboxConfiguration {
             .then(() => {
                 if (items) {
                     for (i = 0; i < elements.length; ++i) {
-                        items.push(elementsMap[elements[i].id()]);
+                        items.push(elementsMap[elements[i].id]);
                     }
                 }
 
@@ -164,14 +164,14 @@ export default class ToolboxConfiguration {
         renderer.elementToContext(artboard, context, contextScale, tileMatrix);
         tileMatrix.free();
 
-        stencilMap[artboard.id()] = {
+        stencilMap[artboard.id] = {
             id: createUUID(),
-            artboardId: artboard instanceof IStateboard ? artboard.props.masterId : artboard.id(),
-            pageId: page.id(),
+            artboardId: artboard instanceof IStateboard ? artboard.props.masterId : artboard.id,
+            pageId: page.id,
             realHeight: bb.width,
             realWidth: bb.height,
             spriteMap: { x: t.x * contextScale, y: t.y * contextScale, width: t.data.width * contextScale, height: t.data.height * contextScale },
-            title: artboard.name(),
+            title: artboard.name,
             stateId,
             //will be set later
             spriteSize: null,
@@ -333,10 +333,10 @@ export default class ToolboxConfiguration {
      * A master always comes first. The rest of the states follow the general rule.
      */
     private static symbolComparer(a: IArtboard, b: IArtboard) {
-        if (a instanceof IStateboard && a.props.masterId === b.id()) {
+        if (a instanceof IStateboard && a.props.masterId === b.id) {
             return 1;
         }
-        else if (b instanceof IStateboard && b.props.masterId === a.id()) {
+        else if (b instanceof IStateboard && b.props.masterId === a.id) {
             return -1;
         }
 

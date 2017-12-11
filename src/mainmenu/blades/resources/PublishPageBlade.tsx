@@ -189,7 +189,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         }
 
         var item = new Symbol();
-        item.setProps({ source: { pageId: page.id(), artboardId: artboard.id() }, br: rect })
+        item.setProps({ source: { pageId: page.id, artboardId: artboard.id }, br: rect })
         return { w, h, item, id: Math.random() };
     }
 
@@ -248,22 +248,22 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
         let updated = false;
 
         if (oldArtbard) {
-            let old = screenshots.find(x => x.id === oldArtbard.id());
+            let old = screenshots.find(x => x.id === oldArtbard.id);
             if (old) {
-                old.id = newArtboard.id();
-                old.name = newArtboard.name();
+                old.id = newArtboard.id;
+                old.name = newArtboard.name;
                 old.url = dataUrl;
                 updated = true;
             }
         }
 
         if (!updated) {
-            let existing = screenshots.findIndex(x => x.id === newArtboard.id());
+            let existing = screenshots.findIndex(x => x.id === newArtboard.id);
             if (existing !== -1) {
                 screenshots.splice(existing, 1);
             }
 
-            screenshots.push({id: newArtboard.id(), name: newArtboard.name(), url: dataUrl});
+            screenshots.push({id: newArtboard.id, name: newArtboard.name, url: dataUrl});
         }
         this.setState({ screenshots });
     }
@@ -350,7 +350,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             className="drop_down"
             selectedItem={this.state.page}
             items={pages}
-            renderItem={page => <p>{page.name()}</p>}
+            renderItem={page => <p>{page.name}</p>}
             caption={caption}
             onSelect={this.pageSelected}>
         </PageSelect>;

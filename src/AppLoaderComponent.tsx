@@ -84,13 +84,13 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
             .then(x => {
                 app.companyId(x.companyId);
                 if (this.props.params.appId) {
-                    app.id(this.props.params.appId);
+                    app.id = (this.props.params.appId);
                 }
                 if (this.props.location.query.r) {
                     app.initializeWithResource(this.props.location.query.r);
                 }
 
-                if (!app.id() && !app.serverless()) {
+                if (!app.id && !app.serverless()) {
                     var token = app.actionManager.subscribe("save", (name, result) => {
                         if (result) {
                             //strip possible resource from query
@@ -128,10 +128,10 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
 
     private getAppUrlPath(companyName: string) {
         if (app.companyId() === backend.getUserId()) {
-            return "/app/" + app.id();
+            return "/app/" + app.id;
         }
         console.assert(!!companyName);
-        return "/app/@" + companyName + "/" + app.id();
+        return "/app/@" + companyName + "/" + app.id;
     }
 
     static contextTypes = {

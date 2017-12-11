@@ -583,7 +583,7 @@ export interface IFieldState {
     error?: string;
 }
 
-export let FieldState = Immutable.Record<IFieldState>({
+export let FieldState = Immutable.Record({
     status: "notReady",
     error: ""
 });
@@ -600,11 +600,11 @@ interface IGuiValidatedInputProps extends IGuiInputProps {
      * The force parameter specifies that validation should be performed regardless of the trigger,
      * for example if a form is submitted without key up or blur event on the component.
      */
-    onValidate?: (newValue: string, state: ImmutableRecord<IFieldState>, force?: boolean) => ImmutableRecord<IFieldState> | null;
+    onValidate?: (newValue: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => any/*ImmutableRecord<IFieldState>*/| null;
     trigger?: ValidationTrigger;
 }
 interface IGuiValidatedInputState {
-    fieldState: ImmutableRecord<IFieldState>;
+    fieldState: any/*ImmutableRecord<IFieldState>*/;
 }
 /**
  * An input with validation callback.
@@ -693,7 +693,7 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
             {...rest} />
     }
 
-    private renderFieldMods(field: Immutable.Record.Instance<IFieldState>) {
+    private renderFieldMods(field: any/*Immutable.Record.Instance<IFieldState>*/) {
         var status = field.get("status");
         var mods: GuiInputMod[] = [];
         if (status === "ok") {
@@ -708,7 +708,7 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
         return mods;
     }
 
-    private renderFieldSuffix(field: Immutable.Record.Instance<IFieldState>, component) {
+    private renderFieldSuffix(field: any/*Immutable.Record.Instance<IFieldState>*/, component) {
         var status = field.get("status");
         if (status === "checking") {
             //TODO: (design) add icon (or animation) for checking field
@@ -730,7 +730,7 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
 }
 
 export class GuiRequiredInput extends GuiValidatedInput {
-    private validateField = (value: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    private validateField = (value: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => {
         if (value) {
             return state.set("status", "ok");
         }

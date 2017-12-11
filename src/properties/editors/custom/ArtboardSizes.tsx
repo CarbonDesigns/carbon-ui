@@ -318,7 +318,7 @@ class ScreenTypeGroup extends React.Component<any, any> {
         if(this.state.collapsed){
             return null;
         }
-        return <div>{this.props.children.map(c=><div key={c.name} className="screen screen-group-item" onClick={()=>this._createItem(c)}>
+        return <div>{(this.props.children as any[]).map(c=><div key={c.name} className="screen screen-group-item" onClick={()=>this._createItem(c)}>
                         <span className="name">{c.name}</span>
                         <span className="size">{c.w +"x" +c.h}</span>
                     </div>)}</div>;
@@ -349,7 +349,7 @@ export default class ArtboardSizes extends EditorComponent<any, any, any>{
             var section = {name:t.name, children:children};
             for(var j = 0; j < t.children.length; ++j){
                 var c = t.children[j];
-                children.push({name:c.name(), w:c.width(), h:c.height(), i:c});
+                children.push({name:c.name, w:c.width, h:c.height, i:c});
             }
             screenSizes.push(section);
         }

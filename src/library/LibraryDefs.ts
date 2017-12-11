@@ -30,7 +30,7 @@ export type ToolboxGroup<T extends Stencil> = {
 }
 
 export type ToolboxConfig<T extends Stencil> = {
-    id: string;
+    id?: string;
     groups: ToolboxGroup<T>[];
 }
 

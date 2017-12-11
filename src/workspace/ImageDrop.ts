@@ -53,7 +53,7 @@ export default class ImageDrop {
                 }
 
                 for (var i = 0; i < files.length; i++) {
-                    let fileElement = dropHandler.files.find(x => x.name() === files[i].name);
+                    let fileElement = dropHandler.files.find(x => x.name === files[i].name);
                     fileElement.setExternalUrl(response.images[i].url);
                 }
             },

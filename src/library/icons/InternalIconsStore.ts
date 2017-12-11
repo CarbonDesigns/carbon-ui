@@ -67,7 +67,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         element.setProps({
             width: stencil.realWidth,
             height: stencil.realHeight,
-            source: Image.createElementSource(stencil.pageId, artboard.id(), stencil.id)
+            source: Image.createElementSource(stencil.pageId, artboard.id, stencil.id)
         });
 
         return element;
@@ -125,7 +125,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             return;
         }
 
-        this.markArtboardAsDirty(artboard.parent().id(), artboard.id());
+        this.markArtboardAsDirty(artboard.parent.id, artboard.id);
 
         if (!this.state.config) {
             this.updateDirtySets();
@@ -140,7 +140,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             return;
         }
 
-        this.markArtboardAsDirty(artboard.parent().id(), artboard.id());
+        this.markArtboardAsDirty(artboard.parent.id, artboard.id);
         this.setState({ dirtyConfig: true });
     }
 
@@ -149,7 +149,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             return;
         }
 
-        this.markArtboardAsDirty(page.id(), artboard.id(), DeletedVersion);
+        this.markArtboardAsDirty(page.id, artboard.id, DeletedVersion);
         this.setState({ dirtyConfig: true });
     }
 
@@ -160,7 +160,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
         for (let i = 0; i < pages.length; ++i) {
             let cacheItems = pages[i].props.iconSpriteCache as PageSpriteCacheItem[];
             for (let j = 0; j < cacheItems.length; ++j) {
-                newStates.push({ pageId: pages[i].id(), artboardId: cacheItems[j].id, version: cacheItems[j].version });
+                newStates.push({ pageId: pages[i].id, artboardId: cacheItems[j].id, version: cacheItems[j].version });
             }
         }
 
@@ -198,7 +198,7 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                 let artboard = page.getImmediateChildById<IArtboard>(cacheItem.id);
                 let elements = this.buildIconSet(artboard);
                 let group: ToolboxGroup<SpriteStencil> = {
-                    name: artboard.name(),
+                    name: artboard.name,
                     items: []
                 }
 
@@ -206,15 +206,15 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
                 for (let k = 0; k < elements.length; ++k) {
                     let element = elements[k];
                     group.items.push({
-                        id: element.id(),
+                        id: element.id,
                         realWidth: IconSize,
                         realHeight: IconSize,
                         spriteMap: { x, y: 0, width: IconSize, height: IconSize },
-                        title: element.name(),
+                        title: element.name,
                         spriteSize: cacheItem.spriteSize,
                         spriteUrl: cacheItem.spriteUrl,
                         spriteUrl2x: cacheItem.spriteUrl2x,
-                        pageId: page.id()
+                        pageId: page.id
                     });
                     x += IconSize;
                 }
@@ -280,17 +280,17 @@ export class InternalIconsStore extends CarbonStore<InternalIconsStoreState> imp
             artboards.push(artboard);
 
             let elements = this.buildIconSet(artboard);
-            promises.push(IconSetSpriteManager.buildAndUploadSprite(artboard.id(), artboardState.version, elements, IconSize));
+            promises.push(IconSetSpriteManager.buildAndUploadSprite(artboard.id, artboardState.version, elements, IconSize));
         }
         Promise.all(promises)
             .then(results => {
                 for (let i = 0; i < results.length; ++i) {
                     let result = results[i];
                     let artboard = artboards[i];
-                    artboard.parent().patchProps(PatchType.Remove, "iconSpriteCache", {
-                        id: artboard.id()
+                    artboard.parent.patchProps(PatchType.Remove, "iconSpriteCache", {
+                        id: artboard.id
                     });
-                    artboard.parent().patchProps(PatchType.Insert, "iconSpriteCache", result);
+                    artboard.parent.patchProps(PatchType.Insert, "iconSpriteCache", result);
                 }
             })
             .then(() => this.state.operation.stop())

@@ -356,7 +356,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     _onMouseDownOnBody = (event) => {
         var className = event.target.className;
 
-        if (this.state.data.activeGroup && className.indexOf('ico-tool_') == -1 && className.indexOf('tool-button') == -1) {
+        if (this.state.data.activeGroup && className.indexOf('ico-tool_') === -1 && className.indexOf('tool-button') === -1) {
             this.mergeStateData({ activeGroup: null });
             return _preventDefault(event);
         }
@@ -389,7 +389,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         var activeTool = this.state.data.activeTool;
         var activeGroup = this._findActiveGroup(activeTool);
         if (activeGroup) {
-            this.state[activeGroup] = activeTool;
+            (this.state as any)[activeGroup] = activeTool;
         }
 
         var classNames = cx(this.state.data.activeMode, { "changing-mode": this.state.data.changingActiveMode });

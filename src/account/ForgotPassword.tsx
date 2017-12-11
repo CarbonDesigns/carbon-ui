@@ -71,7 +71,7 @@ export default class ForgotPassword extends RouteComponent<IRouteComponentProps,
         this.setState({ status: "error" });
     };
 
-    private validateEmail = (email: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    private validateEmail = (email: string, state: any, force?: boolean) => {
         if (email && email.indexOf('@') < 0) {
             return state.set("status", "error").set("error", this.formatLabel("@account.badEmail"));
         }

@@ -82,7 +82,7 @@ export default class LoginForm extends RouteComponent<ILoginFormProps, IFormStat
         this.setState({ status: "error" });
     };
 
-    protected validateEmail = (email: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    protected validateEmail = (email: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => {
         if (email && email.indexOf('@') < 0) {
             return state.set("status", "error").set("error", this.formatLabel("@account.badEmail"));
         }
@@ -94,7 +94,7 @@ export default class LoginForm extends RouteComponent<ILoginFormProps, IFormStat
         return state.set("status", "notReady");
     }
 
-    protected validatePassword = (password: string, state: ImmutableRecord<IFieldState>, force?: boolean) => {
+    protected validatePassword = (password: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => {
         if (!password && force) {
             return state.set("status", "error").set("error", this.formatLabel("@account.noPassword"));
         }

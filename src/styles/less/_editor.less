@@ -1,0 +1,41 @@
+.monaco-editor {
+    flex: auto;
+}
+
+.editor-toolbar {
+    flex:32px 0 0;
+    height:32px;
+    display: flex;
+    font-size: 1.2rem;
+    color:white;
+}
+
+.editor-toolbar_button {
+    height:30px;
+    width:30px;
+    margin: 2px;
+
+    @x: 0;
+    @y: 14*31;
+
+    &__restart {
+        .sprite1(@x, @y);
+    }
+    cursor: pointer;
+    &:hover {
+        .wbg(20);
+    }
+}
+
+.drop_down_toolbar{
+    font-size: 1.2rem;
+    min-width: 100px;
+}
+
+.editor-toolbar__dropdown {
+    margin-right: 16px;
+}
+
+.toolbar-align-end {
+    margin-left: auto;
+}

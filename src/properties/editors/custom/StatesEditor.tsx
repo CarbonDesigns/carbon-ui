@@ -81,7 +81,7 @@ export default class CustomPropertiesEditor extends EditorComponent<any, any, an
                 this.setValueByCommand(newValue);
                 this.setState({newProperty: false});
                 //this.buildMetadata is undefined
-                //PropertyMetadata.replaceForNamedType(this.props.e.first().name(), Symbol, this.buildMetadata(newValue));
+                //PropertyMetadata.replaceForNamedType(this.props.e.first().name, Symbol, this.buildMetadata(newValue));
                 return;
             }
         }
@@ -118,7 +118,7 @@ export default class CustomPropertiesEditor extends EditorComponent<any, any, an
             return null;
         }
         return (
-            <div key={"state_editor_"+this.state.artboard.id()} className="state-editor">
+            <div key={"state_editor_"+this.state.artboard.id} className="state-editor">
                 <StateList data={states} idGetter={this.stateId} nameGetter={this.stateName}
                     onRename={this._onRename}
                     onDelete={this._onDelete}

@@ -51,7 +51,7 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         let artboard = page.findNodeByIdBreadthFirst<IArtboard>(stencil.artboardId);
         if (artboard.props.insertAsContent) {
             let clone = artboard.children[0].clone();
-            clone.name(null);
+            clone.name = null;
             return clone;
         }
 
@@ -101,24 +101,24 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
                 return;
             case "Carbon_ResourceAdded":
                 if (action.resourceType === ArtboardType.Symbol) {
-                    if (this.state.currentPage !== action.resource.parent()) {
-                        this.loadConfig(action.resource.parent());
+                    if (this.state.currentPage !== action.resource.parent) {
+                        this.loadConfig(action.resource.parent);
                     }
-                    else if (action.resource.parent() === this.state.currentPage) {
+                    else if (action.resource.parent === this.state.currentPage) {
                         this.setState({ dirtyConfig: true });
-                        action.resource.parent().setProps({ toolboxConfigUrl: null });
+                        action.resource.parent.setProps({ toolboxConfigUrl: null });
                     }
                 }
                 return;
             case "Carbon_ResourceChanged":
-                if (action.resourceType === ArtboardType.Symbol && action.resource.parent() === this.state.currentPage) {
-                    this.setState({ dirtyConfig: true, changedId: action.resource.id() });
-                    action.resource.parent().setProps({ toolboxConfigUrl: null });
+                if (action.resourceType === ArtboardType.Symbol && action.resource.parent === this.state.currentPage) {
+                    this.setState({ dirtyConfig: true, changedId: action.resource.id });
+                    action.resource.parent.setProps({ toolboxConfigUrl: null });
                 }
                 return;
             case "Carbon_ResourceDeleted":
                 if (action.resourceType === ArtboardType.Symbol && action.parent === this.state.currentPage) {
-                    this.setState({ dirtyConfig: true, changedId: action.resource.id() });
+                    this.setState({ dirtyConfig: true, changedId: action.resource.id });
                     action.parent.setProps({ toolboxConfigUrl: null });
                 }
                 return;
@@ -185,10 +185,10 @@ class SymbolsStore extends CarbonStore<SymbolsStoreState> implements IToolboxSto
         }
 
         let pages = app.pagesWithSymbols();
-        return pages.find(x => x.id() === pageId);
+        return pages.find(x => x.id === pageId);
     }
     private saveCurrentSymbolsPage(page?: IPage) {
-        app.setUserSetting("symbolsPageId", page.id());
+        app.setUserSetting("symbolsPageId", page.id);
     }
 
     private refreshLibrary() {

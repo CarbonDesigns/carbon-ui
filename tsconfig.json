@@ -11,11 +11,11 @@
     },
     "include": [
         "src/**/*",
-        //"../carbon-core/mylibs/definitions/carbon-*.d.ts"
-         "./node_modules/@carbonium/carbon-core/types/*.d.ts"
+        "./node_modules/monaco-editor/monaco.d.ts",
+        // "../carbon-core/mylibs/definitions/carbon-*.d.ts"
+        "./node_modules/@carbonium/carbon-core/types/*.d.ts"
     ],
     "files": [
-        //TODO: remove when immutable > 3.8.1 is released
         "./typings/immutable.d.ts",
         "./typings/custom.d.ts"
     ],

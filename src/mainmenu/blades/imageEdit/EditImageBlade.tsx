@@ -188,7 +188,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
                         className="drop_down"
                         caption="@chooseArtboard"
                         items={this.getArtboards()}
-                        renderItem={artboard => <p>{artboard.name()}</p>}
+                        renderItem={artboard => <p>{artboard.name}</p>}
                         onSelect={this.artboardChosen}>
                     </ArtboardSelect>
                 </div>

@@ -174,26 +174,26 @@ export default class Header extends Component<HeaderProps, HeaderState> {
         dispatch(AppActions.showMainMenu());
     }
 
-    changeDisplayMode = (value: PreviewDisplayMode) => {
-        // this.setState({ displayMode: value });
-        dispatch(PreviewActions.changePreviewDisplayMode(value))
-    }
+    // changeDisplayMode = (value: PreviewDisplayMode) => {
+    //     // this.setState({ displayMode: value });
+    //     dispatch(PreviewActions.changePreviewDisplayMode(value))
+    // }
 
-    renderDisplayMode = () => {
-        let id = "@preview.originalsize";
-        switch (this.state.displayMode) {
-            case PreviewDisplayMode.Fill:
-                id = "@preview.fill"
-                break;
-            case PreviewDisplayMode.Fit:
-                id = "@preview.fit"
-                break;
-            case PreviewDisplayMode.Responsive:
-                id = "@preview.responsive"
-                break;
-        }
-        return <FormattedMessage id={id} tagName="div" />;
-    }
+    // renderDisplayMode = () => {
+    //     let id = "@preview.originalsize";
+    //     switch (this.state.displayMode) {
+    //         case PreviewDisplayMode.Fill:
+    //             id = "@preview.fill"
+    //             break;
+    //         case PreviewDisplayMode.Fit:
+    //             id = "@preview.fit"
+    //             break;
+    //         case PreviewDisplayMode.Responsive:
+    //             id = "@preview.responsive"
+    //             break;
+    //     }
+    //     return <FormattedMessage id={id} tagName="div" />;
+    // }
 
     render() {
         const { isLoggedIn } = this.props;
@@ -239,7 +239,7 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                     &&  <StoriesSelector name=""/>
                 }*/}
                 {/* Stories in preview*/}
-                {(this.state.activeMode === "preview")
+                {/*(this.state.activeMode === "preview")
                     && (<Dropdown
                         autoClose={true}
                         className="drop_down_fixed80"
@@ -251,7 +251,7 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                         <p>Fill</p>
                         <p>Responsive</p>
                     </Dropdown>)
-                }
+                    */ }
 
                 { /*   Userbar / Signup   */}
                 <div className="statusbar">

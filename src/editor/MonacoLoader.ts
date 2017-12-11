@@ -1,3 +1,5 @@
+import { backend } from "carbon-core";
+
 let loadPromise = null;
 export function ensureMonacoLoaded():Promise<void> {
     loadPromise = loadPromise || new Promise<void>(resolve => {
@@ -7,9 +9,11 @@ export function ensureMonacoLoaded():Promise<void> {
             return;
         }
 
+        var cdn = backend.cdnEndpoint;
+
         const onGotAmdLoader = () => {
-            (window as any)["require"].config({ paths: { 'vs': '/target/vs' } });
-            (window as any)["require"](['vs/editor/editor.main'], (editor) => {
+            (window as any)["require"].config({ paths: { 'vs': cdn+'/t'+'arget/vs' } });
+            (window as any)["require"]([cdn+'vs/editor/editor.main'], (editor) => {
                 resolve();
             });
         };

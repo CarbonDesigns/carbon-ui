@@ -28,9 +28,6 @@ try
         npm install --loglevel=error
     }
 
-    copy .\node_modules\monaco-editor\min\vs\ .\target\ -Recurse
-    copy .\node_modules\typescript\lib\typescript.js .\target\
-
     $params = @("run", "pack", "--", "--noColors", "--verbose", "--vendors")
     if ($Debug)
     {

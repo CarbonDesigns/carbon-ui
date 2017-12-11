@@ -3,42 +3,42 @@ import Immutable from "immutable";
 
 var emptyCode: string = require("./model/empty.txt") as any;
 
-import { IDisposable, IArtboard, app, Environment, Sandbox, PreviewModel, util, AutoDisposable } from "carbon-core";
+//import { IDisposable, IArtboard, app, Environment, Sandbox, PreviewModel, util, AutoDisposable, Services } from "carbon-core";
+import * as core from "carbon-core";
 import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
-import { CompilerService } from "../compiler/CompilerService";
 
 interface IEditorStoreState {
-    currentArtboard?: IArtboard;
+    currentArtboard?: core.IArtboard;
     artboards?: { name: string, id: string }[];
 }
 
-class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable {
+class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDisposable {
     private initialized: boolean = false;
     private editor: monaco.editor.IStandaloneCodeEditor;
     // private activeProxyModel: IArtboardModel;
-    private proxyModelDisposable = new AutoDisposable();
-    private storeDisposables = new AutoDisposable();
+    private proxyModelDisposable = new core.AutoDisposable();
+    private storeDisposables = new core.AutoDisposable();
     private activeProxyVersion: number;
     // private modelsCache: { [id: string]: IArtboardModel }[] = [];
     private codeCache: { [id: string]: monaco.editor.IModel }[] = [];
     private currentEditorModel: monaco.editor.IModel;
-    private editorDisposables: IDisposable[] = [];
+    private editorDisposables: core.IDisposable[] = [];
 
-    private _onPageChangedBinding: IDisposable;
+    private _onPageChangedBinding: core.IDisposable;
     private _ignoreChange:boolean = false;
 
     private _restartModel: () => void;
     constructor(dispatcher?) {
         super(dispatcher);
-        this._restartModel = util.debounce(this.restartModel, 200);
+        this._restartModel = core.util.debounce(this.restartModel, 200);
         this.state = { currentArtboard: null, artboards: [] };
     }
 
     initialize(editor: monaco.editor.IStandaloneCodeEditor) {
         this._setEditor(editor);
 
-        let previewModel = (Environment.controller as any).previewModel;
+        let previewModel = (core.Environment.controller as any).previewModel;
         if (!previewModel) {
             return;
         }
@@ -64,7 +64,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
             target: monaco.languages.typescript.ScriptTarget.ES2016
         });
 
-        var staticLibs = previewModel.codeProvider.getStaticLibs();
+        var staticLibs = core.Services.compiler.codeProvider.getStaticLibs();
         var libNames = Object.keys(staticLibs);
         for (var lib of libNames) {
             this.storeDisposables.add(
@@ -74,7 +74,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
 
         this.initialized = true;
 
-        Environment.detaching.bind(() => {
+        core.Environment.detaching.bind(() => {
             if (this._onPageChangedBinding) {
                 this._onPageChangedBinding.dispose();
                 this._onPageChangedBinding = null;
@@ -86,7 +86,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
             dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
         });
 
-        Environment.attached.bind((view, controller) => {
+        core.Environment.attached.bind((view, controller) => {
             let previewModel = (controller as any).previewModel;
             if (this._onPageChangedBinding) {
                 this._onPageChangedBinding.dispose();
@@ -104,7 +104,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
     }
 
     private _artboardsMetainfo() {
-        return app.activePage.getAllArtboards().reverse().map(a => { return { id: a.id, name: a.name } });
+        return core.app.activePage.getAllArtboards().reverse().map(a => { return { id: a.id, name: a.name } });
     }
 
     @handles(EditorActions.changeArtboard)
@@ -113,7 +113,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
     }
 
     _contentChanged = (event: monaco.editor.IModelContentChangedEvent) => {
-        let previewModel = (Environment.controller as any).previewModel;
+        let previewModel = (core.Environment.controller as any).previewModel;
         if (previewModel.sourceArtboard) {
             previewModel.sourceArtboard.code(this.currentEditorModel.getValue());
             this._restartModel();
@@ -140,16 +140,16 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
                     this.refreshProxyModel();
                 }));
 
-                this.editorDisposables.push(this.editor.onDidChangeModelContent(util.debounce(this._contentChanged, 1000)));
+                this.editorDisposables.push(this.editor.onDidChangeModelContent(core.util.debounce(this._contentChanged, 1000)));
             }
         }
     }
 
-    getArtboardFileName(artboard: IArtboard) {
+    getArtboardFileName(artboard: core.IArtboard) {
         return "artboard.ts";
     }
 
-    _setModelFromArtboard(artboard: IArtboard) {
+    _setModelFromArtboard(artboard: core.IArtboard) {
         if (!artboard) {
             this.editor && this.editor.setModel(null);
             return;
@@ -171,7 +171,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
         this.editor && this.editor.setModel(codeModel);
     }
 
-    changeArtboard(artboard: IArtboard) {
+    changeArtboard(artboard: core.IArtboard) {
         if (artboard === this.state.currentArtboard) {
             return;
         }
@@ -187,12 +187,12 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
             return;
         }
 
-        let previewModel = (Environment.controller as any).previewModel;
+        let previewModel = (core.Environment.controller as any).previewModel;
         if (!previewModel) {
             return;
         }
 
-        var artboard: IArtboard = previewModel.sourceArtboard;
+        var artboard: core.IArtboard = previewModel.sourceArtboard;
         if (!artboard) {
             return;
         }
@@ -200,7 +200,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements IDisposable 
         this.activeProxyVersion = this.state.currentArtboard.version;
         this.proxyModelDisposable.dispose();
 
-        let dynamicLibs = previewModel.codeProvider.getDynamicLibs(artboard, false);
+        let dynamicLibs = core.Services.compiler.codeProvider.getDynamicLibs(artboard, false);
         let libNames = Object.keys(dynamicLibs);
         for (let libName of libNames) {
             this.proxyModelDisposable.add(

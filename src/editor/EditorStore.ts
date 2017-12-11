@@ -66,6 +66,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
 
         var staticLibs = core.Services.compiler.codeProvider.getStaticLibs();
         var libNames = Object.keys(staticLibs);
+
         for (var lib of libNames) {
             this.storeDisposables.add(
                 monaco.languages.typescript.typescriptDefaults.addExtraLib(staticLibs[lib].text(), lib)

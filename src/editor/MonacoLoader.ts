@@ -12,7 +12,7 @@ export function ensureMonacoLoaded():Promise<void> {
         var cdn = backend.cdnEndpoint;
 
         const onGotAmdLoader = () => {
-            (window as any)["require"].config({ paths: { 'vs': cdn+'/t'+'arget/vs' } });
+            (window as any)["require"].config({ paths: { 'vs': cdn+'/target/vs' } });
             (window as any)["require"]([cdn+'vs/editor/editor.main'], (editor) => {
                 resolve();
             });
@@ -22,7 +22,7 @@ export function ensureMonacoLoaded():Promise<void> {
         if (!(window as any)["require"]) {
             const loaderScript = document.createElement('script');
             loaderScript.type = 'text/javascript';
-            loaderScript.src = '/target/vs/loader.js';
+            loaderScript.src = cdn+'/target/vs/loader.js';
             loaderScript.async = true;
             loaderScript.addEventListener('load', onGotAmdLoader);
             document.body.appendChild(loaderScript);

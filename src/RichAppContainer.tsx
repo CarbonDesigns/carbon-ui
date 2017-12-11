@@ -22,7 +22,6 @@ import Perf from "react-addons-perf";
 import FullScreenApi from "./shared/FullScreenApi";
 import { Splash } from "./Splash";
 import { EditorPanel } from "./editor/EditorPanel";
-import { CompilerService } from "./compiler/CompilerService";
 window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent {
@@ -31,9 +30,6 @@ export class RichAppContainer extends AppLoaderComponent {
         document.body.classList.add("noscroll");
         if(Services.compiler) {
             Services.compiler.clear();
-        }
-        else {
-            Services.compiler = new CompilerService();
         }
     }
 

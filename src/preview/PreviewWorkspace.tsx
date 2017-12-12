@@ -439,6 +439,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         if(this.state.emulateTouch) {
             this.touchEmulator.enable(this.refs.viewport, true);
         }
+
+        document.body.classList.add("fullscreen");
+        document.body.classList.add("preview");
     }
 
     _getCurrentArtboard() {
@@ -609,14 +612,17 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             var controller = new PreviewController(app, view, previewModel);
             Environment.set(view, controller);
 
-            if (view.page === NullPage) {
-                var pageChangedToken = app.pageChanged.bind(() => {
+            app.onLoad(() => {
+                if (view.page === NullPage) {
+                    var pageChangedToken = app.pageChanged.bind(() => {
+                        this._initialize(view, previewModel, controller);
+                        pageChangedToken.dispose();
+                    })
+                }
+                else {
                     this._initialize(view, previewModel, controller);
-                    pageChangedToken.dispose();
-                })
-            } else {
-                this._initialize(view, previewModel, controller);
-            }
+                }
+            });
         }
     }
 
@@ -664,6 +670,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         window.removeEventListener("resize", this.onresize);
         this.touchEmulator.disable();
+
+        document.body.classList.remove("fullscreen");
+        document.body.classList.remove("preview");
     }
 
     _setPage(page) {

@@ -75,7 +75,7 @@ export default class TopMenu extends Component<TopMenuProps, any>{
 
         let itemCn = bem("navigation-menu", "item", {dark:this.props.dark});
         return [
-            <li key="slack" className={itemCn}><a target="_blank" href="https://carboniumteam.slack.com/signup"><CarbonLabel id="@nav.teamslack" /></a></li>,
+            <li key="slack" className={itemCn}><a target="_blank" href="https://carbonium.azurewebsites.net/"><CarbonLabel id="@nav.teamslack" /></a></li>,
             <li key="gh" className={itemCn}><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui"><CarbonLabel id="@nav.github" /></a></li>,
             <li key="library" className={bem("navigation-menu", "item", {active:libraryActive, dark:this.props.dark})}><Link to="/library" ><CarbonLabel id="@nav.communitylibrary" /></Link></li>,
             <li key="account" className={bem("navigation-menu", "item", {button:true, dark:this.props.dark})}>{this._renderLoginButton()}</li>

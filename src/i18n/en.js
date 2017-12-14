@@ -307,7 +307,7 @@ export default
         "button.addNewScenario": "Add flow",
         "button.addNewPrototype": "Add prototype",
         "Compound path": "Compound path",
-        "@content": "Content",
+        "@contentBehavior": "Content",
         "@content_original": "Original",
         "@content_stretch": "Stretch",
         "@content_scale": "Scale",

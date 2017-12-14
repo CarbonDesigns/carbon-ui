@@ -97,7 +97,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps, La
     }
 
     private onScroll = (event) => {
-        var scrollTop = document.body.scrollTop
+        var scrollTop = document.documentElement.scrollTop;
 
         var found = false;
         for (var i = this.sections.length - 1; i >= 0; --i) {

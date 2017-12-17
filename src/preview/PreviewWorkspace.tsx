@@ -122,7 +122,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     constructor(props) {
         super(props);
-        this.state = { data: PreviewStore.state, currentCanvas: 0, emulateTouch:false };
+        this.state = { data: PreviewStore.state, currentCanvas: 0, emulateTouch:true };
         this._renderingRequestId = 0;
         this._currentCanvas = 0;
         this._canvas1Left = -1;
@@ -144,8 +144,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         let id;
         if (this.state.data.activePage) {
             id = this.state.data.activePage.artboardId;
-        } else if (this.previewModel.sourceArtboard) {
-            id = this.previewModel.sourceArtboard.id;
+        } else if (this.previewModel.activeArtboard) {
+            id = this.previewModel.activeArtboard.runtimeProps.sourceArtboard.id;
         } else {
             return;
         }
@@ -640,7 +640,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             height: this.state.data.deviceHeight || this.refs.viewport.clientHeight
         }).then(page => {
             this._updateActivePage(page);
-
+            if(!this.previewModel.activePage) {
+                this.previewModel.activePage = page;
+            }
             this._attached = true;
             this.ensureCanvasSize();
         })

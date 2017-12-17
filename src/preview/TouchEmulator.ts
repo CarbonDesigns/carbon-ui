@@ -47,7 +47,7 @@ if (!document.createTouchList) {
  * @param deltaY
  * @returns {Object} touchPoint
  */
-function Touch(target, identifier, pos?, deltaX?, deltaY?):void {
+function Touch(target, identifier, pos?, deltaX?, deltaY?): void {
     deltaX = deltaX || 0;
     deltaY = deltaY || 0;
 
@@ -68,12 +68,12 @@ function Touch(target, identifier, pos?, deltaX?, deltaY?):void {
  */
 
 class TouchList extends Array {
-    item (index) {
+    item(index) {
         return this[index] || null;
     };
 
     // specified by Mozilla
-    identifiedTouch (id) {
+    identifiedTouch(id) {
         return this[id + 1] || null;
     };
 
@@ -123,22 +123,24 @@ function preventMouseEvents(ev) {
 var pressed = false;
 function onMouse(touchType) {
     return function (ev) {
-        // prevent mouse events
-        preventMouseEvents(ev);
+
 
         // The EventTarget on which the touch point started when it was first placed on the surface,
         // even if the touch point has since moved outside the interactive area of that element.
         // also, when the target doesnt exist anymore, we update it
-        if (ev.type === 'mousedown'|| ev.type === 'pointerdown'|| !eventTarget || (eventTarget && !eventTarget.dispatchEvent)) {
+        if (ev.type === 'mousedown' || ev.type === 'pointerdown' || !eventTarget || (eventTarget && !eventTarget.dispatchEvent)) {
             eventTarget = ev.target;
         }
 
-        if (ev.witch === 1 && ev.type === 'mousedown'|| ev.type === 'pointerdown') {
+        if (ev.witch === 1 && ev.type === 'mousedown' || ev.type === 'pointerdown') {
             pressed = true;
         }
 
-        if(!pressed) {
+        if (!pressed) {
             return;
+        } else {
+            // prevent mouse events
+            preventMouseEvents(ev);
         }
 
         // shiftKey has been lost, so trigger a touchend
@@ -229,7 +231,7 @@ function getActiveTouches(mouseEv, eventName) {
     }
 
     var touchList = createTouchList(mouseEv);
-    if (isMultiTouch && mouseEv.type !== 'mouseup'&& mouseEv.type !== 'pointerup' && eventName === 'touchend') {
+    if (isMultiTouch && mouseEv.type !== 'mouseup' && mouseEv.type !== 'pointerup' && eventName === 'touchend') {
         touchList.splice(1, 1);
     }
     return touchList;
@@ -249,7 +251,7 @@ function getChangedTouches(mouseEv, eventName) {
     //
     // but when the mouseEv.type is mouseup, we want to send all touches because then
     // no new input will be possible
-    if (isMultiTouch && mouseEv.type !== 'mouseup'&& mouseEv.type !== 'pointerup' &&
+    if (isMultiTouch && mouseEv.type !== 'mouseup' && mouseEv.type !== 'pointerup' &&
         (eventName === 'touchstart' || eventName === 'touchend')) {
         touchList.splice(0, 1);
     }
@@ -298,9 +300,9 @@ export class TouchEmulator {
     private _touchStart: any;
     private _touchMove: any;
     private _touchEnd: any;
-    private _host:any;
+    private _host: any;
 
-    enable(host:any, force:boolean) {
+    enable(host: any, force: boolean) {
         if (!force && hasTouchSupport()) {
             return;
         }
@@ -340,7 +342,7 @@ export class TouchEmulator {
     }
 
     disable() {
-        let  host = this._host || window;
+        let host = this._host || window;
         host.removeEventListener("mousedown", this._touchStart);
         host.removeEventListener("mousemove", this._touchMove);
         host.removeEventListener("mouseup", this._touchEnd);

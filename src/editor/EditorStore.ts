@@ -115,8 +115,10 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
 
     _contentChanged = (event: monaco.editor.IModelContentChangedEvent) => {
         let previewModel = (core.Environment.controller as any).previewModel;
-        if (previewModel.sourceArtboard) {
-            previewModel.sourceArtboard.code(this.currentEditorModel.getValue());
+        let previewArtboard = previewModel.activeArtboard;
+
+        if (previewArtboard.runtimeProps.sourceArtboard) {
+            previewArtboard.runtimeProps.sourceArtboard.code(this.currentEditorModel.getValue());
             this._restartModel();
         }
     }
@@ -193,7 +195,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             return;
         }
 
-        var artboard: core.IArtboard = previewModel.sourceArtboard;
+        var artboard: core.IArtboard = previewModel.activeArtboard.runtimeProps.sourceArtboard;
         if (!artboard) {
             return;
         }

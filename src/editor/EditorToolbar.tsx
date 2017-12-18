@@ -23,7 +23,7 @@ export default class EditorToolbar extends Component<any, any> {
     @listenTo(EditorStore)
     onEditorStoreChanged() {
         let id = null;
-        if (EditorStore.state.currentArtboard) {
+        if (EditorStore.state.currentArtboard && !EditorStore.state.currentArtboard.isDisposed()) {
             id = EditorStore.state.currentArtboard.id;
         }
 

@@ -39,8 +39,8 @@ export default class Splitter extends Component<ISplitterProps, ISplitterState> 
         var body = document.body;        // TODO: use hammer js
         this._onMouseUp = this.onMouseUp.bind(this);
         this._onMouseMove = this.onMouseMove.bind(this);
-        document.addEventListener('mouseup', this._onMouseUp);
-        body.addEventListener('mousemove', this._onMouseMove);
+        window.addEventListener('mouseup', this._onMouseUp,true);
+        body.addEventListener('mousemove', this._onMouseMove, true);
 
         this._lastX = e.clientX;
         this._lastY = e.clientY;
@@ -74,8 +74,8 @@ export default class Splitter extends Component<ISplitterProps, ISplitterState> 
     onMouseUp(e) {
         var body = document.body;
 
-        document.removeEventListener('mouseup', this._onMouseUp);
-        body.removeEventListener('mousemove', this._onMouseMove);
+        window.removeEventListener('mouseup', this._onMouseUp, true);
+        body.removeEventListener('mousemove', this._onMouseMove, true);
 
         dispatchAction({ type: "Layout_StopResizing" });
         this.setState({ resizing: false });

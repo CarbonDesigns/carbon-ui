@@ -18,7 +18,7 @@ export default class BrushSelector extends Component<any, IBrushSelectorState> {
         super(props);
         this.state = {
             newStyle: Brush.toCss(props.brush),
-            initialStyle : this.state.newStyle
+            initialStyle : {type:0, value:""}
         };
     }
 

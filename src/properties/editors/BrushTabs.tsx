@@ -46,7 +46,7 @@ export default class BrushTabs extends Component<any, any> {
             brush = Brush.Empty;
         }
         else {
-            brush = Brush.createFromColor(value);
+            brush = Brush.createFromCssColor(value);
         }
         this.selectBrush(brush);
     };
@@ -59,11 +59,11 @@ export default class BrushTabs extends Component<any, any> {
         if (color.rgb.a && color.rgb.a !== 1) {
             var rgba = color.rgb;
             color = `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`;
-            var brush = Brush.createFromColor(color);
+            var brush = Brush.createFromCssColor(color);
 
         }
         else {
-            brush = Brush.createFromColor(color.hex);
+            brush = Brush.createFromCssColor(color.hex);
             color = color.hex;
         }
         // this.setState({ color: color });
@@ -82,7 +82,7 @@ export default class BrushTabs extends Component<any, any> {
 
     onTabChanged = (index) => {
         if (index === "1") {
-            this.selectBrush(Brush.createFromColor(this.props.brush.value.stops[0][1]));
+            this.selectBrush(Brush.createFromCssColor(this.props.brush.value.stops[0][1]));
         } else {
             var color1 = this.props.brush.value;
             var color2 = tinycolor(color1).darken(30).toString();

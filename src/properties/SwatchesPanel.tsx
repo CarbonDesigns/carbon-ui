@@ -27,7 +27,7 @@ function colorToBrush(color) {
     } else if (color.stops) {
         brush = Brush.createFromLinearGradientObject(color);
     } else {
-        brush = Brush.createFromColor(color);
+        brush = Brush.createFromCssColor(color);
     }
     return brush;
 }

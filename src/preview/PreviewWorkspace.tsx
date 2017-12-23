@@ -153,6 +153,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             this.view.animationController.reset();
             this.view.setActivePage(NullPage);
             this.previewModel.recycleCurrentPage();
+            this.previewModel.recycleModules();
         }
         this.previewModel.getScreenById(id, {
             width: this.state.data.deviceWidth || this.refs.viewport.clientWidth,
@@ -363,7 +364,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             width: 100,
             height: 100,
             stroke: Brush.Empty,
-            fill: Brush.createFromColor("rgba(100,120,230,0.3)")
+            fill: Brush.createFromCssColor("rgba(100,120,230,0.3)")
         });
         circle.setTransform(Matrix.createTranslationMatrix(x - 50, y - 50));
         layer.add(circle);

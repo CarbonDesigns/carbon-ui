@@ -209,7 +209,7 @@ export default class LinearGradientPicker extends Component<any, any> {
             cssColor = `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`;
         }
         else {
-            // brush = Brush.createFromColor(color.hex);
+            // brush = Brush.createFromCssColor(color.hex);
             cssColor = color.hex;
         }
         var gradient = clone(this.props.brush.value);

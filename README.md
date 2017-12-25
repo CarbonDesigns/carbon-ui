@@ -2,11 +2,11 @@
 
 # Release plan
 
-[Release 001] (https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC1)
+[Release 001](https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC1)
 
-[Release 002] (https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC2)
+[Release 002](https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC2)
 
-[Release 003] (https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC3)
+[Release 003](https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC3)
 
 # Carbonium - Addictive Design Solution
 

@@ -17,19 +17,19 @@ export default class EditorToolbar extends Component<any, any> {
 
     constructor(props, context) {
         super(props, context);
-        this.state = { artboards: [], artboardIndex: 0 }
+        this.state = { codeItems: [], artboardIndex: 0 }
     }
 
     @listenTo(EditorStore)
     onEditorStoreChanged() {
         let id = null;
-        if (EditorStore.state.currentArtboard && !EditorStore.state.currentArtboard.isDisposed()) {
-            id = EditorStore.state.currentArtboard.id;
+        if (EditorStore.state.currentItem && !(EditorStore.state.currentItem as any).isDisposed()) {
+            id = EditorStore.state.currentItem.id;
         }
 
-        let currentIndex = EditorStore.state.artboards.findIndex(a => a.id === id);
+        let currentIndex = EditorStore.state.codeItems.findIndex(a => a.id === id);
         this.setState({
-            artboards: EditorStore.state.artboards,
+            codeItems: EditorStore.state.codeItems,
             artboardIndex: Math.max(0, currentIndex)
         });
     }
@@ -46,8 +46,8 @@ export default class EditorToolbar extends Component<any, any> {
     renderCurrentArtboard = (selectedItemIndex) => {
         const __target = <FormattedMessage id="transition.target" />;
         let current = "";
-        if (this.state.artboards[selectedItemIndex]) {
-            current = this.state.artboards[selectedItemIndex].name;
+        if (this.state.codeItems[selectedItemIndex]) {
+            current = this.state.codeItems[selectedItemIndex].name;
         }
 
         return <div className="editor-toolbar__dropdown">
@@ -77,15 +77,20 @@ export default class EditorToolbar extends Component<any, any> {
     }
 
     changeArtboard = (index) => {
-        let artboard: IArtboard = this.state.artboards[index];
-        if (artboard) {
-            dispatch(PreviewActions.navigateTo(artboard.id, {}));
+        let item = this.state.codeItems[index];
+        if(!item) {
+            return;
+        }
+
+        if (item.type === "artboard") {
+            dispatch(PreviewActions.navigateTo(item.id, {}));
+        } else if(item.type === "page") {
+            dispatch(EditorActions.showPageCode(item.id));
         }
     }
 
     render() {
         return <div className="editor-toolbar">
-
             <Dropdown
                 autoClose={true}
                 className="drop_down_toolbar"
@@ -93,7 +98,7 @@ export default class EditorToolbar extends Component<any, any> {
                 onSelect={this.changeArtboard}
                 renderSelected={this.renderCurrentArtboard}
             >
-                {this.state.artboards.map(a => <p key={a.id}><span>{a.name}</span></p>)}
+                {this.state.codeItems.map(a => <p key={a.id}><span>{a.name}</span></p>)}
             </Dropdown>
             <div className="editor-toolbar_button editor-toolbar_button__restart" onClick={this._onRestart}></div>
 

@@ -17,5 +17,11 @@ export default {
             artboard,
             async:true
         }
+    },
+    showPageCode:(id)=> {
+        return {
+            type:'Editor_showPageCode',
+            id
+        }
     }
 }

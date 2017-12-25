@@ -89,7 +89,7 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
             options: {
                 size: 1 / 4
             },
-            value: Brush.createFromColor(font.color),
+            value: Brush.createFromCssColor(font.color),
         });
         var style = Immutable.Map({
             descriptor: {
@@ -153,7 +153,7 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
             newState.align = oldState.align.set("value", newFont); //yes, full font
         }
         if (oldFont.color !== newFont.color) {
-            newState.color = oldState.color.set("value", Brush.createFromColor(newFont.color));
+            newState.color = oldState.color.set("value", Brush.createFromCssColor(newFont.color));
         }
         if (oldFont.lineSpacing !== newFont.lineSpacing) {
             newState.lineSpacing = oldState.lineSpacing.set("value", newFont.lineSpacing);

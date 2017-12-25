@@ -7,10 +7,14 @@ var emptyCode: string = require("./model/empty.txt") as any;
 import * as core from "carbon-core";
 import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
+import { instanceOf } from "../../node_modules/@types/prop-types/index";
+import { Page, NullPage } from "carbon-core";
 
 interface IEditorStoreState {
-    currentArtboard?: core.IArtboard;
-    artboards?: { name: string, id: string }[];
+    currentItem?: core.IElementWithCode & core.IDisposable;
+    codeItems?: { name: string, id: string }[];
+    hasPreview?: boolean;
+    currentItemName?: string;
 }
 
 class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDisposable {
@@ -19,20 +23,22 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
     // private activeProxyModel: IArtboardModel;
     private proxyModelDisposable = new core.AutoDisposable();
     private storeDisposables = new core.AutoDisposable();
+    private globalModelDisposable = new core.AutoDisposable();
     private activeProxyVersion: number;
     // private modelsCache: { [id: string]: IArtboardModel }[] = [];
     private codeCache: { [id: string]: monaco.editor.IModel }[] = [];
     private currentEditorModel: monaco.editor.IModel;
+    private parentEditorModel: monaco.editor.IModel;
     private editorDisposables: core.IDisposable[] = [];
 
     private _onPageChangedBinding: core.IDisposable;
-    private _ignoreChange:boolean = false;
+    private _ignoreChange: boolean = false;
 
     private _restartModel: () => void;
     constructor(dispatcher?) {
         super(dispatcher);
         this._restartModel = core.util.debounce(this.restartModel, 200);
-        this.state = { currentArtboard: null, artboards: [] };
+        this.state = { currentItem: null, codeItems: [] };
     }
 
     initialize(editor: monaco.editor.IStandaloneCodeEditor) {
@@ -42,7 +48,12 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         if (!previewModel) {
             return;
         }
-        this.setState({ currentArtboard: previewModel.activeArtboard, artboards: this._artboardsMetainfo() });
+
+        let name = null;
+        if (previewModel.activeArtboard) {
+            name = previewModel.activeArtboard.name
+        }
+        this.setState({ currentItem: previewModel.activeArtboard, currentItemName: name, codeItems: this._codeItemsMetainfo() });
 
         if (this.initialized) {
             return;
@@ -53,7 +64,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             noLib: true,
             // noEmitOnError:true,
             allowNonTsExtensions: true,
-            noResolve: true,
+            noResolve: false,
             noImplicitAny: true,
             noImplicitThis: true,
             noImplicitReturns: true,
@@ -61,7 +72,9 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             removeComments: true,
             strictNullChecks: true,
             alwaysStrict: true,
-            target: monaco.languages.typescript.ScriptTarget.ES2016
+            module: monaco.languages.typescript.ModuleKind.CommonJS,
+            target: monaco.languages.typescript.ScriptTarget.ES2016,
+            rootDir: "./"
         });
 
         var staticLibs = core.Services.compiler.codeProvider.getStaticLibs();
@@ -82,7 +95,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             }
         });
 
-        this.changeArtboard(previewModel.activeArtboard);
+        this.setFromArtboard(previewModel.activeArtboard);
         this._onPageChangedBinding = previewModel.onPageChanged.bind((page) => {
             dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
         });
@@ -104,22 +117,39 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         // TODO: bind on event to refresh list of artboards
     }
 
-    private _artboardsMetainfo() {
-        return core.app.activePage.getAllArtboards().reverse().map(a => { return { id: a.id, name: a.name } });
+    private _codeItemsMetainfo() {
+        let page = core.app.activePage;
+        return [
+            { id: page.id, name: page.name, type: 'page' }
+        ].concat(page.getAllArtboards().reverse().map(a => { return { id: a.id, name: a.name, type: "artboard" } }));
     }
 
     @handles(EditorActions.changeArtboard)
     onChangeArtboard({ artboard }) {
-        this.changeArtboard(artboard);
+        if (artboard) {
+            this.setFromArtboard(artboard);
+        }
+    }
+
+    @handles(EditorActions.showPageCode)
+    onShowPageCode({ id }) {
+        let page = core.app.getImmediateChildById(id, true);
+        if (page) {
+            this.setFromPage(page as any);
+        }
     }
 
     _contentChanged = (event: monaco.editor.IModelContentChangedEvent) => {
-        let previewModel = (core.Environment.controller as any).previewModel;
-        let previewArtboard = previewModel.activeArtboard;
+        if (!this.state.hasPreview) {
+            (this.state.currentItem as any).code(this.currentEditorModel.getValue());
+        } else {
+            let previewModel = (core.Environment.controller as any).previewModel;
+            let previewArtboard = previewModel.activeArtboard;
 
-        if (previewArtboard.runtimeProps.sourceArtboard) {
-            previewArtboard.runtimeProps.sourceArtboard.code(this.currentEditorModel.getValue());
-            this._restartModel();
+            if (previewArtboard.runtimeProps.sourceArtboard) {
+                previewArtboard.runtimeProps.sourceArtboard.code(this.currentEditorModel.getValue());
+                this._restartModel();
+            }
         }
     }
 
@@ -165,33 +195,92 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             }
 
             codeModel = monaco.editor.createModel(code, "typescript", monaco.Uri.parse(artboard.id + ".ts"));
-            let range = new monaco.Range(1, 0, 99999, 0);
-            (codeModel as any).setEditableRange(range);
-
             this.codeCache[artboard.id] = codeModel;
         }
         this.currentEditorModel = codeModel;
         this.editor && this.editor.setModel(codeModel);
     }
 
-    changeArtboard(artboard: core.IArtboard) {
-        if (artboard === this.state.currentArtboard) {
+    _setModelFromPage(page: core.IPage & core.IElementWithCode) {
+        if (!page) {
+            this.editor && this.editor.setModel(null);
+            return;
+        }
+        let pageModelName = './' + core.CodeNameProvider.escapeName(page.name) + ".ts";
+        let codeModel: monaco.editor.IModel = this.codeCache[pageModelName];
+        if (!codeModel) {
+            let code = page.code();
+            if (!code) {
+                code = emptyCode;
+            }
+
+            codeModel = monaco.editor.createModel(code, "typescript", monaco.Uri.parse(pageModelName));
+            this.codeCache[pageModelName] = codeModel;
+        }
+
+        this.currentEditorModel = codeModel;
+        this.editor && this.editor.setModel(codeModel);
+    }
+
+    setFromArtboard(artboard: core.IArtboard) {
+        if (artboard === this.state.currentItem) {
             return;
         }
 
-        this.setState({ currentArtboard: artboard });
+        let hasSameSource = (artboard as any).name === this.state.currentItemName;
 
+        this.setState({ currentItem: artboard, currentItemName: artboard.name, hasPreview: true });
+
+        if (hasSameSource) {
+            return;
+        }
+
+        this.globalModelDisposable.dispose();
         this._setModelFromArtboard(artboard);
         this.refreshProxyModel(true);
+
+        if ((artboard as any).runtimeProps && (artboard as any).runtimeProps.sourceArtboard) {
+            let models = core.Services.compiler.codeProvider.getGlobalModels((artboard as any).runtimeProps.sourceArtboard);
+            let libNames = Object.keys(models);
+            for (let libName of libNames) {
+                let lib = this.codeCache[libName];;
+                if (lib) {
+                    lib.dispose();
+                    this.codeCache[libName] = null;
+                }
+                this.globalModelDisposable.add(
+                    //monaco.editor.createModel(models[libName].text(), "typescript", monaco.Uri.parse(libName))
+                    monaco.languages.typescript.typescriptDefaults.addExtraLib(models[libName].text(), libName)
+                );
+            }
+        }
+    }
+
+    setFromPage(page: core.IPage & core.IElementWithCode) {
+        if (page === this.state.currentItem) {
+            return;
+        }
+        this.globalModelDisposable.dispose();
+
+        this.setState({ currentItem: page, currentItemName: page.name, hasPreview: false });
+
+        this._setModelFromPage(page);
+        this.proxyModelDisposable.dispose();
+        let previewModel = (core.Environment.controller as any).previewModel;
+        if (!previewModel) {
+            return;
+        }
+
+        previewModel.activePage = NullPage;
     }
 
     refreshProxyModel(force?) {
-        if (!this.state.currentArtboard || (this.state.currentArtboard as any).isDisposed() || (!force && this.activeProxyVersion === this.state.currentArtboard.version)) {
+        if (!this.state.currentItem || (this.state.currentItem as any).isDisposed() || (!force && this.activeProxyVersion === this.state.currentItem.version)) {
             return;
         }
 
         let previewModel = (core.Environment.controller as any).previewModel;
-        if (!previewModel) {
+        if (!previewModel || !previewModel.activeArtboard) {
             return;
         }
 
@@ -200,7 +289,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             return;
         }
 
-        this.activeProxyVersion = this.state.currentArtboard.version;
+        this.activeProxyVersion = this.state.currentItem.version;
         this.proxyModelDisposable.dispose();
 
         let dynamicLibs = core.Services.compiler.codeProvider.getDynamicLibs(artboard, false);
@@ -237,10 +326,9 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
                         });
                     }
                 }).then((code) => {
-                    // if (code) {
-                    //     new Sandbox().runOnElement(this.currentArtboard, code);
-                    // }
-                    dispatch(EditorActions.restart());
+                    if (this.state.hasPreview) {
+                        dispatch(EditorActions.restart());
+                    }
                 })
             });
         });

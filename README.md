@@ -1,5 +1,13 @@
 <img src="https://carbonproject.visualstudio.com/_apis/public/build/definitions/97eb78ba-a4c2-454d-8939-441ef92e1bdc/4/badge"/>
 
+# Release plan
+
+[Release 001] (https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC1)
+
+[Release 002] (https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC2)
+
+[Release 003] (https://github.com/CarbonDesigns/carbon-ui/issues?q=is%3Aissue+is%3Aopen+label%3ARC3)
+
 # Carbonium - Addictive Design Solution
 
 [Carbonium](http://carbonium.io) is a solution for building software interfaces and prototyping application scenarios.

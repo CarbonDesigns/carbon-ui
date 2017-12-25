@@ -68,7 +68,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
     private panelCache: any;
     private _dispatchWindowResizedDebounced: any;
     private _splitterIndex: number;
-    private _tmpVisibleContainer:any;
+    private _tmpVisibleContainer: any;
 
     refs: {
         layoutBody: HTMLElement
@@ -145,7 +145,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
         return panelContainer;
     }
 
-    _buildChildrenList(container: any, resultList: any[], indexBag: {index: number}) {
+    _buildChildrenList(container: any, resultList: any[], indexBag: { index: number }) {
         let childrenDom = [];
         var direction = null;
 
@@ -239,7 +239,9 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
                 var panelIndex = parseInt(node.getAttribute("data-index"));
                 event.interaction.panelIndex = panelIndex;
                 event.interaction.detached = node.classList.contains("floating");
+                node.classList.add('dragging');
                 event.preventDefault();
+                event.stopPropagation();
             })
             .on('dragmove', function (event) {
                 event.interaction.x += event.dx;
@@ -263,14 +265,19 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
             })
             .on("dragend", event => {
                 event.preventDefault();
+                event.stopPropagation();
                 if (!event.interaction.detached) {
                     return;
                 }
                 var target = event.interaction.node;
                 var offset = $(target).offset();
                 var bodyOffset = $(this.refs.layoutBody).offset();
+                let top = this.refs.layoutBody.clientTop;
                 target.style[transformProp] = '';
-                dispatch(LayoutActions.movePanel(event.interaction.panelIndex, offset.left - bodyOffset.left, offset.top - bodyOffset.top));
+                setTimeout(() => {
+                    target.classList.remove('dragging');
+                }, 100)
+                dispatch(LayoutActions.movePanel(event.interaction.panelIndex, offset.left - bodyOffset.left, Math.max(top, offset.top - bodyOffset.top)));
             });
 
         var lastTarget = null;
@@ -298,11 +305,11 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
                 .on('drop', function ({ target, dragEvent, interaction }) {
                     target.classList.remove("droptarget");
                     that.refs.layoutBody.classList.remove("droptarget");
-                    var offset = $(target).offset();
+                    let offset = $(target).offset();
                     var dropIndex = parseInt(target.getAttribute("data-index"));
                     if (!that._handlePanelDrop(target, offset.left, offset.top, target.clientWidth, target.clientHeight, dragEvent, CatcherSize, CatcherSize, dropIndex, interaction.panelIndex)) {
                         var layoutBody = that.refs.layoutBody;
-                        var offset = $(layoutBody).offset();
+                        let offset = $(layoutBody).offset();
                         var w = layoutBody.clientWidth;
                         var h = layoutBody.clientHeight;
                         that._handlePanelDrop(target, offset.left, offset.top, w, h, dragEvent, w, h, that.state.renderingTree.index, interaction.panelIndex);

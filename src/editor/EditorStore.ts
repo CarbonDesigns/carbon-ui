@@ -37,7 +37,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
     private _restartModel: () => void;
     constructor(dispatcher?) {
         super(dispatcher);
-        this._restartModel = core.util.debounce(this.restartModel, 200);
+        this._restartModel = core.util.debounce(this.restartModel, 30);
         this.state = { currentItem: null, codeItems: [] };
     }
 

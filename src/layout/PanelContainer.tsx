@@ -151,7 +151,7 @@ export default class PanelContainer extends Component<IPanelContainerProps> {
             `lbox lbox_${dockToString(container.collapseDirection)}`,
             container.className,
             {
-                autohide: container.collapsed || (this.props.minimized && !container.fixed),
+                autohide: (container.collapsed || (this.props.minimized && !container.fixed)) && !container.floating,
                 tmpVisible: container.panelName === this.props.temporaryVisiblePanel,
                 floating: container.floating
             }

@@ -146,7 +146,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             let previewModel = (core.Environment.controller as any).previewModel;
             let previewArtboard = previewModel.activeArtboard;
 
-            if (previewArtboard.runtimeProps.sourceArtboard) {
+            if (previewArtboard && previewArtboard.runtimeProps.sourceArtboard) {
                 previewArtboard.runtimeProps.sourceArtboard.code(this.currentEditorModel.getValue());
                 this._restartModel();
             }

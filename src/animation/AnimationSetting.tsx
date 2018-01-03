@@ -18,9 +18,9 @@ var TransitionTypeValues = [
 ];
 
 var EasingValues = [
-    { label: "easing.out", value: EasingType.EaseOut },
-    { label: "easing.in", value: EasingType.EaseIn },
-    { label: "easing.inout", value: EasingType.EaseInOut },
+    { label: "easing.out", value: EasingType.EaseOutQuad },
+    { label: "easing.in", value: EasingType.EaseInQuad },
+    { label: "easing.inout", value: EasingType.EaseInOutQuad },
     { label: "easing.none", value: EasingType.None },
 ];
 

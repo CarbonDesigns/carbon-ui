@@ -94,11 +94,11 @@ const ViewportMargin = 40;
 
 function easeTypeToClassName(type) {
     switch (type) {
-        case EasingType.EaseIn:
+        case EasingType.EaseInQuad:
             return "ease-in";
-        case EasingType.EaseOut:
+        case EasingType.EaseOutQuad:
             return "ease-out";
-        case EasingType.EaseInOut:
+        case EasingType.EaseInOutQuad:
             return "ease-in-out";
     }
 

@@ -121,7 +121,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         let page = core.app.activePage;
         return [
             { id: page.id, name: page.name, type: 'page' }
-        ].concat(page.getAllArtboards().reverse().map(a => { return { id: a.id, name: a.name, type: "artboard" } }));
+        ].concat(page.getAllArtboards(true).reverse().map(a => { return { id: a.id, name: a.name, type: "artboard" } }));
     }
 
     @handles(EditorActions.changeArtboard)

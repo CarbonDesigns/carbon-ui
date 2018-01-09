@@ -368,7 +368,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         });
         circle.setTransform(Matrix.createTranslationMatrix(x - 50, y - 50));
         layer.add(circle);
-        return circle.animate({ width: 10, height: 10 }, 450, {}, () => {
+        return circle.animate({ width: 10, height: 10 }, {duration:450}, () => {
             circle.setTransform(Matrix.createTranslationMatrix(x - circle.width / 2, y - circle.height / 2));
             layer && layer.invalidate();
         }).then(() => {

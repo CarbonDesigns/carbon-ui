@@ -6,12 +6,8 @@ import {Environment, Devices, PreviewDisplayMode} from "carbon-core";
 
 var State = Record({
     frameVisible: false,
-    // deviceWidth: Devices[0].w,
-    // deviceHeight: Devices[0].h,
-    // responsive:false,
     displayMode: PreviewDisplayMode.Fit,
     previewActive: true,
-    activePage: null,
     activeDevice:0
 });
 
@@ -34,8 +30,9 @@ class PreviewStore extends CarbonStore<any> {
     }
 
     @handles(PreviewActions.navigateTo)
-    onNavigateToPage({artboardId, animation}) {
-        this.state = this.state.set("activePage",{artboardId, animation});
+    onNavigateToPage({artboardId, animation, data}) {
+        //this.state = this.state.set("activePage",{artboardId, animation});
+        (Environment.controller as any).previewModel.navigateToArtboard(artboardId, animation, data);
     }
 
     @handles(PreviewActions.navigateBack)

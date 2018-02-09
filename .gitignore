@@ -11,3 +11,4 @@ node_modules/*
 *_BASE_*
 *_REMOTE_*
 *_BACKUP_*
+package-lock.json

@@ -4,7 +4,6 @@
 *.rej
 *.log
 *.trx
-package-lock.json
 target/*
 node_modules/*
 .mylocal/
@@ -12,3 +11,4 @@ node_modules/*
 *_BASE_*
 *_REMOTE_*
 *_BACKUP_*
+package-lock.json

@@ -122,7 +122,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     constructor(props) {
         super(props);
-        this.state = { data: PreviewStore.state, currentCanvas: 0, emulateTouch:true };
+        this.state = { data: PreviewStore.state, currentCanvas: 0, emulateTouch: true };
         this._renderingRequestId = 0;
         this._currentCanvas = 0;
         this._canvas1Left = -1;
@@ -149,7 +149,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         } else {
             return;
         }
-        if(this.previewModel.activePage) {
+        if (this.previewModel.activePage) {
             this.view.animationController.reset();
             this.view.setActivePage(NullPage);
             this.previewModel.recycleCurrentPage();
@@ -174,7 +174,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         var page = newData.activePage;
         if (!page) {
-            if(newData.displayMode !== this.state.data.displayMode) {
+            if (newData.displayMode !== this.state.data.displayMode) {
                 this.restart();
             }
             return;
@@ -368,7 +368,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         });
         circle.setTransform(Matrix.createTranslationMatrix(x - 50, y - 50));
         layer.add(circle);
-        return circle.animate({ width: 10, height: 10 }, 450, {}, () => {
+        return circle.animate({ width: 10, height: 10 }, { duration: 450 }, () => {
             circle.setTransform(Matrix.createTranslationMatrix(x - circle.width / 2, y - circle.height / 2));
             layer && layer.invalidate();
         }).then(() => {
@@ -437,7 +437,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         this.attachToView();
         window.addEventListener("resize", this.onresize);
-        if(this.state.emulateTouch) {
+        if (this.state.emulateTouch) {
             this.touchEmulator.enable(this.refs.viewport, true);
         }
 
@@ -647,7 +647,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             height: this.state.data.deviceHeight || this.refs.viewport.clientHeight
         }).then(page => {
             this._updateActivePage(page);
-            if(!this.previewModel.activePage) {
+            if (!this.previewModel.activePage) {
                 this.previewModel.activePage = page;
             }
             this._attached = true;
@@ -706,7 +706,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var classNames = cx("animate", (!this.state.data.activePage) ? "" : easeTypeToClassName(this.state.data.activePage.animation.curve));
 
         return (
-            <div id="viewport" ref="viewport" key="viewport" className="viewport" name="viewport"  tabIndex={1}>
+            <div id="viewport" ref="viewport" key="viewport" className="viewport" name="viewport" tabIndex={1}>
                 <canvas ref="canvas0" className={classNames}
                     style={{
                         position: 'absolute'

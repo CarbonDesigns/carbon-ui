@@ -632,9 +632,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         app.platform.attachEvents(this.refs.viewport);
 
         this._displayClickSpotsToken = view.displayClickSpots.bind(this, this.onDisplayClikSpots);
-        this._navigateToPageToken = previewModel.navigateToPage.bind(this, function (artboardId, animation) {
-            dispatch(PreviewActions.navigateTo(artboardId, animation));
-        });
+        //TODO: fix
+        // this._navigateToPageToken = previewModel.navigateToPage.bind(this, function (artboardId, animation) {
+        //     dispatch(PreviewActions.navigateTo(artboardId, animation));
+        // });
 
         this.view = view;
         view.setupRendering([this.activeContext], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));

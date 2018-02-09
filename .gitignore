@@ -4,7 +4,6 @@
 *.rej
 *.log
 *.trx
-package-lock.json
 target/*
 node_modules/*
 .mylocal/

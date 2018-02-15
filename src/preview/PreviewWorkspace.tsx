@@ -144,7 +144,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         var page = newData.activePage;
         if (!page) {
-            if(newData.displayMode !== this.state.data.displayMode) {
+            if (newData.displayMode !== this.state.data.displayMode) {
                 this.restart();
             }
             return;
@@ -272,9 +272,12 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         this.attachToView();
         window.addEventListener("resize", this.onresize);
-        if(this.state.emulateTouch) {
+        if (this.state.emulateTouch) {
             this.touchEmulator.enable(this.refs.viewport, true);
         }
+
+        document.body.classList.add("fullscreen");
+        document.body.classList.add("preview");
     }
 
     _getCurrentArtboard() {
@@ -395,14 +398,17 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             var controller = new PreviewController(app, view, previewModel);
             Environment.set(view, controller);
 
-            if (view.page === NullPage) {
-                var pageChangedToken = app.pageChanged.bind(() => {
+            app.onLoad(() => {
+                if (view.page === NullPage) {
+                    var pageChangedToken = app.pageChanged.bind(() => {
+                        this._initialize(view, previewModel, controller);
+                        pageChangedToken.dispose();
+                    })
+                }
+                else {
                     this._initialize(view, previewModel, controller);
-                    pageChangedToken.dispose();
-                })
-            } else {
-                this._initialize(view, previewModel, controller);
-            }
+                }
+            });
         }
     }
 
@@ -432,6 +438,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         window.removeEventListener("resize", this.onresize);
         this.touchEmulator.disable();
+
+        document.body.classList.remove("fullscreen");
+        document.body.classList.remove("preview");
     }
 
     _setPage(page) {
@@ -443,7 +452,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var data = this.state.data;
 
         return (
-            <div id="viewport" ref="viewport" key="viewport" className="viewport" name="viewport"  tabIndex={1}>
+            <div id="viewport" ref="viewport" key="viewport" className="viewport" name="viewport" tabIndex={1}>
                 <div className="preview__device" ref="device">
                     <canvas ref="canvas"
                         style={{

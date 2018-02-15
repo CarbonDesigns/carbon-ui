@@ -13,8 +13,8 @@ try
 
     New-Item .\target -ItemType "directory" -ErrorAction Ignore
     gci target -Exclude fonts,carbon-core*,carbon-api*,*.d.ts | ri -recurse
-    copy .\fonts\ .\target\ -Recurse
-    copy .\img\ .\target\ -Recurse
+    copy .\fonts\ .\target\ -Recurse -Force
+    copy .\img\ .\target\ -Recurse -Force
 
     if ($CopyCore)
     {

@@ -15,6 +15,7 @@ interface IEditorStoreState {
     codeItems?: { name: string, id: string }[];
     hasPreview?: boolean;
     currentItemName?: string;
+    currentCompilationUnitId?:string;
 }
 
 class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDisposable {
@@ -50,10 +51,13 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         }
 
         let name = null;
+        let id = null;
         if (previewModel.activeArtboard) {
             name = previewModel.activeArtboard.name
+            id = previewModel.activeArtboard.compilationUnitId;
         }
-        this.setState({ currentItem: previewModel.activeArtboard, currentItemName: name, codeItems: this._codeItemsMetainfo() });
+
+        this.setState({ currentItem: previewModel.activeArtboard, currentItemName: name, currentCompilationUnitId:id, codeItems: this._codeItemsMetainfo() });
 
         if (this.initialized) {
             return;
@@ -227,9 +231,8 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             return;
         }
 
-        let hasSameSource = (artboard as any).name === this.state.currentItemName;
-
-        this.setState({ currentItem: artboard, currentItemName: artboard.name, hasPreview: true });
+        let hasSameSource = (artboard as any).compilationUnitId === this.state.currentCompilationUnitId;
+        this.setState({ currentItem: artboard, currentItemName: artboard.name, currentCompilationUnitId:artboard.compilationUnitId, hasPreview: true });
 
         if (hasSameSource) {
             return;
@@ -262,7 +265,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         }
         this.globalModelDisposable.dispose();
 
-        this.setState({ currentItem: page, currentItemName: page.name, hasPreview: false });
+        this.setState({ currentItem: page, currentItemName: page.name, currentCompilationUnitId:page.compilationUnitId, hasPreview: false });
 
         this._setModelFromPage(page);
         this.proxyModelDisposable.dispose();

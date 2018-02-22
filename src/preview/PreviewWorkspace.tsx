@@ -351,6 +351,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         let scale = this.view.scale(deviceScale);
         this.view.updateViewportSize(deviceSize);
+
         let resized = false;
 
         var canvasWidth = deviceSize.width;

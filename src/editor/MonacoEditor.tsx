@@ -13,7 +13,6 @@ export class MonacoEditor extends React.Component<Props, {}> {
 
     constructor(props, context) {
         super(props, context);
-
     }
 
     render(): JSX.Element {

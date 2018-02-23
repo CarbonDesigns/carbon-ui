@@ -44,17 +44,17 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
                 break;
             }
         }
-        var DEFAULT_ANIMATION_DURATION = .2;
+        var DEFAULT_ANIMATION_DURATION = 200;
         var animation = this.props.action.animation;
         var segueIndex = TransitionTypeValues.findIndex(s => s.value === animation.type);
         var easingIndex = EasingValues.findIndex(s => s.value === animation.curve);
-        var duration = animation.duration == undefined ? DEFAULT_ANIMATION_DURATION : animation.duration;
+        var duration = animation.duration === undefined ? DEFAULT_ANIMATION_DURATION : (animation.duration);
 
         this.state = {
             artboardIndex: artboardIndex,
             segueIndex: segueIndex < 0 ? 0 : segueIndex,
             easingIndex: easingIndex < 0 ? 0 : easingIndex,
-            duration: duration
+            duration: duration/1000
         };
     }
 
@@ -80,7 +80,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
 
     changeDuration = (event) => {
         this.setState({ duration: event.target.value });
-        this.props.newAction.animation.duration = event.target.value;
+        this.props.newAction.animation.duration = parseFloat(event.target.value)*1000;
     }
 
     renderTarget = (selectedItemIndex) => {

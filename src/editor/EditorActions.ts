@@ -11,6 +11,12 @@ export default {
             async: true
         }
     },
+    changeState:(stateId) => {
+        return {
+            type:'PreviewActions_changeState',
+            stateId
+        }
+    },
     changeArtboard: (artboard) => {
         return {
             typed: 'Editor_changeArtboard',

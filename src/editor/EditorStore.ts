@@ -9,6 +9,7 @@ import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
 import { instanceOf } from "../../node_modules/@types/prop-types/index";
 import { Page, NullPage } from "carbon-core";
+import PreviewActions from "../preview/PreviewActions";
 
 interface IEditorStoreState {
     currentItem?: core.IElementWithCode & core.IDisposable;
@@ -16,6 +17,7 @@ interface IEditorStoreState {
     hasPreview?: boolean;
     currentItemName?: string;
     currentCompilationUnitId?:string;
+    stateId?:string;
 }
 
 class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDisposable {
@@ -33,6 +35,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
     private editorDisposables: core.IDisposable[] = [];
 
     private _onPageChangedBinding: core.IDisposable;
+    private _onStateChangedBinding: core.IDisposable;
     private _ignoreChange: boolean = false;
 
     private _restartModel: () => void;
@@ -52,12 +55,19 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
 
         let name = null;
         let id = null;
+        let stateId = "default";
         if (previewModel.activeArtboard) {
             name = previewModel.activeArtboard.name
             id = previewModel.activeArtboard.compilationUnitId;
+            stateId = previewModel.activeArtboard.stateId;
         }
 
-        this.setState({ currentItem: previewModel.activeArtboard, currentItemName: name, currentCompilationUnitId:id, codeItems: this._codeItemsMetainfo() });
+        this.setState({
+            currentItem: previewModel.activeArtboard,
+            currentItemName: name,
+            currentCompilationUnitId:id,
+            stateId:stateId,
+            codeItems: this._codeItemsMetainfo() });
 
         if (this.initialized) {
             return;
@@ -97,11 +107,23 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
                 this._onPageChangedBinding.dispose();
                 this._onPageChangedBinding = null;
             }
+            if(this._onStateChangedBinding) {
+                this._onStateChangedBinding.dispose();
+                this._onStateChangedBinding = null;
+            }
         });
 
         this.setFromArtboard(previewModel.activeArtboard);
         this._onPageChangedBinding = previewModel.onPageChanged.bind((page) => {
             dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
+            if(this._onStateChangedBinding) {
+                this._onStateChangedBinding.dispose();
+                this._onStateChangedBinding = null;
+            }
+
+            if(previewModel.activeArtboard) {
+                this._onStateChangedBinding = previewModel.activeArtboard.stateChanged.bind(this, this.onStateChanged)
+            }
         });
 
         core.Environment.attached.bind((view, controller) => {
@@ -109,6 +131,10 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             if (this._onPageChangedBinding) {
                 this._onPageChangedBinding.dispose();
                 this._onPageChangedBinding = null;
+            }
+            if(this._onStateChangedBinding) {
+                this._onStateChangedBinding.dispose();
+                this._onStateChangedBinding = null;
             }
 
             if (previewModel) {
@@ -119,6 +145,15 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         });
 
         // TODO: bind on event to refresh list of artboards
+    }
+
+    onStateChanged(stateId) {
+        dispatch(EditorActions.changeState(stateId));
+    }
+
+    @handles(EditorActions.changeState)
+    onChangeState({stateId}) {
+        this.setState({stateId:stateId});
     }
 
     private _codeItemsMetainfo() {

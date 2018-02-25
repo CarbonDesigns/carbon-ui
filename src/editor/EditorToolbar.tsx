@@ -3,7 +3,7 @@ import { dispatch, Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import EditorActions from "./EditorActions";
 import Dropdown from "../shared/Dropdown";
 import { FormattedMessage } from "react-intl";
-import { app, PreviewDisplayMode, IArtboard, DataNode, Artboard } from "carbon-core";
+import { app, PreviewDisplayMode, IArtboard, DataNode, Artboard, Environment } from "carbon-core";
 import PreviewActions from "../preview/PreviewActions";
 import EditorStore from "./EditorStore";
 import PreviewStore from "../preview/PreviewStore";
@@ -36,7 +36,7 @@ export default class EditorToolbar extends Component<any, any> {
                 var item: any = DataNode.getImmediateChildById(app.activePage, codeItem.id, true);
                 if ((item instanceof Artboard)) {
                     states = item.getStates();
-                    let stateId = item.stateId;
+                    let stateId = EditorStore.state.stateId;
                     stateIndex = states.findIndex(s=>s.id === stateId);
                 }
             }
@@ -46,7 +46,7 @@ export default class EditorToolbar extends Component<any, any> {
             codeItems: EditorStore.state.codeItems,
             artboardIndex: Math.max(0, currentIndex),
             states: states,
-            sateIndex: stateIndex
+            stateIndex: stateIndex
         });
     }
 
@@ -103,8 +103,9 @@ export default class EditorToolbar extends Component<any, any> {
         }
     }
 
-    changeState(index) {
-
+    changeState=(index)=> {
+        let state = this.state.states[index];
+        (Environment.controller as any).previewModel.activeArtboard.setProps({stateId:state.id});
     }
 
     renderCurrentState = (selectedStateIndex) => {
@@ -119,6 +120,10 @@ export default class EditorToolbar extends Component<any, any> {
     }
 
     renderStates() {
+        if(!(this.state.states && this.state.states.length > 1) ) {
+            return;
+        }
+
         return <Dropdown
             autoClose={true}
             className="drop_down_toolbar"

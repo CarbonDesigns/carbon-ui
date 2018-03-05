@@ -18,6 +18,8 @@ import { StoriesPopupList, StoriesListItem } from "../stories/StoriesList";
 import StoriesStore from "../stories/StoriesStore";
 import AppStatus from "./AppStatus";
 import appStore from "../AppStore";
+import styled from "styled-components";
+import ModeSelector from './ModeSelector';
 
 var State = Record({
     canUndo: false,
@@ -138,6 +140,16 @@ type HeaderState = {
     displayMode?: PreviewDisplayMode;
 }
 
+const HeaderBase = styled.div`
+    height: 30px;
+    position:relative;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    align-items: stretch;
+`
+
 export default class Header extends Component<HeaderProps, HeaderState> {
     constructor(props) {
         super(props);
@@ -174,34 +186,13 @@ export default class Header extends Component<HeaderProps, HeaderState> {
         dispatch(AppActions.showMainMenu());
     }
 
-    // changeDisplayMode = (value: PreviewDisplayMode) => {
-    //     // this.setState({ displayMode: value });
-    //     dispatch(PreviewActions.changePreviewDisplayMode(value))
-    // }
-
-    // renderDisplayMode = () => {
-    //     let id = "@preview.originalsize";
-    //     switch (this.state.displayMode) {
-    //         case PreviewDisplayMode.Fill:
-    //             id = "@preview.fill"
-    //             break;
-    //         case PreviewDisplayMode.Fit:
-    //             id = "@preview.fit"
-    //             break;
-    //         case PreviewDisplayMode.Responsive:
-    //             id = "@preview.responsive"
-    //             break;
-    //     }
-    //     return <FormattedMessage id={id} tagName="div" />;
-    // }
-
     render() {
         const { isLoggedIn } = this.props;
 
         var that = this;
 
         return (
-            <div className="layout__header">
+            <HeaderBase>
                 <div className="projectbar">
                     {this.state.appAvatar && <div className="projectbar__pic" onClick={Header.onProjectClick}>
                         <div className="projectbar__project-avatar" style={{ backgroundImage: "url('" + this.state.appAvatar + "')" }} onClick={Header.onProjectClick}></div>
@@ -213,61 +204,14 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                 </div>
 
                 {/* Modebar */}
-                <div className="modebar">
-                    {
-                        ['edit', 'prototype', 'preview'].map(function (item) {
-                            var classname = cx("modebar__pill modebar__pill_" + item,
-                                {
-                                    "modebar__pill_active": (item === that.state.activeMode)
-                                });
-
-                            return (
-                                <div className={classname} key={item}
-                                    onClick={() => app.setMode(item)}>
-                                    <div className="big-icon"></div>
-                                    <div className="pill-cap">
-                                        <FormattedMessage id={'mode.' + item} />
-                                    </div>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-
-                {/* Stories in preview
-                { (this.state.activeMode === "preview")
-                    &&  <StoriesSelector name=""/>
-                }*/}
-                {/* Stories in preview*/}
-                {/*(this.state.activeMode === "preview")
-                    && (<Dropdown
-                        autoClose={true}
-                        className="drop_down_fixed80"
-                        selectedItem={this.state.displayMode}
-                        onSelect={this.changeDisplayMode}
-                        renderSelected={this.renderDisplayMode}>
-                        <p>Original size</p>
-                        <p>Fit</p>
-                        <p>Fill</p>
-                        <p>Responsive</p>
-                    </Dropdown>)
-                    */ }
+                <ModeSelector/>
 
                 { /*   Userbar / Signup   */}
                 <div className="statusbar">
                     <AppStatus />
                     <UserBar />
                 </div>
-
-                { /* Help   */}
-                {/*<DropButton key="helpbar" id="helpbar" caption="Help">
-                    <DropButtonItem key="feedback"  id="action-button_feedback"  >Leave a feedback</DropButtonItem>
-                    <DropButtonItem key="bugreport" id="action-button_bugreport" >Found a bug?</DropButtonItem>
-                    <DropButtonItem key="message"   id="action-button_message"   >Send us a message</DropButtonItem>
-                    <DropButtonItem key="keyboard"  id="action-button_keyboard"  >Keyboard shorcuts</DropButtonItem>
-                </DropButton>*/}
-
-            </div>
+            </HeaderBase>
         );
     }
 

@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Selection, Environment, Invalidate, app, IArtboardPage, Brush, Text, IText, workspace, Artboard } from "carbon-core";
 import { Component, dispatch, dispatchAction } from "../CarbonFlux";
-import LayersActions from './LayersActions';
 import bem from "../utils/commonUtils";
 import { LayerNode } from "./LayersStore";
 import dragController from "./LayersDragController";

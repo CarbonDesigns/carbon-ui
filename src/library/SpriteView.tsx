@@ -2,7 +2,6 @@ import React from "react";
 import ReactDom from "react-dom";
 import { Component, listenTo, dispatchAction, handles } from "../CarbonFlux";
 import { richApp } from "../RichApp";
-import StencilsActions from "./StencilsActions";
 import { FormattedMessage, defineMessages } from 'react-intl';
 import bem from "../utils/commonUtils";
 import VirtualCollection from "../shared/collections/VirtualCollection";

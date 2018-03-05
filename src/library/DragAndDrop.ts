@@ -1,5 +1,5 @@
 import interact from "interact.js";
-import {findTransformProp, nodeOffset} from "utils/domUtil";
+import {findTransformProp, nodeOffset} from "../utils/domUtil";
 
 export class DragAndDrop {
     private _stencilInteraction: Interact.Interactable = null;

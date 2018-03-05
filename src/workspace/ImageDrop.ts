@@ -2,7 +2,7 @@ import Dropzone from "dropzone";
 import { dispatch, dispatchAction } from "../CarbonFlux";
 import ImagesActions from "../library/images/ImagesActions";
 import DropzoneRegistry from "./DropzoneRegistry";
-import { IUIElement, createUUID, RepeatContainer, IImage, app, backend, Environment, Selection, SvgParser, Matrix, Image, Origin, IDisposable, IContainer, model, ChangeMode, workspace, IFileElement, FileType } from "carbon-core";
+import { IUIElement, createUUID, RepeatContainer, IImage, app, backend, Environment, Selection, Matrix, Image, Origin, IDisposable, IContainer, model, ChangeMode, workspace, IFileElement, FileType } from "carbon-core";
 
 const hiddenInput = document.createElement("div");
 const SvgMimeType = "image/svg+xml";

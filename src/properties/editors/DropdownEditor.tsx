@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDom from "react-dom";
 import cx from 'classnames';
 import bem from '../../utils/commonUtils';
-import {CarbonLabel} from "CarbonFlux";
+import {CarbonLabel} from "../../CarbonFlux";
 
 import EditorComponent, { IEditorProps } from "./EditorComponent";
 import FlyoutButton from '../../shared/FlyoutButton';

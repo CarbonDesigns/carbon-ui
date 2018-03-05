@@ -11,7 +11,6 @@ import propertyStore from "../properties/PropertyStore";
 import { swatchesStore, Slot, SwatchesStoreState } from "../properties/SwatchesStore";
 import FlyoutButton from '../shared/FlyoutButton';
 import BrushSelector from "../properties/editors/BrushSelector";
-import SwatchesActions from "./SwatchesActions"
 
 
 // TODO: change default color

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Component, handles, dispatch} from "../CarbonFlux";
 import FlyoutButton from "../shared/FlyoutButton";
-import Avatar from "../shared/Avatar";
+import {Avatar} from "../shared/Avatar";
 import {app, backend} from "carbon-core";
 import {FormattedMessage} from "react-intl";
 

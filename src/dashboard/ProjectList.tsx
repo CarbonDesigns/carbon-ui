@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Component, listenTo, CarbonLabel, dispatch } from "../CarbonFlux";
 import { Link } from "react-router";
-import FlyoutButton from "shared/FlyoutButton";
+import FlyoutButton from "../shared/FlyoutButton";
 
 import DashboardStore from "./DashboardStore";
 import DashboardActions from "./DashboardActions";

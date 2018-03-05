@@ -12,7 +12,7 @@ import { util, LayoutDockPosition, LayoutDirection, Invalidate } from "carbon-co
 import Header from '../header/Header';
 import { default as layoutStore } from "./LayoutStore";
 
-import { findTransformProp } from "utils/domUtil"
+import { findTransformProp } from "../utils/domUtil"
 import interact from "interact.js";
 
 const PillsSize = 35;

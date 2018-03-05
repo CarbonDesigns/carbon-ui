@@ -5,7 +5,7 @@ import { Component, dispatchAction } from "../../../CarbonFlux";
 import { backend, IPage, app, ISharedPageSetup, ResourceScope, Screenshot } from "carbon-core";
 import { PublishAction } from "./PublishActions";
 import { MarkupLine } from "../../../shared/ui/Markup";
-import electronEndpoint from "electronEndpoint";
+import electronEndpoint from "../../../electronEndpoint";
 import { TabContainer, TabArea, TabPage } from "../../../shared/TabContainer";
 import ResourceSharer from "../../../library/ResourceSharer";
 import { Operation } from "../../../shared/Operation";

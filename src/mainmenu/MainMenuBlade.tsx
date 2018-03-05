@@ -5,7 +5,7 @@ import { app, backend } from "carbon-core";
 import { richApp } from '../RichApp';
 import { handles, ComponentWithImmutableState, Component, listenTo } from '../CarbonFlux';
 import { FormattedMessage } from "react-intl"
-import electronEndpoint from "electronEndpoint";
+import electronEndpoint from "../electronEndpoint";
 
 import MainMenuButton from './MainMenuButton';
 import appStore from "../AppStore";

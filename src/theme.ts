@@ -1,9 +1,11 @@
 import createTheme from 'styled-components-theme';
 
 export const colors = {
-    main: '#393276',
-    dark: '#0D083B',
-    light: '#837EB1'
+    panel_background:'#292929',
+    text:'#d7d7d7',
+    text_active:' #ff4295',
+    workspace_background:'#131313',
+    h1font: "400 18px 'Roboto', sans-serif;"
 }
 
 const theme = createTheme(...Object.keys(colors));

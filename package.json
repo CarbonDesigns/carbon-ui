@@ -98,6 +98,7 @@
   "dependencies": {
     "@carbonium/carbon-api": "~0.5",
     "@carbonium/carbon-core": "~0.5",
+    "@types/history": "^4.6.2",
     "babel-polyfill": "6.26.0",
     "babel-runtime": "6.26.0",
     "classnames": "2.1.3",

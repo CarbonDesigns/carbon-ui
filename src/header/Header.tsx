@@ -20,6 +20,7 @@ import AppStatus from "./AppStatus";
 import appStore from "../AppStore";
 import styled from "styled-components";
 import ModeSelector from './ModeSelector';
+import theme from "../theme";
 
 var State = Record({
     canUndo: false,
@@ -141,7 +142,8 @@ type HeaderState = {
 }
 
 const HeaderBase = styled.div`
-    height: 30px;
+    height: 47px;
+    background:${theme.panel_background};
     position:relative;
     margin-bottom: 10px;
     display: flex;

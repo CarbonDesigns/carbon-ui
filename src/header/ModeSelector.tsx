@@ -6,6 +6,8 @@ import { app } from "carbon-core";
 import { FormattedMessage, defineMessages } from 'react-intl';
 import cx from "classnames";
 import appStore from "../AppStore";
+import theme from "../theme";
+import icons from "../theme-icons";
 
 interface IModeSelectorProps extends IReactElementProps {
 
@@ -42,10 +44,10 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
                     return (
                         <ModeBarItem active={(item === this.state.activeMode)} key={item}
                             onClick={() => app.setMode(item)}>
-                            <div className="big-icon"></div>
-                            <div className="pill-cap">
+                            <Icon icon={icons.menu_design}></Icon>
+                            <Cap>
                                 <FormattedMessage id={'mode.' + item} />
-                            </div>
+                            </Cap>
                         </ModeBarItem>
                     )
                 })
@@ -55,17 +57,31 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
 }
 
 const ModeBar = styled.div`
+    white-space:nowrap;
+    padding: 0 10px;
+    position:relative;
+    display:block;
 `;
 
-const ModeBarItem = styled.div.attrs<{active?:boolean}>({
-    active:false
-})`
-    background: ${props=>props.active?"red":"green"};
-    &.big-icon {
+const Icon = styled.div.attrs<{icon?:any}>({})`
+    ${props=>props.icon}
+`;
 
-    }
+const Cap = styled.div`
+    margin-left: .5rem;
+    position: relative;
+    left: -3px;
+    letter-spacing: 2.6px;
+`;
 
-    &.pill-cap {
-
-    }
+const ModeBarItem = styled.div.attrs<{active?:boolean}>({})`
+    color: ${(props:any)=>props.active?theme.text_active:theme.text};
+    font: ${theme.h1font};
+    padding: 0 10px 0 6px;
+    position: relative;
+    height: 100%;
+    display: inline-flex;
+    line-height:47px;
+    margin-right:80px;
+    align-items:center;
 `;

@@ -22,6 +22,8 @@ import AnimationSettings from "../animation/AnimationSetting";
 
 import appStore from "../AppStore";
 import { cancellationStack, ICancellationHandler } from "../shared/ComponentStack";
+import styled from "styled-components";
+import theme from "../theme";
 
 require("./IdleDialog");
 
@@ -29,6 +31,17 @@ const State = Record({
     activeTool: null,
     attached: false
 })
+
+const Viewport = styled.div`
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color: ${theme.workspace_background};
+    overflow: hidden;
+    user-select: none;
+`;
 
 
 class Workspace extends ComponentWithImmutableState<any, any> implements ICancellationHandler {
@@ -38,8 +51,9 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     refs:{
         contextMenu:any;
         animationSettings:any;
-        viewport:HTMLElement;
     };
+
+    private viewport:HTMLElement;
 
     constructor(props) {
         super(props);
@@ -77,7 +91,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     componentDidMount() {
         super.componentDidMount();
 
-        this._renderLoop.mountDesignerView(app, this.refs.viewport);
+        this._renderLoop.mountDesignerView(app, this.viewport);
 
         if (app.isLoaded && !this._imageDrop.active()){
             this._imageDrop.setup(this._renderLoop.viewContainer);
@@ -104,7 +118,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     render() {
         var status_text = 'saved2';
         return (
-            <div id="viewport" ref="viewport" key="viewport" name="viewport" className={cx({'viewport_artboard-mode':this.state.data.activeTool === "artboardTool"})}>
+            <Viewport id="viewport" innerRef={x => { this.viewport = x }} key="viewport" name="viewport">
                 {/* canvases and view container will be inserted here */}
 
                 <div id="workspace-top-edge" className="rulers">
@@ -122,7 +136,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
 
                 <ContextMenu ref="contextMenu" onBuildMenu={this._buildContextMenu.bind(this)}/>
                 <AnimationSettings ref="animationSettings"/>
-            </div>);
+            </Viewport>);
     }
 
 }

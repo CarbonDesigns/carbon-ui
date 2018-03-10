@@ -3,5 +3,16 @@
     <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
     <title>Group 10</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <linearGradient x1="0%" y1="-54.0559973%" x2="100%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FF4396" offset="0%"></stop>
+            <stop stop-color="#FF292C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="icon/layer_Groupicon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-10" fill="url(#linearGradient-1)">
+            <path d="M0,13.2 C0,14.19405 0.83953125,15 1.875,15 L13.125,15 C14.1604688,15 15,14.19405 15,13.2 L15,6 L0,6 L0,13.2 L0,13.2 Z" id="Fill-206"></path>
+            <path d="M6.5625,1.8 C6.5625,0.80595 5.72296875,0 4.6875,0 L1.875,0 C0.83953125,0 0,0.80595 0,1.8 L0,4.5 L15,4.5 L15,3.6 C15,2.60595 14.1604688,1.8 13.125,1.8 L6.5625,1.8 Z" id="Path"></path>
+        </g>
+    </g>
 </svg>

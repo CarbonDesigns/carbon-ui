@@ -4,4 +4,14 @@
     <title>teglas-icon</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
+    <g id="icon/library_symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="teglas-icon" transform="translate(7.318490, 10.285053) rotate(-360.000000) translate(-7.318490, -10.285053) translate(0.818490, 0.285053)" stroke="#FFFFFF" stroke-width="0.9375">
+            <rect id="Rectangle-12" x="0.46875" y="4.27827381" width="11.5625" height="15.2529762"></rect>
+            <rect id="Rectangle-13" x="2.39182692" y="0.46875" width="7.71634615" height="3.82440476"></rect>
+            <rect id="Rectangle-14" x="4.31490385" y="1.42113095" width="1" height="1.91964286"></rect>
+            <rect id="Rectangle-14" x="6.23798077" y="1.42113095" width="1" height="1.91964286"></rect>
+            <rect id="Rectangle-14" x="8.16105769" y="1.42113095" width="1" height="1.91964286"></rect>
+            <path d="M2.39182692,17.6264881 L10.1081731,17.6264881 L10.1081731,13.3035714 C10.1081731,12.526921 9.47857351,11.8973214 8.70192308,11.8973214 L3.79807692,11.8973214 C3.02142649,11.8973214 2.39182692,12.526921 2.39182692,13.3035714 L2.39182692,17.6264881 Z" id="Rectangle-12"></path>
+        </g>
+    </g>
 </svg>

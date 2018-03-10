@@ -3,5 +3,16 @@
     <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
     <title>Group 12</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <linearGradient x1="1.40106824%" y1="51.4010682%" x2="98.5989318%" y2="51.4010682%" id="linearGradient-1">
+            <stop stop-color="#FF4396" offset="0%"></stop>
+            <stop stop-color="#FF292C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="icon/proporties_tik_pink" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-12" transform="translate(0.500000, 0.250000)">
+            <rect id="Rectangle-8" fill="url(#linearGradient-1)" x="0" y="0" width="15" height="15" rx="2.5"></rect>
+            <path d="M3.88133471,8.78014398 L5.93894522,11.0975693 C6.11236569,11.2954618 6.45920664,11.3006695 6.63731416,11.1131924 L6.96540695,10.7642767 L7.67314997,10.0091606 L11.1134372,6.36377242 C11.2915448,6.17629532 11.2962318,5.79092572 11.1228113,5.59824092 L10.7244129,5.14517125 C10.5509925,4.95248645 10.2041515,4.95248645 10.030731,5.13996355 L6.6654364,8.87388253 C6.49201592,9.06656734 6.14517497,9.06135964 5.97644154,8.86867484 L4.85623901,7.61361978 C4.68750557,7.41572728 4.3500387,7.42093498 4.18130526,7.62403518 L3.87196063,7.99378169 C3.7032272,8.19167419 3.71260128,8.58745918 3.88133471,8.78014398 Z" id="Shape" fill="#FFFFFF"></path>
+        </g>
+    </g>
 </svg>

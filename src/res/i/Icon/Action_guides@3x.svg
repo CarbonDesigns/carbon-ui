@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon/Action_guides@3x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="5.43053618%" y1="11.5388728%" x2="100%" y2="94.0995069%" id="linearGradient-1">
+            <stop stop-color="#FF4396" offset="0%"></stop>
+            <stop stop-color="#FF292C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design-Gray-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-263.000000, -973.000000)">
+        <g id="Window/Action" transform="translate(245.000000, 52.000000)" fill="url(#linearGradient-1)">
+            <path d="M35.5,921 L30.5,921 L30.5,922.25 L35.5,922.25 C36.19,922.25 36.75,922.81 36.75,923.5 L36.75,928.5 L38,928.5 L38,923.5 C38,922.119375 36.880625,921 35.5,921 L35.5,921 Z M36.75,938.5 C36.75,939.19 36.19,939.75 35.5,939.75 L30.5,939.75 L30.5,941 L35.5,941 C36.880625,941 38,939.880625 38,938.5 L38,933.5 L36.75,933.5 L36.75,938.5 L36.75,938.5 Z M19.25,938.5 L19.25,933.5 L18,933.5 L18,938.5 C18,939.880625 19.119375,941 20.5,941 L25.5,941 L25.5,939.75 L20.5,939.75 C19.81,939.75 19.25,939.19 19.25,938.5 L19.25,938.5 Z M18,923.5 L18,928.5 L19.25,928.5 L19.25,923.5 C19.25,922.81 19.81,922.25 20.5,922.25 L25.5,922.25 L25.5,921 L20.5,921 C19.119375,921 18,922.119375 18,923.5 L18,923.5 Z" id="Icon/Action_guides"></path>
+        </g>
+    </g>
+</svg>

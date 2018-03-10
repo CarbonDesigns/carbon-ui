@@ -3,5 +3,24 @@
     <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
     <title>Group 17</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <circle id="path-1" cx="9" cy="9" r="8"></circle>
+        <filter x="-9.4%" y="-9.4%" width="118.8%" height="118.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.794638813 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Icon/windows_off" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-17">
+            <rect id="Rectangle-32" stroke="#FFFFFF" x="0.5" y="0.5" width="41" height="17" rx="8.5"></rect>
+            <text id="off" font-family="AppleSDGothicNeo-Regular, Apple SD Gothic Neo" font-size="10" font-weight="normal" fill="#FFFFFF">
+                <tspan x="21" y="13">off</tspan>
+            </text>
+            <g id="Oval-4">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
 </svg>

@@ -3,5 +3,21 @@
     <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
     <title>Drive</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <linearGradient x1="1.40106824%" y1="51.4010682%" x2="98.5989318%" y2="51.4010682%" id="linearGradient-1">
+            <stop stop-color="#FF4396" offset="0%"></stop>
+            <stop stop-color="#FF292C" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="1.40106824%" y1="51.4010682%" x2="98.5989318%" y2="51.4010682%" id="linearGradient-2">
+            <stop stop-color="#FF4396" offset="0%"></stop>
+            <stop stop-color="#FF355D" offset="53.4991983%"></stop>
+            <stop stop-color="#FF292C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="icon/layer_drive" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Drive">
+            <circle id="Combined-Shape" fill="url(#linearGradient-1)" cx="7.5" cy="7.5" r="5.1"></circle>
+            <path d="M6,14.8499728 C2.57663952,14.1550673 0,11.1284369 0,7.5 C0,6.59353143 0.160812581,5.72462265 0.455464995,4.92024641 C0.608497982,5.02430541 0.780048671,5.13912459 0.970117061,5.26470394 C0.730201288,5.96573462 0.6,6.71766224 0.6,7.5 C0.6,10.7956305 2.91048806,13.5516176 6,14.2364972 L6,14.8499728 Z M9,14.8499728 L9,14.2364972 C12.0895119,13.5516176 14.4,10.7956305 14.4,7.5 C14.4,6.78376746 14.2908724,6.09302305 14.0883371,5.4434868 L14.6022421,5.08364666 C14.8601202,5.8418394 15,6.65458436 15,7.5 C15,11.1284369 12.4233605,14.1550673 9,14.8499728 Z M2.25897477,2.1351419 C3.61100307,0.814129012 5.46042653,0 7.5,0 C9.62299811,0 11.5399727,0.882091701 12.9044137,2.29976511 L12.406399,2.64847875 C11.1556438,1.38366448 9.41933921,0.6 7.5,0.6 C5.66430966,0.6 3.99604755,1.31684546 2.75987443,2.48587562 L2.25897477,2.1351419 Z" id="Combined-Shape" fill="url(#linearGradient-2)"></path>
+        </g>
+    </g>
 </svg>

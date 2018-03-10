@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="6px" viewBox="0 0 8 6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Play@3x</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Design-Gray-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1420.000000, -22.000000)">
+        <g id="Window/Tabbar" transform="translate(-13.000000, 0.000000)" fill="#9B9B9B">
+            <polygon id="Play" transform="translate(1437.000000, 25.000000) rotate(180.000000) translate(-1437.000000, -25.000000) " points="1437 22 1441 28 1433 28"></polygon>
+        </g>
+    </g>
+</svg>

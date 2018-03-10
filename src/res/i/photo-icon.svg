@@ -4,4 +4,12 @@
     <title>photo-icon</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
+    <g id="icon/library_images" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="photo-icon" transform="translate(0.750000, 0.500000)" stroke="#FFFFFF" stroke-width="1.25">
+            <rect id="Mask" x="0.625" y="0.625" width="18.75" height="15"></rect>
+            <path d="M15.0618559,15.625 L9.375,7.35320954 L3.68814406,15.625 L15.0618559,15.625 Z" id="Triangle-1"></path>
+            <circle id="Oval-7" cx="15.625" cy="5.625" r="1.25"></circle>
+            <path d="M15.5749262,15.625 C15.3403987,14.1843971 14.3119255,13.125 13.125,13.125 C11.9380745,13.125 10.9096013,14.1843971 10.6750738,15.625 L15.5749262,15.625 Z" id="Oval-8"></path>
+        </g>
+    </g>
 </svg>

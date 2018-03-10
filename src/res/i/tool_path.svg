@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="17px" viewBox="0 0 16 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Group@3x</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Design-Gray-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-264.000000, -296.000000)">
+        <g id="Window/Action" transform="translate(245.000000, 52.000000)" fill="#9B9B9B">
+            <g id="Group" transform="translate(26.436684, 253.436684) rotate(-135.000000) translate(-26.436684, -253.436684) translate(20.436684, 243.436684)">
+                <path d="M6.13043478,18.3423913 C3.53726087,18.3423913 1.43478261,16.2036685 1.43478261,13.5660326 C1.43478261,10.9277853 4.68241304,4.2279212 6.13043478,2.44565217 C7.54441304,4.19368207 10.826087,10.9277853 10.826087,13.5660326 C10.826087,16.2036685 8.7236087,18.3423913 6.13043478,18.3423913 L6.13043478,18.3423913 Z M6.13043478,0 C7.89834783,2.23777174 12,10.0748641 12,13.451087 C12,16.8279212 9.3716087,19.5652174 6.13043478,19.5652174 C2.88926087,19.5652174 0.260869565,16.8279212 0.260869565,13.451087 C0.260869565,10.0748641 4.32084783,2.28118207 6.13043478,0 Z" id="Fill-78"></path>
+                <path d="M5.73913043,2.34782609 L5.73913043,12.5217391" id="Fill-3" stroke="#9B9B9B" stroke-width="1.5625"></path>
+                <circle id="Oval" stroke="#9B9B9B" stroke-width="1.5625" cx="6.13043478" cy="12.9130435" r="1.17391304"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

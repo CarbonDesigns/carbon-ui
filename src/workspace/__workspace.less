@@ -37,7 +37,6 @@
     }
 
     .noselect;
-    .abs;
 
     z-index: 2;
 
@@ -52,12 +51,10 @@
 
     .tool-button {
         .act();
-        //.rounded(2);
         .rounded(2);
         .size(@toolbar_width);
         .rel;
 
-        //.transition(background .1s);
         .transition(none);
 
         i {
@@ -70,7 +67,6 @@
         }
 
         background-color: @tool_bg;
-        //.tool__subtools > & {background-color: @tool_bg !important;}
 
         &:hover {
             background-color: @tool_hover;
@@ -101,7 +97,6 @@
         .transition(all .1s linear .1s);
     }
     .tool-button_active ~ .tool-button-group._activeGroup .tool__subtools {
-        //.transition(all .1s linear 0);
         .transition(none);
     }
 
@@ -118,7 +113,6 @@
             .inbl;
             margin-left: 6px;
 
-            //&.hover,
             &:hover {
               border-bottom: 3px solid @sel_color;
             }
@@ -127,26 +121,6 @@
 
     .tool__more {
         .corner-pill-dropdown(3px, rgba(255,255,255, .4));
-
-//        .clip;
-//        max-width: 0;
-//        .bgc(@sel_color);
-//        .size(3, 100%);
-//        left: 100%;
-//        top: 0;
-//        @r: 2px;
-//
-//        .rounded(0,@r,@r,0);
-//        .abs;
-//        .tcenter;
-//
-//        i {
-//            left: -5px;
-//            margin-top: -2px;
-//            top: 50%;
-//            .moredots(@font_color);
-//        }
-
     }
 
     .tool-button._active + .tool__more {
@@ -159,10 +133,6 @@
     }
 }
 
-
-
-
-
 //--------------------
 
 #workspace-top-edge {
@@ -170,13 +140,9 @@
     left: 0;
     top: 0;
     right: 0;
-    //height: @module3;
     height: @line;
     .noselect;
     -webkit-user-drag: none;
-
-//    border-bottom: 1px solid rgba(136, 136, 136, 0.49);
-//    border-bottom: 1px solid rgba(136, 136, 136, 0.16);
 }
 
 

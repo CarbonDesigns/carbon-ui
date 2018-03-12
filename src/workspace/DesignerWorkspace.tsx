@@ -1,7 +1,7 @@
 //require("./__workspace.less");
 import WindowControls from './topBar/windowControls';
 import ContextBar     from './topBar/contextbar';
-import Tools          from './topBar/tools';
+// import Tools          from './topBar/tools';
 import Breadcrumbs    from './bottomBar/breadcrumbs';
 import PagesBar       from './bottomBar/pagesbar';
 
@@ -122,7 +122,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
                 {/* canvases and view container will be inserted here */}
 
                 <div id="workspace-top-edge" className="rulers">
-                    <Tools key="tools"/>
+                    {/* <Tools key="tools"/> */}
                     <WindowControls key="windowcontrols"/>
                     <ContextBar key="contextBar"/>
                     {/*<AltContext key="altContext"/>*/}

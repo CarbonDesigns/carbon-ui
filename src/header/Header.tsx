@@ -21,6 +21,8 @@ import appStore from "../AppStore";
 import styled from "styled-components";
 import ModeSelector from './ModeSelector';
 import theme from "../theme";
+import icons from "../theme-icons";
+import IconButton from '../components/IconButton';
 
 var State = Record({
     canUndo: false,
@@ -141,11 +143,22 @@ type HeaderState = {
     displayMode?: PreviewDisplayMode;
 }
 
+const ProjectBar = styled.div`
+    position:relative;
+    display: flex;
+    align-items: center;
+    align-content:center;
+    flex-wrap: wrap;
+    flex: 1;
+    overflow:hidden;
+    padding-left:20px;
+`
+
 const HeaderBase = styled.div`
     height: 47px;
     background:${theme.panel_background};
     position:relative;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
@@ -195,7 +208,7 @@ export default class Header extends Component<HeaderProps, HeaderState> {
 
         return (
             <HeaderBase>
-                <div className="projectbar">
+                {/* <div className="projectbar">
                     {this.state.appAvatar && <div className="projectbar__pic" onClick={Header.onProjectClick}>
                         <div className="projectbar__project-avatar" style={{ backgroundImage: "url('" + this.state.appAvatar + "')" }} onClick={Header.onProjectClick}></div>
                     </div>
@@ -203,7 +216,10 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                     <div className={bem("projectbar", "name", { big: this.state.appName.length > 10 })} onClick={Header.onProjectClick}>
                         <h2>{this.state.appName}</h2>
                     </div>
-                </div>
+                </div> */}
+                <ProjectBar>
+                    <IconButton src={icons.menu_main.src} width={icons.menu_main.width} height={icons.menu_main.height} color="white" onClick={Header.onProjectClick}/>
+                </ProjectBar>
 
                 {/* Modebar */}
                 <ModeSelector/>

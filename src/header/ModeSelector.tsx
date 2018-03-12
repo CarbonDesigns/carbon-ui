@@ -44,7 +44,7 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
                     return (
                         <ModeBarItem active={(item === this.state.activeMode)} key={item}
                             onClick={() => app.setMode(item)}>
-                            <Icon icon={icons.menu_design}></Icon>
+                            <Icon icon={icons['menu_'+item]}></Icon>
                             <Cap>
                                 <FormattedMessage id={'mode.' + item} />
                             </Cap>
@@ -82,6 +82,6 @@ const ModeBarItem = styled.div.attrs<{active?:boolean}>({})`
     height: 100%;
     display: inline-flex;
     line-height:47px;
-    margin-right:80px;
+    margin-right:40px;
     align-items:center;
 `;

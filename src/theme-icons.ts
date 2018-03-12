@@ -1,18 +1,36 @@
 import styled, { css } from "styled-components";
-import {backend} from "carbon-core"
+import { backend } from "carbon-core"
 
-function icon(dx, dy, w, h) {
-    return css`
-    background-image:url(${backend.cdnEndpoint}/target/res/app/dark.svg);
-    background-repeat: no-repeat;
-    background-size: 8158px 30px;
-    background-position:${dx} ${dy};
-    width:${w}px;
-    height:${h}px;
-    display:inline-block;
-`
+function icon(name, w, h) {
+    return {
+        src: iconPath(name),
+        width: w,
+        height: h
+    }
+}
+
+function iconPath(name) {
+    return backend.cdnEndpoint + "/target/res/app/i/" + name;
 }
 
 export default {
-    menu_design: icon(0, 0, 20, 20)
+    tool_selection: icon("tool_selection.svg", 20, 20),
+    tool_directSelection: icon("tool_directSelection.svg", 20, 20),
+    tool_image: icon("tool_image.svg", 16, 16),
+    tool_line: icon("tool_line.svg", 20, 20),
+    tool_oval: icon("tool_oval.svg", 20, 20),
+    tool_path: icon("tool_path.svg", 16, 17),
+    tool_pen: icon("tool_pen.svg", 16, 17),
+    tool_rectangle: icon("tool_rectangle.svg", 19, 19),
+    tool_text: icon("tool_text.svg", 14, 20),
+    tool_triangle: icon("tool_triangle.svg", 20, 20),
+    tool_polygon: icon("tool_polygon", 20, 20),
+    tool_star: icon("tool_star.svg", 20, 20),
+    tool_hand: icon("tool_hand.svg", 20, 20),
+    tool_artboard: icon("tool_artboard.svg", 17, 18),
+    tool_artboardViewer: icon("tool_artboardViewer.svg", 20, 20),
+    panel_closer: icon("panel_closer.svg", 15, 15),
+    p_properties: icon("p_properties.svg", 17, 17),
+    p_layers: icon("p_layers.svg", 11, 12),
+    menu_main: icon("menu_main.svg", 20, 20)
 }

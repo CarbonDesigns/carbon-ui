@@ -16,6 +16,7 @@ import LayerItem from "./LayerItem";
 import layersStore, { LayerNode, LayersStoreState } from "./LayersStore";
 import dragController from "./LayersDragController";
 import BackButton from "../shared/ui/BackButton";
+import icons from "../theme-icons";
 
 type VirtualLayersList = new (props) => VirtualList<LayerNode>;
 const VirtualLayersList = VirtualList as VirtualLayersList;
@@ -158,7 +159,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
 
     render() {
         let { children, ...rest } = this.props;
-        return <Panel ref="panel" header="Layers" id="layers_panel" {...rest}>
+        return <Panel ref="panel" header="Layers" icon={icons.p_layers} id="layers_panel" {...rest}>
             {this.renderBackButton()}
 
             <div className={bem("layers-panel", "layers-list", null, "panel__stretcher")} data-mode="airy">

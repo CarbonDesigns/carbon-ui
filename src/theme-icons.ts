@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { backend } from "carbon-core"
 
-function icon(name, w, h) {
+function icon(name, w, h) : {src:string, width:number, height:number} {
     return {
         src: iconPath(name),
         width: w,
@@ -32,5 +32,9 @@ export default {
     panel_closer: icon("panel_closer.svg", 15, 15),
     p_properties: icon("p_properties.svg", 17, 17),
     p_layers: icon("p_layers.svg", 11, 12),
-    menu_main: icon("menu_main.svg", 20, 20)
+    menu_main: icon("menu_main.svg", 20, 20),
+    undo: icon("undo.svg", 17, 13),
+    redo: icon("redo.svg", 17, 13),
+    zoom_in: icon("zoom-in.svg", 15,15),
+    zoom_out: icon("zoom-out.svg", 15, 15),
 }

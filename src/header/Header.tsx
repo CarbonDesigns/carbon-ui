@@ -23,6 +23,7 @@ import ModeSelector from './ModeSelector';
 import theme from "../theme";
 import icons from "../theme-icons";
 import IconButton from '../components/IconButton';
+import ActionHeader from './ActionHeader';
 
 var State = Record({
     canUndo: false,
@@ -218,11 +219,13 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                     </div>
                 </div> */}
                 <ProjectBar>
-                    <IconButton src={icons.menu_main.src} width={icons.menu_main.width} height={icons.menu_main.height} color="white" onClick={Header.onProjectClick}/>
+                    <IconButton icon={icons.menu_main} color="white" onClick={Header.onProjectClick}/>
                 </ProjectBar>
 
                 {/* Modebar */}
                 <ModeSelector/>
+
+                <ActionHeader/>
 
                 { /*   Userbar / Signup   */}
                 <div className="statusbar">

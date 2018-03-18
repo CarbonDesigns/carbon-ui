@@ -14,9 +14,9 @@ export default class MirroringAppContainer extends AppLoaderComponent {
         params.mirroring = true;
     }
     componentDidMount(){
-        if (this.props.params.code) {
+        if (this.props.match.params.code) {
             backend.ensureLoggedIn()
-                .then(() => backend.shareProxy.use(this.props.params.code))
+                .then(() => backend.shareProxy.use(this.props.match.params.code))
                 .then(x => this._navigate(x))
                 .catch((e) => {
                     if (e.message !== LoginRequiredError){
@@ -40,15 +40,15 @@ export default class MirroringAppContainer extends AppLoaderComponent {
 
     _navigate(data){
         var companyName = data.companyName || "anonymous";
-        this.context.router.replace({
+        this.context.history.replace({
             pathname: "/m/app/@" + companyName + "/" + data.projectId,
-            query: this.props.location.query,
+            search: this.props.location.search,
             state: {companyId: data.companyId, userId: data.userId}
         });
     }
 
     render() {
-        if(this.props.params.code) {
+        if(this.props.match.params.code) {
             return <div></div>
         }
         return <MirroringWorkspace userId={this.props.location.state.userId}/>;

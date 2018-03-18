@@ -5,8 +5,7 @@ import flyoutStore from '../FlyoutStore';
 import { richApp } from '../RichApp';
 import { Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import Dropdown from "../shared/Dropdown";
-import { RequestAnimationSettings, app, ActionType } from "carbon-core";
-import { AnimationType, EasingType } from "carbon-runtime";
+import { RequestAnimationSettings, app, ActionType, AnimationType, EasingType } from "carbon-core";
 import { FormattedMessage, defineMessages } from 'react-intl';
 
 var TransitionTypeValues = [

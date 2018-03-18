@@ -100,10 +100,8 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
             return;
         }
 
-        var {src, width, height} = this.props.icon || {} as any;
-
         return <PanelHeader>
-            <Icon className="icon" src={src} width={width} height={height}></Icon>
+            <Icon className="icon" icon={this.props.icon}></Icon>
             <PanelName>
                 <FormattedMessage id={this.props.header} defaultMessage={this.props.header} />
             </PanelName>
@@ -126,7 +124,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
     }
 }
 
-const PanelStyled = styled.div`
+const PanelStyled = styled.div.attrs<{name?:string, id?:any}>({})`
     background-color:${theme.panel_background};
     display: flex;
     flex-direction: column;
@@ -154,7 +152,7 @@ const PanelHeader = styled.div`
     user-select: none;
 
     > .icon,
-    > .panel_closer {
+    > .panel_closer > .icon {
         background-color: ${theme.accent};
         background:linear-gradient(to right, ${theme.accent} 0%, ${theme.accent.darken(0.1)} 100%);
     }

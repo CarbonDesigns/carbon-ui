@@ -6,7 +6,6 @@ import Breadcrumbs    from './bottomBar/breadcrumbs';
 import PagesBar       from './bottomBar/pagesbar';
 
 import React from 'react';
-import ZoomBar from './bottomBar/zoomBar';
 
 import {app, Selection, Environment, RenderLoop } from "carbon-core";
 import ContextMenu from "../shared/ContextMenu";
@@ -118,7 +117,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     render() {
         var status_text = 'saved2';
         return (
-            <Viewport id="viewport" innerRef={x => { this.viewport = x }} key="viewport" name="viewport">
+            <Viewport id="viewport" innerRef={x => { this.viewport = x }} key="viewport">
                 {/* canvases and view container will be inserted here */}
 
                 <div id="workspace-top-edge" className="rulers">
@@ -131,7 +130,6 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
                 <div id="workspace-bottom-edge">
                     <PagesBar key="boards"/>
                     <Breadcrumbs key="breadcrumbs"/>
-                    <ZoomBar/>
                 </div>
 
                 <ContextMenu ref="contextMenu" onBuildMenu={this._buildContextMenu.bind(this)}/>

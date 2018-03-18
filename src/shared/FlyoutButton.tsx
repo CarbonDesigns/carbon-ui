@@ -1,4 +1,5 @@
 import {default as React, ReactInstance, ReactHTMLElement} from "react";
+import ReactDOM from "react-dom";
 import cx from 'classnames';
 import FlyoutActions from '../FlyoutActions';
 import flyoutStore from '../FlyoutStore';
@@ -24,6 +25,12 @@ interface IFlyoutButtonProps extends IReactElementProps{
 
 type FlyoutButtonState = {
     open: boolean;
+}
+
+class FlyoutContent extends Component<any, any> {
+    render() {
+        return ReactDOM.createPortal(this.props.children, this.props.host);
+    }
 }
 
 export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutButtonState> {

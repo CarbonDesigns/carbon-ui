@@ -3,7 +3,7 @@ import ReactDom from "react-dom";
 import { Component } from "../CarbonFlux";
 import { platform } from "carbon-api";
 
-interface EnterInputProps extends React.HTMLAttributes<HTMLInputElement> {
+interface EnterInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     value?: string | number;
     onValueEntered?: (value, valid: boolean) => void;
     onUndo?: () => void;

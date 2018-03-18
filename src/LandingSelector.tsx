@@ -20,7 +20,7 @@ export default class LandingSelector extends RouteComponent<IRouteComponentProps
         if (backend.isLoggedIn()){
             this._resolveCompanyName()
                 .then(data => {
-                    this.context.router.replace({
+                    this.context.history.replace({
                         pathname: "/@" + (data.companyName || "guest"),
                         state: {companyId: backend.getUserId()}
                     });

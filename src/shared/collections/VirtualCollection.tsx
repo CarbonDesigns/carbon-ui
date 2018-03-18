@@ -69,7 +69,7 @@ export default class VirtualCollection extends Component<VirtualCollectionProps>
     }
 
     private initScroller() {
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.collection);
+        let gridNode = ReactDom.findDOMNode(this.collection) as HTMLElement;
         this.scroller = ScrollContainer.initScroller(gridNode.parentElement, { innerSelector: gridNode });
     }
 

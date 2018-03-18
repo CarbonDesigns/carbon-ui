@@ -11,14 +11,14 @@ var resolveCoreModules = require("./resolveCore");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
-var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
+// var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
 
 var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
 var defaults = {
     minimize: false,
     noUglify: false,
-    debug: true,
+     debug: true,
     linkCore: false,
     devServer: true,
     port: 8080,
@@ -40,9 +40,10 @@ function getEntry(settings) {
         ]
     };
     if (settings.devServer) {
-        entry.index.unshift('webpack-dev-server/client?' + settings.authority);
-        entry.index.unshift('webpack/hot/only-dev-server');
+        entry.index.unshift(
+            'webpack-dev-server/client?' + settings.authority);
     }
+
     return entry;
 }
 function getOutput(settings) {
@@ -57,16 +58,16 @@ function getOutput(settings) {
     return output;
 }
 function getResolve(settings) {
-    var root = [];
-    root.push(fullPath("../src"));
-
     var resolves = {
-        root: root,
+        modules: [
+            fullPath("../src"),
+            fullPath("../node_modules")
+        ],
         alias: {
             "bem": fullPath("../src/utils/commonUtils"),
-            'react/lib/ReactMount': 'react-dom/lib/ReactMount'
+            "fbjs/lib/memoizeStringOnly": fullPath("../node_modules/fbjs/lib/memoizeStringOnly")
         },
-        extensions: ["", ".ts", ".tsx", ".js", ".jsx", ".less", ".html"]
+        extensions: [".ts", ".tsx", ".js", ".jsx", ".less", ".html"]
     };
 
     return resolves;
@@ -97,7 +98,7 @@ function getPlugins(settings) {
         apiScript = getDebugOrCdnPath(settings, path.relative(root, modules.api));
     }
 
-    let resourceBundleOptions = {resourceFile: null};
+    let resourceBundleOptions = { resourceFile: null };
     var plugins = [
         //breaks incremental updates in watch mode...
 
@@ -116,19 +117,20 @@ function getPlugins(settings) {
             coreScript: coreScript,
             resourceBundleOptions: resourceBundleOptions
         }),
-        new HtmlWebpackScriptCrossoriginPlugin({}),
+        // new HtmlWebpackScriptCrossoriginPlugin({}),
 
-        new CheckerPlugin()
+        new CheckerPlugin(),
 
-        // new HtmlWebpackPlugin({
-        //     template: './res/electron.ejs',
-        //     chunksSortMode: 'none',
-        //     vendorsScript:  settings.authority + (settings.minimize ? settings.publicPath : "/") + settings.vendorsFile
-        // }),
+        new webpack.LoaderOptionsPlugin({
+            debug: settings.debug
+        })
     ];
 
     if (settings.devServer) {
-        plugins.push(new webpack.HotModuleReplacementPlugin());
+        plugins.push(
+            // new webpack.HotModuleReplacementPlugin(),
+            new webpack.NamedModulesPlugin()
+        );
     }
 
     var defines = {
@@ -140,9 +142,8 @@ function getPlugins(settings) {
     if (settings.minimize) {
         if (!settings.noUglify) {
             plugins.push(new webpack.optimize.UglifyJsPlugin({
-                compressor: {
-                    warnings: false
-                }
+                sourceMap: true,
+                minimize: true
             }));
         }
 
@@ -160,8 +161,6 @@ function getPlugins(settings) {
                 manifestVariable: "webpackManifest"
             }),
 
-            //breaks incremental updates in watch mode...
-            new webpack.optimize.OccurrenceOrderPlugin(),
             new ExtractTextPlugin("[name]-[contenthash].css")
         );
     }
@@ -203,7 +202,17 @@ function getLoaders(settings) {
         "plugins": plugins,
         cacheDirectory: true
     };
-    var babelLoader = "babel?" + JSON.stringify(babelSettings);
+    var babelLoader = {
+        loader: "babel-loader",
+        options: babelSettings
+    };
+
+    var tsloader = {
+        loader : 'ts-loader',
+        options: {
+
+        }
+     };
 
     var excludedFolders = ["node_modules", "libs", "generated"];
     var excludedFiles = ["carbon-core-.*", "carbon-api-.*", "CompilerWorker.w.js"];
@@ -214,69 +223,85 @@ function getLoaders(settings) {
         {
             test: /\.js$/,
             include: /oidc\-client/,
-            loaders: [babelLoader]
+            use: [babelLoader]
         },
         {
             test: /\.js$/,
             include: /react\-color/,
-            loaders: [babelLoader, "react-map-styles"]
+            use: [babelLoader, "react-map-styles"]
         },
         {
             test: /\.(txt)$/,
-            loaders: ['raw-loader']
+            use: ['raw-loader']
         },
         {
             test: /\.jsx$/,
-            loaders: ["react-hot", babelLoader],
+            // loaders: ["react-hot-loader/webpack", babelLoader],
+            use: [babelLoader],
             exclude: excludes
         },
         {
             test: /\.tsx$/,
-            loaders: ["react-hot", babelLoader, "awesome-typescript-loader"],
+            // loaders: ["react-hot-loader/webpack", babelLoader, "awesome-typescript-loader"],
+            use: [babelLoader, tsloader],
             exclude: excludes
         },
         {
             test: /[^\.]\w(?!\.d)\.ts$/,
-            loaders: [babelLoader, "awesome-typescript-loader"],
+            use: [babelLoader, tsloader],
             exclude: /node_modules/
         },
         {
             test: /\.js$/,
-            loaders: [babelLoader],
+            use: [babelLoader],
             exclude: excludes
         },
         {
             test: /\.(png|gif|jpeg|jpg|cur|woff|woff2|eot|ttf|svg|gif)$/,
-            loaders: [util.format("file?name=[path][name]%s.[ext]", settings.hashPattern)],
+            use: [{
+                loader: "file-loader",
+                options: {
+                    name: util.format("[path][name]%s.[ext]", settings.hashPattern)
+                }
+            }],
             exclude: excludes
         }
-        // ,
-        // {
-        //     test:  /\.w.js$/,
-        //     loaders: ["worker-loader"],
-        //     options:{inline:true},
-        //     exclude: excludes
-        // }
     ];
 
     loaders.push({
         test: /\.optional\.css$/,
-        loaders: ["style-loader/useable", "css"]
+        use: ["style-loader/useable", "css-loader"]
     });
 
     if (settings.minimize) {
         loaders.push({
             test: /\.less$/,
-            loader: ExtractTextPlugin.extract(
-                'css?sourceMap!less?sourceMap'
-            )
+            use: ExtractTextPlugin.extract({
+                use: [
+                    "css-loader",
+                    {
+                        loader: "sourceMap-loader",
+                        options: {
+                            less: true
+                        }
+                    }]
+            })
         });
     }
     else {
         var lessSettings = {};
         loaders.push({
             test: /\.less$/,
-            loaders: ["style", "css?-minimize&sourceMap", 'less?' + JSON.stringify(lessSettings)]
+            use: [
+                "style-loader",
+                {
+                    loader: "css-loader",
+                    options: {
+                        minimize: false,
+                        sourceMap: true
+                    }
+                },
+                "less-loader"]
         });
     }
     return loaders;
@@ -299,22 +324,20 @@ module.exports = function (settings) {
             "carbon-core": "window.c.core",
             "carbon-api": "window.c.api"
         },
-        resolveLoader: {
-            root: fullPath("../node_modules")
-        },
+
         amd: { jQuery: true },
         module: {
-            loaders: getLoaders(settings)
+            rules: getLoaders(settings)
         },
         plugins: getPlugins(settings),
         devtool: settings.devtool,
-        debug: !settings.minimize,
+        // debug: !settings.minimize,
         devServer: {
             contentBase: fullPath('../'),
             publicPath: settings.fullPublicPath + "/",
             host: settings.host.substring(settings.host.indexOf("//") + 2),
             port: settings.port,
-            hot: true,
+            // hot: true,
             historyApiFallback: {
                 rewrites: [
                     {
@@ -347,11 +370,11 @@ module.exports = function (settings) {
                 errorDetails: settings.errors
             }
         },
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-        },
+        // headers: {
+        //     "Access-Control-Allow-Origin": "*",
+        //     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        //     "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+        // },
         cache: true
     };
 

@@ -1,6 +1,6 @@
 import { LayoutDirection, LayoutDockPosition } from "carbon-core";
 
-const version = 6; // update version if layout has to changed on the client
+const version = 8; // update version if layout has to changed on the client
 
 export default {
     edit: {

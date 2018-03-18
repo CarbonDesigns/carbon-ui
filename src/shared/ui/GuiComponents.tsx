@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDom from 'react-dom';
 import PropTypes from "prop-types";
 // import {app} from '../../../RichApp'
 import { FormattedMessage } from "react-intl";
@@ -448,7 +449,7 @@ export type GuiInputMod = "small" |
     "wide" |
     "fill";
 
-export interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement>, IHasMods<GuiInputMod> {
+export interface IGuiInputProps extends React.InputHTMLAttributes<HTMLInputElement>, IHasMods<GuiInputMod> {
     label?: any;
     caption?: string;
     defaultMessage?: string;
@@ -518,7 +519,7 @@ export class GuiInput extends Component<IGuiInputProps>{
     }
 }
 
-interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAreaElement>, IHasMods<
+interface IGuiTextAreaProps extends React.InputHTMLAttributes<HTMLTextAreaElement>, IHasMods<
     "resize-v" |
     "small" |
     "fill" |

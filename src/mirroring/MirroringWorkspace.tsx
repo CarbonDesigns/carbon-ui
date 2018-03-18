@@ -156,7 +156,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
         var canvasHeight = this._screenHeight = size.height ;
 
         var needResize = false;
-        if (!this._oldViewportSize || this._oldViewportSize.width !== size.width || this._oldViewportSize.height != size.height) {
+        if (!this._oldViewportSize || this._oldViewportSize.width !== size.width || this._oldViewportSize.height !== size.height) {
             needResize = true;
         }
 
@@ -247,7 +247,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
 
     render() {
         return (
-            <div id="mobileViewContainer" ref="viewport" key="viewport" name="viewport">
+            <div id="mobileViewContainer" ref="viewport" key="viewport">
                 <div className="preview__device" ref="device">
                     <canvas ref="canvas"
                             style={{

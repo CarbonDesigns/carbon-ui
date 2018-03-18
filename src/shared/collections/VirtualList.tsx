@@ -43,7 +43,7 @@ export default class VirtualList<T = any> extends Component<VirtualListProps<T>>
     }
 
     private initScroller(){
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
+        let gridNode = ReactDom.findDOMNode(this.list) as HTMLElement;
         this.scroller = ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
     }
 

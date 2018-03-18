@@ -26,15 +26,13 @@ class ToolButton extends Component<any, any> {
     render() {
         var { active, type, icon, ...rest } = this.props;
 
-        var { src, width, height } = icon || { src: "", width: 0, height: 0 };
-
         return (
             <ToolButtonStyled
                 active={active}
                 {...rest}
                     onMouseEnter={() => this.setState({ hover: true })}
                     onMouseLeave={() => this.setState({ hover: false })}>
-                <Icon className="icon" src={src} width={width} height={height} color="#9b9a9b" />
+                <Icon className="icon" icon={icon} color={theme.button_default} />
             </ToolButtonStyled>
         )
     }
@@ -62,10 +60,6 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 activeMode: AppStore.state.activeMode
             })
         };
-    }
-
-    shouldComponentUpdate(nextState, nextProps) {
-        return super.shouldComponentUpdate.apply(this, arguments);
     }
 
     @listenTo(AppStore)
@@ -397,13 +391,13 @@ const ToolButtonStyled = styled.div.attrs<{active?:boolean}>({})`
     ${ props=>props.active?
         css`
         > .icon {
-            background-color:#e94565;
+            background-color:${theme.button_active};
         }`:
         css`
         &:hover {
             > .icon
             {
-                background-color:white;
+                background-color:${theme.button_hover};
             }
         }
         `

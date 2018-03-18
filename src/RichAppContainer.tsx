@@ -19,11 +19,11 @@ import CommentsPanel from './comments/CommentsPanel';
 import PropertiesPanel from './properties/PropertiesPanel';
 import SwatchesPanel from './properties/SwatchesPanel';
 
-import Perf from "react-addons-perf";
+// import Perf from "react-addons-perf";
 import FullScreenApi from "./shared/FullScreenApi";
 import { Splash } from "./Splash";
 import { EditorPanel } from "./editor/EditorPanel";
-window['Perf'] = Perf
+// window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent {
     componentDidMount() {

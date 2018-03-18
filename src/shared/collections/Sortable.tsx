@@ -41,7 +41,7 @@ export default class Sortable<T> extends Component<SortableProps<T>> {
             return;
         }
 
-        let currentNode = ReactDom.findDOMNode<HTMLElement>(this);
+        let currentNode = ReactDom.findDOMNode(this) as HTMLElement;
         console.assert(currentNode.childNodes.length === 1, "Sortable must contain a single child");
 
         let container = currentNode.childNodes[0] as HTMLElement;

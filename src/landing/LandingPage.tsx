@@ -93,7 +93,7 @@ export default class LandingPage extends RouteComponent<IRouteComponentProps, La
     }
 
     private registerGif = (gif: React.ReactInstance) => {
-        this.gifs.push(ReactDom.findDOMNode<HTMLElement>(gif));
+        this.gifs.push(ReactDom.findDOMNode(gif) as HTMLElement);
     }
 
     private onScroll = (event) => {

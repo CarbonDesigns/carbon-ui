@@ -2,13 +2,18 @@ import React from 'react';
 import { CompositeElement } from "carbon-core";
 import cx from 'classnames';
 import { app, Environment } from "carbon-core";
-import VerticalSlider from "../../shared/VerticalSlider";
-import EnterInput from "../../shared/EnterInput";
-import { richApp } from "../../RichApp";
-import { listenTo, Component } from '../../CarbonFlux';
-import AppActions from '../../RichAppActions';
-import { default as bem, join_bem_mods } from '../../utils/commonUtils';
-import appStore from "../../AppStore";
+import VerticalSlider from "../shared/VerticalSlider";
+import EnterInput from "../shared/EnterInput";
+import { richApp } from "../RichApp";
+import { listenTo, Component } from '../CarbonFlux';
+import AppActions from '../RichAppActions';
+import { default as bem, join_bem_mods } from '../utils/commonUtils';
+import appStore from "../AppStore";
+import styled from "styled-components";
+import icons from "../theme-icons";
+import theme from "../theme";
+import IconButton from '../components/IconButton';
+import FlyoutButton from '../shared/FlyoutButton';
 
 class ContiniouseAction extends Component<any> {
     stopExecution = true;
@@ -43,11 +48,7 @@ class ContiniouseAction extends Component<any> {
     }
 
     render() {
-        let classes = cx("button zoom__button", this.props.className);
-        return (
-            <div className={classes} tabIndex={this.props.tabIndex} title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onMouseUp={this._onMouseUp}>
-                <i />
-            </div>)
+        return <IconButton icon={this.props.icon} tabIndex={this.props.tabIndex} title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onMouseUp={this._onMouseUp} />
     }
 }
 
@@ -87,56 +88,57 @@ class ZoomMenuDropAction extends ZoomMenuAction {
     }
 }
 
-class ZoomMenu extends Component<any, any> {
-    [name: string]: any;
+// class ZoomMenu extends Component<any, any> {
+//     [name: string]: any;
 
-    constructor(props) {
-        super(props);
-        this.state = { open: false };
-    }
+//     constructor(props) {
+//         super(props);
+//         this.state = { open: false };
+//     }
 
-    private toggle(event = null) {
-        this.setState({ open: !this.state.open });
-        event && event.stopPropagation();
-    }
-    private close = () => {
-       this.setState({ open: false });
-    };
+//     private toggle(event = null) {
+//         this.setState({ open: !this.state.open });
+//         event && event.stopPropagation();
+//     }
+//     private close = () => {
+//         this.setState({ open: false });
+//     };
 
-    _onMouseDown = (event) => {
-        this.toggle();
-        document.addEventListener('mousemove', this._onMouseMove);
-        document.addEventListener('mouseup', this._onMouseUp);
-        this._startValue = event.clientY;
-        this.props.onBeginDeltaChange && this.props.onBeginDeltaChange();
-    }
+//     _onMouseDown = (event) => {
+//         this.toggle();
+//         document.addEventListener('mousemove', this._onMouseMove);
+//         document.addEventListener('mouseup', this._onMouseUp);
+//         this._startValue = event.clientY;
+//         this.props.onBeginDeltaChange && this.props.onBeginDeltaChange();
+//     }
 
-    _onMouseUp = () => {
-        document.removeEventListener('mousemove', this._onMouseMove);
-        document.removeEventListener('mouseup', this._onMouseUp);
-        this.props.onEndDeltaChange && this.props.onEndDeltaChange();
-    }
+//     _onMouseUp = () => {
+//         document.removeEventListener('mousemove', this._onMouseMove);
+//         document.removeEventListener('mouseup', this._onMouseUp);
+//         this.props.onEndDeltaChange && this.props.onEndDeltaChange();
+//     }
 
-    _onMouseMove = (event) => {
-        var dv = event.clientY - this._startValue;
-        this.props.onDelta && this.props.onDelta(dv);
-    }
+//     _onMouseMove = (event) => {
+//         var dv = event.clientY - this._startValue;
+//         this.props.onDelta && this.props.onDelta(dv);
+//     }
 
-    render() {
-        let mods = join_bem_mods(this.props.mods, {
-            down: false,
-            open: this.state.open
-        });
-        let classname = bem('zoom__drop', null, mods, this.props.className);
+//     render() {
+//         let mods = join_bem_mods(this.props.mods, {
+//             down: false,
+//             open: this.state.open
+//         });
+//         let classname = bem('zoom__drop', null, mods, this.props.className);
 
-        return <div className={classname} tabIndex={2} onMouseDown={this._onMouseDown} onKeyDown={this.onKeyDown} onBlur={this.close}>
-            <i className="ico ico-triangle-up" />
-            <div className="zoom__menu">
-                {this.props.children}
-            </div>
-        </div>;
-    }
-}
+//         return <div className={classname} tabIndex={2} onMouseDown={this._onMouseDown} onKeyDown={this.onKeyDown} onBlur={this.close}>
+//             <i className="ico ico-triangle-up" />
+//             <div className="zoom__menu">
+//                 {this.props.children}
+//             </div>
+//         </div>;
+//     }
+// }
+
 
 export default class ZoomBar extends Component<any, any> {
     [name: string]: any;
@@ -155,6 +157,10 @@ export default class ZoomBar extends Component<any, any> {
     @listenTo(appStore)
     onChange() {
         this.setState({ scale: appStore.state.scale, selectionCount: appStore.state.selectionCount });
+    }
+
+    renderZoomMenuButton() {
+        return <i className="ico ico-triangle-up" />
     }
 
     _onValueChanged = (value) => {
@@ -198,8 +204,8 @@ export default class ZoomBar extends Component<any, any> {
     };
 
     onKeyDown = e => {
-        if (e.keyCode == 38 /* ArrowUp */) {
-            var newValue = (this.state.scale * 100 + (e.shiftKey ? 10 : 1)) / 100;
+        if (e.keyCode === 38 /* ArrowUp */) {
+            let newValue = (this.state.scale * 100 + (e.shiftKey ? 10 : 1)) / 100;
             if (newValue < this._minZoom) {
                 newValue = this._minZoom;
             }
@@ -207,7 +213,7 @@ export default class ZoomBar extends Component<any, any> {
             Environment.view.zoom(newValue);
             e.preventDefault();
         } else if (e.keyCode === 40 /*ArrowDown*/) {
-            var newValue = (this.state.scale * 100 - (e.shiftKey ? 10 : 1)) / 100;
+            let newValue = (this.state.scale * 100 - (e.shiftKey ? 10 : 1)) / 100;
             if (newValue > this._maxZoom) {
                 newValue = this._maxZoom;
             }
@@ -221,21 +227,21 @@ export default class ZoomBar extends Component<any, any> {
         var scale = this.state.scale;
 
         return (
-            <div className="zoombar">
-                <div className="zoom">
-                    <label htmlFor="zoom__input" className="zoom__input-container">
-                        <EnterInput dataType="int" size={4} value={~~(scale * 100)} ref="zoomInput"
-                            divOnBlur={true}
-                            tabIndex={1}
-                            onValueEntered={this.onZoomTyped}
-                            onKeyDown={this.onKeyDown}
-                            className="zoom__input" />
-                        <span>%</span>
-                        <div className="bg" />
-                    </label>
-                    <ContiniouseAction className="zoom-out" action="zoomOut" tabIndex="0" />
-                    <ContiniouseAction className="zoom-in" action="zoomIn" tabIndex="1" />
-                    <ZoomMenu onDelta={(d) => { this.refs.slider.deltaChange(d) }} onBeginDeltaChange={() => { this.refs.slider.beginDeltaChange() }} onEndDeltaChange={() => { this.refs.slider.endDeltaChange() }}>
+            <ZoomBarComponent>
+                <ContiniouseAction icon={icons.zoom_out} action="zoomOut" tabIndex="0" />
+                <label htmlFor="zoom__input" className="zoom__input-container">
+                    <EnterInput dataType="int" size={4} value={~~(scale * 100)} ref="zoomInput"
+                        divOnBlur={true}
+                        tabIndex={1}
+                        onValueEntered={this.onZoomTyped}
+                        onKeyDown={this.onKeyDown}
+                        className="zoom__input" />
+                    <span>%</span>
+                    <div className="bg" />
+                </label>
+
+                <FlyoutButton renderContent={this.renderZoomMenuButton} position={{ targetVertical: "bottom", targetHorizontal: "right" }}>
+                    <ZoomMenu>
                         <div className="zoom__list">
                             <ZoomMenuDropAction action="zoomFit" />
                             <ZoomMenuDropAction action="zoomSelection" disabled={this.state.selectionCount === 0} />
@@ -250,8 +256,23 @@ export default class ZoomBar extends Component<any, any> {
                         </div>
                         <VerticalSlider ref="slider" value={this.scaleToValue(scale)} valueChanged={this._onValueChanged} />
                     </ZoomMenu>
-                </div>
-            </div>
+                </FlyoutButton>
+                <ContiniouseAction icon={icons.zoom_in} action="zoomIn" tabIndex="1" />
+            </ZoomBarComponent>
         )
     }
 }
+
+
+const ZoomBarComponent = styled.div`
+    display: flex;
+    align-items: stretch;
+    flex-wrap: nowrap;
+`;
+
+const ZoomMenu = styled.div`
+    background: ${theme.flyout_background};
+    min-width:100px;
+    min-height:200px;
+    display:flex;
+`;

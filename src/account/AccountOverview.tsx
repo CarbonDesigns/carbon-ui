@@ -322,7 +322,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
 
     _onActiveChanged = (id) => {
         var location:any = this.props.location;
-        this.context.router.push({
+        this.context.history.push({
             pathname: "/settings/" + id,
             query: location.query
         });

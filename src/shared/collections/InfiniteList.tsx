@@ -81,7 +81,7 @@ export default class InfiniteList<T> extends Component<InfiniteListProps<T>, Inf
     }
 
     private initScroller(){
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
+        let gridNode = ReactDom.findDOMNode(this.list) as HTMLElement;
         this.scroller = ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
     }
 

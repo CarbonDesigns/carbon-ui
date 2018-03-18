@@ -20,7 +20,7 @@ function getPlugins(settings){
             'process.env.NODE_ENV': settings.minimize ? '"production"' : '"dev"'
         }),
 
-        new webpack.optimize.OccurenceOrderPlugin(),
+       // new webpack.optimize.OccurenceOrderPlugin(),
         new WebpackMd5Hash()
     ];
 
@@ -52,8 +52,8 @@ module.exports = function(settings){
         },
         plugins: getPlugins(settings),
         resolve: {
-            root: [fullPath("../src")],
-            extensions: ["", ".js", ".jsx", ".less"]
+            modules: [fullPath("../src"), fullPath("../node_modules")],
+            extensions: [".js", ".jsx", ".less"]
         }
     };
 

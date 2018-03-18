@@ -464,7 +464,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var data = this.state.data;
 
         return (
-            <Viewport id="viewport" innerRef={x=>this.viewport = x} key="viewport" name="viewport" tabIndex={1}>
+            <Viewport id="viewport" innerRef={x=>this.viewport = x} key="viewport" tabIndex={1}>
                 <div className="preview__device" ref="device">
                     <canvas ref="canvas"
                         style={{

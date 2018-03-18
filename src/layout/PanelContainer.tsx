@@ -159,7 +159,7 @@ export default class PanelContainer extends Component<IPanelContainerProps> {
 
         return (
             <div className={classNames}
-                name={this.props.container.panelName}
+                key={this.props.container.panelName}
                 data-index={container.index}
                 onMouseDown={this._onMouseDown}
                 style={this.getAbsoluteStyle(this.props.container)}

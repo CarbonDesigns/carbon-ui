@@ -69,7 +69,7 @@ interface SubMenuProps extends ISimpleReactElementProps {
 class SubMenu extends Component<SubMenuProps> implements ICancellationHandler {
     componentDidMount() {
         super.componentDidMount();
-        let node = ReactDOM.findDOMNode<HTMLElement>(this);
+        let node = ReactDOM.findDOMNode(this) as HTMLElement;
         ensureElementVisible(node, document.documentElement);
 
         //if there is no space on the right, flip on the other side

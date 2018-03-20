@@ -37,4 +37,5 @@ export default {
     redo: icon("redo.svg", 17, 13),
     zoom_in: icon("zoom-in.svg", 15,15),
     zoom_out: icon("zoom-out.svg", 15, 15),
+    triangle_down: icon("triangle_down.svg", 10, 10)
 }

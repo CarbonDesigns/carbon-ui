@@ -29,7 +29,6 @@ class ToolButton extends Component<any, any> {
         return (
             <ToolButtonStyled
                 active={active}
-                {...rest}
                     onMouseEnter={() => this.setState({ hover: true })}
                     onMouseLeave={() => this.setState({ hover: false })}>
                 <Icon className="icon" icon={icon} color={theme.button_default} />

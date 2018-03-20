@@ -1,6 +1,5 @@
 import React from 'react';
 import { CompositeElement } from "carbon-core";
-import cx from 'classnames';
 import { app, Environment } from "carbon-core";
 import VerticalSlider from "../shared/VerticalSlider";
 import EnterInput from "../shared/EnterInput";
@@ -48,7 +47,7 @@ class ContiniouseAction extends Component<any> {
     }
 
     render() {
-        return <IconButton icon={this.props.icon} tabIndex={this.props.tabIndex} title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onMouseUp={this._onMouseUp} />
+        return <IconButton width={36} height={46} icon={this.props.icon} tabIndex={this.props.tabIndex} title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onMouseUp={this._onMouseUp} />
     }
 }
 
@@ -68,77 +67,23 @@ class ZoomMenuAction extends Component<any> {
     }
 
     render() {
-        return (<span className="zoom__scale" title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onClick={this._onClick}>
+        return (<ZoomScale title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onClick={this._onClick}>
             {this.formatLabel(this.props.action)}
-        </span>)
+        </ZoomScale>)
     }
 }
 
 class ZoomMenuDropAction extends ZoomMenuAction {
     render() {
-        var className = cx("zoom__action", { zoom__action_disabled: this.props.disabled });
-
         return (
-            <div className={className} title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onClick={this._onClick}>
+            <ZoomAction disabled={this.props.disabled } title={this.formatLabel(this.props.action)} onMouseDown={this._onMouseDown} onClick={this._onClick}>
                 <span>
                     {this.formatLabel(this.props.action)}
                 </span>
-            </div>
+            </ZoomAction>
         )
     }
 }
-
-// class ZoomMenu extends Component<any, any> {
-//     [name: string]: any;
-
-//     constructor(props) {
-//         super(props);
-//         this.state = { open: false };
-//     }
-
-//     private toggle(event = null) {
-//         this.setState({ open: !this.state.open });
-//         event && event.stopPropagation();
-//     }
-//     private close = () => {
-//         this.setState({ open: false });
-//     };
-
-//     _onMouseDown = (event) => {
-//         this.toggle();
-//         document.addEventListener('mousemove', this._onMouseMove);
-//         document.addEventListener('mouseup', this._onMouseUp);
-//         this._startValue = event.clientY;
-//         this.props.onBeginDeltaChange && this.props.onBeginDeltaChange();
-//     }
-
-//     _onMouseUp = () => {
-//         document.removeEventListener('mousemove', this._onMouseMove);
-//         document.removeEventListener('mouseup', this._onMouseUp);
-//         this.props.onEndDeltaChange && this.props.onEndDeltaChange();
-//     }
-
-//     _onMouseMove = (event) => {
-//         var dv = event.clientY - this._startValue;
-//         this.props.onDelta && this.props.onDelta(dv);
-//     }
-
-//     render() {
-//         let mods = join_bem_mods(this.props.mods, {
-//             down: false,
-//             open: this.state.open
-//         });
-//         let classname = bem('zoom__drop', null, mods, this.props.className);
-
-//         return <div className={classname} tabIndex={2} onMouseDown={this._onMouseDown} onKeyDown={this.onKeyDown} onBlur={this.close}>
-//             <i className="ico ico-triangle-up" />
-//             <div className="zoom__menu">
-//                 {this.props.children}
-//             </div>
-//         </div>;
-//     }
-// }
-
 
 export default class ZoomBar extends Component<any, any> {
     [name: string]: any;
@@ -160,7 +105,7 @@ export default class ZoomBar extends Component<any, any> {
     }
 
     renderZoomMenuButton() {
-        return <i className="ico ico-triangle-up" />
+        return <IconButton icon={icons.triangle_down} width={20} height={46}></IconButton>
     }
 
     _onValueChanged = (value) => {
@@ -229,31 +174,31 @@ export default class ZoomBar extends Component<any, any> {
         return (
             <ZoomBarComponent>
                 <ContiniouseAction icon={icons.zoom_out} action="zoomOut" tabIndex="0" />
-                <label htmlFor="zoom__input" className="zoom__input-container">
-                    <EnterInput dataType="int" size={4} value={~~(scale * 100)} ref="zoomInput"
+                <ZoomInputLabel htmlFor="zoom__input">
+                    <ZoomInput dataType="int" size={4} value={~~(scale * 100)}
                         divOnBlur={true}
                         tabIndex={1}
                         onValueEntered={this.onZoomTyped}
                         onKeyDown={this.onKeyDown}
-                        className="zoom__input" />
+                        name="zoom__input" />
                     <span>%</span>
                     <div className="bg" />
-                </label>
+                </ZoomInputLabel>
 
-                <FlyoutButton renderContent={this.renderZoomMenuButton} position={{ targetVertical: "bottom", targetHorizontal: "right" }}>
+                <FlyoutButton renderContent={this.renderZoomMenuButton} position={{ targetVertical: "bottom", targetHorizontal: "right", sourceHorizontal: "right" }}>
                     <ZoomMenu>
-                        <div className="zoom__list">
+                        <ZoomList>
                             <ZoomMenuDropAction action="zoomFit" />
                             <ZoomMenuDropAction action="zoomSelection" disabled={this.state.selectionCount === 0} />
                             <ZoomMenuDropAction action="pageCenter" />
-                        </div>
-                        <div className="zoom__scales">
+                        </ZoomList>
+                        <ZoomScales>
                             <ZoomMenuAction action="zoom8:1" />
                             <ZoomMenuAction action="zoom2:1" />
                             <ZoomMenuAction action="zoom100" />
                             <ZoomMenuAction action="zoom1:2" />
                             <ZoomMenuAction action="zoom1:4" />
-                        </div>
+                        </ZoomScales>
                         <VerticalSlider ref="slider" value={this.scaleToValue(scale)} valueChanged={this._onValueChanged} />
                     </ZoomMenu>
                 </FlyoutButton>
@@ -262,6 +207,18 @@ export default class ZoomBar extends Component<any, any> {
         )
     }
 }
+
+const ZoomList = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const ZoomScales = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 40px;
+`;
 
 
 const ZoomBarComponent = styled.div`
@@ -272,7 +229,79 @@ const ZoomBarComponent = styled.div`
 
 const ZoomMenu = styled.div`
     background: ${theme.flyout_background};
+    color: ${theme.text_color};
     min-width:100px;
     min-height:200px;
     display:flex;
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+`;
+
+const ZoomInputLabel = styled.div.attrs<any>({}) `
+    width: 46px;
+    box-sizing: border-box;
+    height: 100%;
+
+    /* .middler; */
+    position:relative;
+    display:flex;
+    align-items:center;
+
+    span {
+        font-size:14px;
+        color: ${theme.text_color};
+        opacity: 0.4;
+    }
+
+    .bg{
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index: -1;
+    }
+`
+const ZoomInput = styled(EnterInput) `
+    background-color: transparent;
+    text-align: right;
+    width:100%;
+    z-index: 1;
+    padding-right : 3px;
+
+    color: ${theme.text_color};
+    font-size:14px;
+
+    &:focus {
+        color: ${theme.text_color};
+
+        & ~ .bg { background-color: white; }
+        & ~ span { color: ${theme.text_color}; }
+    }
+`
+
+const ZoomScale = styled.div`
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:${theme.text_color};
+    cursor:pointer;
+    &:hover {
+        color:${theme.accent};
+    }
+`;
+
+const ZoomAction = styled.div.attrs<{disabled:boolean}>({})`
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor:pointer;
+    color:${(props:any)=>props.disabled?theme.text_disabled:theme.text_color};
+
+    &:hover {
+        color:${theme.accent};
+    }
 `;

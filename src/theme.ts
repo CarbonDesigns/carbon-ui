@@ -4,6 +4,7 @@ export const colors = {
     accent:'#ff3d7d',
     panel_background:'#292929',
     flyout_background: '#272727',
+    flyout_shadow: '0 0 4px 1px rgba(0, 0, 0, 0.5)',
     text:'#d7d7d7',
     text_active:'#ff4295',
     text_color: '#ffffff',

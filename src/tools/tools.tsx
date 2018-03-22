@@ -30,7 +30,8 @@ class ToolButton extends Component<any, any> {
             <ToolButtonStyled
                 active={active}
                     onMouseEnter={() => this.setState({ hover: true })}
-                    onMouseLeave={() => this.setState({ hover: false })}>
+                    onMouseLeave={() => this.setState({ hover: false })}
+                    {...rest}>
                 <Icon className="icon" icon={icon} color={theme.button_default} />
             </ToolButtonStyled>
         )
@@ -372,6 +373,9 @@ const ToolsStyled = styled.div`
     user-select: none;
     display:flex;
     flex-direction:column;
+    background-color: ${theme.panel_background};
+    width: 55px;
+    height: 100%;
 `;
 
 const ToolButtonGroup = styled.div`
@@ -384,7 +388,6 @@ const ToolButtonStyled = styled.div.attrs<{active?:boolean}>({})`
     align-items:center;
     justify-content:center;
     cursor:pointer;
-
     margin-bottom:4px;
 
     ${ props=>props.active?

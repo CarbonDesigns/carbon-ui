@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes, { bool } from "prop-types";
 import { listenTo, Component, handles, dispatch } from "../CarbonFlux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { FormattedMessage, defineMessages } from 'react-intl';
 import cx from "classnames";
 import theme from "../theme";
@@ -14,9 +14,10 @@ interface IIconButtonProps extends IReactElementProps {
     hoverColor?: any;
     width?: number;
     height?: number;
+    disabled?: boolean;
 }
 
-const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, color?: any, hoverColor?: any }>({}) `
+const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, color?: any, hoverColor?: any, disabled?: any }>({}) `
     width:${props => props.width}px;
     height:${props => props.height}px;
     cursor:pointer;
@@ -27,9 +28,11 @@ const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, 
         background-color: ${props => props.color || theme.button_default};
     }
 
-    &:hover > .icon {
-        background-color: ${props => props.hoverColor || theme.button_hover}
-    }
+    ${props => props.disabled ? '' : css`
+        &:hover > .icon {
+            background-color: ${props => props.hoverColor || theme.button_hover}
+        }
+    `}
 `
 
 export default class IconButton extends Component<IIconButtonProps, {}> {

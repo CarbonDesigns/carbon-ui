@@ -106,7 +106,7 @@ export default class ContextBar extends Component<any, any> {
         }
     }
 
-    @handles(CarbonActions.activeLayerChanged)
+    // @handles(CarbonActions.activeLayerChanged)
     onElementSelected() {
         var menu: any = { items: [] };
         var context = {

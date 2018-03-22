@@ -637,41 +637,6 @@
     }
 }
 
-//Zoombar
-& {
-    @width: 2px;
-    @height: 10px;
-
-    .zoom-out,
-    .zoom-in {
-        i {
-            .rel;
-            .size(@module2, 100%);
-        }
-        i:before, i:after {
-            .bef;
-            background-color: @font_color;
-        }
-        i:before {
-            .size(@height, @width);
-            left: 50%;
-            top: 50%;
-            margin-top: @width / -2;
-            margin-left: @height / -2;
-        }
-    }
-
-    .zoom-in{
-        i:after {
-            .size(@width, @height);
-            left: 50%;
-            top: 50%;
-            margin-left: @width / -2;
-            margin-top: @height / -2;
-        }
-    }
-}
-
 
 
 

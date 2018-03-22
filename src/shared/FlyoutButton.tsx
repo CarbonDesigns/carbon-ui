@@ -5,25 +5,27 @@ import FlyoutActions from '../FlyoutActions';
 import flyoutStore from '../FlyoutStore';
 import { nodeOffset, ensureElementVisible } from "../utils/domUtil";
 import { Component, listenTo, dispatch, } from "../CarbonFlux";
+import { default as CarbonActionsFactory, CarbonAction } from "../CarbonActions";
 
 var idCounter = 0;
 
 export type FlyoutPosition = {
-    targetVertical?: "top" | "bottom",
-    targetHorizontal?: "left" | "right",
+    targetVertical?: "top" | "bottom" | "center",
+    targetHorizontal?: "left" | "right" | "center",
     sourceVertical?: "top" | "bottom",
     sourceHorizontal?: "left" | "right",
     syncWidth?: boolean,
     disableAutoClose?: boolean,
-    absolute?:boolean,
-    x?:number,
-    y?:number
+    absolute?: boolean,
+    x?: number,
+    y?: number
 };
 
 interface IFlyoutButtonProps extends IReactElementProps {
     renderContent?: () => ReactHTMLElement<any> | Element | React.ReactElement<any> | undefined | any;
     content?: any;
     position?: FlyoutPosition;
+    disabled?: boolean;
     showAction?: any;
     onOpened?: any;
     onClosed?: any;
@@ -34,30 +36,51 @@ type FlyoutButtonState = {
 }
 
 interface IFlyoutContentProps {
-    position:FlyoutPosition;
-    target:HTMLElement;
+    position: FlyoutPosition;
+    target: HTMLElement;
 }
 
 class FlyoutContent extends Component<IFlyoutContentProps, any> {
+    refs: {
+        host: any;
+    }
+    inside: boolean;
+
+    onMouseDown = () => {
+        if (!this.inside) {
+            dispatch(CarbonActionsFactory.cancel());
+        }
+    }
 
     componentDidMount() {
+        document.body.addEventListener("mousedown", this.onMouseDown, { capture: true });
+        this.refs.host.clientWidth;
+        setTimeout(()=>{this.ensurePosition();}, 0)
     }
-    render() {
-        var host = document.body;
-        if(!host) {
-            return <div></div>;
-        }
 
+    componentWillUnmount() {
+        document.body.removeEventListener("mousedown", this.onMouseDown, { capture: true });
+    }
+
+    preventDefault(e) {
+        e.stopPropagation();
+        return false;
+    }
+
+    ensurePosition() {
         var _offset: any = {};
-        var style:any = {
-            position: 'absolute', zIndex: 100000,
-            background:'red',
+        var style: any = {
             left: undefined, bottom: undefined, top: undefined, right: undefined,
-            width: undefined, height: undefined
+            width: undefined, height: undefined,
+            opacity:1
         };
 
         var targetWidth, targetHeight;
-        var position = this.props.position;
+        var position = this.props.position || { targetVertical: "bottom", targetHorizontal: "left" };
+
+        var source = this.refs.host;
+        var sourceHeight = source.offsetHeight;
+        var sourceWidth = source.offsetWidth;
 
         switch (false) {
 
@@ -82,35 +105,43 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
                 targetWidth = this.props.target.offsetWidth;
 
                 if (position.targetVertical === 'top') {
-                    style.bottom = documentHeight - _offset.top;
+                    style.bottom = Math.min(documentHeight - sourceHeight,documentHeight - _offset.top) + 'px';
                 }
-                else {
-                    style.top = _offset.top + targetHeight;
+                else if (position.targetVertical === 'bottom') {
+                    style.top = Math.min(documentHeight - sourceHeight, _offset.top + targetHeight) + 'px';
+                } else {
+                    style.top = Math.max(0, _offset.top - sourceHeight/2 + targetHeight / 2) + 'px';
                 }
 
                 if (position.targetHorizontal === "right") {
-                    style.right = documentWidth - _offset.left - targetWidth;
-                    if(position.sourceHorizontal === "right") {
-                        // style.right += targetWidth;
-                    }
+                    style.right = Math.min(documentWidth - sourceWidth, documentWidth - _offset.left - targetWidth) + 'px';
                 }
-                else {
-                    style.left = _offset.left;
-                    if(position.sourceHorizontal === "right") {
-                        // style.left -= targetWidth;
-                    }
+                else if (position.targetHorizontal === "left") {
+                    style.left = Math.max(0, _offset.left) + 'px';
+                } else {
+                    style.left = Math.max(0, _offset.left - sourceWidth / 2 + targetWidth / 2) + 'px';
                 }
 
                 if (position.syncWidth) {
-                    style.width = targetWidth;
+                    style.width = targetWidth + 'px';
                 }
 
                 break;
 
             default:
         }
+        for(var propName in style) {
+            source.style[propName] = style[propName];
+        }
+    }
 
-        return ReactDOM.createPortal(<div className="flyouthost" style={style}>{this.props.children}</div>, host);
+    render() {
+        var host = document.body;
+        if (!host) {
+            return <div></div>;
+        }
+
+        return ReactDOM.createPortal(<div ref="host" style={{opacity:0, position: 'absolute', zIndex: 100000}} className="flyouthost" onMouseEnter={e => this.inside = true} onMouseLeave={e => this.inside = false}>{this.props.children}</div>, host);
     }
 }
 
@@ -124,6 +155,18 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
             open: false
         };
         this.position = this.props.position || { targetVertical: 'top' };
+    }
+
+    canHandleActions() {
+        return true;
+    }
+
+    onAction(action: CarbonAction) {
+        switch (action.type) {
+            case "Carbon_Cancel":
+                this.close();
+                return;
+        }
     }
 
     drawContent() {
@@ -157,7 +200,7 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
     }
 
     toggle = (event?) => {
-        this.setState({ open: !this.state.open });
+        this.setState({ open: !this.state.open && !this.props.disabled });
 
         // if (!this.state.open) {
         //     dispatch(FlyoutActions.show(this.refs.host, this.drawContent(), this.position));
@@ -170,15 +213,15 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
         }
     }
 
-    @listenTo(flyoutStore)
-    storeChanged() {
-        var target = flyoutStore.state.target;
-        if (!target && this.state.open) {
-            if (this._mounted) {
-                this.setState({ open: !this.state.open });
-            }
-        }
-    }
+    // @listenTo(flyoutStore)
+    // storeChanged() {
+    //     var target = flyoutStore.state.target;
+    //     if (!target && this.state.open) {
+    //         if (this._mounted) {
+    //             this.setState({ open: !this.state.open });
+    //         }
+    //     }
+    // }
 
     onMouseDown = (e) => {
         e.stopPropagation();
@@ -233,7 +276,7 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
     }
 
     renderFlyout() {
-        if(this.state.open) {
+        if (this.state.open) {
             return <FlyoutContent position={this.props.position} target={this.refs.host as any}>
                 {this.props.children}
             </FlyoutContent>

@@ -13,9 +13,9 @@ interface IIconProps extends IReactElementProps {
     color?: string;
 }
 
-const IconStyled = styled.div.attrs<{ src?: any, color?: any, width?: any, height?: any }>({}) `
+const IconStyled = styled.div.attrs<{ src?: any, defaultColor?: any, width?: any, height?: any }>({}) `
     mask: url(${props => props.src});
-    background-color: ${props => props.color};
+    background-color: ${props => props.defaultColor};
     background-repeat: no-repeat;
     width:${props => props.width}px;
     height:${props => props.height}px;
@@ -26,7 +26,7 @@ export default class Icon extends Component<IIconProps, {}> {
     render() {
         var { icon, color, className, ...props } = this.props;
         var { src, width, height } = icon || { src: "", width: 0, height: 0 };
-        return <IconStyled src={src} width={width} height={height} color={color} className={className} {...props} >
+        return <IconStyled src={src} width={width} height={height} defaultColor={color} className={className} {...props}>
         </IconStyled>;
     }
 }

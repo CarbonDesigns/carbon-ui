@@ -233,7 +233,7 @@ const ZoomMenu = styled.div`
     min-width:100px;
     min-height:200px;
     display:flex;
-    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5);
+    box-shadow: ${theme.flyout_shadow};
     border-radius: 2px;
 `;
 

@@ -1,8 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import cx from 'classnames';
-import FlyoutActions from '../FlyoutActions';
-import flyoutStore from '../FlyoutStore';
 import { Component, listenTo, stopPropagationHandler, CarbonLabel, dispatch } from "../CarbonFlux";
 import bem from "../utils/commonUtils";
 import { ensureElementVisible } from "../utils/domUtil";
@@ -27,7 +25,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
         if (!this.props.item.disabled) {
             app.actionManager.invoke(this.props.item.actionId, this.props.item.actionArg);
         }
-        dispatch(FlyoutActions.hide());
+       // dispatch(FlyoutActions.hide());
     }
     private onMouseEnter = () => {
         this.setState({ submenuVisible: true });
@@ -139,11 +137,11 @@ export default class ContextMenu extends Component<any, any> {
 
 
     _popupContextMenu(target, content, position, onClose?) {
-        dispatch(FlyoutActions.show(target, content, position, onClose));
+      //  dispatch(FlyoutActions.show(target, content, position, onClose));
     };
 
     _hideContextMenu() {
-        dispatch(FlyoutActions.hide());
+        //dispatch(FlyoutActions.hide());
     };
 
     _getFlyoutPositionFromEvent(event) {
@@ -173,18 +171,18 @@ export default class ContextMenu extends Component<any, any> {
         }
     }
 
-    @listenTo(flyoutStore)
-    storeChanged() {
-        var target = flyoutStore.state.target;
+    // @listenTo(flyoutStore)
+    // storeChanged() {
+    //     var target = flyoutStore.state.target;
 
-        if (target === this.refs.menu) {
-            this._runOnOpenCallback();
-        }
-        else if (!target && this.state.open) {
-            this.setState({ open: false });
-            this._runOnCloseCallback();
-        }
-    }
+    //     if (target === this.refs.menu) {
+    //         this._runOnOpenCallback();
+    //     }
+    //     else if (!target && this.state.open) {
+    //         this.setState({ open: false });
+    //         this._runOnCloseCallback();
+    //     }
+    // }
 
     onMouseDown = (e) => {
         e.stopPropagation();

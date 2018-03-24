@@ -2,11 +2,11 @@ import React from "react";
 import ReactDom from "react-dom";
 import cx from 'classnames';
 import BrushTabs from "./BrushTabs";
-import FlyoutActions from '../../FlyoutActions';
 import {Component, dispatch} from '../../CarbonFlux';
 import {Brush} from "carbon-core";
 
 import {FormattedMessage} from "react-intl";
+import CarbonActions from "../../CarbonActions";
 
 interface IBrushSelectorState {
     newStyle?:any;
@@ -28,11 +28,11 @@ export default class BrushSelector extends Component<any, IBrushSelectorState> {
     };
 
     ok = () => {
-        dispatch(FlyoutActions.hide());
+        dispatch(CarbonActions.cancel());
     };
     cancel = () => {
         this.props.onCancelled();
-        dispatch(FlyoutActions.hide());
+        dispatch(CarbonActions.cancel());
     };
 
     componentDidMount(){

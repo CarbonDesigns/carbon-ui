@@ -1,8 +1,6 @@
 import { default as React, ReactInstance, ReactHTMLElement } from "react";
 import ReactDOM from "react-dom";
 import cx from 'classnames';
-import FlyoutActions from '../FlyoutActions';
-import flyoutStore from '../FlyoutStore';
 import { nodeOffset, ensureElementVisible } from "../utils/domUtil";
 import { Component, listenTo, dispatch, } from "../CarbonFlux";
 import { default as CarbonActionsFactory, CarbonAction } from "../CarbonActions";
@@ -166,6 +164,10 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
             case "Carbon_Cancel":
                 this.close();
                 return;
+            case "Carbon_Scroll": {
+                this.close();
+                return;
+            }
         }
     }
 
@@ -202,26 +204,11 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
     toggle = (event?) => {
         this.setState({ open: !this.state.open && !this.props.disabled });
 
-        // if (!this.state.open) {
-        //     dispatch(FlyoutActions.show(this.refs.host, this.drawContent(), this.position));
-        // } else {
-        //     dispatch(FlyoutActions.hide());
-        // }
-
         if (event) {
             event.stopPropagation();
         }
     }
 
-    // @listenTo(flyoutStore)
-    // storeChanged() {
-    //     var target = flyoutStore.state.target;
-    //     if (!target && this.state.open) {
-    //         if (this._mounted) {
-    //             this.setState({ open: !this.state.open });
-    //         }
-    //     }
-    // }
 
     onMouseDown = (e) => {
         e.stopPropagation();
@@ -245,8 +232,6 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
             if (!prevState.open) {
                 this.props.onOpened && this.props.onOpened();
             }
-
-            dispatch(FlyoutActions.update(this.refs.host, this.drawContent()));
         }
         else if (prevState.open) {
             this.props.onClosed && this.props.onClosed();

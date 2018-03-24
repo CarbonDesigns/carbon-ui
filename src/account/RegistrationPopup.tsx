@@ -1,8 +1,8 @@
 import React from "react";
 import { Component, dispatchAction, dispatch } from "../CarbonFlux";
-import FlyoutActions from "../FlyoutActions";
 import { AccountAction } from "./AccountActions";
 import RegistrationForm from "./RegistrationForm";
+import CarbonActions from "../CarbonActions";
 
 export default class RegistrationPopup extends Component {
     canHandleActions() {
@@ -11,7 +11,7 @@ export default class RegistrationPopup extends Component {
     onAction(action: AccountAction) {
         if (action.type === "Account_LoginResponse") {
             if (action.response.ok === true){
-                dispatch(FlyoutActions.hide());
+                dispatch(CarbonActions.cancel());
             }
             return;
         }

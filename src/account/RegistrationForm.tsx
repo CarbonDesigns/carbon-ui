@@ -3,7 +3,6 @@ import cx from "classnames";
 import { FormattedMessage } from "react-intl";
 import { backend } from "carbon-api";
 import { dispatch, handles, Component, dispatchAction } from "../CarbonFlux";
-import FlyoutActions from "../FlyoutActions";
 import { AccountAction } from "./AccountActions";
 import { GuiButton, GuiRadio, GuiInput, IFieldState, ValidationTrigger, GuiValidatedInput, IFormState } from "../shared/ui/GuiComponents";
 import Socials from "./Socials";

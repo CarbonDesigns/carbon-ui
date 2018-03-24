@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { backend } from "carbon-core"
 
-function icon(name, w, h) : {src:string, width:number, height:number} {
+function icon(name, w, h): { src: string, width: number, height: number } {
     return {
         src: iconPath(name),
         width: w,
@@ -35,8 +35,16 @@ export default {
     menu_main: icon("menu_main.svg", 20, 20),
     undo: icon("undo.svg", 17, 13),
     redo: icon("redo.svg", 17, 13),
-    zoom_in: icon("zoom-in.svg", 15,15),
+    zoom_in: icon("zoom-in.svg", 15, 15),
     zoom_out: icon("zoom-out.svg", 15, 15),
-    triangle_down: icon("triangle_down.svg", 10, 10),
+    triangle_down: icon("triangle_down.svg", 7, 7),
     path_binary: icon("path_binary.svg", 20, 20),
+    group: icon("path_binary.svg", 20, 20), // TODO:
+    path_union: icon("path_binary.svg", 20, 20), // TODO:
+    path_difference: icon("path_binary.svg", 20, 20), // TODO:
+    path_subtract: icon("path_binary.svg", 20, 20), // TODO:
+    path_intersect: icon("path_binary.svg", 20, 20), // TODO:
+    repeat_menu: icon("repeat.svg", 19, 11),
+    repeat_small: icon("repeat_small.svg", 20, 12),
+    symbols_small: icon("symbols_small.svg", 19, 11),
 }

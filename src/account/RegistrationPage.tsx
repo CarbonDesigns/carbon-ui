@@ -1,6 +1,5 @@
 import React from "react";
 import { Component, dispatchAction, dispatch } from "../CarbonFlux";
-import FlyoutActions from "../FlyoutActions";
 import { AccountAction } from "./AccountActions";
 import RegistrationForm from "./RegistrationForm";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";

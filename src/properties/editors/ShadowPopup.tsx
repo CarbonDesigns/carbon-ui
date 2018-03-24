@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
 import ColorPicker from "../../shared/ui/ColorPicker";
-import FlyoutActions from "../../FlyoutActions";
 import {Component, dispatch} from "../../CarbonFlux";
 import {TabContainer, TabTabs, TabPage, TabArea} from "../../shared/TabContainer";
 import bem from "../../utils/commonUtils";
@@ -10,6 +9,7 @@ import { FormattedMessage } from "react-intl";
 import ArrowKeyModifier from "../../shared/ui/ArrowKeyModifier";
 import GuiNumericInput from "../../shared/ui/GuiNumericInput";
 import { util } from "carbon-core";
+import CarbonActions from "../../CarbonActions";
 
 
 var b = function (elem = null, mods = null, mix = null) {
@@ -269,12 +269,12 @@ export default class ShadowPopup extends Component<any, any> {
     }
 
     ok = () => {
-        dispatch(FlyoutActions.hide());
+        dispatch(CarbonActions.cancel());
     };
 
     cancel = () => {
         this.props.onCancelled && this.props.onCancelled();
-        dispatch(FlyoutActions.hide());
+        dispatch(CarbonActions.cancel());
     };
 
     componentDidMount() {

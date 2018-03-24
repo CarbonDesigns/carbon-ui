@@ -23,6 +23,7 @@ import SwatchesPanel from './properties/SwatchesPanel';
 import FullScreenApi from "./shared/FullScreenApi";
 import { Splash } from "./Splash";
 import { EditorPanel } from "./editor/EditorPanel";
+
 // window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent {

@@ -1,9 +1,9 @@
 import React from "react";
 import { Component, dispatchAction, dispatch } from "../CarbonFlux";
-import FlyoutActions from "../FlyoutActions";
 import { AccountAction } from "./AccountActions";
 import LoginForm from "./LoginForm";
 import RouteComponent from "../RouteComponent";
+import CarbonActions from "../CarbonActions";
 
 export default class LoginPopup extends RouteComponent {
     canHandleActions() {
@@ -13,7 +13,7 @@ export default class LoginPopup extends RouteComponent {
     onAction(action: AccountAction) {
         if (action.type === "Account_LoginResponse") {
             if (action.response.ok === true){
-                dispatch(FlyoutActions.hide());
+                dispatch(CarbonActions.cancel());
             }
             return;
         }

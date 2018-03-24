@@ -4,6 +4,7 @@ export type CarbonAction =
     { type: "Carbon_AppLoaded" } |
     { type: "Carbon_AppUpdated" } |
     { type: "Carbon_Cancel" } |
+    { type: "Carbon_Scroll" } |
     { type: "Carbon_AppChanged", primitives: Primitive[] } |
     { type: "Carbon_AppSettingsChanged", settings: AppSettings } |
     { type: "Carbon_Selection", composite: ISelectComposite } |
@@ -22,6 +23,9 @@ var CarbonActions = {
     },
     cancel:()=>{
         return {type: "Carbon_Cancel"}
+    },
+    scroll: () => {
+        return {type: "Carbon_Scroll"}
     },
     pageChanged:(oldPage, newPage)=>{
         return {

@@ -28,3 +28,5 @@ export default class RichAppRoot extends Component {
         HotKeyListener.detach();
     }
 }
+
+

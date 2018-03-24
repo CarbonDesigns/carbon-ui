@@ -25,7 +25,7 @@ const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, 
     align-items: center;
     justify-content:center;
     & > .icon {
-        background-color: ${props => props.color || theme.button_default};
+        background-color: ${props => !props.disabled?(props.color || theme.button_default):theme.button_disabled};
     }
 
     ${props => props.disabled ? '' : css`
@@ -37,9 +37,9 @@ const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, 
 
 export default class IconButton extends Component<IIconButtonProps, {}> {
     render() {
-        var { icon, color, width, height, ...props } = this.props;
+        var { icon, color, width, height, disabled, ...props } = this.props;
 
-        return <IconButtonComponent width={width} height={height} {...props}>
+        return <IconButtonComponent width={width} height={height} disabled={disabled} {...props}>
             <Icon className="icon" icon={icon}>
             </Icon>
         </IconButtonComponent>;

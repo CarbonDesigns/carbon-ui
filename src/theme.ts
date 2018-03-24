@@ -11,9 +11,14 @@ export const colors = {
     button_default: "#9b9a9b",
     button_hover: "white",
     button_active: "#e94565",
+    button_disabled:"#525252",
     workspace_background:'#131313',
     h1font: "400 18px 'Roboto', sans-serif;",
-    h2font: "400 13px 'Roboto', sans-serif;"
+    h2font: "400 13px 'Roboto', sans-serif;",
+    link_font: "400 10px 'Roboto', sans-serif;",
+    input_font: "400 10px 'Roboto', sans-serif;",
+    link_padding: "8px",
+    input_background: "#212121"
 }
 
 const theme = createTheme(...Object.keys(colors));

@@ -1,7 +1,5 @@
 import React from "react";
 import cx from 'classnames';
-import FlyoutActions from '../FlyoutActions';
-import flyoutStore from '../FlyoutStore';
 import { richApp } from '../RichApp';
 import { Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import Dropdown from "../shared/Dropdown";
@@ -242,36 +240,36 @@ export default class AnimationSettingsPopup extends Component<IAnimationSettings
     };
 
     toggle = (event?, target?, action?) => {
-        this.setState({ open: !this.state.open });
-        if (this.state.open) {
-            var newProps = this._newActionProps = clone(action.props);
-            richApp.dispatch(FlyoutActions.show(null, this.renderPopup(target, action.props, newProps), {
-                absolute: true,
-                x: event.pageX,
-                y: event.pageY
-            }, () => {
-                action.setProps(this._newActionProps);
-            }));
-        } else {
-            richApp.dispatch(FlyoutActions.hide());
-        }
+        // this.setState({ open: !this.state.open });
+        // if (this.state.open) {
+        //     var newProps = this._newActionProps = clone(action.props);
+        //     richApp.dispatch(FlyoutActions.show(null, this.renderPopup(target, action.props, newProps), {
+        //         absolute: true,
+        //         x: event.pageX,
+        //         y: event.pageY
+        //     }, () => {
+        //         action.setProps(this._newActionProps);
+        //     }));
+        // } else {
+        //     richApp.dispatch(FlyoutActions.hide());
+        // }
 
-        if (event) {
-            event.stopPropagation();
-        }
+        // if (event) {
+        //     event.stopPropagation();
+        // }
     };
 
-    @listenTo(flyoutStore)
-    storeChanged() {
-        var target = flyoutStore.state.target;
-        if (target === this.refs.host) {
-            this.props.onOpened && this.props.onOpened();
-        }
-        else if (!target && this.state.open) {
-            this.setState({ open: !this.state.open });
-            this.props.onClosed && this.props.onClosed();
-        }
-    }
+    // @listenTo(flyoutStore)
+    // storeChanged() {
+    //     var target = flyoutStore.state.target;
+    //     if (target === this.refs.host) {
+    //         this.props.onOpened && this.props.onOpened();
+    //     }
+    //     else if (!target && this.state.open) {
+    //         this.setState({ open: !this.state.open });
+    //         this.props.onClosed && this.props.onClosed();
+    //     }
+    // }
 
     onKeyDown = (e) => {
         //TODO: handle ESC

@@ -182,7 +182,8 @@ function getLoaders(settings) {
         require.resolve("babel-plugin-transform-runtime"),
         require.resolve("babel-plugin-add-module-exports"),
         //remove when babel 6 has proper support for decorators
-        require.resolve("babel-plugin-transform-decorators-legacy")
+        require.resolve("babel-plugin-transform-decorators-legacy"),
+        require.resolve("react-hot-loader/babel"),
     );
 
     if (!settings.trace) {
@@ -337,7 +338,7 @@ module.exports = function (settings) {
             publicPath: settings.fullPublicPath + "/",
             host: settings.host.substring(settings.host.indexOf("//") + 2),
             port: settings.port,
-            // hot: true,
+            hot: true,
             historyApiFallback: {
                 rewrites: [
                     {

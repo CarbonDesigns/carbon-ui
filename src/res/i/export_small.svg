@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>arrow_in_down [#384]</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="1.40106824%" y1="51.4010682%" x2="98.5989318%" y2="51.4010682%" id="linearGradient-1">
+            <stop stop-color="#FF4396" offset="0%"></stop>
+            <stop stop-color="#FF292C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design-Gray-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-630.000000, -540.000000)">
+        <g id="Export" transform="translate(617.000000, 529.000000)" fill="url(#linearGradient-1)">
+            <path d="M24.205,16.544 L23.194,15.4535 L21.25,17.2745 L21.25,11 L19.75,11 L19.75,17.2745 L17.842,15.4535 L16.8205,16.544 L20.5315,20.04725 L24.205,16.544 Z M28,26 L13,26 L13,18.5 L16,18.5 L16,20 L14.5,20 L14.5,24.5 L26.5,24.5 L26.5,20 L25,20 L25,18.5 L28,18.5 L28,26 Z" id="arrow_in_down-[#384]"></path>
+        </g>
+    </g>
+</svg>

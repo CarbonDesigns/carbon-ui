@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDom from "react-dom";
 import cx from 'classnames';
+
 export default class Slider extends React.Component{
     constructor(props){
         super(props);

@@ -152,7 +152,7 @@ const ActionHeaderComponent = styled.div`
 
 const TextGroup = styled(HorizontalGroup)`
     justify-content:space-between;
-    & > div {
+    & > * {
         margin-top:12px;
         width:70px;
     }

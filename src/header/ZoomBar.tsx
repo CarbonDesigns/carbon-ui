@@ -1,7 +1,7 @@
 import React from 'react';
 import { CompositeElement } from "carbon-core";
 import { app, Environment } from "carbon-core";
-import VerticalSlider from "../shared/VerticalSlider";
+import Slider from "../shared/VerticalSlider";
 import EnterInput from "../shared/EnterInput";
 import { richApp } from "../RichApp";
 import { listenTo, Component } from '../CarbonFlux';
@@ -199,7 +199,7 @@ export default class ZoomBar extends Component<any, any> {
                             <ZoomMenuAction action="zoom1:2" />
                             <ZoomMenuAction action="zoom1:4" />
                         </ZoomScales>
-                        <VerticalSlider ref="slider" value={this.scaleToValue(scale)} valueChanged={this._onValueChanged} />
+                        <Slider ref="slider" vertical={true} value={this.scaleToValue(scale)} valueChanged={this._onValueChanged} />
                     </ZoomMenu>
                 </FlyoutButton>
                 <ContiniouseAction icon={icons.zoom_in} action="zoomIn" tabIndex="1" />

@@ -10,19 +10,17 @@ import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";
 import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
 import { say } from "../shared/Utils";
-import bem from "bem";
 import { MarkupLine } from "../shared/ui/Markup";
 import LayerItem from "./LayerItem";
 import layersStore, { LayerNode, LayersStoreState } from "./LayersStore";
 import dragController from "./LayersDragController";
 import BackButton from "../shared/ui/BackButton";
 import icons from "../theme-icons";
+import styled from "styled-components";
 
 type VirtualLayersList = new (props) => VirtualList<LayerNode>;
 const VirtualLayersList = VirtualList as VirtualLayersList;
 
-// TODO: inherited visibility and lock style
-function b(a, b?, c?) { return bem('layer', a, b, c) }
 
 export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     refs: {
@@ -162,7 +160,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         return <Panel ref="panel" header="Layers" icon={icons.p_layers} id="layers_panel" {...rest}>
             {this.renderBackButton()}
 
-            <div className={bem("layers-panel", "layers-list", null, "panel__stretcher")} data-mode="airy">
+            <PanelContent>
                 <VirtualLayersList className="layers__container"
                     ref="list"
                     data={this.state.layers}
@@ -170,7 +168,13 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
                     rowRenderer={this.renderLayer}
                     scrollToRow={this.state.scrollToLayer}
                     useTranslate3d={true} />
-            </div>
+            </PanelContent>
         </Panel>;
     }
 }
+
+const PanelContent = styled.div`
+    flex: auto;
+    display: flex;
+    padding-left:20px;
+`;

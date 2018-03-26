@@ -18,6 +18,8 @@ import { FlyoutBody, HorizontalGroup, VerticalGroup } from "../components/Common
 import FlyoutHeader from "../components/FlyoutHeader";
 import TextInput from "../components/TextInput";
 import MainButton from "../components/MainButton";
+import Slider from "../components/Slider";
+import RepeateDropButton from "./RepeateDropButton";
 
 interface IActionHeaderProps extends IReactElementProps {
 
@@ -84,23 +86,37 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
         return <ActionHeaderComponent>
             <IconButton icon={icons.undo} width={46} height={46} onClick={this.undoAction} />
             <IconButton icon={icons.redo} width={46} height={46} onClick={this.redoAction} />
+            <RepeateDropButton/>
             <FlyoutButton
                 position={{ targetVertical: "bottom", targetHorizontal: "center" }}
                 renderContent={() =>
-                    <IconButton icon={icons.repeat_menu} width={46} height={46} />
+                    <IconButton icon={icons.symbols_small} width={46} height={46} title="@symbol.menu"/>
                 }>
-                <RepeatFlyoutBody onClick={e=>e.stopPropagation()}>
-                    <FlyoutHeader icon={icons.repeat_small} label="@repeater.group"/>
-                    <TextGroup>
-                        <TextInput type="number"></TextInput>
-                        <TextInput type="number"></TextInput>
-                    </TextGroup>
-                    <TextGroup>
-                        <TextInput type="number"></TextInput>
-                        <TextInput type="number"></TextInput>
-                    </TextGroup>
-                    <RepeatButton label="Make repeater grid"></RepeatButton>
-                </RepeatFlyoutBody>
+                <FlyoutBody>
+                    <FlyoutHeader icon={icons.symbols_small} label="@symbols"/>
+                    <VerticalGroup>
+                        <ActionLinkButton id="symbols.create"/>
+                        <ActionLinkButton id="symbols.markAsText"/>
+                        <ActionLinkButton id="symbols.markAsBackground"/>
+                        <ActionLinkButton id="symbols.editMaster"/>
+                        <ActionLinkButton id="symbols.detach"/>
+                    </VerticalGroup>
+                </FlyoutBody>
+            </FlyoutButton>
+            <FlyoutButton
+                position={{ targetVertical: "bottom", targetHorizontal: "center" }}
+                renderContent={() =>
+                    <IconButton icon={icons.symbols_small} width={46} height={46} title="@arrange.menu"/>
+                }>
+                <FlyoutBody>
+                    <FlyoutHeader icon={icons.symbols_small} label="@arrange"/>
+                    <VerticalGroup>
+                        <ActionLinkButton id="bringToFront"/>
+                        <ActionLinkButton id="sendToBack"/>
+                        <ActionLinkButton id="bringForward"/>
+                        <ActionLinkButton id="sendBackward"/>
+                    </VerticalGroup>
+                </FlyoutBody>
             </FlyoutButton>
             <FlyoutButton
                 position={{ targetVertical: "bottom", targetHorizontal: "center" }}
@@ -108,6 +124,7 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
                     <IconButton icon={icons.path_binary} width={46} height={46} />
                 }>
                 <FlyoutBody>
+                    <FlyoutHeader icon={icons.symbols_small} label="@path.operations"/>
                     <HorizontalGroup>
                         <IconButton icon={icons.path_union} width={46} height={46} onClick={this.pathUnion} />
                         <IconButton icon={icons.path_intersect} width={46} height={46} onClick={this.pathIntersect} />
@@ -124,9 +141,10 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
             <FlyoutButton
                 position={{ targetVertical: "bottom", targetHorizontal: "center" }}
                 renderContent={() =>
-                    <IconButton icon={icons.group} width={46} height={46}/>
+                    <IconButton icon={icons.group} width={46} height={46} title="@group.menu"/>
                 }>
                 <FlyoutBody>
+                    <FlyoutHeader icon={icons.symbols_small} label="@group.operations"/>
                     <VerticalGroup>
                         <ActionLinkButton id="group"/>
                         <ActionLinkButton id="ungroup"/>
@@ -150,19 +168,4 @@ const ActionHeaderComponent = styled.div`
     height:100%;
 `;
 
-const TextGroup = styled(HorizontalGroup)`
-    justify-content:space-between;
-    & > * {
-        margin-top:12px;
-        width:70px;
-    }
-`
-const RepeatFlyoutBody = styled(FlyoutBody)`
-    min-width:180px;
-`
-
-const RepeatButton = styled(MainButton).attrs<{label:string}>({})`
-    width:100%;
-    margin: 10px 0;
-`;
 

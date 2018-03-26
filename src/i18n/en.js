@@ -29,6 +29,7 @@ export default
         "pageCenter": "Center the page",
 
         "@action.done": "Done",
+        "@path.operations": "Path actions",
         "@path.union": "Union",
         "@path.join": "Join",
         "@path.difference": "Difference",
@@ -42,6 +43,7 @@ export default
         "Distribute horizontally": "Distribute horizontally",
         "Distribute vertically": "Distribute vertically",
         "Group elements": "Group elements",
+        "@group.operations": "Group actions",
         "Ungroup elements": "Ungroup elements",
         "Group in repeater": "Group in repeater",
         "Parent width": "Parent width",

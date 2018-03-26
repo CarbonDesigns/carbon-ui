@@ -1,7 +1,7 @@
 import React from 'react';
 import { CompositeElement } from "carbon-core";
 import { app, Environment } from "carbon-core";
-import Slider from "../shared/VerticalSlider";
+import Slider from "../components/Slider";
 import EnterInput from "../shared/EnterInput";
 import { richApp } from "../RichApp";
 import { listenTo, Component } from '../CarbonFlux';

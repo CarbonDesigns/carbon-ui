@@ -14,6 +14,7 @@ interface ISliderProps {
 export default class Slider extends React.Component<ISliderProps, any>{
   private slider: HTMLElement;
   private handle: HTMLElement;
+  private progress: HTMLElement;
   private _size: number;
   private _offset: number;
   private _dragging: boolean;
@@ -47,11 +48,11 @@ export default class Slider extends React.Component<ISliderProps, any>{
   }
 
   beginDeltaChange() {
-    this.slider.classList.add("_dragging");
+    this.slider.classList.add("dragging");
   }
 
   endDeltaChange() {
-    this.slider.classList.remove("_dragging");
+    this.slider.classList.remove("dragging");
     delete this._originalPosition;
   }
 
@@ -88,9 +89,9 @@ export default class Slider extends React.Component<ISliderProps, any>{
     }
 
     if (this.props.vertical) {
-      this.handle.style.top = percentPosition + '%';
+      this.progress.style.height = this.handle.style.top = percentPosition + '%';
     } else {
-      this.handle.style.left = percentPosition + '%';
+      this.progress.style.width = this.handle.style.left = percentPosition + '%';
     }
 
     if (this.props.valueChanged) {
@@ -102,14 +103,14 @@ export default class Slider extends React.Component<ISliderProps, any>{
     this._dragging = true;
     document.body.addEventListener("mousemove", this._handleDragging);
     document.body.addEventListener("mouseup", this._handelMouseUp);
-    this.slider.classList.add("_dragging");
+    this.slider.classList.add("dragging");
   }
 
   _handelMouseUp = (event) => {
     this._dragging = false;
     document.body.removeEventListener("mousemove", this._handleDragging);
     document.body.removeEventListener("mouseup", this._handelMouseUp);
-    this.slider.classList.remove("_dragging");
+    this.slider.classList.remove("dragging");
   }
 
   render() {
@@ -134,7 +135,7 @@ export default class Slider extends React.Component<ISliderProps, any>{
 
     return (<SliderContainer onMouseDown={this._onMouseDown} vertical={this.props.vertical}>
       <SliderTrack innerRef={x => this.slider = x} vertical={this.props.vertical}>
-        <SliderProgress style={progressStyle}/>
+        <SliderProgress style={progressStyle} innerRef={x => this.progress = x}/>
         <SliderHandle style={handleStyle} vertical={this.props.vertical} innerRef={x => this.handle = x} onMouseDown={this._handelMouseDown} />
       </SliderTrack>
     </SliderContainer>);
@@ -149,18 +150,19 @@ var SliderContainer = styled.div.attrs<{vertical:boolean}>({})`
     cursor: pointer;
 `;
 
+const HandleSize = 12;
 var SliderTrack = styled.div.attrs<{vertical:boolean}>({})`
   position: absolute;
   ${props=>props.vertical?css`
-    top: 16px;
+    top: ${HandleSize/2}px;
     left: 50%;
-    bottom: 16px;
+    bottom: ${HandleSize/2}px;
     width: 4px;
     margin-left: -2px;
   `:css`
-    left: 16px;
+    left: ${HandleSize/2}px;
     top: 50%;
-    right: 16px;
+    right: ${HandleSize/2}px;
     height: 4px;
     margin-top: -2px;
   `}
@@ -170,24 +172,25 @@ var SliderTrack = styled.div.attrs<{vertical:boolean}>({})`
   box-shadow: 0 1px 3px rgba(1, 2, 3, 0.2) inset;
 `;
 
+
 var SliderHandle = styled.div.attrs<{vertical:boolean}>({})`
   border-radius: 100px;
-  width: 12px;
-  height: 12px;
+  width: ${HandleSize}px;
+  height: ${HandleSize}px;
   box-shadow: 0 1px 2px rgba(1, 2, 3, 0.28);
   border: 3px solid white;
   position: absolute;
   background: white;
   ${props=>props.vertical?css`
-    margin-top: -100%;
+    margin-top:-${HandleSize/2}px;
     top: 0%;
     left: 50%;
-    margin-left: -6px;
+    margin-left: -${HandleSize/2}px;
   `:css`
-    margin-left: -100%;
+    margin-left: -${HandleSize/2}px;
     left: 0%;
     top: 50%;
-    margin-top: -6px;
+    margin-top: -${HandleSize/2}px;
   `}
 `;
 

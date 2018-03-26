@@ -46,5 +46,7 @@ export default {
     path_intersect: icon("path_binary.svg", 20, 20), // TODO:
     repeat_menu: icon("repeat.svg", 19, 11),
     repeat_small: icon("repeat_small.svg", 20, 12),
-    symbols_small: icon("symbols_small.svg", 19, 11),
+    symbols_small: icon("symbols_small.svg", 16, 20),
+    layer_collapsed: icon("layer_c.svg", 6, 8),
+    layer_expanded: icon("layer_e.svg", 8, 6),
 }

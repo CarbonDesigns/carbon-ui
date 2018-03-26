@@ -19,6 +19,7 @@ const FlyoutHeaderComponent = styled.div`
     font:${theme.link_font};
     display: flex;
     align-items:center;
+    margin-bottom:8px;
 
     &, & > .text {
         height: 14px;

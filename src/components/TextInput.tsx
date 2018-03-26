@@ -10,6 +10,10 @@ import Icon from "./Icon";
 
 interface ITextInputProps extends IReactElementProps {
     type:"text"|"email"|"number";
+    placeholder?:string;
+    innerRef?:(ref:any)=>void;
+    min?:number;
+    max?:number;
 }
 
 const TextInputComponent = styled.input.attrs<{ width?: number, height?: number, color?: any, hoverColor?: any, disabled?: any }>({}) `
@@ -25,7 +29,7 @@ const TextInputComponent = styled.input.attrs<{ width?: number, height?: number,
 
 export default class TextInput extends Component<ITextInputProps, {}> {
     render() {
-        return <TextInputComponent {...this.props}>
+        return <TextInputComponent {...this.props} innerRef={x=>this.props.innerRef?this.props.innerRef(x):{}}>
         </TextInputComponent>;
     }
 }

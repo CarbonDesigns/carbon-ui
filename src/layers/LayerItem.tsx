@@ -3,13 +3,15 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Selection, Environment, Invalidate, app, IArtboardPage, Brush, Text, IText, workspace, Artboard } from "carbon-core";
 import { Component, dispatch, dispatchAction } from "../CarbonFlux";
-import bem from "../utils/commonUtils";
 import { LayerNode } from "./LayersStore";
 import dragController from "./LayersDragController";
 import layersStore from "./LayersStore";
 import EnterInput from "../shared/EnterInput";
+import styled from "styled-components";
+import theme from "../theme";
+import icons from "../theme-icons";
+import IconButton from "../components/IconButton";
 
-function b(a, b?, c?) { return bem('layer', a, b, c) }
 
 interface LayerItemProps extends ISimpleReactElementProps {
     layer: LayerNode;
@@ -137,7 +139,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
 
     private renderTitle() {
         if (this.state.editing) {
-            return <EnterInput className={b("input")}
+            return <EnterInput
                 defaultValue={this.props.layer.element.name}
                 onValueEntered={value => {
                     this.props.layer.element.name = (value);
@@ -145,9 +147,22 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
                 }}
                 autoFocus/>
         }
-        return <div onDoubleClick={this.onTitleDoubleClick} className={b('name')}>
+        return <span onDoubleClick={this.onTitleDoubleClick}>
             {this.props.layer.element.displayName()}
-        </div>;
+        </span>;
+    }
+
+    private renderCollapser() {
+        var layer = this.props.layer;
+        if(!layer.hasChildren) {
+            return null;
+        }
+        return <IconButton
+            icon={this.props.expanded?icons.layer_expanded:icons.layer_collapsed}
+            width={10}
+            height={10}
+            data-index={this.props.index}
+            onClick={this.onToggleExpand}/>
     }
 
     render() {
@@ -155,14 +170,14 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         let locked = layer.element.locked();
         let visible = layer.element.visible;
 
-        let layerClassNames = b(null, {
-            "lock-0": !locked,
-            "lock-1": locked,
-            "vis-0": !visible,
-            "vis-1": visible,
-            "selected": this.props.selected,
-            "ancestorSelected": this.props.ancestorSelected
-        });
+        // let layerClassNames = b(null, {
+        //     "lock-0": !locked,
+        //     "lock-1": locked,
+        //     "vis-0": !visible,
+        //     "vis-1": visible,
+        //     "selected": this.props.selected,
+        //     "ancestorSelected": this.props.ancestorSelected
+        // });
 
         var body_mods = {
             collapsed: !this.props.expanded,
@@ -188,53 +203,67 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
             colorsCss.backgroundColor = this.displayColor(layer.element.fill, 'transparent');
         }
 
-        var layer_body = (<section
-            className={b('body', body_mods)}
-            ref="layer_body"
-        >
-            <div className={b('left-icons')}>
-                <VisibleButton onClick={this.onToggleVisible} />
-                <LockButton onClick={this.onToggleLock} />
-            </div>
+        // var layer_body = (<section
+        //     className={b('body', body_mods)}
+        //     ref="layer_body"
+        // >
+        //     <div className={b('left-icons')}>
+        //         <VisibleButton onClick={this.onToggleVisible} />
+        //         <LockButton onClick={this.onToggleLock} />
+        //     </div>
 
-            <div className={b('desc')}>
-                <div className={b('indent')} onClick={this.onToggleExpand} data-index={this.props.index}>
-                    {!!layer.hasChildren && <i className={b("arrow")} />}
-                </div>
-                <div className={b('title')} >
-                    <i className={b('icon', null, `type-icon_${layer.type}`)} onDoubleClick={this.onIconDoubleClick}/>
-                    {this.renderTitle()}
-                </div>
-            </div>
+        //     <div className={b('desc')}>
+        //         <div className={b('indent')} onClick={this.onToggleExpand} data-index={this.props.index}>
+        //             {!!layer.hasChildren && <i className={b("arrow")} />}
+        //         </div>
+        //         <div className={b('title')} >
+        //             <i className={b('icon', null, `type-icon_${layer.type}`)} onDoubleClick={this.onIconDoubleClick}/>
+        //             {this.renderTitle()}
+        //         </div>
+        //     </div>
 
-            <div className={b('right-icons')}>
-                <div className={b('colors')}>
-                    <div className={b('colors-square')} style={colorsCss}></div>
-                </div>
-                <SelectCheckbox
-                    onClick={LayerItem.addToSelection}
-                    canSelect={layer.canSelect}
-                    index={this.props.index}
-                />
-            </div>
+        //     {/* <div className={b('right-icons')}>
+        //         <div className={b('colors')}>
+        //             <div className={b('colors-square')} style={colorsCss}></div>
+        //         </div>
+        //         <SelectCheckbox
+        //             onClick={LayerItem.addToSelection}
+        //             canSelect={layer.canSelect}
+        //             index={this.props.index}
+        //         />
+        //     </div> */}
 
-        </section>);
+        // </section>);
 
         return (
-            <div ref="item"
+            <LayerContainer ref="item"
                 data-index={this.props.index}
-                className={layerClassNames}
+
                 onMouseMove={dragController.onDropMove}
                 onMouseEnter={LayerItem.onMouseEnter}
                 onMouseLeave={LayerItem.onMouseLeave}
                 onMouseUp={dragController.onDrop}
                 onClick={this.selectElement}
+                indent={layer.indent}
             >
-                {layer_body}
-            </div>
+                {this.renderCollapser()}
+                <LayerCaption >{this.renderTitle()}</LayerCaption>
+            </LayerContainer>
         );
     }
 }
+
+const LayerContainer = styled.div.attrs<any>({})`
+    display:flex;
+    align-items:center;
+    padding-left:${props=>props.indent*16}px;
+`;
+
+const LayerCaption = styled.div`
+    font:${theme.default_font};
+    color:${theme.text_color};
+    padding-left: 8px;
+`;
 
 var LockButton = (props) => {
     return <div className="layer__lock" onClick={props.onClick}><i className="layer__lock-icon" /></div>;

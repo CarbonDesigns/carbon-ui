@@ -21,7 +21,7 @@ const MainButtonComponent = styled.button`
     border-radius: 1px;
 `
 
-export default class TextInput extends Component<IMainButtonProps, {}> {
+export default class MainButton extends Component<IMainButtonProps, {}> {
     render() {
         var { ...props } = this.props;
 

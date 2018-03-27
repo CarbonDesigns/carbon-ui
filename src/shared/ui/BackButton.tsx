@@ -10,7 +10,7 @@ type BackButtonProps = {
 
 export default class BackButton extends Component<BackButtonProps> {
     render() {
-        return <div onClick={this.props.onClick}><u>← {this.props.translate ? <FormattedMessage id={this.props.caption}/> : this.props.caption} </u></div>
+        return <div onClick={this.props.onClick}><span>← {this.props.translate ? <FormattedMessage id={this.props.caption}/> : this.props.caption} </span></div>
     }
 
     static defaultProps: Partial<BackButtonProps> = {

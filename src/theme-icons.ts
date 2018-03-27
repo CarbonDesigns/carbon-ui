@@ -49,4 +49,9 @@ export default {
     symbols_small: icon("symbols_small.svg", 16, 20),
     layer_collapsed: icon("layer_c.svg", 6, 8),
     layer_expanded: icon("layer_e.svg", 8, 6),
+    layer_visible: icon("layer_visible.svg", 16, 16),
+    path_invisible: icon("path_binary.svg", 20, 20), // TODO:
+    layer_lock: icon("layer_lock.svg", 7, 11),
+    layer_unlock: icon("layer_lock.svg", 7, 11), // TODO:
+    layer_code: icon("layer_code.svg", 9, 9),
 }

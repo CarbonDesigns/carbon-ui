@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import cx from "classnames";
 import { Selection, Environment, Invalidate, app, IArtboardPage, Brush, Text, IText, workspace, Artboard } from "carbon-core";
 import { Component, dispatch, dispatchAction } from "../CarbonFlux";
 import { LayerNode } from "./LayersStore";
@@ -22,6 +23,7 @@ interface LayerItemProps extends ISimpleReactElementProps {
     ancestorSelected: boolean;
     onHide: (node: LayerNode, selected: boolean) => void;
     onLock: (node: LayerNode, selected: boolean) => void;
+    onCode: (node: LayerNode, selected: boolean) => void;
 }
 
 type LayerItemState = {
@@ -39,6 +41,11 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     private onToggleVisible = (ev) => {
         ev.stopPropagation();
         this.props.onHide(this.props.layer, this.props.selected);
+    }
+
+    private onToggleCode = (ev) => {
+        ev.stopPropagation();
+        this.props.onCode(this.props.layer, this.props.selected);
     }
 
     private onToggleLock = (ev) => {
@@ -169,6 +176,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         var layer = this.props.layer;
         let locked = layer.element.locked();
         let visible = layer.element.visible;
+        let useInCode = layer.element.useInCode;
 
         // let layerClassNames = b(null, {
         //     "lock-0": !locked,
@@ -238,31 +246,59 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         return (
             <LayerContainer ref="item"
                 data-index={this.props.index}
-
                 onMouseMove={dragController.onDropMove}
                 onMouseEnter={LayerItem.onMouseEnter}
                 onMouseLeave={LayerItem.onMouseLeave}
                 onMouseUp={dragController.onDrop}
                 onClick={this.selectElement}
                 indent={layer.indent}
+                className={cx({selected:this.props.selected})}
             >
                 {this.renderCollapser()}
                 <LayerCaption >{this.renderTitle()}</LayerCaption>
+                <ActionButtons>
+                    <IconButton className={cx("layerButton", {active:!visible})} icon={icons.layer_visible} width={16} height={16} onClick={this.onToggleVisible}/>
+                    <IconButton className={cx("layerButton", {active:locked})} icon={icons.layer_lock} width={16} height={16} onClick={this.onToggleLock} />
+                    <IconButton className={cx("layerButton", {active:useInCode})} icon={icons.layer_code} width={16} height={16} onClick={this.onToggleCode} />
+                </ActionButtons>
             </LayerContainer>
         );
     }
 }
 
+const ActionButtons = styled.div`
+    display:flex;
+    align-self:flex-end;
+    height:100%;
+    align-items:center;
+    padding-right:4px;
+`;
+
 const LayerContainer = styled.div.attrs<any>({})`
     display:flex;
     align-items:center;
-    padding-left:${props=>props.indent*16}px;
+    height:32px;
+    padding-left:${props=>(props.indent+1)*16}px;
+    border-radius:1px;
+    &:hover {
+        background-color:${theme.layer_hover_background};
+    }
+    &.selected {
+        background-color: ${theme.layer_selection_background};
+    }
+
+    &:not(:hover) {
+        & .layerButton:not(.active) {
+            opacity:0;
+        }
+    }
 `;
 
 const LayerCaption = styled.div`
     font:${theme.default_font};
     color:${theme.text_color};
     padding-left: 8px;
+    flex:1;
 `;
 
 var LockButton = (props) => {

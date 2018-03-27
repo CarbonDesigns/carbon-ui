@@ -17,6 +17,7 @@ import dragController from "./LayersDragController";
 import BackButton from "../shared/ui/BackButton";
 import icons from "../theme-icons";
 import styled from "styled-components";
+import theme from '../theme';
 
 type VirtualLayersList = new (props) => VirtualList<LayerNode>;
 const VirtualLayersList = VirtualList as VirtualLayersList;
@@ -71,6 +72,19 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         }
     };
 
+    private onCode = (node: LayerNode, selected: boolean) => {
+        if (!selected) {
+            node.element.useInCode = !node.element.useInCode;
+            return;
+        }
+        if (!node.element.useInCode) {
+            Selection.useInCode(true);
+        }
+        else {
+            Selection.useInCode(false);
+        }
+    };
+
     private onHide = (node: LayerNode, selected: boolean) => {
         if (!selected) {
             node.element.visible = (!node.element.visible);
@@ -97,6 +111,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
             expanded={expanded}
             ancestorSelected={layersStore.isAncestorSelected(layer)}
             onLock={this.onLock}
+            onCode={this.onCode}
             onHide={this.onHide} />
     }
     /**
@@ -150,9 +165,9 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
             }
         }
 
-        return <MarkupLine className="layers-back__button">
+        return <PageHeaderContainer>
             <BackButton onClick={this.goBack} caption={name} translate={false} />
-        </MarkupLine>;
+        </PageHeaderContainer>;
     }
 
     render() {
@@ -176,5 +191,14 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
 const PanelContent = styled.div`
     flex: auto;
     display: flex;
-    padding-left:20px;
+`;
+
+const PageHeaderContainer = styled.div`
+    height:29px;
+    background-color: ${theme.layer_page_background};
+    color: ${theme.text_color};
+    font: ${theme.default_font};
+    display:flex;
+    align-items:center;
+    padding-left: 16px;
 `;

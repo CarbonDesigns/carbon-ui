@@ -350,6 +350,8 @@ export default
         "@menu.openProject": "Open project...", //
         "@menu.saveProjectAs": "Save project as...", //
 
+        "@useInCode": "Use in code",
+
 
         "featurenotready": "This feature is not ready yet, but we are actively working on it. Press a button below if you would like to get notified when it is ready. (and to motivate us work faster ;) )", //
         "btn.notifyfeature": "Notify me", //

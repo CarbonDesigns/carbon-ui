@@ -30,8 +30,9 @@ export default {
     tool_artboard: icon("tool_artboard.svg", 17, 18),
     tool_artboardViewer: icon("tool_artboardViewer.svg", 20, 20),
     panel_closer: icon("panel_closer.svg", 15, 15),
-    p_properties: icon("p_properties.svg", 17, 17),
+    p_properties: icon("p_props.svg", 17, 17),
     p_layers: icon("p_layers.svg", 11, 12),
+    p_symbols: icon("p_symbols.svg", 15, 17),
     menu_main: icon("menu_main.svg", 20, 20),
     undo: icon("undo.svg", 17, 13),
     redo: icon("redo.svg", 17, 13),
@@ -49,9 +50,11 @@ export default {
     symbols_small: icon("symbols_small.svg", 16, 20),
     layer_collapsed: icon("layer_c.svg", 6, 8),
     layer_expanded: icon("layer_e.svg", 8, 6),
-    layer_visible: icon("layer_visible.svg", 16, 16),
+    layer_visible: icon("layer_visible.svg", 11, 6),
     path_invisible: icon("path_binary.svg", 20, 20), // TODO:
     layer_lock: icon("layer_lock.svg", 7, 11),
     layer_unlock: icon("layer_lock.svg", 7, 11), // TODO:
     layer_code: icon("layer_code.svg", 9, 9),
+    top_edit: icon("top_design.svg", 9, 9),
+    top_prototype: icon("top_prototype.svg", 24, 19),
 }

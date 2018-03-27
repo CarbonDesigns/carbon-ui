@@ -8,6 +8,7 @@ import cx from "classnames";
 import appStore from "../AppStore";
 import theme from "../theme";
 import icons from "../theme-icons";
+import Icon from "../components/Icon";
 
 interface IModeSelectorProps extends IReactElementProps {
 
@@ -44,7 +45,7 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
                     return (
                         <ModeBarItem active={(item === this.state.activeMode)} key={item}
                             onClick={() => app.setMode(item)}>
-                            <Icon icon={icons['menu_'+item]}></Icon>
+                            <Icon icon={icons['top_'+item]} color="white"></Icon>
                             <Cap>
                                 <FormattedMessage id={'mode.' + item} />
                             </Cap>
@@ -60,11 +61,8 @@ const ModeBar = styled.div`
     white-space:nowrap;
     padding: 0 10px;
     position:relative;
-    display:block;
-`;
-
-const Icon = styled.div.attrs<{icon?:any}>({})`
-    ${props=>props.icon}
+    display:flex;
+    align-items:center;
 `;
 
 const Cap = styled.div`
@@ -82,6 +80,7 @@ const ModeBarItem = styled.div.attrs<{active?:boolean}>({})`
     height: 100%;
     display: inline-flex;
     line-height:47px;
+    height:47px;
     margin-right:40px;
     align-items:center;
 `;

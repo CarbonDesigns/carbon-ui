@@ -20,6 +20,7 @@ interface LayerItemProps extends ISimpleReactElementProps {
     index: number;
     selected: boolean;
     expanded: boolean;
+    useInCode:boolean;
     ancestorSelected: boolean;
     onHide: (node: LayerNode, selected: boolean) => void;
     onLock: (node: LayerNode, selected: boolean) => void;
@@ -176,7 +177,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         var layer = this.props.layer;
         let locked = layer.element.locked();
         let visible = layer.element.visible;
-        let useInCode = layer.element.useInCode;
+        let useInCode = this.props.useInCode;
 
         // let layerClassNames = b(null, {
         //     "lock-0": !locked,

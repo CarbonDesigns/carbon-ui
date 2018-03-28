@@ -428,66 +428,6 @@
         }
 
     }
-
-
-    //——————————————————————————————————————————————————————————————————————
-    // OVERLAYS
-    //——————————————————————————————————————————————————————————————————————
-
-    @overlay_height: 6px;
-    @overlay_border: 1px;
-
-    .layer__overlay() {
-        content: " ";
-        display: block;
-        .bgc(@sel_color1);
-        border: @overlay_border solid @sel_color;
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: @overlay_height;
-        z-index: 10;
-    }
-
-    .layers__container_moving {
-        &.single {
-            .c-layer_drag_single();
-        }
-        &.single.into {
-            .c-layer_drag_single_into();
-        }
-        &.multi {
-            .c-layer_drag_multi();
-        }
-        &.multi.into {
-            .c-layer_drag_multi_into();
-        }
-
-        .layer {
-            &__dropAbove:after {
-                .layer__overlay();
-                top: -@overlay_height/2;
-            }
-            &__dropBelow:before {
-                .layer__overlay();
-                bottom: -@overlay_height/2;
-            }
-            &__dropInside {
-                .bgc(@sel_color1);
-                outline: @sel_color @overlay_border solid;
-                outline-offset: -1px;
-            }
-        }
-
-        .layer_selected {
-            background: @bg2_darkest;
-        }
-
-        .layer_selected .layer__body{
-            .trn2;
-            .op40;
-        }
-    }
 }
 
 

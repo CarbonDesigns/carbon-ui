@@ -18,7 +18,7 @@ export default {
     tool_directSelection: icon("tool_directSelection.svg", 20, 20),
     tool_image: icon("tool_image.svg", 16, 16),
     tool_line: icon("tool_line.svg", 20, 20),
-    tool_oval: icon("tool_oval.svg", 20, 20),
+    tool_oval: icon("tool_oval.svg", 21, 21),
     tool_path: icon("tool_path.svg", 16, 17),
     tool_pen: icon("tool_pen.svg", 16, 17),
     tool_rectangle: icon("tool_rectangle.svg", 19, 19),

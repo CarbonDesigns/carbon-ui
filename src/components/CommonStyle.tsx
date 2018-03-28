@@ -1,9 +1,12 @@
 import styled from "styled-components";
 import theme from "../theme";
 
-export const FlyoutBody = styled.div`
+export const FlyoutBodyNoPadding = styled.div`
     background: ${theme.flyout_background};
     box-shadow: ${theme.flyout_shadow};
+`;
+
+export const FlyoutBody = styled(FlyoutBodyNoPadding)`
     padding:12px;
 `;
 

@@ -10,6 +10,8 @@ import styled, {css} from "styled-components";
 import icons from "../theme-icons";
 import theme from "../theme";
 import Icon from '../components/Icon';
+import FlyoutButton from '../shared/FlyoutButton';
+import { FlyoutBody, VerticalGroup, HorizontalGroup, FlyoutBodyNoPadding } from '../components/CommonStyle';
 
 function _preventDefault(event) {
     event.preventDefault();
@@ -23,8 +25,14 @@ class ToolButton extends Component<any, any> {
         this.state = { hover: false };
     }
 
+    _renderGroupIndicator() {
+        return <GroupIndicator>
+            <Icon icon={icons.layer_collapsed} className="icon"></Icon>
+        </GroupIndicator>
+    }
+
     render() {
-        var { active, type, icon, ...rest } = this.props;
+        var { active, group, type, icon, ...rest } = this.props;
 
         return (
             <ToolButtonStyled
@@ -33,6 +41,7 @@ class ToolButton extends Component<any, any> {
                     onMouseLeave={() => this.setState({ hover: false })}
                     {...rest}>
                 <Icon className="icon" icon={icon} color={theme.button_default} />
+                {group && this._renderGroupIndicator()}
             </ToolButtonStyled>
         )
     }
@@ -178,6 +187,9 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     _clickButton(event, action, group) {
         app.actionManager.invoke(action);
         this.mergeStateData({ activeGroup: null });
+        if(this.flyout) {
+            this.flyout.close();
+        }
 
         event.preventDefault();
     }
@@ -297,6 +309,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 onBlur={this._onBlur}
                 onMouseUp={mouseUp}
                 onMouseDown={mouseDown}
+                group={is_group}
                 onClick={click}
             />
         )
@@ -331,15 +344,19 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         if (item.type === "group") {
             var activeButton = this._findToolInGroup(item.children, this.state[item.name]);
             return (
-                <div data-group={item.name} key={item.name}>
-                    {
-                        this._renderButton(activeButton.tool, activeButton.icon, activeTool === activeButton.tool, item.name, true)
-                    }
-                    {/* {
-                        this._renderMore(activeButton.tool, item.name)
-                    } */}
-
-                </div>
+                <FlyoutButton data-group={item.name} key={item.name} onOpened={x=>this.flyout = x} onClosed={()=>this.flyout=null}
+                    showAction="longpress"
+                    position={{targetVertical:"center", targetHorizontal:"right", sourceHorizontal:"left"}}
+                    renderContent={()=>this._renderButton(activeButton.tool, activeButton.icon, activeTool === activeButton.tool, item.name, true)}
+                >
+                    <FlyoutBodyNoPadding>
+                        <HorizontalGroup>
+                            {item.children.map(i=>{
+                                return this._renderButton(i.tool, i.icon, activeTool === i.tool, null, false)
+                            })}
+                        </HorizontalGroup>
+                    </FlyoutBodyNoPadding>
+                </FlyoutButton>
             );
         }
         else {
@@ -358,8 +375,6 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         if (activeGroup) {
             (this.state as any)[activeGroup] = activeTool;
         }
-
-        // var classNames = cx(this.state.data.activeMode, { "changing-mode": this.state.data.changingActiveMode });
 
         return (
             <ToolsStyled key="tools" innerRef={x => this.tools = x}>
@@ -389,19 +404,29 @@ const ToolButtonStyled = styled.div.attrs<{active?:boolean}>({})`
     justify-content:center;
     cursor:pointer;
     margin-bottom:4px;
+    position:relative;
 
     ${ props=>props.active?
         css`
-        > .icon {
+        & .icon {
             background-color:${theme.button_active};
         }`:
         css`
         &:hover {
-            > .icon
+            & .icon
             {
                 background-color:${theme.button_hover};
             }
         }
         `
     }
+`;
+
+const GroupIndicator = styled.div`
+    position:absolute;
+    right:3px;
+    top:0;
+    bottom:0;
+    display:flex;
+    align-items:center;
 `;

@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
-    <title>align_r</title>
+    <title>Ortalama2@3x</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <linearGradient x1="1.40106824%" y1="51.4010682%" x2="98.5989318%" y2="51.4010682%" id="linearGradient-1">
+            <stop stop-color="#FF4396" offset="0%"></stop>
+            <stop stop-color="#FF292C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="icon/proporties_right1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Ortalama2" transform="translate(9.656542, 9.750000) scale(-1, 1) rotate(-270.000000) translate(-9.656542, -9.750000) translate(0.156542, 0.250000)">
+            <rect id="Rectangle-14" fill="url(#linearGradient-1)" transform="translate(3.876109, 7.679828) rotate(-270.000000) translate(-3.876109, -7.679828) " x="-3.80371899" y="5.22655667" width="15.3596554" height="4.90654206" rx="1.25"></rect>
+            <rect id="Rectangle-14" fill="#4A4A4A" transform="translate(13.447932, 11.359734) rotate(-270.000000) translate(-13.447932, -11.359734) " x="9.44801059" y="8.90646321" width="7.99984231" height="4.90654206" rx="1.25"></rect>
+            <rect id="Rectangle-15" fill="#4A4A4A" x="0" y="17.1728972" width="18.3995327" height="1.22663551" rx="0.613317757"></rect>
+        </g>
+    </g>
 </svg>

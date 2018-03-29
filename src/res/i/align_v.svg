@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="20px" height="19px" viewBox="0 0 20 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
-    <title>align_v</title>
+    <title>Ortalama2@3x</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <rect id="path-1" x="0" y="8.5864486" width="18.3995327" height="1.22663551" rx="0.613317757"></rect>
+        <linearGradient x1="1.40106824%" y1="51.4010682%" x2="98.5989318%" y2="51.4010682%" id="linearGradient-2">
+            <stop stop-color="#FF4396" offset="0%"></stop>
+            <stop stop-color="#FF292C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="icon/proporties_mid5" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Ortalama2" transform="translate(10.254673, 9.750000) rotate(-360.000000) translate(-10.254673, -9.750000) translate(0.754673, 0.250000)">
+            <g id="Rectangle-15">
+                <use fill="#D8D8D8" fill-rule="evenodd" xlink:href="#path-1"></use>
+                <rect stroke="#4A4A4A" stroke-width="1.25" x="0.625" y="9.2114486" width="17.1495327" height="1" rx="0.5"></rect>
+            </g>
+            <rect id="Rectangle-14" fill="url(#linearGradient-2)" transform="translate(3.876109, 9.199766) rotate(-270.000000) translate(-3.876109, -9.199766) " x="-5.32365765" y="6.74649533" width="18.3995327" height="4.90654206" rx="1.25"></rect>
+            <rect id="Rectangle-14" fill="#4A4A4A" transform="translate(13.695813, 9.199766) rotate(-270.000000) translate(-13.695813, -9.199766) " x="9.69589222" y="6.74649533" width="7.99984231" height="4.90654206" rx="1.25"></rect>
+        </g>
+    </g>
 </svg>

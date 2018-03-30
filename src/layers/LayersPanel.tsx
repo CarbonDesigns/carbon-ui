@@ -1,4 +1,4 @@
-import { CarbonLabel, StoreComponent, listenTo } from '../CarbonFlux';
+import { CarbonLabel, StoreComponent, listenTo, dispatch } from '../CarbonFlux';
 import * as React from "react";
 import * as ReactDom from "react-dom";
 import * as PropTypes from "prop-types";
@@ -16,8 +16,9 @@ import layersStore, { LayerNode, LayersStoreState } from "./LayersStore";
 import dragController from "./LayersDragController";
 import BackButton from "../shared/ui/BackButton";
 import icons from "../theme-icons";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import theme from '../theme';
+import CarbonActions from '../CarbonActions';
 
 type VirtualLayersList = new (props) => VirtualList<LayerNode>;
 const VirtualLayersList = VirtualList as VirtualLayersList;
@@ -75,14 +76,15 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     private onCode = (node: LayerNode, selected: boolean) => {
         if (!selected) {
             node.element.useInCode = !node.element.useInCode;
-            return;
+        } else {
+            if (!node.element.useInCode) {
+                Selection.useInCode(true);
+            }
+            else {
+                Selection.useInCode(false);
+            }
         }
-        if (!node.element.useInCode) {
-            Selection.useInCode(true);
-        }
-        else {
-            Selection.useInCode(false);
-        }
+        dispatch({ type: "Carbon_Selection", composite: Selection.selectComposite() })
     };
 
     private onHide = (node: LayerNode, selected: boolean) => {
@@ -109,6 +111,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         return <LayerItem layer={layer} index={index} version={layer.version}
             selected={selected}
             expanded={expanded}
+            useInCode={layer.element.useInCode}
             ancestorSelected={layersStore.isAncestorSelected(layer)}
             onLock={this.onLock}
             onCode={this.onCode}
@@ -188,9 +191,62 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     }
 }
 
+const overlay_height = 2;
+const overlay_border = 1;
+
+const layer_overlay = css`
+    content: " ";
+    display: block;
+    border: ${overlay_border}px solid ${theme.accent};
+    position: absolute;
+    left: 0;
+    height:${overlay_height}px;
+    right: 0;
+    z-index: 10;
+`;
+
 const PanelContent = styled.div`
     flex: auto;
     display: flex;
+
+    & .layers__container_moving {
+        &.single {
+            /* .c-layer_drag_single(); */
+        }
+        &.single.into {
+            /* .c-layer_drag_single_into(); */
+        }
+        &.multi {
+            /* .c-layer_drag_multi(); */
+        }
+        &.multi.into {
+            /* .c-layer_drag_multi_into(); */
+        }
+
+        .layer {
+            &__dropAbove:after {
+                ${layer_overlay};
+                top: -${overlay_height/2}px;
+            }
+            &__dropBelow:before {
+                ${layer_overlay};
+                bottom: -${overlay_height/2}px;
+            }
+            &__dropInside {
+                ${layer_overlay};
+                outline: red ${overlay_border}px solid;
+                outline-offset: -1px;
+            }
+        }
+
+        .layer.selected {
+            background: ${theme.layer_page_background};
+        }
+
+        .layer.selected{
+            opacity:0.4;
+        }
+    }
 `;
 
 const PageHeaderContainer = styled.div`

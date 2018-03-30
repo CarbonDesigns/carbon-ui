@@ -24,8 +24,8 @@ interface IFlyoutButtonProps extends IReactElementProps {
     content?: any;
     position?: FlyoutPosition;
     disabled?: boolean;
-    showAction?: any;
-    onOpened?: any;
+    showAction?: "none"|"click"|"dblclick"|"longpress";
+    onOpened?: (ref:FlyoutButton)=>void;
     onClosed?: any;
 }
 
@@ -81,7 +81,6 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
         var sourceWidth = source.offsetWidth;
 
         switch (false) {
-
             case !(position.absolute):
                 style.left = position.x + 'px';
                 style.top = position.y + 'px';
@@ -112,7 +111,11 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
                 }
 
                 if (position.targetHorizontal === "right") {
-                    style.right = Math.min(documentWidth - sourceWidth, documentWidth - _offset.left - targetWidth) + 'px';
+                    var dx = 0;
+                    if(position.sourceHorizontal === "left") {
+                        dx = sourceWidth;
+                    }
+                    style.right = Math.min(documentWidth - sourceWidth, documentWidth - _offset.left - targetWidth - dx) + 'px';
                 }
                 else if (position.targetHorizontal === "left") {
                     style.left = Math.max(0, _offset.left) + 'px';
@@ -146,6 +149,7 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
 export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutButtonState> {
     private position: any;
     private _mounted: boolean;
+    private _openTimer:any;
 
     constructor(props) {
         super(props);
@@ -189,6 +193,22 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
         }
     }
 
+    onMouseDown = (e) => {
+        if (this.props.showAction === "longpress") {
+            this._openTimer = setTimeout(()=>{
+                this.open();
+                this._openTimer = null;
+            }, 300);
+           // e.stopPropagation();
+        }
+    }
+
+    onMouseUp = (e) => {
+        if(this._openTimer) {
+            clearTimeout(this._openTimer);
+        }
+    }
+
     open = () => {
         if (!this.state.open) {
             this.toggle();
@@ -209,11 +229,6 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
         }
     }
 
-
-    onMouseDown = (e) => {
-        e.stopPropagation();
-    }
-
     componentDidMount() {
         super.componentDidMount();
         this._mounted = true;
@@ -230,7 +245,7 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
     componentDidUpdate(prevProps, prevState: Readonly<FlyoutButtonState>) {
         if (this.state.open) {
             if (!prevState.open) {
-                this.props.onOpened && this.props.onOpened();
+                this.props.onOpened && this.props.onOpened(this);
             }
         }
         else if (prevState.open) {
@@ -277,7 +292,8 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
                 className={cx(this.props.className, { opened: this.state.open })}
                 onClick={this.onClick}
                 onDoubleClick={this.onDblClick}
-                onMouseDown={this.onMouseDown}
+                onMouseDownCapture={this.onMouseDown}
+                onMouseUpCapture={this.onMouseUp}
                 tabIndex={0}
             >
                 {this.renderContent()}

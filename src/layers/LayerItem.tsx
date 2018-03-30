@@ -20,6 +20,7 @@ interface LayerItemProps extends ISimpleReactElementProps {
     index: number;
     selected: boolean;
     expanded: boolean;
+    useInCode:boolean;
     ancestorSelected: boolean;
     onHide: (node: LayerNode, selected: boolean) => void;
     onLock: (node: LayerNode, selected: boolean) => void;
@@ -176,7 +177,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         var layer = this.props.layer;
         let locked = layer.element.locked();
         let visible = layer.element.visible;
-        let useInCode = layer.element.useInCode;
+        let useInCode = this.props.useInCode;
 
         // let layerClassNames = b(null, {
         //     "lock-0": !locked,
@@ -252,7 +253,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
                 onMouseUp={dragController.onDrop}
                 onClick={this.selectElement}
                 indent={layer.indent}
-                className={cx({selected:this.props.selected})}
+                className={cx("layer", {selected:this.props.selected})}
             >
                 {this.renderCollapser()}
                 <LayerCaption >{this.renderTitle()}</LayerCaption>
@@ -280,9 +281,15 @@ const LayerContainer = styled.div.attrs<any>({})`
     height:32px;
     padding-left:${props=>(props.indent+1)*16}px;
     border-radius:1px;
+
+    .layers__container_moving &:hover {
+        background:none;
+    }
+
     &:hover {
         background-color:${theme.layer_hover_background};
     }
+
     &.selected {
         background-color: ${theme.layer_selection_background};
     }

@@ -1,13 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { listenTo, Component, handles, dispatch } from "../CarbonFlux";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import { app } from "carbon-core";
 import { FormattedMessage, defineMessages } from 'react-intl';
 import * as cx from "classnames";
 import appStore from "../AppStore";
 import theme from "../theme";
 import icons from "../theme-icons";
+import Icon from "../components/Icon";
 
 interface IModeSelectorProps extends IReactElementProps {
 
@@ -44,7 +45,7 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
                     return (
                         <ModeBarItem active={(item === this.state.activeMode)} key={item}
                             onClick={() => app.setMode(item)}>
-                            <Icon icon={icons['menu_'+item]}></Icon>
+                            <SelectorIcon icon={icons['top_'+item]} active={(item === this.state.activeMode)}></SelectorIcon>
                             <Cap>
                                 <FormattedMessage id={'mode.' + item} />
                             </Cap>
@@ -56,21 +57,21 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
     }
 }
 
+const SelectorIcon = styled(Icon).attrs<any>({})`
+    background-color:${props=>props.active?theme.text_active:theme.text};
+`;
+
 const ModeBar = styled.div`
     white-space:nowrap;
     padding: 0 10px;
     position:relative;
-    display:block;
-`;
-
-const Icon = styled.div.attrs<{icon?:any}>({})`
-    ${props=>props.icon}
+    display:flex;
+    align-items:center;
 `;
 
 const Cap = styled.div`
-    margin-left: .5rem;
+    margin-left: 15px;
     position: relative;
-    left: -3px;
     letter-spacing: 2.6px;
 `;
 
@@ -82,6 +83,21 @@ const ModeBarItem = styled.div.attrs<{active?:boolean}>({})`
     height: 100%;
     display: inline-flex;
     line-height:47px;
+    height:47px;
     margin-right:40px;
     align-items:center;
+    cursor:pointer;
+    position:relative;
+    ${props=>props.active?css`
+        &::after {
+            content: " ";
+            position:absolute;
+            display:block;
+            left:0;
+            right:0;
+            bottom: 7px;
+            height:1px;
+            background-color:${theme.accent};
+        }
+    `:''};
 `;

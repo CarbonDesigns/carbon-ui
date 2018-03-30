@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { IUIElement, IPage, IArtboard, app, IRect, workspace, backend } from "carbon-core";
 import { FormattedMessage } from "react-intl";
 import { ArtboardSelect } from "../../shared/ui/GuiSelect";

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import { Component, listenTo } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'

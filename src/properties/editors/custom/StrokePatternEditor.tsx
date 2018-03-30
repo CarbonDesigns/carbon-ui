@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import DropDownEditor from "../DropdownEditor";
 import EditorComponent from "../EditorComponent";
 

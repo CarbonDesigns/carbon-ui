@@ -1,13 +1,13 @@
-import React from 'react';
-import ReactDom from 'react-dom';
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as PropTypes from "prop-types";
 // import {app} from '../../../RichApp'
 import { FormattedMessage } from "react-intl";
 import { Component } from "../../CarbonFlux";
 import DropDown, { IDropdownProps } from "../Dropdown";
-import cx from 'classnames';
+import * as cx from "classnames";
 import bem, { IHasMods } from '../../utils/commonUtils';
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 
 interface IGuiInlineLabelProps extends IReactElementProps {
     text?: string

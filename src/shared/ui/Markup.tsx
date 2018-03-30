@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { Component } from "../../CarbonFlux";
-import cx from 'classnames';
+import * as cx from "classnames";
 import bem, { IHasMods } from '../../utils/commonUtils';
 
 

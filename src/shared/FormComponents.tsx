@@ -1,8 +1,8 @@
-import React from 'react';
+import * as React from "react";
 // import {app} from '../../../RichApp'
 import {Component} from "../CarbonFlux";
 import {FormattedMessage} from "react-intl";
-import cx from 'classnames';
+import * as cx from "classnames";
 
 //TODO: typescript bug, react intl is stripped
 var a = typeof FormattedMessage;

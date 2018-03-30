@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { Component, listenTo, dispatchAction, StoreComponent } from "../../CarbonFlux";
 import Search from "../../shared/Search";
 import ScrollContainer from "../../shared/ScrollContainer";

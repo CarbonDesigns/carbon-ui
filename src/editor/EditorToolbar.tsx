@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { dispatch, Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import EditorActions from "./EditorActions";
 import Dropdown from "../shared/Dropdown";

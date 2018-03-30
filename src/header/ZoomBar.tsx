@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import { CompositeElement } from "carbon-core";
 import { app, Environment } from "carbon-core";
 import Slider from "../components/Slider";

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import {Component, dispatch, dispatchAction} from "../../CarbonFlux";
 import {FormattedMessage} from "react-intl";
 import {util, PatchType} from "carbon-core";

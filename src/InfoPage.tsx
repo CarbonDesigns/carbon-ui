@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { InfoCode } from "./Constants";
 import { FormattedMessage } from "react-intl";
 

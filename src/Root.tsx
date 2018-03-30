@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import DialogContainer from "./dialogs/DialogContainer";
 import {Component} from "./CarbonFlux";
 

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import UserImages from "./UserImages";
 import RecentImages from "./RecentImages";
 //import RecentIcons from "./RecentIcons";

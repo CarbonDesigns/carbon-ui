@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from "react";
 import EditorComponent, {IEditorProps} from "./EditorComponent";
-import cx from 'classnames';
+import * as cx from "classnames";
 import {FormattedMessage} from "react-intl";
 
 export default class MultiSwitchEditor extends EditorComponent<any, IEditorProps> {

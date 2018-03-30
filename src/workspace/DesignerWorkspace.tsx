@@ -5,7 +5,7 @@ import ContextBar from './topBar/contextbar';
 import Breadcrumbs from './bottomBar/breadcrumbs';
 import PagesBar from './bottomBar/pagesbar';
 
-import React from 'react';
+import * as React from "react";
 
 import { app, Selection, Environment, RenderLoop } from "carbon-core";
 import ContextMenu from "../shared/ContextMenu";
@@ -16,7 +16,7 @@ import { richApp } from "../RichApp";
 import { listenTo, Component, ComponentWithImmutableState } from "../CarbonFlux";
 import { Clipboard } from "carbon-core";
 import { Record } from "immutable";
-import cx from 'classnames';
+import * as cx from "classnames";
 import AnimationSettings from "../animation/AnimationSetting";
 
 import appStore from "../AppStore";

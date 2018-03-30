@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import {app} from "carbon-core";
 import {richApp}    from '../RichApp';
 import AppActions   from '../RichAppActions';

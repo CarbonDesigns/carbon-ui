@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { app, backend, Invalidate, Rect } from "carbon-core";
 import { Component, listenTo } from "../../../CarbonFlux";
 import { FormattedMessage } from "react-intl"

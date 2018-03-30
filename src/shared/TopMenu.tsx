@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import * as ReactDom from "react-dom";
 import { util } from "carbon-core";
-import cx from "classnames";
+import * as cx from "classnames";
 import { Link, InjectedRouter } from "react-router";
 import { Component, CarbonLabel } from "../CarbonFlux";
 import FlyoutButton from "./FlyoutButton";

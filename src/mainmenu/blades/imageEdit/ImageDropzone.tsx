@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component } from "../../../CarbonFlux";
 import Dropzone, { DropzoneOptions } from "dropzone";
 import { backend, ImagesResult, IDisposable } from "carbon-core";

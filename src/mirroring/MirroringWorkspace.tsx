@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import {
     app,
     MirroringController,
@@ -13,7 +13,7 @@ import {
 } from "carbon-core";
 
 import {listenTo, Component, ComponentWithImmutableState, dispatch, IComponentImmutableState} from "../CarbonFlux";
-import cx from "classnames";
+import * as cx from "classnames";
 
 var doRendering = function (continuous) {
     this._renderingRequestId = 0;

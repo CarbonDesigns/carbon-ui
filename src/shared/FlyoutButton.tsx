@@ -1,6 +1,6 @@
-import { default as React, ReactInstance, ReactHTMLElement } from "react";
-import ReactDOM from "react-dom";
-import cx from 'classnames';
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as cx from "classnames";
 import { nodeOffset, ensureElementVisible } from "../utils/domUtil";
 import { Component, listenTo, dispatch, } from "../CarbonFlux";
 import { default as CarbonActionsFactory, CarbonAction } from "../CarbonActions";
@@ -20,7 +20,7 @@ export type FlyoutPosition = {
 };
 
 interface IFlyoutButtonProps extends IReactElementProps {
-    renderContent?: () => ReactHTMLElement<any> | Element | React.ReactElement<any> | undefined | any;
+    renderContent?: () => React.ReactHTMLElement<any> | Element | React.ReactElement<any> | undefined | any;
     content?: any;
     position?: FlyoutPosition;
     disabled?: boolean;
@@ -139,7 +139,7 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
             return <div></div>;
         }
 
-        return ReactDOM.createPortal(<div ref="host" style={{opacity:0, position: 'absolute', zIndex: 100000}} className="flyouthost" onMouseEnter={e => this.inside = true} onMouseLeave={e => this.inside = false}>{this.props.children}</div>, host);
+        return ReactDom.createPortal(<div ref="host" style={{opacity:0, position: 'absolute', zIndex: 100000}} className="flyouthost" onMouseEnter={e => this.inside = true} onMouseLeave={e => this.inside = false}>{this.props.children}</div>, host);
     }
 }
 

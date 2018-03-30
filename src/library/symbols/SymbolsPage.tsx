@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import Symbols from "./Symbols";
 import RecentSymbols from "./RecentSymbols";
 import SearchSymbols from "./SearchSymbols";

@@ -1,9 +1,9 @@
 import {Store} from 'flux/utils';
-import invariant from 'invariant';
+import * as invariant from 'invariant';
 import {Dispatcher as FluxDispatcher} from 'flux';
 import {Record} from 'immutable';
-import React from 'react';
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import shallowCompare from 'react-addons-shallow-compare';
 import { FormattedMessage } from 'react-intl';
 import { AccountAction } from "./account/AccountActions";

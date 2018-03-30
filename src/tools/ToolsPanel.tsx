@@ -1,8 +1,8 @@
-import React from 'react';
+import * as React from "react";
 import { Component, listenTo, dispatch, handles, dispatchAction } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'
-import ReactDom from "react-dom";
+import * as ReactDom from "react-dom";
 import Tools from './tools';
 
 export default class ToolsPanel extends Component<{}, {}> {

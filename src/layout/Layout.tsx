@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import { List, Map, fromJS } from 'immutable';
 import Splitter from './Splitter';
 import { app } from "../RichApp";
@@ -6,15 +6,15 @@ import PanelContainer from './PanelContainer';
 
 import { listenTo, Component, dispatch, handles } from "../CarbonFlux";
 import LayoutActions from './LayoutActions';
-import cx from 'classnames';
+import * as cx from "classnames";
 import bem_mod from '../utils/commonUtils';
 import { util, LayoutDockPosition, LayoutDirection, Invalidate } from "carbon-core";
 import Header from '../header/Header';
 import { default as layoutStore } from "./LayoutStore";
 
 import { findTransformProp } from "../utils/domUtil"
-import interact from "interact.js";
-import styled from "styled-components"
+import * as interact from "interact.js";
+import styled from "styled-components";
 import theme from "../theme";
 
 const PillsSize = 35;

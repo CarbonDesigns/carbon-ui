@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 import classNames from 'classnames';
 import {richApp} from "../RichApp";
 import AppActions from "../RichAppActions";
-import cx from 'classnames';
+import * as cx from "classnames";
 import bem_mod from '../utils/commonUtils';
 
 export default class MainMenuButton extends React.Component<any, any>{

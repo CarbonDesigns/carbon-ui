@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDom from 'react-dom';
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { FormattedMessage } from "react-intl";
-import cx from 'classnames';
+import * as cx from "classnames";
 import Dots from "../../shared/dots";
 import FlyoutButton from "../../shared/FlyoutButton";
 import ScrollContainer from "../../shared/ScrollContainer";

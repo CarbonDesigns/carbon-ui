@@ -1,11 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import {backend} from "carbon-api";
 import {handles, Component} from "./CarbonFlux";
-import LandingPage from "./landing/LandingPage";
 import RouteComponent, { IRouteComponentProps } from "./RouteComponent";
+import { LandingPage } from "./landing/LandingPage";
 
-export default class LandingSelector extends RouteComponent<IRouteComponentProps, any>{
+interface LandingSelectorProps extends IRouteComponentProps {
+    landingComponent: React.Component;
+}
+
+export class LandingSelector extends RouteComponent<LandingSelectorProps, any>{
     constructor(props){
         super(props);
         this.state = {renderLanding: false};

@@ -1,4 +1,4 @@
-import cx from "classnames";
+import * as cx from "classnames";
 
 // return bem classnames  BLOCK__ELEM_MOD , like main-menu__button_half
 const _ELEM_SEP = "__";

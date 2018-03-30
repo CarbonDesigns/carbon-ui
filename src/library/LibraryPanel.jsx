@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import SymbolsPage from "./symbols/SymbolsPage";
 import IconsPage from "./icons/IconsPage";
 import ImagesPage from "./images/ImagesPage";

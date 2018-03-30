@@ -1,10 +1,10 @@
 // deprecated
 import { Component } from '../CarbonFlux';
-import React from 'react';
+import * as React from "react";
 import LayoutActions from './LayoutActions';
 import { app } from "../RichApp";
 import { LayoutDockPosition, IAreaConstraint } from "carbon-core";
-import cx from "classnames";
+import * as cx from "classnames";
 
 interface IResizerProps extends IReactElementProps {
     v: number[];

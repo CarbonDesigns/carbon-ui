@@ -1,5 +1,5 @@
 import { Component, handles, dispatch, listenTo, dispatchAction } from '../../CarbonFlux';
-import React from 'react';
+import * as React from "react";
 import { app, PropertyTracker } from "carbon-core";
 import Navigatable from "../../shared/Navigatable";
 import { FormattedMessage, defineMessages } from 'react-intl';

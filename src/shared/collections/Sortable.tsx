@@ -1,6 +1,6 @@
-import React from "react";
-import ReactDom from "react-dom";
-import interact from "interact.js";
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as interact from "interact.js";
 import { Component } from "../../CarbonFlux";
 import { findTransformProp, nodeOffset } from "../../utils/domUtil";
 

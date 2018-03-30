@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component, dispatchAction } from "../CarbonFlux";
 import { GuiButton, GuiTextArea } from "../shared/ui/GuiComponents";
 import DialogRegistry from "./DialogRegistry";

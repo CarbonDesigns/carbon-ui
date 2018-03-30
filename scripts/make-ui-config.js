@@ -18,7 +18,7 @@ var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 var defaults = {
     minimize: false,
     noUglify: false,
-     debug: true,
+    debug: true,
     linkCore: false,
     devServer: true,
     port: 8080,
@@ -41,7 +41,9 @@ function getEntry(settings) {
     };
     if (settings.devServer) {
         entry.index.unshift(
-            'webpack-dev-server/client?' + settings.authority);
+            'webpack/hot/only-dev-server',
+            'webpack-dev-server/client?' + settings.authority
+        );
     }
 
     return entry;
@@ -51,8 +53,8 @@ function getOutput(settings) {
         publicPath: settings.fullPublicPath + "/"
     };
 
-    output.filename = "carbon-[name].js";
-    output.chunkFilename = "carbon-[name]-[id].js";
+    output.filename = "carbon-[name]-[hash].js";
+    output.chunkFilename = "carbon-[name]-[chunkhash].js";
     output.path = fullPath("../target/");
 
     return output;
@@ -128,7 +130,7 @@ function getPlugins(settings) {
 
     if (settings.devServer) {
         plugins.push(
-            // new webpack.HotModuleReplacementPlugin(),
+            new webpack.HotModuleReplacementPlugin(),
             new webpack.NamedModulesPlugin()
         );
     }
@@ -156,12 +158,8 @@ function getPlugins(settings) {
             //     names: ["common", "manifest"]
             // }),
 
-            new (require('chunk-manifest-webpack-plugin'))({
-                filename: "manifest.json",
-                manifestVariable: "webpackManifest"
-            }),
-
-            new ExtractTextPlugin("[name]-[contenthash].css")
+            new webpack.HashedModuleIdsPlugin(),
+            //new ExtractTextPlugin("[name]-[contenthash].css")
         );
     }
 
@@ -175,45 +173,35 @@ function getPlugins(settings) {
 }
 
 function getLoaders(settings) {
-    var plugins = [];
+    var babelPlugins = [];
 
-    plugins.push(
-        require.resolve("babel-plugin-transform-promise-to-bluebird"),
-        require.resolve("babel-plugin-transform-runtime"),
-        require.resolve("babel-plugin-add-module-exports"),
-        //remove when babel 6 has proper support for decorators
-        require.resolve("babel-plugin-transform-decorators-legacy"),
-        require.resolve("react-hot-loader/babel"),
+    babelPlugins.push(
+        "react-hot-loader/babel",
+        "transform-class-properties",
+        "syntax-dynamic-import",
+        "babel-plugin-transform-promise-to-bluebird"
     );
 
     if (!settings.trace) {
-        plugins.push(require.resolve("babel-plugin-transform-remove-console"));
+        babelPlugins.push("babel-plugin-transform-remove-console");
     }
-    if (settings.minimize) {
-        plugins.push(require.resolve("babel-plugin-transform-react-constant-elements"));
-        plugins.push(require.resolve("babel-plugin-transform-react-inline-elements"));
-    }
-    var babelSettings = {
-        babelrc: false, //do not use settings from referenced packages
-        "presets": [
-            require.resolve("babel-preset-es2015"),
-            require.resolve("babel-preset-stage-0"),
-            require.resolve("babel-preset-react")
-        ],
-        "plugins": plugins,
-        cacheDirectory: true
-    };
+
     var babelLoader = {
         loader: "babel-loader",
-        options: babelSettings
+        options: {
+            babelrc: false, //do not use settings from referenced packages
+            presets: ["env", "react"],
+            plugins: babelPlugins,
+            cacheDirectory: true
+        }
     };
 
     var tsloader = {
-        loader : 'ts-loader',
+        loader: 'ts-loader',
         options: {
 
         }
-     };
+    };
 
     var excludedFolders = ["node_modules", "libs", "generated"];
     var excludedFiles = ["carbon-core-.*", "carbon-api-.*", "CompilerWorker.w.js"];
@@ -238,12 +226,13 @@ function getLoaders(settings) {
         {
             test: /\.jsx$/,
             // loaders: ["react-hot-loader/webpack", babelLoader],
-            use: [babelLoader],
+            use: [babelLoader, tsloader],
             exclude: excludes
         },
         {
             test: /\.tsx$/,
             // loaders: ["react-hot-loader/webpack", babelLoader, "awesome-typescript-loader"],
+            //use: [babelLoader, tsloader],
             use: [babelLoader, tsloader],
             exclude: excludes
         },
@@ -274,22 +263,18 @@ function getLoaders(settings) {
         use: ["style-loader/useable", "css-loader"]
     });
 
-    if (settings.minimize) {
-        loaders.push({
-            test: /\.less$/,
-            use: ExtractTextPlugin.extract({
-                use: [
-                    "css-loader",
-                    {
-                        loader: "sourceMap-loader",
-                        options: {
-                            less: true
-                        }
-                    }]
-            })
-        });
-    }
-    else {
+    //extract-text broken, need to remove less
+    //if (settings.minimize) {
+        // loaders.push({
+        //     test: /\.less$/,
+        //     use: ExtractTextPlugin.extract({
+        //         use: [
+        //             "css-loader"
+        //         ]
+        //     })
+        // });
+    //}
+    //else {
         var lessSettings = {};
         loaders.push({
             test: /\.less$/,
@@ -304,7 +289,7 @@ function getLoaders(settings) {
                 },
                 "less-loader"]
         });
-    }
+    //}
     return loaders;
 }
 
@@ -371,12 +356,8 @@ module.exports = function (settings) {
                 errorDetails: settings.errors
             }
         },
-        // headers: {
-        //     "Access-Control-Allow-Origin": "*",
-        //     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        //     "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-        // },
-        cache: true
+        cache: true,
+        mode: settings.debug ? "development" : "production"
     };
 
     settings.verbose && console.log(config);

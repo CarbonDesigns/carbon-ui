@@ -1,9 +1,9 @@
-import React from "react";
-import ReactDom from "react-dom";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as PropTypes from "prop-types";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
-import cx from "classnames";
+import * as cx from "classnames";
 
 import { backend, util } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
@@ -23,7 +23,7 @@ type LandingPageState = {
     activeGifs: number;
 }
 
-export default class LandingPage extends RouteComponent<IRouteComponentProps, LandingPageState>{
+export class LandingPage extends RouteComponent<IRouteComponentProps, LandingPageState>{
     sections: any;
     backgrounds: any[];
     activeSection: any;

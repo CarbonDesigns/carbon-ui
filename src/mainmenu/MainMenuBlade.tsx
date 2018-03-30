@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from "react";
 import Router from "react-router";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { app, backend } from "carbon-core";
 import { richApp } from '../RichApp';
 import { handles, ComponentWithImmutableState, Component, listenTo } from '../CarbonFlux';

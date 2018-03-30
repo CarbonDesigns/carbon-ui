@@ -1,5 +1,5 @@
 import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import { PropertyAction, PropertiesTab } from "./PropertyActions";
 import { PropertyTracker, app, NullPage, Selection, CompositeElement, PropertyMetadata, ChangeMode } from "carbon-core";

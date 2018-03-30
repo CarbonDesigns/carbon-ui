@@ -1,28 +1,38 @@
-import React from "react";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as ReactDom from "react-dom";
 // import Router, { RouteConfig } from "react-router/Router";
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 // import browserHistory from "react-router/browserHistory";
 import { IntlProvider, addLocaleData } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import ru from 'react-intl/locale-data/ru';
-
+import * as en from 'react-intl/locale-data/en';
+import * as ru from 'react-intl/locale-data/ru';
 import messages from "./i18n/en.js";
 
 import Root from "./Root";
 import "./Index.less";
 
+import { loadCore } from "./CarbonLoader";
+import { backend, logger } from "carbon-api";
+import { hot } from "react-hot-loader";
+import { RenewToken } from "./account/RenewToken";
+import { ExternalLogin } from "./account/ExternalLogin";
+import { IRouteComponentProps } from "./RouteComponent";
+import { LandingSelector } from "./LandingSelector";
+import { LandingPage } from "./landing/LandingPage";
+
 var currentLocale = "en";
 addLocaleData([...en, ...ru]);
 
-import { loadCore } from "./CarbonLoader";
-import { backend, logger } from "carbon-api";
-
-class AsyncComponent extends React.PureComponent<{ asyncComponent: (resolve: any, reject: any) => void; }, any> {
+interface AsyncComponentProps {
+    loader: () => Promise<any>;
+    routeProps?: any;
+    loadCore?: boolean;
+}
+class AsyncComponent extends React.PureComponent<AsyncComponentProps, any> {
     private component: any;
-    private promise: any;
     private updateOnMount: boolean;
     private mounted: boolean;
+    private loading = false;
 
     componentDidMount() {
         this.mounted = true;
@@ -34,42 +44,44 @@ class AsyncComponent extends React.PureComponent<{ asyncComponent: (resolve: any
 
     render() {
         if (this.component) {
-            return this.component;
+            return <this.component {...this.props.routeProps} />;
         }
-        if (!this.promise) {
-            this.promise = new Promise((resolve, reject) => {
-                this.props.asyncComponent(resolve, reject);
-            }).then((component) => {
-                this.component = component;
-                this.promise = null;
-                if (this.mounted) {
-                    this.forceUpdate();
-                } else {
-                    this.updateOnMount = true;
-                }
-                return component;
-            }).catch((reason) => {
-                this.component = <div>error</div>;
-                this.promise = null;
-                if (this.mounted) {
-                    this.forceUpdate();
-                } else {
-                    this.updateOnMount = true;
-                }
-                return reason;
-            })
+
+        if (!this.loading) {
+            this.loading = true;
+            this.load().finally(() => this.loading = false);
         }
 
         return <div></div>
     }
-}
 
-class TestComponent extends React.Component<any, any>
-{
-    render() {
-        return <div>datataeasdf</div>
+    private load() {
+        let core = this.props.loadCore ? loadCore() : Promise.resolve();
+        return core
+            .then(() => this.props.loader())
+            .then((component) => {
+                this.component = component.default;
+                if (this.mounted) {
+                    this.forceUpdate();
+                }
+                else {
+                    this.updateOnMount = true;
+                }
+                return component;
+            })
+            .catch((reason) => {
+                this.component = <div>error</div>;
+                if (this.mounted) {
+                    this.forceUpdate();
+                }
+                else {
+                    this.updateOnMount = true;
+                }
+                return reason;
+            });
     }
 }
+
 // const {whyDidYouUpdate} = require('why-did-you-update');
 // whyDidYouUpdate(React);
 
@@ -266,77 +278,34 @@ const onRouterUpdate = () => {
     window.scrollTo(0, 0);
 }
 
-ReactDom.render((
+const appStartChunk = props => <AsyncComponent routeProps={props} loadCore loader={() => import(/* webpackChunkName: "app-start" */ "./AppStart")} />;
+const quickAppStartChunk = props => <AsyncComponent routeProps={props} loadCore loader={() => import(/* webpackChunkName: "quick-app-start" */ "./quick/QuickApp")} />;
+const mirrorringAppStartChunk = props => <AsyncComponent routeProps={props} loadCore loader={() => import(/* webpackChunkName: "mirroring-app-start" */ "./mirroring/MirroringAppStart")} />;
+const previewAppStartChunk = props => <AsyncComponent routeProps={props} loadCore loader={() => import(/* webpackChunkName: "preview-app-start" */ "./preview/PreviewAppStart")} />;
+
+const previewIndexChunk = props => <AsyncComponent routeProps={props} loader={() => import(/* webpackChunkName: "preview-index" */ "./preview/Instructions")} />;
+const pageNotFoundChunk = props => <AsyncComponent routeProps={props} loader={() => import(/* webpackChunkName: "page-not-found" */ "./PageNotFound")} />;
+
+const externalLogin = props => <ExternalLogin {...props} />
+
+ReactDom.render(
     <BrowserRouter>
         <IntlProvider locale={currentLocale} messages={messages}>
             <Root>
-                {/* <Route exact path='/' component={ require("./LandingSelector")} /> */}
-                <Route path='/landing' render={props => <AsyncComponent asyncComponent={(resolve, reject) => {
-                    require.ensure([], (require) => {
-                        var factory = React.createFactory(require("./landing/LandingPage"));
-                        resolve(factory(props));
-                    }, "landing");
-                }} />} />
-                <Route path='/app(/@:companyName)?(/:appId)?' render={props => <AsyncComponent asyncComponent={(resolve, reject) => {
-                    loadCore(() => {
-                        require.ensure([], (r) => {
-                            var factory = React.createFactory(require("./AppStart"));
-                            resolve(factory(props));
-                        }, "app-start");
-                    });
-                }} />} />
-                <Route path='m' render={props => <AsyncComponent asyncComponent={(resolve, reject) => {
-                    require.ensure([], (require) => {
-                        var factory = React.createFactory(require("./preview/Instructions"));
-                        resolve(factory(props));
-                    }, "preview-index");
-                }} />} />
-                <Route path='m/app(/@:companyName)(/:appId)' render={props => <AsyncComponent asyncComponent={(resolve, reject) => {
-                    loadCore(() => {
-                        require.ensure([], (r) => {
-                            var factory = React.createFactory(require("./mirroring/MirroringAppStart"));
-                            resolve(factory(props));
-                        }, "mirroring-app-start");
-                    });
-                }} />} />
-                <Route path='m/:code' render={props => <AsyncComponent asyncComponent={(resolve, reject) => {
-                    loadCore(() => {
-                        require.ensure([], (r) => {
-                            var factory = React.createFactory(require("./mirroring/MirroringAppStart"));
-                            resolve(factory(props));
-                        }, "mirroring-app-code");
-                    });
-                }} />} />
-                <Route path='p/app(/@:companyName)(/:appId)' render={props => <AsyncComponent asyncComponent={(resolve, reject) => {
-                    loadCore(() => {
-                        require.ensure([], (r) => {
-                            var factory = React.createFactory(require("./preview/PreviewAppStart"));
-                            resolve(factory(props));
-                        }, "preview-app-start");
-                    });
-                }} />} />
-                <Route path='q/:code' render={props => <AsyncComponent asyncComponent={(resolve, reject) => {
-                    loadCore(() => {
-                        require.ensure([], (r) => {
-                            var factory = React.createFactory(require("./quick/QuickApp"));
-                            resolve(factory(props));
-                        }, "quick-app-start");
-                    });
-                }} />} />
-                <Route path='a/renew' render={props => {
-                    var factory = React.createFactory(require("./account/RenewToken"));
-                    return factory(props);
-                }} />
-                <Route path='a/external' render={props => {
-                    var factory = React.createFactory(require("./account/ExternalLogin"));
-                    return factory(props);
-                }} />
-                {/* <Redirect path="*" render={props=><AsyncComponent asyncComponent={(resolve, reject) => {
-                        require.ensure([], (require) => {
-                            resolve(require("./PageNotFound"));
-                        }, "page-not-found");
-                    }} />} /> */}
+                <Route exact path='/' component={LandingSelector} />
+                <Route path='/landing' component={LandingPage} />
+                <Route path='/app(/@:companyName)?(/:appId)?' render={appStartChunk} />
+                <Route path='m' render={previewIndexChunk} />
+                <Route path='q/:code' render={quickAppStartChunk} />
+                <Route path='m/app(/@:companyName)(/:appId)' render={mirrorringAppStartChunk} />
+                <Route path='m/:code' render={mirrorringAppStartChunk} />
+                <Route path='p/app(/@:companyName)(/:appId)' render={previewAppStartChunk} />
+
+                <Route path='a/renew' component={RenewToken} />
+                <Route path='a/external' render={externalLogin} />
+
+                {/* <Redirect path="*" render={pageNotFoundChunk} /> */}
             </Root>
         </IntlProvider>
-    </BrowserRouter>
-), document.getElementById("reactContainer"));
+    </BrowserRouter>,
+    document.getElementById("reactContainer"));

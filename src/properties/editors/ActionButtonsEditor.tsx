@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import EditorComponent from "./EditorComponent";
 import {GuiButton}         from "../../shared/ui/GuiComponents";
 

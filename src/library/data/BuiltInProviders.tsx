@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { StoreComponent, dispatchAction } from "../../CarbonFlux";
 import dataStore, { DataStoreState } from "./DataStore";
 import Navigatable from "../../shared/Navigatable";

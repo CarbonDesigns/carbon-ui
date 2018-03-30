@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import Hue   from 'react-color/lib/components/common/Hue';
 import Alpha from 'react-color/lib/components/common/Alpha';
 

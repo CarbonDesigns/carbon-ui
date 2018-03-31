@@ -21,7 +21,7 @@ function pack(webpackConfig) {
             //console.log("Writing stats", statsPath);
             //fs.writeFileSync(statsPath, JSON.stringify(json, null, '  '), 'utf-8');
 
-            hash();
+            //hash();
         });
 }
 

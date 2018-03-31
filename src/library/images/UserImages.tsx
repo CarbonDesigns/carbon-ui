@@ -1,6 +1,6 @@
-import React from "react";
-import ReactDom from "react-dom";
-import Dropzone from "dropzone";
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as Dropzone from "dropzone";
 
 import { app, backend, createUUID, IDisposable } from "carbon-core";
 import { Component, listenTo, dispatch, handles, dispatchAction } from "../../CarbonFlux";
@@ -312,7 +312,7 @@ export default class UserImages extends Component<any, any>{
             previewsContainer: ".library-page__upload .dz-previews"
         };
 
-        Dropzone.autoDiscover = false;
+        (Dropzone as any).autoDiscover = false;
         this.dropzone = new Dropzone(this.refs.dropzone, config);
         DropzoneRegistry.register("panel", this.dropzone);
 

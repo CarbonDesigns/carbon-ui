@@ -1,17 +1,17 @@
-import React                  from 'react';
-import Dots                   from '../shared/dots';
+import * as React from 'react';
+import Dots from '../shared/dots';
 import { workspace } from "carbon-core";
 // import {FormattedMessage} from "react-intl";
 
 /**
  *  Turns ('base', ['mod1', 'mod2'])  to -> 'base_mod1 base_mod2'.
  * */
-var _render_mods = function (base, mods, glue='_') {
+var _render_mods = function (base, mods, glue = '_') {
     if (typeof mods === 'string') {
         mods = [mods]
     }
     var cn = [];
-    mods.map(function(mod){
+    mods.map(function (mod) {
         cn.push(base + glue + mod);
     });
     return cn.join(' ');
@@ -41,11 +41,11 @@ var _get_icon = function (props) {
     if (props.icon != null) {
         var base_icon_cn = "pane-icon";
         switch (props.icon) {
-            case 'dots' :
-                icon = <i className={base_icon_cn}><Dots/></i>;
+            case 'dots':
+                icon = <i className={base_icon_cn}><Dots /></i>;
                 break;
-            default :
-                icon = <i className={base_icon_cn + " " + props.icon}/>;
+            default:
+                icon = <i className={base_icon_cn + " " + props.icon} />;
         }
     }
     return icon;
@@ -64,7 +64,7 @@ var _get_caption = function (props) {
     return caption
 };
 
-interface IPanelButtonProps extends IReactElementProps<HTMLButtonElement>{
+interface IPanelButtonProps extends IReactElementProps<HTMLButtonElement> {
     actionId: string;
     actionArg: string;
     icon?: string;
@@ -81,7 +81,7 @@ export class PaneButton extends React.Component<IPanelButtonProps>  {
     render() {
         var cn = _render_full_classname("pane-button", this.props);
         var caption = _get_caption(this.props);
-        var {children, className, onClick, icon, label, disabled, actionId, actionArg, ...rest} = this.props;
+        var { children, className, onClick, icon, label, disabled, actionId, actionArg, ...rest } = this.props;
         var title = workspace.shortcutManager.getActionHotkey(actionId);
         return (
             <div className={cn} onClick={this.onClick} data-action={actionId} data-action-arg={actionArg} title={title}>
@@ -104,9 +104,9 @@ export class PaneListItem extends React.Component<any>  {
 
     render() {
         var cn = _render_full_classname("pane-list__item", this.props);
-        var icon    = _get_icon(this.props);
+        var icon = _get_icon(this.props);
         var caption = _get_caption(this.props);
-        var {children, className, actionId, actionArg} = this.props;
+        var { children, className, actionId, actionArg } = this.props;
         var title = workspace.shortcutManager.getActionHotkey(actionId);
 
         return (

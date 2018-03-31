@@ -1,7 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import {app} from "carbon-core";
-import cx from 'classnames';
+import * as cx from "classnames";
 import { Component } from "../CarbonFlux";
 
 interface ActionButtonProps extends IReactElementProps {

@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes, { bool } from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { listenTo, Component, handles, dispatch } from "../CarbonFlux";
 import styled, {css} from "styled-components";
 import { app } from "carbon-core";
 import { FormattedMessage, defineMessages } from 'react-intl';
-import cx from "classnames";
+import * as cx from "classnames";
 import appStore from "../AppStore";
 import theme from "../theme";
 import icons from "../theme-icons";

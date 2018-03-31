@@ -1,7 +1,7 @@
 import {app} from "carbon-core";
 import {handles, CarbonStore, dispatch} from "../../CarbonFlux";
 import ImagesActions from "./ImagesActions";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 import { DropzoneType } from "../../workspace/DropzoneRegistry";
 
 export const enum UploadStatus {

@@ -1,4 +1,4 @@
-// import React from "react";
+// import * as React from "react";
 // import Modal, {Body, Footer} from "react-bootstrap/lib/Modal";
 // import Button from "react-bootstrap/lib/Button";
 // import ScrollContainer from "../../shared/ScrollContainer";

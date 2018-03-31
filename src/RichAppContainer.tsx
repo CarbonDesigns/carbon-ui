@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component, dispatch } from "./CarbonFlux";
 import LayoutContainer from "./layout/Layout";
 // import Header from './header/Header';

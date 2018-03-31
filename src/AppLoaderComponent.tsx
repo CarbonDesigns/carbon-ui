@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Component, dispatchAction } from "./CarbonFlux";
 
 import { app, logger, backend, workspace } from "carbon-core";
 import RouteComponent, { IRouteComponentProps } from "./RouteComponent";
 import { LoginRequiredError } from "./Constants";
 import { CarbonAction } from "./CarbonActions";
-import queryString from "query-string";
+import * as queryString from "query-string";
 
 require("./dialogs/FatalDialog");
 

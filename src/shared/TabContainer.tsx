@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Component } from "../CarbonFlux"
 import LessVars from "../styles/LessVars";
-import cx from "classnames";
+import * as cx from "classnames";
 import bem from '../utils/commonUtils';
 
 interface ITabContainerProps extends IReactElementProps {

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component } from "../../CarbonFlux";
 import { IGuiInputProps, GuiInput, GuiInputMod } from "./GuiComponents";
 import bem from "../../utils/commonUtils";

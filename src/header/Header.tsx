@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import DropButton from '../shared/DropButton';
 import DropButtonItem from '../shared/DropButtonItem';
 import ActionButton from './ActionButton';
@@ -7,7 +7,7 @@ import FlyoutButton from "../shared/FlyoutButton";
 import { app, PreviewDisplayMode } from "carbon-core";
 import { listenTo, Component, ComponentWithImmutableState, CarbonLabel, dispatch } from '../CarbonFlux';
 import AppActions from '../RichAppActions';
-import cx from "classnames";
+import * as cx from "classnames";
 import bem from '../utils/commonUtils';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { Record } from "immutable";
@@ -218,6 +218,7 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                         <h2>{this.state.appName}</h2>
                     </div>
                 </div> */}
+
                 <ProjectBar>
                     <IconButton icon={icons.menu_main} color="white" onClick={Header.onProjectClick}/>
                 </ProjectBar>

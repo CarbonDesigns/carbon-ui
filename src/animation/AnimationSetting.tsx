@@ -1,5 +1,5 @@
-import React from "react";
-import cx from 'classnames';
+import * as React from "react";
+import * as cx from "classnames";
 import { richApp } from '../RichApp';
 import { Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import Dropdown from "../shared/Dropdown";

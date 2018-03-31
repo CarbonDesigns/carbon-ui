@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Link, InjectedRouter } from "react-router";
 
 export function SearchTag(props: {text: string}) {

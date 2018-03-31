@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import SpriteView from "../SpriteView";
 import Dropdown from "../../shared/Dropdown";
 import Navigatable from "../../shared/Navigatable";

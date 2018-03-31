@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 import EditorComponent from "../EditorComponent";
-import cx from "classnames";
+import * as cx from "classnames";
 import {app, Artboard} from "carbon-core";
 
 

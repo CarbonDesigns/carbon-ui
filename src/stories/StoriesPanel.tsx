@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Component, listenTo, dispatch, CarbonLabel } from '../CarbonFlux';
 import Panel from '../layout/Panel'
 import { TabContainer, TabPage, TabArea } from "../shared/TabContainer";

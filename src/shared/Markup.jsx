@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import cx    from "classnames";
 
 var _simple_render = function (base_clase, props) {

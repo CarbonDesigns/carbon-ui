@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import {FormattedMessage} from "react-intl"
 import {backend, app} from "carbon-core";
 import {GuiButton} from "../shared/ui/GuiComponents";

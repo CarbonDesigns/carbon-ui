@@ -1,5 +1,5 @@
-import React from 'react'
-import cx from "classnames";
+import * as React from 'react'
+import * as cx from "classnames";
 import ColorPicker from "../../shared/ui/ColorPicker";
 import { Component } from "../../CarbonFlux";
 import { util } from "carbon-api";

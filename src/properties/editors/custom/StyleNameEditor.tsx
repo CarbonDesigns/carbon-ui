@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 import EditorComponent from "../EditorComponent";
-import cx from "classnames";
+import * as cx from "classnames";
 import {
     app,
     StyleManager,
@@ -12,7 +12,7 @@ import StringEditor from "../StringEditor";
 import ScrollContainer from '../../../shared/ScrollContainer';
 import {richApp} from "../../../RichApp";
 import {FormattedMessage} from "react-intl";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 //import ManageStylesDialog from "../../dialogs/ManageStylesDialog";
 
 

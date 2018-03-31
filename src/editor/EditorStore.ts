@@ -1,5 +1,5 @@
 import { CarbonStore, dispatch, handles } from "../CarbonFlux";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 
 var emptyCode: string = require("./model/empty.txt") as any;
 

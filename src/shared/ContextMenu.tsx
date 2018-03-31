@@ -1,6 +1,6 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import cx from 'classnames';
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as cx from "classnames";
 import { Component, listenTo, stopPropagationHandler, CarbonLabel, dispatch } from "../CarbonFlux";
 import bem from "../utils/commonUtils";
 import { ensureElementVisible } from "../utils/domUtil";
@@ -67,7 +67,7 @@ interface SubMenuProps extends ISimpleReactElementProps {
 class SubMenu extends Component<SubMenuProps> implements ICancellationHandler {
     componentDidMount() {
         super.componentDidMount();
-        let node = ReactDOM.findDOMNode(this) as HTMLElement;
+        let node = ReactDom.findDOMNode(this) as HTMLElement;
         ensureElementVisible(node, document.documentElement);
 
         //if there is no space on the right, flip on the other side

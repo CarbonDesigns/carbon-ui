@@ -1,9 +1,9 @@
-import React from "react";
+import * as React from "react";
 import PropTypes, { bool } from "prop-types";
 import { listenTo, Component, handles, dispatch, CarbonLabel } from "../CarbonFlux";
 import styled, { css } from "styled-components";
 import { FormattedMessage, defineMessages } from 'react-intl';
-import cx from "classnames";
+import * as cx from "classnames";
 import theme from "../theme";
 import icons from "../theme-icons";
 import Icon from "./Icon";

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import SpriteView from "../SpriteView";
 import { richApp } from "../../RichApp";

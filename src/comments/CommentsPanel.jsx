@@ -1,6 +1,6 @@
 import {Component, listenTo} from "../CarbonFlux";
 import NotReady from '../shared/NotReady';
-import React from 'react';
+import * as React from "react";
 //import {FormattedMessage} from 'react-intl';
 //import {msg} from '../intl/store';
 import Panel from '../layout/Panel'

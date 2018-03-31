@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { Component, listenTo, dispatchAction, handles } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import { FormattedMessage, defineMessages } from 'react-intl';

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import HotKeyListener from "./HotkeyListener";
 import { Component } from "./CarbonFlux";
 import { CoreIntl } from "carbon-core"

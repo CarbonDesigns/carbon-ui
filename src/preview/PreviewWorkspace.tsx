@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import {
     app,
     PreviewController,
@@ -27,7 +27,7 @@ import {
 import { listenTo, Component, ComponentWithImmutableState, dispatch, handles } from "../CarbonFlux";
 import PreviewStore from "./PreviewStore";
 import PreviewActions from './PreviewActions';
-import cx from "classnames";
+import * as cx from "classnames";
 import EditorActions from "../editor/EditorActions";
 import { TouchEmulator } from './TouchEmulator';
 import styled from "styled-components";

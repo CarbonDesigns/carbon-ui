@@ -1,10 +1,10 @@
 import { Component } from '../CarbonFlux';
-import React from 'react';
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import immutable from 'immutable';
 import LayoutActions from './LayoutActions';
 import { richApp, app } from "../RichApp";
-import cx from 'classnames';
+import * as cx from "classnames";
 import bem_mod from '../utils/commonUtils';
 import { FormattedMessage } from "react-intl";
 import styled from "styled-components";

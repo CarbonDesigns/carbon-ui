@@ -1,7 +1,7 @@
-import React from "react";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { dispatch, Component } from '../CarbonFlux';
-import cx from 'classnames';
+import * as cx from "classnames";
 import Antiscroll, { AntiscrollOptions } from "../external/antiscroll";
 import CarbonActions from "../CarbonActions";
 

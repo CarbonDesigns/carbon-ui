@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
 import {backend, logger} from "carbon-api";
 
-export default class RenewToken extends React.Component{
+export class RenewToken extends React.Component{
     componentDidMount(){
         backend.renewTokenCallback();
     }

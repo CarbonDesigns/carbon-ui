@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import ColorPicker from "../../shared/ui/ColorPicker";
 import {Component, dispatch} from "../../CarbonFlux";
 import {TabContainer, TabTabs, TabPage, TabArea} from "../../shared/TabContainer";

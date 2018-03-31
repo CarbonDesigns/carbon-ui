@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 import { Component } from "../CarbonFlux";
-import cx from "classnames";
+import * as cx from "classnames";
 import ScrollContainer from "./ScrollContainer";
 
 //strange webpack bug, scroll container import is removed

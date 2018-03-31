@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 import { Container, IContainer, IUIElement, Selection, Shape, Image } from "carbon-core";
-import interact from "interact.js";
+import * as interact from "interact.js";
 import layersStore, { LayerNode } from "./LayersStore";
 import { dispatchAction } from "../CarbonFlux";
 

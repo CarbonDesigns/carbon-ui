@@ -1,5 +1,5 @@
-import React, {ReactHTMLElement} from 'react';
-import cx from "classnames";
+import * as React from "react";
+import * as cx from "classnames";
 import FlyoutButton from '../../shared/FlyoutButton';
 
 import EditorComponent from "./EditorComponent";

@@ -56,5 +56,12 @@ export default {
     layer_unlock: icon("layer_lock.svg", 7, 11), // TODO:
     layer_code: icon("layer_code.svg", 9, 9),
     top_edit: icon("top_design.svg", 9, 9),
-    top_prototype: icon("top_prototype.svg", 24, 19),
+    dist_h: icon("dist_h.svg", 20, 20),
+    dist_v: icon("dist_v.svg", 20, 20),
+    align_l: icon("align_l.svg", 20, 20),
+    align_h: icon("align_h.svg", 20, 20),
+    align_r: icon("align_r.svg", 20, 20),
+    align_t: icon("align_t.svg", 20, 20),
+    align_v: icon("align_v.svg", 20, 20),
+    align_b: icon("align_b.svg", 20, 20),
 }

@@ -19,7 +19,7 @@ import FlyoutHeader from "../components/FlyoutHeader";
 import TextInput from "../components/TextInput";
 import MainButton from "../components/MainButton";
 import Slider from "../components/Slider";
-import RepeateDropButton from "./RepeateDropButton";
+import RepeatDropButton from "./RepeateDropButton";
 
 interface IActionHeaderProps extends IReactElementProps {
 
@@ -86,7 +86,8 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
         return <ActionHeaderComponent>
             <IconButton icon={icons.undo} width={46} height={46} onClick={this.undoAction} />
             <IconButton icon={icons.redo} width={46} height={46} onClick={this.redoAction} />
-            <RepeateDropButton/>
+            <ZoomBar />
+            <RepeatDropButton/>
             <FlyoutButton
                 position={{ targetVertical: "bottom", targetHorizontal: "center" }}
                 renderContent={() =>
@@ -155,7 +156,6 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
                     </VerticalGroup>
                 </FlyoutBody>
             </FlyoutButton>
-            <ZoomBar />
         </ActionHeaderComponent>;
     }
 }

@@ -16,6 +16,7 @@ import { MarkupLine, Markup } from "../shared/ui/Markup";
 import { GuiButton } from "../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
 import icons from "../theme-icons";
+import ArrangeCommands from './ArrangeCommands';
 
 interface IPropertiesPanelProps {
 }
@@ -99,11 +100,12 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
         }
 
         return <ScrollContainer id="edit__properties" className="thin dark">
-            <NameAndLockProps
+            {/* <NameAndLockProps
                 e={this.state.element}
                 nameProperty={this.state.nameProperty}
                 lockedProperty={this.state.lockedProperty}
-            />
+            /> */}
+            <ArrangeCommands/>
             {content}
         </ScrollContainer>
     }

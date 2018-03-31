@@ -148,7 +148,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     private renderTitle() {
         if (this.state.editing) {
             return <EnterInput
-                defaultValue={this.props.layer.element.name}
+                value={this.props.layer.element.name}
                 onValueEntered={value => {
                     this.props.layer.element.name = (value);
                     this.setState({editing: false});
@@ -179,71 +179,6 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
         let visible = layer.element.visible;
         let useInCode = this.props.useInCode;
 
-        // let layerClassNames = b(null, {
-        //     "lock-0": !locked,
-        //     "lock-1": locked,
-        //     "vis-0": !visible,
-        //     "vis-1": visible,
-        //     "selected": this.props.selected,
-        //     "ancestorSelected": this.props.ancestorSelected
-        // });
-
-        var body_mods = {
-            collapsed: !this.props.expanded,
-            "lock-0": !locked,
-            "lock-1": locked,
-            "vis-0": !visible,
-            "vis-1": visible,
-            selected: this.props.selected,
-            "is-container": (layer.type === 'group' || layer.type === 'page' || layer.type === 'artboard'),
-            'has-children': layer.hasChildren,
-            // 'is-single'   : !ps.hasChildren
-        };
-        body_mods["indent-" + layer.indent] = true;
-        body_mods["type-" + layer.type] = true;
-
-        var colorsCss: React.CSSProperties = {};
-        if (layer.element instanceof Text) {
-            colorsCss.backgroundColor = (layer.element as IText).props.font.color;
-            colorsCss.borderColor = colorsCss.backgroundColor;
-        }
-        else {
-            colorsCss.borderColor = this.displayColor(layer.element.stroke, 'transparent');
-            colorsCss.backgroundColor = this.displayColor(layer.element.fill, 'transparent');
-        }
-
-        // var layer_body = (<section
-        //     className={b('body', body_mods)}
-        //     ref="layer_body"
-        // >
-        //     <div className={b('left-icons')}>
-        //         <VisibleButton onClick={this.onToggleVisible} />
-        //         <LockButton onClick={this.onToggleLock} />
-        //     </div>
-
-        //     <div className={b('desc')}>
-        //         <div className={b('indent')} onClick={this.onToggleExpand} data-index={this.props.index}>
-        //             {!!layer.hasChildren && <i className={b("arrow")} />}
-        //         </div>
-        //         <div className={b('title')} >
-        //             <i className={b('icon', null, `type-icon_${layer.type}`)} onDoubleClick={this.onIconDoubleClick}/>
-        //             {this.renderTitle()}
-        //         </div>
-        //     </div>
-
-        //     {/* <div className={b('right-icons')}>
-        //         <div className={b('colors')}>
-        //             <div className={b('colors-square')} style={colorsCss}></div>
-        //         </div>
-        //         <SelectCheckbox
-        //             onClick={LayerItem.addToSelection}
-        //             canSelect={layer.canSelect}
-        //             index={this.props.index}
-        //         />
-        //     </div> */}
-
-        // </section>);
-
         return (
             <LayerContainer ref="item"
                 data-index={this.props.index}
@@ -256,7 +191,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
                 className={cx("layer", {selected:this.props.selected})}
             >
                 {this.renderCollapser()}
-                <LayerCaption >{this.renderTitle()}</LayerCaption>
+                <LayerCaption>{this.renderTitle()}</LayerCaption>
                 <ActionButtons>
                     <IconButton className={cx("layerButton", {active:!visible})} icon={icons.layer_visible} width={16} height={16} onClick={this.onToggleVisible}/>
                     <IconButton className={cx("layerButton", {active:locked})} icon={icons.layer_lock} width={16} height={16} onClick={this.onToggleLock} />
@@ -275,10 +210,12 @@ const ActionButtons = styled.div`
     padding-right:4px;
 `;
 
+const layer_height = 32;
+
 const LayerContainer = styled.div.attrs<any>({})`
     display:flex;
     align-items:center;
-    height:32px;
+    height:${layer_height}px;
     padding-left:${props=>(props.indent+1)*16}px;
     border-radius:1px;
 
@@ -306,6 +243,10 @@ const LayerCaption = styled.div`
     color:${theme.text_color};
     padding-left: 8px;
     flex:1;
+    input {
+        height:${layer_height}px;
+        padding-left:8px;
+    }
 `;
 
 var LockButton = (props) => {

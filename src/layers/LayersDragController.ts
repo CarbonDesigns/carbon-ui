@@ -256,6 +256,7 @@ export class LayersDragController {
         if (dragEvent.clientY > targetRect.top + targetRect.height / 2) {
             return DropPosition.Below;
         }
+
         return DropPosition.Above;
     }
 

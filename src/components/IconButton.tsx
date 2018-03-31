@@ -7,6 +7,7 @@ import cx from "classnames";
 import theme from "../theme";
 import icons from "../theme-icons";
 import Icon from "./Icon";
+import SvgIcon from "./SvgIcon";
 
 interface IIconButtonProps extends IReactElementProps {
     icon?: { src: string; width: number; height: number };
@@ -25,7 +26,7 @@ const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, 
     align-items: center;
     justify-content:center;
     & > .icon {
-        background-color: ${props => !props.disabled?(props.color || theme.button_default):theme.button_disabled};
+        background-color: ${props => !props.disabled ? (props.color || theme.button_default) : theme.button_disabled};
     }
 
     ${props => props.disabled ? '' : css`
@@ -33,15 +34,14 @@ const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, 
             background-color: ${props => props.hoverColor || theme.button_hover}
         }
     `}
-`
+`;
 
 export default class IconButton extends Component<IIconButtonProps, {}> {
     render() {
-        var { icon, color, width, height, disabled, ...props } = this.props;
+        var { icon, color, width, height, disabled, children, ...props } = this.props;
 
         return <IconButtonComponent width={width} height={height} disabled={disabled} {...props}>
-            <Icon className="icon" icon={icon}>
-            </Icon>
+            {!this.props.icon?children:<Icon className="icon" icon={icon}/>}
         </IconButtonComponent>;
     }
 }

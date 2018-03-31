@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import PropTypes, { bool } from "prop-types";
 import { listenTo, Component, handles, dispatch, CarbonLabel } from "../CarbonFlux";
 import styled, { css } from "styled-components";

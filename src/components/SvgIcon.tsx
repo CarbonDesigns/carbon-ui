@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import PropTypes, { bool } from "prop-types";
 import { Component} from "../CarbonFlux";
 import styled from "styled-components";

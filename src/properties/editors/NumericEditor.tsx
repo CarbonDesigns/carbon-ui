@@ -10,7 +10,7 @@ import { PropertyNameContainer, PropertyLineContainer, PropertyWithSubtitleConta
 
 interface INumericEditorProps extends IEditorProps {
     selectOnEnter?: boolean;
-    subproperty?: boolean;
+    type?: "child" | "subproperty";
 }
 
 interface INumericEditorState {
@@ -182,12 +182,17 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
             tabIndex={1}
         />);
 
-        if (this.props.subproperty) {
+        if (this.props.type === "subproperty") {
             return <PropertyWithSubtitleContainer className={this.props.className}>
                 {inputRender}
                 <PropertySmallNameContainer><FormattedMessage id={this.displayName()} /></PropertySmallNameContainer>
             </PropertyWithSubtitleContainer>;
         }
+
+        if (this.props.type === "child") {
+            return inputRender;
+        }
+
         return <PropertyLineContainer className={this.props.className}>
             <PropertyNameContainer><FormattedMessage id={this.displayName()} /></PropertyNameContainer>
             {inputRender}

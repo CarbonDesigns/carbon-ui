@@ -37,13 +37,13 @@ export default class Slider extends React.Component<ISliderProps, any>{
       this._size = this.slider.clientWidth;
     }
 
-    this._updatePositionFromEvent(event);
+    this._updatePositionFromEvent(event, false);
     this._handelMouseDown(event);
   }
 
   _handleDragging = (event) => {
     if (this._dragging) {
-      this._updatePositionFromEvent(event);
+      this._updatePositionFromEvent(event, false);
     }
   }
 
@@ -66,15 +66,15 @@ export default class Slider extends React.Component<ISliderProps, any>{
     }
 
     var newPos = this._originalPosition + dv;
-    this._updateFromPosition(newPos);
+    this._updateFromPosition(newPos, true);
   }
 
-  _updatePositionFromEvent = (event) => {
+  _updatePositionFromEvent = (event, final) => {
     var value = this.props.vertical ? (event.clientY - this._offset) : (event.clientX - this._offset);
-    this._updateFromPosition(value);
+    this._updateFromPosition(value, final);
   }
 
-  _updateFromPosition(value) {
+  _updateFromPosition(value, final) {
     var percentPosition = (value / this._size) * 100;
 
     if (percentPosition > 100) {
@@ -94,7 +94,7 @@ export default class Slider extends React.Component<ISliderProps, any>{
       this.progress.style.width = this.handle.style.left = percentPosition + '%';
     }
 
-    if (this.props.valueChanged) {
+    if (final && this.props.valueChanged) {
       this.props.valueChanged(percentPosition);
     }
   }
@@ -111,6 +111,7 @@ export default class Slider extends React.Component<ISliderProps, any>{
     document.body.removeEventListener("mousemove", this._handleDragging);
     document.body.removeEventListener("mouseup", this._handelMouseUp);
     this.slider.classList.remove("dragging");
+    this._updatePositionFromEvent(event, true);
   }
 
   render() {

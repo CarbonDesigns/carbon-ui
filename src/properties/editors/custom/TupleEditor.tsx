@@ -26,7 +26,7 @@ export default class TupleEditor extends EditorComponent<ISize, ITupleEditorProp
                 {properties.map((p, index) => {
                     return <NumericEditor e={this.props.e} p={p} key={index}
                         onSettingValue={this.changeTupleProperty}
-                        subproperty={true}
+                        type="subproperty"
                         onPreviewingValue={this.previewTupleProperty} />
                 })}
             </PropertyTupleContainer>

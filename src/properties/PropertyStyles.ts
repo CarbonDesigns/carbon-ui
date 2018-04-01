@@ -36,8 +36,4 @@ export const PropertyTupleContainer = styled.div`
     grid-column-gap: 18px;
     justify-content:space-between;
     align-items:center;
-
-    & > * {
-        flex:50% 1 1;
-    }
 `;

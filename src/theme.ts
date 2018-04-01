@@ -18,6 +18,8 @@ export const colors = {
     default_font: "400 12px 'Roboto', sans-serif;",
     link_font: "400 10px 'Roboto', sans-serif;",
     input_font: "400 10px 'Roboto', sans-serif;",
+    prop_font: "400 9px 'Roboto', sans-serif;",
+    prop_name_font: "400 14px 'Roboto', sans-serif;",
     link_padding: "8px",
     input_background: "#212121",
     layer_page_background: "#212121",

@@ -142,6 +142,9 @@ export default
         "Content": "Content", //
         "Text type": "Text type", //
         "@font": "Font", //
+        "@size": "Size", //
+        "@position": "Position", //
+        "@rotation": "Transform", //
         "@symbol": "Symbol",
         "Default font": "Default font", //
         "Content font": "Content font", //

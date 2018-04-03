@@ -8,13 +8,9 @@ var fs = require("fs");
 var BundleResourcesPlugin = require("./BundleResourcesPlugin");
 var resolveCoreModules = require("./resolveCore");
 
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
 var UglifyWebpackPlugin = require("uglifyjs-webpack-plugin");
 // var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
-
-var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
 var defaults = {
     minimize: false,
@@ -103,8 +99,6 @@ function getPlugins(settings) {
 
     let resourceBundleOptions = { resourceFile: null };
     var plugins = [
-        //breaks incremental updates in watch mode...
-
         new BundleResourcesPlugin({
             cdn: settings.authority,
             publicPath: settings.publicPath,
@@ -121,8 +115,6 @@ function getPlugins(settings) {
             resourceBundleOptions: resourceBundleOptions
         }),
         // new HtmlWebpackScriptCrossoriginPlugin({}),
-
-        new CheckerPlugin(),
 
         new webpack.LoaderOptionsPlugin({
             debug: settings.debug

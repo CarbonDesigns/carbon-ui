@@ -28,7 +28,7 @@ function BundleResourcesPlugin(options) {
 };
 BundleResourcesPlugin.prototype.apply = function (compiler) {
     var that = this;
-    compiler.plugin('emit', function (compilation, callback) {
+    compiler.hooks.emit.tapAsync('CarbonResources', function (compilation, callback) {
         // Create a header string for the generated file:
         var result = '';
 

@@ -11,6 +11,7 @@ var resolveCoreModules = require("./resolveCore");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var UglifyWebpackPlugin = require("uglifyjs-webpack-plugin");
 // var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
 
 var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
@@ -142,13 +143,6 @@ function getPlugins(settings) {
     plugins.push(new webpack.DefinePlugin(defines));
 
     if (settings.minimize) {
-        if (!settings.noUglify) {
-            plugins.push(new webpack.optimize.UglifyJsPlugin({
-                sourceMap: true,
-                minimize: true
-            }));
-        }
-
         plugins.push(
             // new InlineManifestWebpackPlugin({
             //     name: 'webpackManifest'
@@ -361,7 +355,8 @@ module.exports = function (settings) {
         optimization: {
             runtimeChunk: {
                 name: "manifest",
-            }
+            },
+            minimizer: settings.minimize && !settings.noUglify ? [new UglifyWebpackPlugin({ sourceMap: true })] : [],
         }
     };
 

@@ -1,5 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
+var UglifyWebpackPlugin = require("uglifyjs-webpack-plugin");
 
 var defaults = {
     minimize: false,
@@ -20,16 +21,6 @@ function getPlugins(settings){
 
        // new webpack.optimize.OccurenceOrderPlugin(),
     ];
-
-    if (settings.minimize){
-        if (!settings.noUglify){
-            plugins.push(new webpack.optimize.UglifyJsPlugin({
-                compressor: {
-                    warnings: false
-                }
-            }));
-        }
-    }
 
     return plugins;
 }
@@ -53,6 +44,9 @@ module.exports = function(settings){
             extensions: [".js", ".jsx", ".less"]
         },
         mode: settings.minimize ? "development" : "production",
+        optimization: {
+            minimizer: settings.minimize && !settings.noUglify ? [new UglifyWebpackPlugin({ sourceMap: true })] : [],
+        }
     };
 
     settings.verbose && console.log(config);

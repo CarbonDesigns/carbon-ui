@@ -15,6 +15,7 @@ try
     gci target -Exclude fonts,carbon-core*,carbon-api*,*.d.ts | ri -recurse
     copy .\fonts\ .\target\ -Recurse -Force
     copy .\img\ .\target\ -Recurse -Force
+    copy .\src\res\i\ .\target\res\app\i\ -Recurse -Force
 
     if ($CopyCore)
     {

@@ -1,8 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
 
-var WebpackMd5Hash = require('webpack-md5-hash');
-
 var defaults = {
     minimize: false,
     noUglify: false,
@@ -21,7 +19,6 @@ function getPlugins(settings){
         }),
 
        // new webpack.optimize.OccurenceOrderPlugin(),
-        new WebpackMd5Hash()
     ];
 
     if (settings.minimize){
@@ -47,14 +44,15 @@ module.exports = function(settings){
         },
         output: {
             path: fullPath("../target"),
-            filename: "carbon-[name]-[hash].js",
+            filename: "carbon-[name]-[hash:4].js",
             library: "[name]"
         },
         plugins: getPlugins(settings),
         resolve: {
             modules: [fullPath("../src"), fullPath("../node_modules")],
             extensions: [".js", ".jsx", ".less"]
-        }
+        },
+        mode: settings.minimize ? "development" : "production",
     };
 
     settings.verbose && console.log(config);

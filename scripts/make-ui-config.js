@@ -53,8 +53,8 @@ function getOutput(settings) {
         publicPath: settings.fullPublicPath + "/"
     };
 
-    output.filename = "carbon-[name]-[hash].js";
-    output.chunkFilename = "carbon-[name]-[chunkhash].js";
+    output.filename = "carbon-[name]-[hash:4].js";
+    output.chunkFilename = "carbon-[name]-[chunkhash:4].js";
     output.path = fullPath("../target/");
 
     return output;
@@ -265,30 +265,30 @@ function getLoaders(settings) {
 
     //extract-text broken, need to remove less
     //if (settings.minimize) {
-        // loaders.push({
-        //     test: /\.less$/,
-        //     use: ExtractTextPlugin.extract({
-        //         use: [
-        //             "css-loader"
-        //         ]
-        //     })
-        // });
+    // loaders.push({
+    //     test: /\.less$/,
+    //     use: ExtractTextPlugin.extract({
+    //         use: [
+    //             "css-loader"
+    //         ]
+    //     })
+    // });
     //}
     //else {
-        var lessSettings = {};
-        loaders.push({
-            test: /\.less$/,
-            use: [
-                "style-loader",
-                {
-                    loader: "css-loader",
-                    options: {
-                        minimize: false,
-                        sourceMap: true
-                    }
-                },
-                "less-loader"]
-        });
+    var lessSettings = {};
+    loaders.push({
+        test: /\.less$/,
+        use: [
+            "style-loader",
+            {
+                loader: "css-loader",
+                options: {
+                    minimize: false,
+                    sourceMap: true
+                }
+            },
+            "less-loader"]
+    });
     //}
     return loaders;
 }
@@ -297,8 +297,8 @@ module.exports = function (settings) {
     settings = extend({}, defaults, settings);
     settings.authority = settings.host ? settings.host + (settings.port ? ":" + settings.port : "") : "";
     settings.fullPublicPath = settings.authority + settings.publicPath;
-    settings.hashPattern = settings.minimize ? "-[hash]" : "";
-    settings.chunkHashPattern = settings.minimize ? "-[chunkhash]" : "";
+    settings.hashPattern = settings.minimize ? "-[hash:4]" : "";
+    settings.chunkHashPattern = settings.minimize ? "-[chunkhash:4]" : "";
     settings.verbose && console.log(settings);
 
     var config = {
@@ -357,7 +357,12 @@ module.exports = function (settings) {
             }
         },
         cache: true,
-        mode: settings.debug ? "development" : "production"
+        mode: settings.debug ? "development" : "production",
+        optimization: {
+            runtimeChunk: {
+                name: "manifest",
+            }
+        }
     };
 
     settings.verbose && console.log(config);

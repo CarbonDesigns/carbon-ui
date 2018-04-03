@@ -45,7 +45,7 @@ try
 
     if (-not $Debug)
     {
-        npm test
+        #npm test
     }
 
     if ($BuildNumber)

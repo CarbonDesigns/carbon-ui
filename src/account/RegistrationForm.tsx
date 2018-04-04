@@ -1,13 +1,12 @@
-import React from "react";
-import cx from "classnames";
+import * as React from "react";
+import * as cx from "classnames";
 import { FormattedMessage } from "react-intl";
 import { backend } from "carbon-api";
 import { dispatch, handles, Component, dispatchAction } from "../CarbonFlux";
-import FlyoutActions from "../FlyoutActions";
 import { AccountAction } from "./AccountActions";
 import { GuiButton, GuiRadio, GuiInput, IFieldState, ValidationTrigger, GuiValidatedInput, IFormState } from "../shared/ui/GuiComponents";
 import Socials from "./Socials";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 import { MinPasswordLength } from "../Constants";
 
 interface IRegistrationFormState extends IFormState {

@@ -1,7 +1,5 @@
 import { IMouseEventHandler, KeyboardState, IMouseEventData, IDisposable, AngleAdjuster, NearestPoint, BrushType } from "carbon-core";
-import { UIElementDecorator, Environment, ILayer, IContext, IEnvironment, Invalidate, Brush, ChangeMode } from "carbon-core";
-import { LayerType, ILayerDrawHandlerObject } from "carbon-app";
-
+import { UIElementDecorator, Environment, ILayer, IContext, IEnvironment, Invalidate, Brush, ChangeMode, LayerType, ILayerDrawHandlerObject } from "carbon-core";
 
 const PointRadius = 6;
 const PointBorder = 1;

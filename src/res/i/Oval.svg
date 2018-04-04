@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
-    <title>Oval</title>
+    <title>Icon/Oval</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Design-Gray-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1782.000000, -335.000000)">
-        <g id="Window/Proporties" transform="translate(1597.000000, 52.000000)" fill="#FFFFFF">
-            <circle id="Oval" cx="190.625" cy="289.375" r="5.625"></circle>
+    <g id="Icon-Set" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon/Oval" stroke="#979797" stroke-width="1.2">
+            <circle id="Oval-3" cx="9.5" cy="9.5" r="9.5"></circle>
         </g>
     </g>
 </svg>

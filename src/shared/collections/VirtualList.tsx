@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { InfiniteLoader, AutoSizer, Dimensions, InfiniteLoaderChildProps, Index, IndexRange, List, ListRowProps, Alignment } from "react-virtualized";
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
@@ -43,7 +43,7 @@ export default class VirtualList<T = any> extends Component<VirtualListProps<T>>
     }
 
     private initScroller(){
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.list);
+        let gridNode = ReactDom.findDOMNode(this.list) as HTMLElement;
         this.scroller = ScrollContainer.initScroller(gridNode.parentElement, {innerSelector: gridNode});
     }
 

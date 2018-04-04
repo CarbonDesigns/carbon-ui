@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { AutoSizer, Dimensions, Index, IndexRange, List, ListRowProps, Collection, CollectionCellRendererParams, SectionRenderedParams } from "react-virtualized";
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
@@ -69,7 +69,7 @@ export default class VirtualCollection extends Component<VirtualCollectionProps>
     }
 
     private initScroller() {
-        let gridNode = ReactDom.findDOMNode<HTMLElement>(this.collection);
+        let gridNode = ReactDom.findDOMNode(this.collection) as HTMLElement;
         this.scroller = ScrollContainer.initScroller(gridNode.parentElement, { innerSelector: gridNode });
     }
 

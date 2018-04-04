@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from "react";
 import SwitchEditor from "../SwitchEditor";
-import cx from 'classnames';
+import * as cx from "classnames";
 import {TextAlign} from "carbon-core";
 
 import {richApp} from "../../../RichApp";

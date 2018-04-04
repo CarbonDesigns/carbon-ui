@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component } from "../CarbonFlux";
 import bem from "../utils/commonUtils";
 import { GuiButton } from "../shared/ui/GuiComponents";

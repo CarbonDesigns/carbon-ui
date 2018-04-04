@@ -8,12 +8,9 @@ var fs = require("fs");
 var BundleResourcesPlugin = require("./BundleResourcesPlugin");
 var resolveCoreModules = require("./resolveCore");
 
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
-
-var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
+var UglifyWebpackPlugin = require("uglifyjs-webpack-plugin");
+// var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
 
 var defaults = {
     minimize: false,
@@ -40,9 +37,12 @@ function getEntry(settings) {
         ]
     };
     if (settings.devServer) {
-        entry.index.unshift('webpack-dev-server/client?' + settings.authority);
-        entry.index.unshift('webpack/hot/only-dev-server');
+        entry.index.unshift(
+            'webpack/hot/only-dev-server',
+            'webpack-dev-server/client?' + settings.authority
+        );
     }
+
     return entry;
 }
 function getOutput(settings) {
@@ -50,23 +50,23 @@ function getOutput(settings) {
         publicPath: settings.fullPublicPath + "/"
     };
 
-    output.filename = "carbon-[name].js";
-    output.chunkFilename = "carbon-[name]-[id].js";
+    output.filename = "carbon-[name]-[hash:4].js";
+    output.chunkFilename = "carbon-[name]-[chunkhash:4].js";
     output.path = fullPath("../target/");
 
     return output;
 }
 function getResolve(settings) {
-    var root = [];
-    root.push(fullPath("../src"));
-
     var resolves = {
-        root: root,
+        modules: [
+            fullPath("../src"),
+            fullPath("../node_modules")
+        ],
         alias: {
             "bem": fullPath("../src/utils/commonUtils"),
-            'react/lib/ReactMount': 'react-dom/lib/ReactMount'
+            "fbjs/lib/memoizeStringOnly": fullPath("../node_modules/fbjs/lib/memoizeStringOnly")
         },
-        extensions: ["", ".ts", ".tsx", ".js", ".jsx", ".less", ".html"]
+        extensions: [".ts", ".tsx", ".js", ".jsx", ".less", ".html"]
     };
 
     return resolves;
@@ -97,10 +97,8 @@ function getPlugins(settings) {
         apiScript = getDebugOrCdnPath(settings, path.relative(root, modules.api));
     }
 
-    let resourceBundleOptions = {resourceFile: null};
+    let resourceBundleOptions = { resourceFile: null };
     var plugins = [
-        //breaks incremental updates in watch mode...
-
         new BundleResourcesPlugin({
             cdn: settings.authority,
             publicPath: settings.publicPath,
@@ -116,19 +114,18 @@ function getPlugins(settings) {
             coreScript: coreScript,
             resourceBundleOptions: resourceBundleOptions
         }),
-        new HtmlWebpackScriptCrossoriginPlugin({}),
+        // new HtmlWebpackScriptCrossoriginPlugin({}),
 
-        new CheckerPlugin()
-
-        // new HtmlWebpackPlugin({
-        //     template: './res/electron.ejs',
-        //     chunksSortMode: 'none',
-        //     vendorsScript:  settings.authority + (settings.minimize ? settings.publicPath : "/") + settings.vendorsFile
-        // }),
+        new webpack.LoaderOptionsPlugin({
+            debug: settings.debug
+        })
     ];
 
     if (settings.devServer) {
-        plugins.push(new webpack.HotModuleReplacementPlugin());
+        plugins.push(
+            new webpack.HotModuleReplacementPlugin(),
+            new webpack.NamedModulesPlugin()
+        );
     }
 
     var defines = {
@@ -138,14 +135,6 @@ function getPlugins(settings) {
     plugins.push(new webpack.DefinePlugin(defines));
 
     if (settings.minimize) {
-        if (!settings.noUglify) {
-            plugins.push(new webpack.optimize.UglifyJsPlugin({
-                compressor: {
-                    warnings: false
-                }
-            }));
-        }
-
         plugins.push(
             // new InlineManifestWebpackPlugin({
             //     name: 'webpackManifest'
@@ -155,14 +144,8 @@ function getPlugins(settings) {
             //     names: ["common", "manifest"]
             // }),
 
-            new (require('chunk-manifest-webpack-plugin'))({
-                filename: "manifest.json",
-                manifestVariable: "webpackManifest"
-            }),
-
-            //breaks incremental updates in watch mode...
-            new webpack.optimize.OccurrenceOrderPlugin(),
-            new ExtractTextPlugin("[name]-[contenthash].css")
+            new webpack.HashedModuleIdsPlugin(),
+            //new ExtractTextPlugin("[name]-[contenthash].css")
         );
     }
 
@@ -176,34 +159,35 @@ function getPlugins(settings) {
 }
 
 function getLoaders(settings) {
-    var plugins = [];
+    var babelPlugins = [];
 
-    plugins.push(
-        require.resolve("babel-plugin-transform-promise-to-bluebird"),
-        require.resolve("babel-plugin-transform-runtime"),
-        require.resolve("babel-plugin-add-module-exports"),
-        //remove when babel 6 has proper support for decorators
-        require.resolve("babel-plugin-transform-decorators-legacy")
+    babelPlugins.push(
+        "react-hot-loader/babel",
+        "transform-class-properties",
+        "syntax-dynamic-import",
+        "babel-plugin-transform-promise-to-bluebird"
     );
 
     if (!settings.trace) {
-        plugins.push(require.resolve("babel-plugin-transform-remove-console"));
+        babelPlugins.push("babel-plugin-transform-remove-console");
     }
-    if (settings.minimize) {
-        plugins.push(require.resolve("babel-plugin-transform-react-constant-elements"));
-        plugins.push(require.resolve("babel-plugin-transform-react-inline-elements"));
-    }
-    var babelSettings = {
-        babelrc: false, //do not use settings from referenced packages
-        "presets": [
-            require.resolve("babel-preset-es2015"),
-            require.resolve("babel-preset-stage-0"),
-            require.resolve("babel-preset-react")
-        ],
-        "plugins": plugins,
-        cacheDirectory: true
+
+    var babelLoader = {
+        loader: "babel-loader",
+        options: {
+            babelrc: false, //do not use settings from referenced packages
+            presets: ["env", "react"],
+            plugins: babelPlugins,
+            cacheDirectory: true
+        }
     };
-    var babelLoader = "babel?" + JSON.stringify(babelSettings);
+
+    var tsloader = {
+        loader: 'ts-loader',
+        options: {
+
+        }
+    };
 
     var excludedFolders = ["node_modules", "libs", "generated"];
     var excludedFiles = ["carbon-core-.*", "carbon-api-.*", "CompilerWorker.w.js"];
@@ -214,71 +198,84 @@ function getLoaders(settings) {
         {
             test: /\.js$/,
             include: /oidc\-client/,
-            loaders: [babelLoader]
+            use: [babelLoader]
         },
         {
             test: /\.js$/,
             include: /react\-color/,
-            loaders: [babelLoader, "react-map-styles"]
+            use: [babelLoader, "react-map-styles"]
         },
         {
             test: /\.(txt)$/,
-            loaders: ['raw-loader']
+            use: ['raw-loader']
         },
         {
             test: /\.jsx$/,
-            loaders: ["react-hot", babelLoader],
+            // loaders: ["react-hot-loader/webpack", babelLoader],
+            use: [babelLoader, tsloader],
             exclude: excludes
         },
         {
             test: /\.tsx$/,
-            loaders: ["react-hot", babelLoader, "awesome-typescript-loader"],
+            // loaders: ["react-hot-loader/webpack", babelLoader, "awesome-typescript-loader"],
+            //use: [babelLoader, tsloader],
+            use: [babelLoader, tsloader],
             exclude: excludes
         },
         {
             test: /[^\.]\w(?!\.d)\.ts$/,
-            loaders: [babelLoader, "awesome-typescript-loader"],
+            use: [babelLoader, tsloader],
             exclude: /node_modules/
         },
         {
             test: /\.js$/,
-            loaders: [babelLoader],
+            use: [babelLoader],
             exclude: excludes
         },
         {
             test: /\.(png|gif|jpeg|jpg|cur|woff|woff2|eot|ttf|svg|gif)$/,
-            loaders: [util.format("file?name=[path][name]%s.[ext]", settings.hashPattern)],
+            use: [{
+                loader: "file-loader",
+                options: {
+                    name: util.format("[path][name]%s.[ext]", settings.hashPattern)
+                }
+            }],
             exclude: excludes
         }
-        // ,
-        // {
-        //     test:  /\.w.js$/,
-        //     loaders: ["worker-loader"],
-        //     options:{inline:true},
-        //     exclude: excludes
-        // }
     ];
 
     loaders.push({
         test: /\.optional\.css$/,
-        loaders: ["style-loader/useable", "css"]
+        use: ["style-loader/useable", "css-loader"]
     });
 
-    if (settings.minimize) {
-        loaders.push({
-            test: /\.less$/,
-            loader: ExtractTextPlugin.extract(
-                'css?sourceMap!less?sourceMap'
-            )
-        });
-    }
-    else {
-        var lessSettings = {};
-        loaders.push({
-            test: /\.less$/,
-            loaders: ["style", "css?-minimize&sourceMap", 'less?' + JSON.stringify(lessSettings)]
-        });
-    }
+    //extract-text broken, need to remove less
+    //if (settings.minimize) {
+    // loaders.push({
+    //     test: /\.less$/,
+    //     use: ExtractTextPlugin.extract({
+    //         use: [
+    //             "css-loader"
+    //         ]
+    //     })
+    // });
+    //}
+    //else {
+    var lessSettings = {};
+    loaders.push({
+        test: /\.less$/,
+        use: [
+            "style-loader",
+            {
+                loader: "css-loader",
+                options: {
+                    minimize: false,
+                    sourceMap: true
+                }
+            },
+            "less-loader"]
+    });
+    //}
     return loaders;
 }
 
@@ -286,8 +283,8 @@ module.exports = function (settings) {
     settings = extend({}, defaults, settings);
     settings.authority = settings.host ? settings.host + (settings.port ? ":" + settings.port : "") : "";
     settings.fullPublicPath = settings.authority + settings.publicPath;
-    settings.hashPattern = settings.minimize ? "-[hash]" : "";
-    settings.chunkHashPattern = settings.minimize ? "-[chunkhash]" : "";
+    settings.hashPattern = settings.minimize ? "-[hash:4]" : "";
+    settings.chunkHashPattern = settings.minimize ? "-[chunkhash:4]" : "";
     settings.verbose && console.log(settings);
 
     var config = {
@@ -299,16 +296,14 @@ module.exports = function (settings) {
             "carbon-core": "window.c.core",
             "carbon-api": "window.c.api"
         },
-        resolveLoader: {
-            root: fullPath("../node_modules")
-        },
+
         amd: { jQuery: true },
         module: {
-            loaders: getLoaders(settings)
+            rules: getLoaders(settings)
         },
         plugins: getPlugins(settings),
         devtool: settings.devtool,
-        debug: !settings.minimize,
+        // debug: !settings.minimize,
         devServer: {
             contentBase: fullPath('../'),
             publicPath: settings.fullPublicPath + "/",
@@ -347,12 +342,14 @@ module.exports = function (settings) {
                 errorDetails: settings.errors
             }
         },
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-        },
-        cache: true
+        cache: true,
+        mode: settings.debug ? "development" : "production",
+        optimization: {
+            runtimeChunk: {
+                name: "manifest",
+            },
+            minimizer: settings.minimize && !settings.noUglify ? [new UglifyWebpackPlugin({ sourceMap: true })] : [],
+        }
     };
 
     settings.verbose && console.log(config);

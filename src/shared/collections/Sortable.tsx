@@ -1,6 +1,6 @@
-import React from "react";
-import ReactDom from "react-dom";
-import interact from "interact.js";
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as interact from "interact.js";
 import { Component } from "../../CarbonFlux";
 import { findTransformProp, nodeOffset } from "../../utils/domUtil";
 
@@ -41,7 +41,7 @@ export default class Sortable<T> extends Component<SortableProps<T>> {
             return;
         }
 
-        let currentNode = ReactDom.findDOMNode<HTMLElement>(this);
+        let currentNode = ReactDom.findDOMNode(this) as HTMLElement;
         console.assert(currentNode.childNodes.length === 1, "Sortable must contain a single child");
 
         let container = currentNode.childNodes[0] as HTMLElement;

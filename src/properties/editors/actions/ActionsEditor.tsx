@@ -1,6 +1,6 @@
-import React from 'react';
-import cx from "classnames";
-import Immutable from "immutable";
+import * as React from "react";
+import * as cx from "classnames";
+import * as Immutable from "immutable";
 
 import EditorComponent from "../EditorComponent";
 import ArtboardSelector from "./ArtboardSelector";

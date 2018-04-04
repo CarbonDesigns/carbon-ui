@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import { Component, listenTo, dispatch, handles, dispatchAction, StoreComponent } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'
@@ -6,7 +6,7 @@ import { Brush, app, ChangeMode, Shape, Selection, BrushType } from "carbon-core
 import bem from '../utils/commonUtils';
 import ScrollContainer from "../shared/ScrollContainer";
 import { Gammas } from "../properties/editors/BrushGammaSelector";
-import ReactDom from "react-dom";
+import * as ReactDom from "react-dom";
 import propertyStore from "../properties/PropertyStore";
 import { swatchesStore, Slot, SwatchesStoreState } from "../properties/SwatchesStore";
 import FlyoutButton from '../shared/FlyoutButton';

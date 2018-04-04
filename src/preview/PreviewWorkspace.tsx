@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import {
     app,
     PreviewController,
@@ -27,10 +27,11 @@ import {
 import { listenTo, Component, ComponentWithImmutableState, dispatch, handles } from "../CarbonFlux";
 import PreviewStore from "./PreviewStore";
 import PreviewActions from './PreviewActions';
-import cx from "classnames";
+import * as cx from "classnames";
 import EditorActions from "../editor/EditorActions";
 import { TouchEmulator } from './TouchEmulator';
-
+import styled from "styled-components";
+import theme from "../theme";
 
 // TODO:
 
@@ -94,6 +95,17 @@ function fillRectInRect(outer, inner) {
 
 const ViewportMargin = 40;
 
+const Viewport = styled.div`
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color: ${theme.workspace_background};
+    overflow: hidden;
+    user-select: none;
+`;
+
 export default class PreviewWorkspace extends ComponentWithImmutableState<any, any> {
     private previewModel: any;
     private _renderingRequestId:number;
@@ -106,9 +118,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     private _lastDrawnPage:any;
     private _renderingCallback:()=>void;
     private _renderingCallbackContinuous:()=>void;
-
+    private viewport: HTMLDivElement;
     refs: {
-        viewport: HTMLDivElement;
         canvas: HTMLCanvasElement;
         device: HTMLDivElement;
     }
@@ -138,7 +149,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var data = this.state.data;
         var newData = PreviewStore.state;
 
-        if (!this._attached || !this.refs.viewport) {
+        if (!this._attached || !this.viewport) {
             return;
         }
 
@@ -222,7 +233,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     draw() {
         if (this.previewModel) {
-            let viewport = this.refs.viewport;
+            let viewport = this.viewport;
             if (!viewport) {
                 return;
             }
@@ -273,7 +284,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         this.attachToView();
         window.addEventListener("resize", this.onresize);
         if (this.state.emulateTouch) {
-            this.touchEmulator.enable(this.refs.viewport, true);
+            this.touchEmulator.enable(this.viewport, true);
         }
 
         document.body.classList.add("fullscreen");
@@ -325,13 +336,13 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     }
 
     ensureCanvasSize(viewportSize?) {
-        if (!this._attached || !this.refs.viewport) {
+        if (!this._attached || !this.viewport) {
             return;
         }
 
         let previewDisplayMode = PreviewStore.state.displayMode;
 
-        let viewport = this.refs.viewport;
+        let viewport = this.viewport;
 
         viewportSize = viewportSize || {
             width: viewport.clientWidth - ViewportMargin,
@@ -394,7 +405,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         if (this.context && !this._attached) {
             var view = new PreviewView(app);
             view.setup({ Layer: Page });
-            view.viewContainerElement = this.refs.viewport;
+            view.viewContainerElement = this.viewport;
             var previewModel = new PreviewModel(app);
             var controller = new PreviewController(app, view, previewModel);
             Environment.set(view, controller);
@@ -415,7 +426,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     _initialize(view, previewModel, controller) {
         app.platform.detachEvents();
-        app.platform.attachEvents(this.refs.viewport);
+        app.platform.attachEvents(this.viewport);
 
         this.view = view;
         view.setupRendering([this.context], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
@@ -453,14 +464,14 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var data = this.state.data;
 
         return (
-            <div id="viewport" ref="viewport" key="viewport" className="viewport" name="viewport" tabIndex={1}>
+            <Viewport id="viewport" innerRef={x=>this.viewport = x} key="viewport" tabIndex={1}>
                 <div className="preview__device" ref="device">
                     <canvas ref="canvas"
                         style={{
                             position: 'absolute'
                         }} />
                 </div>
-            </div>
+            </Viewport>
         );
     }
 }

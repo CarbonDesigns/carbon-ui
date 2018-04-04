@@ -1,7 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
-
-var WebpackMd5Hash = require('webpack-md5-hash');
+var UglifyWebpackPlugin = require("uglifyjs-webpack-plugin");
 
 var defaults = {
     minimize: false,
@@ -20,19 +19,8 @@ function getPlugins(settings){
             'process.env.NODE_ENV': settings.minimize ? '"production"' : '"dev"'
         }),
 
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new WebpackMd5Hash()
+       // new webpack.optimize.OccurenceOrderPlugin(),
     ];
-
-    if (settings.minimize){
-        if (!settings.noUglify){
-            plugins.push(new webpack.optimize.UglifyJsPlugin({
-                compressor: {
-                    warnings: false
-                }
-            }));
-        }
-    }
 
     return plugins;
 }
@@ -47,13 +35,17 @@ module.exports = function(settings){
         },
         output: {
             path: fullPath("../target"),
-            filename: "carbon-[name]-[hash].js",
+            filename: "carbon-[name]-[hash:4].js",
             library: "[name]"
         },
         plugins: getPlugins(settings),
         resolve: {
-            root: [fullPath("../src")],
-            extensions: ["", ".js", ".jsx", ".less"]
+            modules: [fullPath("../src"), fullPath("../node_modules")],
+            extensions: [".js", ".jsx", ".less"]
+        },
+        mode: settings.minimize ? "development" : "production",
+        optimization: {
+            minimizer: settings.minimize && !settings.noUglify ? [new UglifyWebpackPlugin({ sourceMap: true })] : [],
         }
     };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component, dispatch } from "./CarbonFlux";
 import LayoutContainer from "./layout/Layout";
 // import Header from './header/Header';
@@ -14,15 +14,17 @@ import PreviewWorkspace from './preview/PreviewWorkspace';
 import StoriesPanel from './stories/StoriesPanel';
 import LibraryPanel from './library/LibraryPanel';
 import LayersPanel from './layers/LayersPanel';
+import ToolsPanel from './tools/ToolsPanel';
 import CommentsPanel from './comments/CommentsPanel';
 import PropertiesPanel from './properties/PropertiesPanel';
 import SwatchesPanel from './properties/SwatchesPanel';
 
-import Perf from "react-addons-perf";
+// import Perf from "react-addons-perf";
 import FullScreenApi from "./shared/FullScreenApi";
 import { Splash } from "./Splash";
 import { EditorPanel } from "./editor/EditorPanel";
-window['Perf'] = Perf
+
+// window['Perf'] = Perf
 
 export class RichAppContainer extends AppLoaderComponent {
     componentDidMount() {
@@ -50,6 +52,7 @@ export class RichAppContainer extends AppLoaderComponent {
             <LayoutContainer
                 panels={{
                     layers: { contentFactory: React.createFactory(LayersPanel) },
+                    tools: { contentFactory: React.createFactory(ToolsPanel) },
                     library: { contentFactory: React.createFactory(LibraryPanel) },
                     comments: { contentFactory: React.createFactory(CommentsPanel) },
                     properties: { contentFactory: React.createFactory(PropertiesPanel) },

@@ -1,12 +1,17 @@
-import React from 'react';
-import cx from 'classnames';
+import * as React from "react";
+import * as cx from "classnames";
 import { app, Selection, WorkspaceTool, workspace } from "carbon-core";
-import AppStore from "../../AppStore";
-import AppActions from "../../RichAppActions";
-import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../../CarbonFlux";
-import HotKeyListener from "../../HotkeyListener";
+import AppStore from "../AppStore";
+import AppActions from "../RichAppActions";
+import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../CarbonFlux";
+import HotKeyListener from "../HotkeyListener";
 import { Record } from "immutable";
-import bem from '../../utils/commonUtils';
+import styled, {css} from "styled-components";
+import icons from "../theme-icons";
+import theme from "../theme";
+import Icon from '../components/Icon';
+import FlyoutButton from '../shared/FlyoutButton';
+import { FlyoutBody, VerticalGroup, HorizontalGroup, FlyoutBodyNoPadding } from '../components/CommonStyle';
 
 function _preventDefault(event) {
     event.preventDefault();
@@ -20,21 +25,24 @@ class ToolButton extends Component<any, any> {
         this.state = { hover: false };
     }
 
+    _renderGroupIndicator() {
+        return <GroupIndicator>
+            <Icon icon={icons.layer_collapsed} className="icon"></Icon>
+        </GroupIndicator>
+    }
+
     render() {
-        var { active, type, ...rest } = this.props;
-        var mods = {
-            // hover  : this.state.hover,
-            active: active
-        };
-        mods[type] = true;
-        var className = bem("tool-button", null, mods);
+        var { active, group, type, icon, ...rest } = this.props;
+
         return (
-            <div
-                {...rest}
-                className={className}
-                onMouseEnter={() => this.setState({ hover: true })}
-                onMouseLeave={() => this.setState({ hover: false })}
-            ><i className={"ico-tool_" + type} /></div>
+            <ToolButtonStyled
+                active={active}
+                    onMouseEnter={() => this.setState({ hover: true })}
+                    onMouseLeave={() => this.setState({ hover: false })}
+                    {...rest}>
+                <Icon className="icon" icon={icon} color={theme.button_default} />
+                {group && this._renderGroupIndicator()}
+            </ToolButtonStyled>
         )
     }
 }
@@ -47,7 +55,7 @@ var State = Record({
     loaded: false
 });
 
-type ToolDefinition = { type: "single", tool: WorkspaceTool } | { type: "group", name: string, children: { tool: WorkspaceTool }[] };
+type ToolDefinition = { type: "single", tool: WorkspaceTool, icon?: any } | { type: "group", name: string, children: { tool: WorkspaceTool, icon?:any }[] };
 type ToolMetadata = { edit: ToolDefinition[], prototype: ToolDefinition[], preview: ToolDefinition[] };
 
 export default class Tools extends ComponentWithImmutableState<any, any> {
@@ -63,20 +71,12 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         };
     }
 
-    shouldComponentUpdate(nextState, nextProps) {
-        return super.shouldComponentUpdate.apply(this, arguments);
-    }
-
     @listenTo(AppStore)
     onChange() {
         this.mergeStateData({ activeTool: AppStore.state.activeTool, loaded: AppStore.state.loaded });
 
         if (this.state.data.activeMode !== AppStore.state.activeMode) {
             this.mergeStateData({ changingActiveMode: true });
-
-            //onCssTransitionEnd(this.refs.tools, ()=> {
-            // this.setState({activeMode: AppStore.state.activeMode, changingActiveMode:false});
-            //}, 500)
         }
     }
 
@@ -87,45 +87,49 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 name: "group-select",
                 children: [
                     {
-                        tool: "pointerTool"
+                        tool: "pointerTool",
+                        icon: icons.tool_selection
                     },
                     {
-                        tool: "pointerDirectTool"
+                        tool: "pointerDirectTool",
+                        icon: icons.tool_directSelection
                     }
                 ]
             },
             {
                 type: "single",
-                tool: "textTool"
+                tool: "textTool",
+                icon: icons.tool_text
             },
             {
                 type: "single",
-                tool: "imageTool"
+                tool: "imageTool",
+                icon: icons.tool_image
             },
             {
                 type: "group",
                 name: "group-shapes",
                 children: [
                     {
-                        tool: "rectangleTool"
+                        tool: "rectangleTool",
+                        icon: icons.tool_rectangle
                     },
                     {
-                        tool: "circleTool"
+                        tool: "circleTool",
+                        icon: icons.tool_oval
                     },
                     {
-                        tool: "triangleTool"
+                        tool: "triangleTool",
+                        icon: icons.tool_triangle
                     },
                     {
-                        tool: "polygonTool"
+                        tool: "polygonTool",
+                        icon: icons.tool_polygon
                     },
                     {
-                        tool: "starTool"
+                        tool: "starTool",
+                        icon: icons.tool_star
                     }
-
-                    //      {this._renderButton("tool-button_circle")}
-                    //      {this._renderButton("tool-button_triangle")}
-                    //      {this._renderButton("tool-button_polygon")}
-                    //      {this._renderButton("tool-button_shape")}
                 ]
             },
             {
@@ -133,44 +137,39 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 name: 'group-drawing',
                 children: [
                     {
-                        tool: "pencilTool"
+                        tool: "pencilTool",
+                        icon: icons.tool_pen
                     },
                     {
-                        tool: "lineTool"
+                        tool: "lineTool",
+                        icon: icons.tool_line
                     },
-                    // {this._renderButton("tool-button_pencil")}
-                    //       {this._renderButton("tool-button_line")}
-                    //       {this._renderButton("tool-button_poly")}
                 ]
             },
             {
                 type: "single",
-                tool: "pathTool"
+                tool: "pathTool",
+                icon: icons.tool_path
             },
             {
                 type: "single",
-                tool: "handTool"
+                tool: "handTool",
+                icon: icons.tool_hand
             },
             {
                 type: "group",
                 name: 'group-artboard',
                 children: [
-                    { tool: "artboardTool" },
-                    { tool: "artboardViewerTool" }
+                    {
+                        tool: "artboardTool",
+                        icon: icons.tool_artboard
+                    },
+                    {
+                        tool: "artboardViewerTool",
+                        icon: icons.tool_artboardViewer
+                    }
                 ]
             },
-            // {
-            //     type: 'sectionTool'
-            // }
-            // {
-            //     type: 'protoTool'
-            // }
-            // {this._renderButton("tool-button_note")}
-            //           {this._renderButton("tool-button_comment")}
-            //           {this._renderButton("tool-button_callout")}
-            //           {this._renderButton("tool-fbutton_memo")}
-            //           {this._renderButton("tool-button_marker")}
-            //           {this._renderButton("tool-button_like")}
         ],
         prototype: [
             {
@@ -188,6 +187,9 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     _clickButton(event, action, group) {
         app.actionManager.invoke(action);
         this.mergeStateData({ activeGroup: null });
+        if(this.flyout) {
+            this.flyout.close();
+        }
 
         event.preventDefault();
     }
@@ -213,7 +215,6 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
     _onMouseDownGroup(event, type, group, delay_before_tool_show = 200) {
         app.actionManager.invoke(type);
         this.mergeStateData({ activeGroup: null });
-        // event.preventDefault();
 
         if (this._groupTimer) {
             clearTimeout(this._groupTimer);
@@ -257,102 +258,6 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         return null;
     }
 
-
-    _renderButton(type, active, group, is_group = false) {
-        var actionLabel = app.actionManager.getActionLabel(type);
-
-        var mouseDown, click, mouseUp;
-        if (is_group) {
-            mouseUp = (e) => { this._onMouseUpGroup(e, type, group) };
-            mouseDown = (e) => { this._onMouseDownGroup(e, type, group) };
-        }
-        else {
-            mouseUp = (e) => { this._onMouseUp(e, type, group) };
-            mouseDown = _preventDefault;
-            click = (e) => { this._clickButton(e, type, group) };
-        }
-        return (
-            <ToolButton
-                tabIndex={this._tabIndex++}
-                key={type}
-                type={type}
-                active={active}
-                title={actionLabel}
-                onBlur={this._onBlur}
-                onMouseUp={mouseUp}
-                onMouseDown={mouseDown}
-                onClick={click}
-            // onMouseUp={(e)=>{this._onMouseUp(e, type, group)}}
-            // onMouseDown={_preventDefault}
-            // onClick={(e)=>{this._clickButton(e, type, group)}}
-            />
-        )
-    }
-
-    _renderMore(type, group) {
-        if (!app.actionManager.hasAction(type)) {
-            throw "Unknown action " + type;
-        }
-
-        return (
-            <div className="tool__more"
-                onMouseDown={(e) => { this._onMouseDownGroup(e, type, group, 10) }}
-                onMouseUp={(e) => { this._onMouseUpGroup(e, type, group) }}
-            ><i /></div>
-        )
-    }
-
-    // _renderGroupButton(type, active, group) {
-    //     var action = app.actionManager.getAction(type);
-    //     if (!action) {
-    //         throw "Unknown action " + type;
-    //     }
-    //
-    //     var {formatMessage} = this.context.intl;
-    //     var fullDescription = app.ctionManager.getActionFullDescription(action.name, (m)=>formatMessage({id: m}));
-    //     var className = cx("tool-button", type, {_active: active});
-    //     return (
-    //         <div className={className}
-    //              tabIndex={this._tabIndex++}
-    //              key={type}
-    //              title={fullDescription}
-    //              onBlur={this._onBlur}
-    //              onMouseUp={(e)=>{this._onMouseUpGroup(e, type, group)}}
-    //              onMouseDown={(e)=>{this._onMouseDownGroup(e, type, group)}}
-    //         >
-    //             <i />
-    //         </div>
-    //     )
-    // }
-
-    _renderToolButtonGroup = (item: ToolDefinition) => {
-        var className = cx("tool-button-group", { _activeGroup: item.type === "group" && item.name === this.state.data.activeGroup });
-        var activeTool = this.state.data.activeTool;
-
-        if (item.type === "group") {
-            var activeButton = this.state[item.name] || item.children[0].tool;
-            return (
-                <div className={className} data-group={item.name} key={item.name}>
-                    {
-                        // this._renderGroupButton(activeButton, activeTool === activeButton, item.type)
-                        this._renderButton(activeButton, activeTool === activeButton, item.name, true)
-                    }
-                    {
-                        this._renderMore(activeButton, item.name)
-                    }
-                    <div className="tool__subtools">
-                        {item.children.map((b) =>
-                            this._renderButton(b.tool, activeTool === b.tool, item.name)
-                        )}
-                    </div>
-                </div>
-            );
-        }
-        else {
-            return this._renderButton(item.tool, activeTool === item.tool, null);
-        }
-    }
-
     _onMouseDownOnBody = (event) => {
         var className = event.target.className;
 
@@ -380,6 +285,85 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         Selection.modeChangedEvent.unbind(this, this._onSelectionModeChanged);
     }
 
+    _renderButton(type, icon, active, group, is_group = false) {
+        var actionLabel = app.actionManager.getActionLabel(type);
+
+        var mouseDown, click, mouseUp;
+        if (is_group) {
+            mouseUp = (e) => { this._onMouseUpGroup(e, type, group) };
+            mouseDown = (e) => { this._onMouseDownGroup(e, type, group) };
+        }
+        else {
+            mouseUp = (e) => { this._onMouseUp(e, type, group) };
+            mouseDown = _preventDefault;
+            click = (e) => { this._clickButton(e, type, group) };
+        }
+        return (
+            <ToolButton
+                tabIndex={this._tabIndex++}
+                key={type}
+                type={type}
+                icon={icon}
+                active={active}
+                title={actionLabel}
+                onBlur={this._onBlur}
+                onMouseUp={mouseUp}
+                onMouseDown={mouseDown}
+                group={is_group}
+                onClick={click}
+            />
+        )
+    }
+
+    _renderMore(type, group) {
+        if (!app.actionManager.hasAction(type)) {
+            throw "Unknown action " + type;
+        }
+
+        return (
+            <div className="tool__more"
+                onMouseDown={(e) => { this._onMouseDownGroup(e, type, group, 10) }}
+                onMouseUp={(e) => { this._onMouseUpGroup(e, type, group) }}
+            ><i /></div>
+        )
+    }
+
+    _findToolInGroup(group, tool) {
+        for(var i = 0; i < group.length; ++i) {
+            if(group[i].tool === tool) {
+                return group[i];
+            }
+        }
+
+        return group[0];
+    }
+
+    _renderToolButtonGroup = (item: ToolDefinition) => {
+        var activeTool = this.state.data.activeTool;
+
+        if (item.type === "group") {
+            var activeButton = this._findToolInGroup(item.children, this.state[item.name]);
+            return (
+                <FlyoutButton data-group={item.name} key={item.name} onOpened={x=>this.flyout = x} onClosed={()=>this.flyout=null}
+                    showAction="longpress"
+                    position={{targetVertical:"center", targetHorizontal:"right", sourceHorizontal:"left"}}
+                    renderContent={()=>this._renderButton(activeButton.tool, activeButton.icon, activeTool === activeButton.tool, item.name, true)}
+                >
+                    <FlyoutBodyNoPadding>
+                        <HorizontalGroup>
+                            {item.children.map(i=>{
+                                return this._renderButton(i.tool, i.icon, activeTool === i.tool, null, false)
+                            })}
+                        </HorizontalGroup>
+                    </FlyoutBodyNoPadding>
+                </FlyoutButton>
+            );
+        }
+        else {
+            return this._renderButton(item.tool, item.icon, activeTool === item.tool, null, false);
+        }
+    }
+
     render() {
         if (!this.state.data.loaded) {
             return null;
@@ -392,12 +376,57 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
             (this.state as any)[activeGroup] = activeTool;
         }
 
-        var classNames = cx(this.state.data.activeMode, { "changing-mode": this.state.data.changingActiveMode });
-
         return (
-            <div id="tools" key="tools" ref="tools" className={classNames}>
+            <ToolsStyled key="tools" innerRef={x => this.tools = x}>
                 {this.toolsMetadata[this.state.data.activeMode].map(this._renderToolButtonGroup)}
-            </div>
+            </ToolsStyled>
         );
     }
 }
+
+const ToolsStyled = styled.div`
+    user-select: none;
+    display:flex;
+    flex-direction:column;
+    background-color: ${theme.panel_background};
+    width: 55px;
+    height: 100%;
+`;
+
+const ToolButtonGroup = styled.div`
+`;
+
+const ToolButtonStyled = styled.div.attrs<{active?:boolean}>({})`
+    display:flex;
+    width: 55px;
+    height:50px;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    margin-bottom:4px;
+    position:relative;
+
+    ${ props=>props.active?
+        css`
+        & .icon {
+            background-color:${theme.button_active};
+        }`:
+        css`
+        &:hover {
+            & .icon
+            {
+                background-color:${theme.button_hover};
+            }
+        }
+        `
+    }
+`;
+
+const GroupIndicator = styled.div`
+    position:absolute;
+    right:3px;
+    top:0;
+    bottom:0;
+    display:flex;
+    align-items:center;
+`;

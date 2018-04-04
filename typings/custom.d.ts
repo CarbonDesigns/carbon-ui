@@ -15,6 +15,8 @@ declare interface ISimpleReactElementProps {
     className?: string;
     style?: any;
     key?: any;
+    tabIndex?:number;
+    title?:string;
 }
 declare interface IReactElementProps<T extends HTMLElement = HTMLElement> extends ISimpleReactElementProps, React.DOMAttributes<HTMLElement>{
     children?:any[]|any;

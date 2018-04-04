@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import cx from 'classnames';
+import * as cx from "classnames";
 import Dots from "./dots";
 import ScrollContainer from "./ScrollContainer";
 import EnterInput from "./EnterInput";

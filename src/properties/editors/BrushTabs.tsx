@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import ColorPicker from "../../shared/ui/ColorPicker";
 import { TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../../shared/TabContainer";
 import { BrushGammaSelector, Gammas } from "./BrushGammaSelector";

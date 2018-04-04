@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { AutoSizer, List } from "react-virtualized";
 import { Component, dispatchAction } from "../CarbonFlux";
 import { GuiButton, GuiButtonBlock } from "../shared/ui/GuiComponents";

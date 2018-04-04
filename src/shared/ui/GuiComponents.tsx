@@ -1,12 +1,13 @@
-import React from 'react';
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as PropTypes from "prop-types";
 // import {app} from '../../../RichApp'
 import { FormattedMessage } from "react-intl";
 import { Component } from "../../CarbonFlux";
 import DropDown, { IDropdownProps } from "../Dropdown";
-import cx from 'classnames';
+import * as cx from "classnames";
 import bem, { IHasMods } from '../../utils/commonUtils';
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 
 interface IGuiInlineLabelProps extends IReactElementProps {
     text?: string
@@ -448,7 +449,7 @@ export type GuiInputMod = "small" |
     "wide" |
     "fill";
 
-export interface IGuiInputProps extends React.ChangeTargetHTMLAttributes<HTMLInputElement>, IHasMods<GuiInputMod> {
+export interface IGuiInputProps extends React.InputHTMLAttributes<HTMLInputElement>, IHasMods<GuiInputMod> {
     label?: any;
     caption?: string;
     defaultMessage?: string;
@@ -518,7 +519,7 @@ export class GuiInput extends Component<IGuiInputProps>{
     }
 }
 
-interface IGuiTextAreaProps extends React.ChangeTargetHTMLAttributes<HTMLTextAreaElement>, IHasMods<
+interface IGuiTextAreaProps extends React.InputHTMLAttributes<HTMLTextAreaElement>, IHasMods<
     "resize-v" |
     "small" |
     "fill" |

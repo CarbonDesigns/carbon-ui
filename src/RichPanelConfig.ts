@@ -1,6 +1,6 @@
 import { LayoutDirection, LayoutDockPosition } from "carbon-core";
 
-const version = 5; // update version if layout has to changed on the client
+const version = 9; // update version if layout has to changed on the client
 
 export default {
     edit: {
@@ -8,6 +8,11 @@ export default {
         direction: LayoutDirection.Row,
         fixed: true,
         children: [
+            // {
+            //     panelName: 'tools',
+            //     fixed:true,
+            //     width:55
+            // },
             {
                 direction: LayoutDirection.Column,
                 width: 305,
@@ -59,6 +64,11 @@ export default {
             //     width: 300,
             //     panelName: 'stories',
             //     collapseDirection:LayoutDockPosition.Left,
+            // },
+            // {
+            //     panelName: 'tools',
+            //     fixed:true,
+            //     width:55
             // },
             {
                 panelName: 'layers',

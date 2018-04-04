@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from "react";
 import EditorComponent, {IEditorProps} from "./EditorComponent";
-import cx from 'classnames';
+import * as cx from "classnames";
 
 export default class ToggleEditor extends EditorComponent<boolean, IEditorProps> {
     render(){

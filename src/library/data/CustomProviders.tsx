@@ -1,5 +1,5 @@
-import React from "react";
-import cx from 'classnames';
+import * as React from "react";
+import * as cx from "classnames";
 import { GuiButton, GuiInput, GuiCheckbox, GuiTextArea } from "../../shared/ui/GuiComponents";
 import { Component, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import CatalogView from "./CatalogView";

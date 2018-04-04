@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import { Url, MinPasswordLength } from "../Constants";
 import { IFieldState, IFormState, GuiValidatedInput, ValidationTrigger } from "../shared/ui/GuiComponents";

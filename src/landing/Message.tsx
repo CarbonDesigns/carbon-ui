@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
 
@@ -19,7 +19,7 @@ export default class MessagePage extends RouteComponent<IRouteComponentProps, an
     }
 
     render() {
-        var router:any = this.context.router;
+        var router:any = this.context.history;
         if (router.location && router.location.state) {
             var header = router.location.state.header;
             var message = router.location.state.message;

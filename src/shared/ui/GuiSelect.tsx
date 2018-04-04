@@ -1,7 +1,7 @@
-import React from "react";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { Component } from "../../CarbonFlux";
-import cx from 'classnames';
+import * as cx from "classnames";
 import { default as bem, join_bem_mods, IHasMods } from '../../utils/commonUtils';
 import FlyoutButton from '../FlyoutButton';
 import ScrollContainer from '../ScrollContainer';

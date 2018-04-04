@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import cx from "classnames";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import * as cx from "classnames";
 
 var ExpandArrow = (props)=>{
     var className = cx("arrow", {collapsed:props.collapsed});

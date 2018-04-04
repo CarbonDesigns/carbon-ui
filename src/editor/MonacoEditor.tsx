@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { ensureMonacoLoaded } from './MonacoLoader';
 import EditorStore from "./EditorStore";
 

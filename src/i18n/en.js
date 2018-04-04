@@ -29,6 +29,7 @@ export default
         "pageCenter": "Center the page",
 
         "@action.done": "Done",
+        "@path.operations": "Path actions",
         "@path.union": "Union",
         "@path.join": "Join",
         "@path.difference": "Difference",
@@ -42,6 +43,7 @@ export default
         "Distribute horizontally": "Distribute horizontally",
         "Distribute vertically": "Distribute vertically",
         "Group elements": "Group elements",
+        "@group.operations": "Group actions",
         "Ungroup elements": "Ungroup elements",
         "Group in repeater": "Group in repeater",
         "Parent width": "Parent width",
@@ -140,6 +142,9 @@ export default
         "Content": "Content", //
         "Text type": "Text type", //
         "@font": "Font", //
+        "@size": "Size", //
+        "@position": "Position", //
+        "@rotation": "Transform", //
         "@symbol": "Symbol",
         "Default font": "Default font", //
         "Content font": "Content font", //
@@ -347,6 +352,8 @@ export default
         "mirroring.urllabel": "Or copy URL manually", //
         "@menu.openProject": "Open project...", //
         "@menu.saveProjectAs": "Save project as...", //
+
+        "@useInCode": "Use in code",
 
 
         "featurenotready": "This feature is not ready yet, but we are actively working on it. Press a button below if you would like to get notified when it is ready. (and to motivate us work faster ;) )", //

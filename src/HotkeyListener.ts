@@ -1,5 +1,5 @@
 import { app, Clipboard, params, IShortcut, workspace } from "carbon-core";
-import Mousetrap from "mousetrap";
+import * as Mousetrap from "mousetrap";
 import { dispatchAction } from "./CarbonFlux";
 import { cancellationStack, searchStack } from "./shared/ComponentStack";
 import { DefaultScheme } from "./Hotkeys";

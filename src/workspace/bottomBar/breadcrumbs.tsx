@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from "react";
 import { CompositeElement, PrimitiveType } from "carbon-core";
 import { app, Artboard, Selection, Environment, LayerType, IIsolationLayer, Invalidate, IComposite, Primitive } from "carbon-core";
-import cx from 'classnames';
+import * as cx from "classnames";
 import { listenTo, Component } from "../../CarbonFlux";
 import { iconType } from "../../utils/appUtils";
 import {

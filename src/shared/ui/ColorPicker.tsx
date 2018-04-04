@@ -1,5 +1,5 @@
-import React from 'react'
-import cx from "classnames";
+import * as React from 'react'
+import * as cx from "classnames";
 import { CustomPicker } from "react-color";
 import Alpha from 'react-color/lib/components/common/Alpha';
 import EditableInput from 'react-color/lib/components/common/EditableInput';

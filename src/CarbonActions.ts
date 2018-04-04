@@ -3,6 +3,8 @@ import { ILayer, IApp, ArtboardType, IArtboard, IPage, AppSettings, IUIElement, 
 export type CarbonAction =
     { type: "Carbon_AppLoaded" } |
     { type: "Carbon_AppUpdated" } |
+    { type: "Carbon_Cancel" } |
+    { type: "Carbon_Scroll" } |
     { type: "Carbon_AppChanged", primitives: Primitive[] } |
     { type: "Carbon_AppSettingsChanged", settings: AppSettings } |
     { type: "Carbon_Selection", composite: ISelectComposite } |
@@ -18,6 +20,12 @@ export type CarbonAction =
 var CarbonActions = {
     loaded:(app)=>{
         return {type: "Carbon_AppLoaded", app}
+    },
+    cancel:()=>{
+        return {type: "Carbon_Cancel"}
+    },
+    scroll: () => {
+        return {type: "Carbon_Scroll"}
     },
     pageChanged:(oldPage, newPage)=>{
         return {

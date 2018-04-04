@@ -10,7 +10,10 @@ let frequentTokens: IDisposable[] = [];
 export function registerEvents() {
     app.onLoad(() => {
         dispatch(CarbonActions.loaded(app))
+
+        app.actionManager.subscribe('cancel', ()=>dispatch(CarbonActions.cancel()));
     });
+
 
     app.updating.bind(() => {
         frequentTokens.forEach(x => x.dispose());

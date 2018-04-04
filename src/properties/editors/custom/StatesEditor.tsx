@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import {Component, listenTo} from "../../../CarbonFlux";
 import EditableList from "../../../shared/EditableList";
 import {richApp} from "../../../RichApp";
@@ -6,7 +6,7 @@ import {FormattedMessage} from "react-intl";
 import StringEditor from "../StringEditor";
 import DropdownEditor from "../DropdownEditor";
 import { PropertyMetadata, Symbol, Artboard, ArtboardState, model } from "carbon-core";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 import EditorComponent from "../EditorComponent";
 import propertyStore from "../../PropertyStore";
 

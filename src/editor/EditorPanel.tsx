@@ -1,10 +1,10 @@
 import { CarbonLabel, StoreComponent, listenTo, Component } from '../CarbonFlux';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as PropTypes from "prop-types";
 import Panel from '../layout/Panel'
 import { richApp } from '../RichApp';
-import cx from 'classnames';
+import * as cx from "classnames";
 import VirtualList from "../shared/collections/VirtualList";
 import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";

@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 import { app, backend, MirrorCode } from "carbon-core";
 import { Component } from "../../../CarbonFlux";
 import { Markup, MarkupLine } from "../../../shared/ui/Markup";
-import cx from 'classnames';
+import * as cx from "classnames";
 import { FormattedMessage } from "react-intl"
 import { BladeBody } from "../BladePage";
 import { GuiContentLoader } from "../../../shared/ui/GuiContentLoader";

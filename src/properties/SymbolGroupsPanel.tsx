@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component, dispatchAction } from "../CarbonFlux";
 import EditableList from "../shared/EditableList";
 import { SymbolGroup, IArtboardPage, app, PatchType, IArtboardPageProps, createUUID } from "carbon-core";

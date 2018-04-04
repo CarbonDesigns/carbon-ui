@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import separatorOr from "../shared/SeparatorOr";
 import { backend } from "carbon-api";
 import { LoginProviders } from "../Constants";

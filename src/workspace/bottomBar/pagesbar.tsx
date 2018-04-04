@@ -1,10 +1,9 @@
-import React from 'react';
-import ReactDom from 'react-dom';
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { FormattedMessage } from "react-intl";
-import cx from 'classnames';
+import * as cx from "classnames";
 import Dots from "../../shared/dots";
 import FlyoutButton from "../../shared/FlyoutButton";
-import FlyoutActions from "../../FlyoutActions";
 import ScrollContainer from "../../shared/ScrollContainer";
 import EnterInput from "../../shared/EnterInput";
 import {
@@ -164,7 +163,7 @@ class PagesList extends React.Component<any, any> {
 
     _newPageClicked = () => {
         app.addNewPage();
-        richApp.dispatch(FlyoutActions.hide());
+        richApp.dispatch(CarbonActions.cancel());
     };
 
     private pageId(page: IPage) {

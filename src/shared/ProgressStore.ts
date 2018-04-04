@@ -2,7 +2,7 @@ import {handles, CarbonStore} from "../CarbonFlux";
 import AppActions from "../RichAppActions";
 import {richApp} from '../RichApp';
 
-export default class ProgressStore extends CarbonStore{
+export default class ProgressStore extends CarbonStore<any>{
     constructor(options){
         super(options);
 

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component, dispatchAction, dispatch, CarbonLabel } from "../CarbonFlux";
 import { AccountAction } from "./AccountActions";
 import LoginForm from "./LoginForm";

@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Router from "react-router";
 import { Component } from "./CarbonFlux";
 import { ErrorCode, Url, InfoCode } from "./Constants";
 
-export interface IRouteComponentProps{
+export interface IRouteComponentProps {
     location: {
         pathname: string;
-        query: object;
+        search: string;
         state: any;
     }
 }
 
 export default class RouteComponent<P extends IRouteComponentProps = IRouteComponentProps, S = {}> extends Component<P, S> {
     context: {
-        router: Router.InjectedRouter
-        intl:any
+        history: Router.InjectedRouter
+        intl: any
     }
 
     componentDidMount() {
@@ -24,57 +24,57 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
         this.updateTitle(this.getTitle());
     }
 
-    goToDashboard(companyName: string, companyId: string){
-        this.context.router.push({
+    goToDashboard(companyName: string, companyId: string) {
+        this.context.history.push({
             pathname: "/@" + (companyName || "guest"),
-            query: this.props.location.query,
+            search: this.props.location.search,
             state: { companyId: companyId }
         });
     }
 
-    goBack(){
-        this.context.router.goBack();
+    goBack() {
+        this.context.history.goBack();
     }
 
-    goHome(){
-        this.context.router.push({
+    goHome() {
+        this.context.history.push({
             pathname: "/",
-            query: this.props.location.query,
+            search: this.props.location.search,
         });
     }
 
-    goToApp(companyName: string, appId: string, companyId?: string){
-        this.context.router.replace({
+    goToApp(companyName: string, appId: string, companyId?: string) {
+        this.context.history.replace({
             pathname: "/app/@" + companyName + "/" + appId,
-            query: this.props.location.query,
-            state: {companyId: companyId}
+            search: this.props.location.search,
+            state: { companyId: companyId }
         });
     }
 
-    goToError(errorCode: ErrorCode){
-        this.context.router.replace({
+    goToError(errorCode: ErrorCode) {
+        this.context.history.replace({
             pathname: "/e/" + errorCode,
-            query: this.props.location.query
+            search: this.props.location.search
         });
     }
 
-    goToInfo(infoCode: InfoCode){
-        this.context.router.replace({
+    goToInfo(infoCode: InfoCode) {
+        this.context.history.replace({
             pathname: "/i/" + infoCode,
-            query: this.props.location.query
+            search: this.props.location.search
         });
     }
 
-    goTo(url: Url, state?: any){
-        this.context.router.push({
+    goTo(url: Url, state?: any) {
+        this.context.history.push({
             pathname: url,
-            query: this.props.location.query,
+            search: this.props.location.search,
             state
         });
     }
 
-    replacePath(path, query = this.props.location.query){
-        this.context.router.replace({ pathname: path, query });
+    replacePath(path, search = this.props.location.search) {
+        this.context.history.replace({ pathname: path, search });
     }
 
     protected getTitle() {

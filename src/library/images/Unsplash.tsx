@@ -1,6 +1,6 @@
-import React from "react";
-import cx from "classnames";
-import ReactDom from "react-dom";
+import * as React from "react";
+import * as cx from "classnames";
+import * as ReactDom from "react-dom";
 import { Component, listenTo, dispatch, handles, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import Search from "../../shared/Search";
 import ImagesActions from './ImagesActions';

@@ -1,4 +1,4 @@
-import Dropzone from "dropzone";
+import * as Dropzone from "dropzone";
 import { dispatch, dispatchAction } from "../CarbonFlux";
 import ImagesActions from "../library/images/ImagesActions";
 import DropzoneRegistry from "./DropzoneRegistry";
@@ -164,7 +164,7 @@ export default class ImageDrop {
             }
         };
 
-        Dropzone.autoDiscover = false;
+        (Dropzone as any).autoDiscover = false;
         this.dropzone = new Dropzone(viewNode, config);
         DropzoneRegistry.register("workspace", this.dropzone);
 

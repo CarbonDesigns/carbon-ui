@@ -1,10 +1,11 @@
-import React from "react";
+import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { Component, dispatchAction } from "../CarbonFlux";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import CommunityLibraryDetails from "./CommunityLibraryDetails";
 import CommunityLibraryPage from "./CommunityLibraryPage";
 import { ISharedResource } from "carbon-core";
+import queryString from "query-string";
 
 interface CommunityLibraryProps extends IRouteComponentProps {
     params: {
@@ -12,9 +13,7 @@ interface CommunityLibraryProps extends IRouteComponentProps {
     };
     location: {
         pathname: string;
-        query: {
-            s?: string;
-        };
+        search:string;
         state: {
             data?: ISharedResource;
         }
@@ -53,7 +52,8 @@ export default class CommunityLibrary extends RouteComponent<CommunityLibraryPro
 
     private renderList() {
         if (this.state.showList) {
-            return <CommunityLibraryPage search={this.props.location.query.s || ""} visible={!this.props.params.resourceId} />;
+            var query = queryString.parse(this.props.location.search);
+            return <CommunityLibraryPage search={query.s || ""} visible={!this.props.params.resourceId} />;
         }
         return null;
     }

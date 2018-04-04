@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { handles, Component } from "./CarbonFlux";
 import AppActions from './RichAppActions';
 import { app } from "carbon-core";

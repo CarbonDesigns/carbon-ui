@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Component, dispatchAction, CarbonLabel } from "../CarbonFlux";
 import { backend, IAccountOverview } from "carbon-api";
 import { IRouteComponentProps, default as RouteComponent } from "../RouteComponent";
@@ -322,7 +322,7 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
 
     _onActiveChanged = (id) => {
         var location:any = this.props.location;
-        this.context.router.push({
+        this.context.history.push({
             pathname: "/settings/" + id,
             query: location.query
         });

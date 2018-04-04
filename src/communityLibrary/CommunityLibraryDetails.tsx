@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
 import { backend } from "carbon-api";
@@ -9,7 +9,7 @@ import TopMenu from "../shared/TopMenu";
 import SubscribeForm from "../shared/SubscribeForm";
 import bem from "../utils/commonUtils";
 import { ISharedResource, IPaginatedResult } from "carbon-core";
-import cx from "classnames";
+import * as cx from "classnames";
 import { SearchTag } from "./SearchTag";
 
 function buildSymbol(name) {

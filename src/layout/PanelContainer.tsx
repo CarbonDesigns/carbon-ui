@@ -1,10 +1,10 @@
 // deprecated
 import { Component } from '../CarbonFlux';
-import React from 'react';
+import * as React from "react";
 import LayoutActions from './LayoutActions';
 import { app } from "../RichApp";
 import { LayoutDockPosition, IAreaConstraint } from "carbon-core";
-import cx from "classnames";
+import * as cx from "classnames";
 
 interface IResizerProps extends IReactElementProps {
     v: number[];
@@ -159,7 +159,7 @@ export default class PanelContainer extends Component<IPanelContainerProps> {
 
         return (
             <div className={classNames}
-                name={this.props.container.panelName}
+                key={this.props.container.panelName}
                 data-index={container.index}
                 onMouseDown={this._onMouseDown}
                 style={this.getAbsoluteStyle(this.props.container)}

@@ -1,7 +1,7 @@
 import {Component, listenTo, dispatch, stopPropagationHandler} from '../CarbonFlux';
-import PropTypes from "prop-types";
-import React from 'react';
-import cx from "classnames";
+import * as PropTypes from "prop-types";
+import * as React from "react";
+import * as cx from "classnames";
 import ScrollContainer from "../shared/ScrollContainer";
 import bem from '../utils/commonUtils';
 import Dots from "../shared/dots";

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import { List, Map, fromJS } from 'immutable';
 import Splitter from './Splitter';
 import { app } from "../RichApp";
@@ -6,14 +6,16 @@ import PanelContainer from './PanelContainer';
 
 import { listenTo, Component, dispatch, handles } from "../CarbonFlux";
 import LayoutActions from './LayoutActions';
-import cx from 'classnames';
+import * as cx from "classnames";
 import bem_mod from '../utils/commonUtils';
 import { util, LayoutDockPosition, LayoutDirection, Invalidate } from "carbon-core";
 import Header from '../header/Header';
 import { default as layoutStore } from "./LayoutStore";
 
 import { findTransformProp } from "../utils/domUtil"
-import interact from "interact.js";
+import * as interact from "interact.js";
+import styled from "styled-components";
+import theme from "../theme";
 
 const PillsSize = 35;
 const CatcherPointSize = 30;
@@ -63,6 +65,24 @@ const PanelMinimalSize = 20;
 function transparentForSplit(panel) {
     return panel.collapsed || panel.floating || panel.fixed;
 }
+
+const Layout = styled.div.attrs<{resizing?:boolean, minimized?:boolean}>({})`
+    display:flex;
+    flex-direction:column;
+    min-width:100%;
+    min-height: 100%;
+    width:100vh;
+    height:100vh;
+    transition: transform .4s;
+    position:relative;
+    overflow: hidden;
+    background-color:${theme.workspace_background};
+    transform-origin: 100% 50%;
+
+    .blades ~ & {
+        transform: scale(.9);
+    }
+`;
 
 export default class LayoutContainer extends Component<ILayoutContainerProps, ILayoutContainerState> {
     private panelCache: any;
@@ -417,10 +437,8 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
             this._buildChildrenList(this.state.renderingTree.toJS(), childrentList, { index: ZIndexStart });
         }
 
-
-
         return (
-            <div className={`layout ${mods}`} onMouseDown={this._onDocumentMouseDown}>
+            <Layout resizing={this.state.resizing} minimized={layoutStore.state.minimized} onMouseDown={this._onDocumentMouseDown}>
                 <Header />
 
                 <div className="layout__body" ref="layoutBody" data-version={this.state.version}>
@@ -438,7 +456,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
                         <div className="lbox_catcher__point right"></div>
                     </div>
                 </div>
-            </div>
+            </Layout>
         );
     }
 }

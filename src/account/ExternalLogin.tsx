@@ -1,9 +1,9 @@
-import React from "react";
+import * as React from "react";
 import { backend, logger } from "carbon-api";
 import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
 import { Url } from "../Constants";
 
-export default class ExternalLogin extends RouteComponent<IRouteComponentProps>{
+export class ExternalLogin extends RouteComponent<IRouteComponentProps>{
     componentDidMount() {
         backend.externalCallback()
             .then(response => {

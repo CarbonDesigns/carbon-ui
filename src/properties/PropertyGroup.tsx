@@ -1,5 +1,5 @@
-import React from 'react';
-import {Component} from "../CarbonFlux";
+import * as React from "react";
+import { Component } from "../CarbonFlux";
 
 import ConstraintsEditor from "./editors/ConstraintsEditor";
 import ShadowsEditor from "./editors/ShadowsEditor";
@@ -28,10 +28,13 @@ import ActionsEditor from "./editors/actions/ActionsEditor";
 import CustomPropertiesEditor from "./editors/custom/CustomPropertiesEditor";
 import StatesEditor from "./editors/custom/StatesEditor";
 
-import {app, TileSize, Types} from "carbon-core";
+import { app, TileSize, Types } from "carbon-core";
 
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
 import SymbolGroupEditor from "./editors/custom/SymbolGroupEditor";
+import TupleEditor from "./editors/custom/TupleEditor";
+import * as Immutable from "immutable";
+import NumericSliderEditor from "./editors/custom/NumericSlider";
 
 interface IPropertyGroupProps {
     e: any, // page element
@@ -49,7 +52,7 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
         if (this._hasVisiblePropertiesInTheGroup(properties)) {
             return <div className="props-group">
                 <div className="props-group__heading">
-                    <FormattedMessage tagName="h5" id={this.props.g.get("label") || "empty.label"}/>
+                    <FormattedMessage tagName="h5" id={this.props.g.get("label") || "empty.label"} />
                 </div>
                 <section className="props-group__list">
                     {properties.map(p => this._chooseEditor(p))}
@@ -70,7 +73,7 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
 
         var options, empty_option_name;
 
-        if(!descriptor.options && typeof descriptor.getOptions === 'function') {
+        if (!descriptor.options && typeof descriptor.getOptions === 'function') {
             prop = prop.set('options', descriptor.getOptions(elem));
         }
 
@@ -78,49 +81,99 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
             case "shadow":
                 return <ShadowsEditor e={elem} p={prop} key={key} items={null} />;
             case "constraints":
-                return <ConstraintsEditor e={elem} p={prop} key={key}/>;
+                return <ConstraintsEditor e={elem} p={prop} key={key} />;
             case "corners":
-                return <CornersEditor e={elem} p={prop} key={key}/>;
+                return <CornersEditor e={elem} p={prop} key={key} />;
             case "strokePattern":
-                return <StrokePatternEditor  e={elem} p={prop} key={key}/>;
+                return <StrokePatternEditor e={elem} p={prop} key={key} />;
             case "numeric":
-                return <NumericEditor e={elem} p={prop} key={key}/>;
+                return <NumericEditor e={elem} p={prop} key={key} />;
+            case "numericslider":
+                return <NumericSliderEditor e={elem} p={prop} key={key} />;
             case "text":
-                return <StringEditor e={elem} p={prop} key={key}/>;
+                return <StringEditor e={elem} p={prop} key={key} />;
             case "toggle":
-                return <ToggleEditor e={elem} p={prop} key={key}/>;
+                return <ToggleEditor e={elem} p={prop} key={key} />;
             case "switch":
-                return <SwitchEditor e={elem} p={prop} key={key}/>;
+                return <SwitchEditor e={elem} p={prop} key={key} />;
             case "checkbox":
-                return <CheckboxEditor e={elem} p={prop} key={key}/>;
+                return <CheckboxEditor e={elem} p={prop} key={key} />;
             case "dropdown":
-                return <DropDownEditor e={elem} p={prop} key={key}/>;
+                return <DropDownEditor e={elem} p={prop} key={key} />;
             case "brush":
-                return <BrushEditor e={elem} p={prop} key={key}/>;
+                return <BrushEditor e={elem} p={prop} key={key} />;
             case "multiToggle":
-                return <MultiToggleEditor e={elem} p={prop} key={key}/>;
+                return <MultiToggleEditor e={elem} p={prop} key={key} />;
             case "textAlign":
-                return <TextAlignEditor e={elem} p={prop} key={key}/>;
+                return <TextAlignEditor e={elem} p={prop} key={key} />;
             case "box":
-                return <BoxEditor e={elem} p={prop} key={key}/>;
+                return <BoxEditor e={elem} p={prop} key={key} />;
             case "font":
-                return <FontEditor e={elem} p={prop} key={key}/>;
+                return <FontEditor e={elem} p={prop} key={key} />;
             case "multiSwitch":
-                return <MultiSwitchEditor e={elem} p={prop} key={key}/>;
+                return <MultiSwitchEditor e={elem} p={prop} key={key} />;
             case "artboardSizes":
-                return <ArtboardSizes e={elem} p={prop} key={key}/>;
+                return <ArtboardSizes e={elem} p={prop} key={key} />;
             case "actions":
-                return <ActionsEditor e={elem} p={prop} key={key}/>;
+                return <ActionsEditor e={elem} p={prop} key={key} />;
             case "styleName":
-                return <StyleNameEditor e={elem} p={prop} key={key}/>;
+                return <StyleNameEditor e={elem} p={prop} key={key} />;
             case "textStyleName":
-                return <TextStyleNameEditor e={elem} p={prop} key={key}/>;
+                return <TextStyleNameEditor e={elem} p={prop} key={key} />;
             case "customProperties":
-                return <CustomPropertiesEditor e={elem} p={prop} key={key}/>;
+                return <CustomPropertiesEditor e={elem} p={prop} key={key} />;
             case "states":
-                return <StatesEditor e={elem} p={prop} key={key}/>;
+                return <StatesEditor e={elem} p={prop} key={key} />;
             case "symbolGroup":
-                return <SymbolGroupEditor e={elem} p={prop} key={key}/>;
+                return <SymbolGroupEditor e={elem} p={prop} key={key} />;
+
+            case "position": {
+                return <TupleEditor e={elem} p={prop} key={key} properties={[
+                    Immutable.Map({
+                        descriptor: {
+                            name: "x",
+                            displayName: "x"
+                        },
+                        value: elem.x
+                    }),
+                    Immutable.Map({
+                        descriptor: {
+                            name: "y",
+                            displayName: "y"
+                        },
+                        value: elem.y
+                    })
+                ]} />
+            }
+            case "size": {
+                return <TupleEditor e={elem} p={prop} key={key} properties={[
+                    Immutable.Map({
+                        descriptor: {
+                            name: "width",
+                            displayName: "width"
+                        },
+                        value: elem.width
+                    }),
+                    Immutable.Map({
+                        descriptor: {
+                            name: "height",
+                            displayName: "height"
+                        },
+                        value: elem.height
+                    })
+                ]} />
+            }
+            case "rotation": {
+                return <TupleEditor e={elem} p={prop} key={key} properties={[
+                    Immutable.Map({
+                        descriptor: {
+                            name: "angle",
+                            displayName: "angle"
+                        },
+                        value: elem.angle
+                    })
+                ]} />
+            }
         }
 
         return null;

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import {richApp} from '../../../RichApp'
 
 import {Component, handles} from "../../../CarbonFlux";

@@ -1,5 +1,5 @@
 import {CarbonStore, dispatch, handles} from "../CarbonFlux";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 
 import DashboardActions from "./DashboardActions";
 import { backend } from "carbon-api";

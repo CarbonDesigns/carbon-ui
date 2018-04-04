@@ -1,5 +1,5 @@
-import React from 'react';
-import Immutable from "immutable";
+import * as React from "react";
+import * as Immutable from "immutable";
 
 import EditorComponent, { IEditorProps } from "../EditorComponent";
 import NumericEditor from "../NumericEditor";

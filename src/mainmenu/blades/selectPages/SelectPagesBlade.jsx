@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 import BladePage from "../BladePage";
-import cx from 'classnames';
+import * as cx from "classnames";
 
 export default class SelectPagesBlade extends React.Component {
     render() {

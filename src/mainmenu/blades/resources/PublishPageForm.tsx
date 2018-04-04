@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { IFieldState, GuiValidatedInput, GuiTextArea, GuiButton, GuiRequiredInput, ValidationTrigger, GuiButtonBlock } from "../../../shared/ui/GuiComponents";
 import { Component, dispatchAction } from "../../../CarbonFlux";

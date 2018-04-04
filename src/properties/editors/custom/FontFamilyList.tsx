@@ -1,9 +1,8 @@
-import React from 'react';
-import ReactDom from 'react-dom';
+import * as React from "react";
+import * as ReactDom from "react-dom";
 import { CarbonStore, StoreComponent, dispatch, dispatchAction } from "../../../CarbonFlux";
 import Search from "../../../shared/Search";
 import LessVars from "../../../styles/LessVars";
-import FlyoutActions from "../../../FlyoutActions";
 import { GuiSpinner } from "../../../shared/ui/GuiComponents";
 import { backend, FontMetadata, FontWeight, FontStyle } from "carbon-core";
 import bem from '../../../utils/commonUtils';
@@ -12,6 +11,7 @@ import VirtualList from "../../../shared/collections/VirtualList";
 import { FontCategory } from "./FontActions";
 import { Markup, MarkupLine } from "../../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
+import CarbonActions from '../../../CarbonActions';
 
 type VirtualFontList = new (props) => VirtualList<FontMetadata>;
 const VirtualFontList = VirtualList as VirtualFontList;
@@ -39,7 +39,7 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
         var index = parseInt(e.currentTarget.dataset.index);
         var fontMetadata = this.state.currentList[index];
         this.props.onSelected(fontMetadata);
-        dispatch(FlyoutActions.show(null));
+        dispatch(CarbonActions.cancel());
     };
 
     private onCategoryToggle(category: FontCategory) {

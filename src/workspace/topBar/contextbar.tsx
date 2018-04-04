@@ -1,5 +1,5 @@
-import React from 'react';
-import cx from 'classnames';
+import * as React from "react";
+import * as cx from "classnames";
 import Dots from "../../shared/dots";
 
 // import {Pane, PaneList, PaneListItem, PaneRow, PaneButton} from "../../shared/Pane";
@@ -106,7 +106,7 @@ export default class ContextBar extends Component<any, any> {
         }
     }
 
-    @handles(CarbonActions.activeLayerChanged)
+    // @handles(CarbonActions.activeLayerChanged)
     onElementSelected() {
         var menu: any = { items: [] };
         var context = {

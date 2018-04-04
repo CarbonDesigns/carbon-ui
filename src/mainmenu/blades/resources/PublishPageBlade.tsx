@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import BladePage from "../BladePage";
 import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ISharedResource, ResourceScope, IPublishPageResult, Screenshot, renderer } from "carbon-core";
 import { Component, dispatchAction } from "../../../CarbonFlux";
-import cx from 'classnames';
+import * as cx from "classnames";
 import { FormattedMessage } from "react-intl";
 import { Markup, MarkupLine } from "../../../shared/ui/Markup";
 import { GuiButton, GuiButtonStack, GuiInput, GuiTextArea } from "../../../shared/ui/GuiComponents";

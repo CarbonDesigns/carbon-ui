@@ -1,27 +1,28 @@
-import { CarbonLabel, StoreComponent, listenTo } from '../CarbonFlux';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from "prop-types";
+import { CarbonLabel, StoreComponent, listenTo, dispatch } from '../CarbonFlux';
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import * as PropTypes from "prop-types";
 import Panel from '../layout/Panel'
 import { richApp } from '../RichApp';
-import cx from 'classnames';
+import * as cx from "classnames";
 import VirtualList from "../shared/collections/VirtualList";
 import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";
 import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
 import { say } from "../shared/Utils";
-import bem from "bem";
 import { MarkupLine } from "../shared/ui/Markup";
 import LayerItem from "./LayerItem";
 import layersStore, { LayerNode, LayersStoreState } from "./LayersStore";
 import dragController from "./LayersDragController";
 import BackButton from "../shared/ui/BackButton";
+import icons from "../theme-icons";
+import styled, {css} from "styled-components";
+import theme from '../theme';
+import CarbonActions from '../CarbonActions';
 
 type VirtualLayersList = new (props) => VirtualList<LayerNode>;
 const VirtualLayersList = VirtualList as VirtualLayersList;
 
-// TODO: inherited visibility and lock style
-function b(a, b?, c?) { return bem('layer', a, b, c) }
 
 export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     refs: {
@@ -72,6 +73,20 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         }
     };
 
+    private onCode = (node: LayerNode, selected: boolean) => {
+        if (!selected) {
+            node.element.useInCode = !node.element.useInCode;
+        } else {
+            if (!node.element.useInCode) {
+                Selection.useInCode(true);
+            }
+            else {
+                Selection.useInCode(false);
+            }
+        }
+        dispatch({ type: "Carbon_Selection", composite: Selection.selectComposite() })
+    };
+
     private onHide = (node: LayerNode, selected: boolean) => {
         if (!selected) {
             node.element.visible = (!node.element.visible);
@@ -96,8 +111,10 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         return <LayerItem layer={layer} index={index} version={layer.version}
             selected={selected}
             expanded={expanded}
+            useInCode={layer.element.useInCode}
             ancestorSelected={layersStore.isAncestorSelected(layer)}
             onLock={this.onLock}
+            onCode={this.onCode}
             onHide={this.onHide} />
     }
     /**
@@ -151,17 +168,17 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
             }
         }
 
-        return <MarkupLine className="layers-back__button">
+        return <PageHeaderContainer>
             <BackButton onClick={this.goBack} caption={name} translate={false} />
-        </MarkupLine>;
+        </PageHeaderContainer>;
     }
 
     render() {
         let { children, ...rest } = this.props;
-        return <Panel ref="panel" header="Layers" id="layers_panel" {...rest}>
+        return <Panel ref="panel" header="Layers" icon={icons.p_layers} id="layers_panel" {...rest}>
             {this.renderBackButton()}
 
-            <div className={bem("layers-panel", "layers-list", null, "panel__stretcher")} data-mode="airy">
+            <PanelContent>
                 <VirtualLayersList className="layers__container"
                     ref="list"
                     data={this.state.layers}
@@ -169,7 +186,75 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
                     rowRenderer={this.renderLayer}
                     scrollToRow={this.state.scrollToLayer}
                     useTranslate3d={true} />
-            </div>
+            </PanelContent>
         </Panel>;
     }
 }
+
+const overlay_height = 2;
+const overlay_border = 1;
+
+const layer_overlay = css`
+    content: " ";
+    display: block;
+    border: ${overlay_border}px solid ${theme.accent};
+    position: absolute;
+    left: 0;
+    height:${overlay_height}px;
+    right: 0;
+    z-index: 10;
+`;
+
+const PanelContent = styled.div`
+    flex: auto;
+    display: flex;
+
+    & .layers__container_moving {
+        &.single {
+            /* .c-layer_drag_single(); */
+        }
+        &.single.into {
+            /* .c-layer_drag_single_into(); */
+        }
+        &.multi {
+            /* .c-layer_drag_multi(); */
+        }
+        &.multi.into {
+            /* .c-layer_drag_multi_into(); */
+        }
+
+        .layer {
+            &__dropAbove:after {
+                ${layer_overlay};
+                top: -${overlay_height/2}px;
+            }
+            &__dropBelow:before {
+                ${layer_overlay};
+                bottom: -${overlay_height/2}px;
+            }
+            &__dropInside {
+                ${layer_overlay};
+                outline: red ${overlay_border}px solid;
+                outline-offset: -1px;
+            }
+        }
+
+        .layer.selected {
+            background: ${theme.layer_page_background};
+        }
+
+        .layer.selected{
+            opacity:0.4;
+        }
+    }
+`;
+
+const PageHeaderContainer = styled.div`
+    height:29px;
+    background-color: ${theme.layer_page_background};
+    color: ${theme.text_color};
+    font: ${theme.default_font};
+    display:flex;
+    align-items:center;
+    padding-left: 16px;
+`;

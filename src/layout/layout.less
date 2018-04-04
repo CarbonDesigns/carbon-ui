@@ -31,19 +31,6 @@
 
 //——————————————————————————————————————————————————————————————————————
 
-.layout:not(.layout_resizing) {
-    .lbox {
-        //transition: left 0.15s ease,
-                // top 0.15s ease,
-                // bottom 0.15s ease,
-                // width 0.15s ease,
-                // height 0.15s ease,
-                // margin 0.15s ease,
-                // right  0.15s ease;
-
-        //transition: opacity 0.2s ease-in;
-    }
-}
 
 .lbox {
     min-width  : 50px;
@@ -643,21 +630,7 @@ body.compact-mode , body.ninja-mode {
             display: flex;
             align-items: center;
 
-            h3 {
-                opacity: @icon_and_name_opacity;
-                .upp;
 
-                //.inbl;
-                //.clip;
-                .nowrap;
-                text-overflow: ellipsis;
-
-                .panel[data-mode="narrow"] & { display:none; }
-                .f11;
-                .panel[data-mode="wide"]   & { .f12; }
-                .panel[data-mode="widest"] & { .f12; }
-
-            }
             .panel.collapsed & {
                 .opacity(80);
             }

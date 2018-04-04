@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import { Component, listenTo } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import Panel from '../layout/Panel'
@@ -15,6 +15,8 @@ import SymbolGroupsPanel from "./SymbolGroupsPanel";
 import { MarkupLine, Markup } from "../shared/ui/Markup";
 import { GuiButton } from "../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
+import icons from "../theme-icons";
+import ArrangeCommands from './ArrangeCommands';
 
 interface IPropertiesPanelProps {
 }
@@ -58,7 +60,7 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
     render() {
         let { children, ...rest } = this.props;
         return (
-            <Panel ref="panel" {...rest} header="Properties" id="edit-panel">
+            <Panel ref="panel" {...rest} icon={icons.p_properties} header="Properties" id="edit-panel">
                 <TabContainer currentTabId={this.state.tabId}>
                     <TabArea className="gui-pages">
                         <TabPage className="gui-page" tabId="1">
@@ -98,11 +100,12 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
         }
 
         return <ScrollContainer id="edit__properties" className="thin dark">
-            <NameAndLockProps
+            {/* <NameAndLockProps
                 e={this.state.element}
                 nameProperty={this.state.nameProperty}
                 lockedProperty={this.state.lockedProperty}
-            />
+            /> */}
+            <ArrangeCommands/>
             {content}
         </ScrollContainer>
     }

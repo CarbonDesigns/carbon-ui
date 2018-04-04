@@ -1,4 +1,4 @@
-import interact from "interact.js";
+import * as interact from "interact.js";
 import {findTransformProp, nodeOffset} from "../utils/domUtil";
 
 export class DragAndDrop {

@@ -40,7 +40,7 @@ export default class MirroringAppContainer extends AppLoaderComponent {
 
     _navigate(data){
         var companyName = data.companyName || "anonymous";
-        this.context.router.replace({
+        this.props.history.replace({
             pathname: "/m/app/@" + companyName + "/" + data.projectId,
             search: this.props.location.search,
             state: {companyId: data.companyId, userId: data.userId}

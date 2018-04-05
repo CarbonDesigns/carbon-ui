@@ -2,10 +2,10 @@ import * as React from "react";
 import {Component} from "../CarbonFlux";
 
 import { app, backend } from "carbon-core";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import { LoginRequiredError } from "../Constants";
 
-interface IQuickAppProps extends IRouteComponentProps{
+interface IQuickAppProps extends RouteComponentProps{
     params: {
         code: string
     }

@@ -2,10 +2,10 @@ import * as React from "react";
 import { Component, dispatchAction, dispatch } from "../CarbonFlux";
 import { AccountAction } from "./AccountActions";
 import RegistrationForm from "./RegistrationForm";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import { FormattedMessage } from "react-intl";
 
-export default class RegistrationPage extends RouteComponent<IRouteComponentProps> {
+export default class RegistrationPage extends RouteComponent<RouteComponentProps> {
     canHandleActions() {
         return true;
     }

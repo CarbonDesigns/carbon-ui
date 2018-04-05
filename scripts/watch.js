@@ -12,7 +12,7 @@ function watch(options) {
     var compiler  = webpack(config);
 
     console.log("Starting webpack...");
-    new WebpackDevServer(compiler, devServer).listen(devServer.port, devServer.host,
+    new WebpackDevServer(compiler, devServer).listen(devServer.port, "0.0.0.0",
         function (err) {
             if (err) return cb(err);
             open(`http://${devServer.host}:${devServer.port}/app?serverless&cls`);

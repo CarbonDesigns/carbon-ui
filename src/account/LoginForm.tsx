@@ -6,11 +6,11 @@ import { backend } from "carbon-api";
 import { dispatch, handles, Component, dispatchAction } from "../CarbonFlux";
 import { AccountAction } from "./AccountActions";
 import { GuiButton, GuiRadio, GuiInput, IFieldState, ValidationTrigger, GuiValidatedInput, IFormState } from "../shared/ui/GuiComponents";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import Socials from "./Socials";
 import * as Immutable from "immutable";
 
-interface ILoginFormProps extends IRouteComponentProps {
+interface ILoginFormProps extends RouteComponentProps {
     messageId: string;
 }
 

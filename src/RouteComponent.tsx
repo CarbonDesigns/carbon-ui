@@ -1,20 +1,16 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import Router from "react-router";
+import { History, Location } from "history";
 import { Component } from "./CarbonFlux";
 import { ErrorCode, Url, InfoCode } from "./Constants";
 
-export interface IRouteComponentProps {
-    location: {
-        pathname: string;
-        search: string;
-        state: any;
-    }
+export interface RouteComponentProps {
+    history: History;
+    location: Location;
 }
 
-export default class RouteComponent<P extends IRouteComponentProps = IRouteComponentProps, S = {}> extends Component<P, S> {
+export default class RouteComponent<P extends RouteComponentProps = RouteComponentProps, S = {}> extends Component<P, S> {
     context: {
-        history: Router.InjectedRouter
         intl: any
     }
 
@@ -25,7 +21,7 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
     }
 
     goToDashboard(companyName: string, companyId: string) {
-        this.context.history.push({
+        this.props.history.push({
             pathname: "/@" + (companyName || "guest"),
             search: this.props.location.search,
             state: { companyId: companyId }
@@ -33,18 +29,18 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
     }
 
     goBack() {
-        this.context.history.goBack();
+        this.props.history.goBack();
     }
 
     goHome() {
-        this.context.history.push({
+        this.props.history.push({
             pathname: "/",
             search: this.props.location.search,
         });
     }
 
     goToApp(companyName: string, appId: string, companyId?: string) {
-        this.context.history.replace({
+        this.props.history.replace({
             pathname: "/app/@" + companyName + "/" + appId,
             search: this.props.location.search,
             state: { companyId: companyId }
@@ -52,21 +48,21 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
     }
 
     goToError(errorCode: ErrorCode) {
-        this.context.history.replace({
+        this.props.history.replace({
             pathname: "/e/" + errorCode,
             search: this.props.location.search
         });
     }
 
     goToInfo(infoCode: InfoCode) {
-        this.context.history.replace({
+        this.props.history.replace({
             pathname: "/i/" + infoCode,
             search: this.props.location.search
         });
     }
 
     goTo(url: Url, state?: any) {
-        this.context.history.push({
+        this.props.history.push({
             pathname: url,
             search: this.props.location.search,
             state
@@ -74,7 +70,7 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
     }
 
     replacePath(path, search = this.props.location.search) {
-        this.context.history.replace({ pathname: path, search });
+        this.props.history.replace({ pathname: path, search });
     }
 
     protected getTitle() {
@@ -86,7 +82,6 @@ export default class RouteComponent<P extends IRouteComponentProps = IRouteCompo
     }
 
     static contextTypes = {
-        router: PropTypes.object.isRequired,
         intl: PropTypes.object
     }
 }

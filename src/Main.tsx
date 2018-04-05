@@ -16,7 +16,7 @@ import { backend, logger } from "carbon-api";
 import { hot } from "react-hot-loader";
 import { RenewToken } from "./account/RenewToken";
 import { ExternalLogin } from "./account/ExternalLogin";
-import { IRouteComponentProps } from "./RouteComponent";
+import { RouteComponentProps } from "./RouteComponent";
 import { LandingSelector } from "./LandingSelector";
 import { LandingPage } from "./landing/LandingPage";
 
@@ -290,19 +290,21 @@ ReactDom.render(
     <BrowserRouter>
         <IntlProvider locale={currentLocale} messages={messages}>
             <Root>
-                <Route exact path='/' component={LandingSelector} />
-                <Route path='/landing' component={LandingPage} />
-                <Route path='/app(/@:companyName)?(/:appId)?' render={appStartChunk} />
-                <Route path='/m' render={previewIndexChunk} />
-                <Route path='/q/:code' render={quickAppStartChunk} />
-                <Route path='/m/app(/@:companyName)(/:appId)' render={mirrorringAppStartChunk} />
-                <Route path='/m/:code' render={mirrorringAppStartChunk} />
-                <Route path='/p/app(/@:companyName)(/:appId)' render={previewAppStartChunk} />
+                <Switch>
+                    <Route exact path='/' component={LandingSelector} />
+                    <Route path='/landing' component={LandingPage} />
+                    <Route path='/app(/@:companyName)?(/:appId)?' render={appStartChunk} />
+                    <Route path='/m' render={previewIndexChunk} />
+                    <Route path='/q/:code' render={quickAppStartChunk} />
+                    <Route path='/m/app(/@:companyName)(/:appId)' render={mirrorringAppStartChunk} />
+                    <Route path='/m/:code' render={mirrorringAppStartChunk} />
+                    <Route path='/p/app(/@:companyName)(/:appId)' render={previewAppStartChunk} />
 
-                <Route path='/a/renew' component={RenewToken} />
-                <Route path='/a/external' component={ExternalLogin} />
+                    <Route path='/a/renew' component={RenewToken} />
+                    <Route path='/a/external' component={ExternalLogin} />
 
-                {/* <Route render={pageNotFoundChunk} /> */}
+                    <Route render={pageNotFoundChunk} />
+                </Switch>
             </Root>
         </IntlProvider>
     </BrowserRouter>,

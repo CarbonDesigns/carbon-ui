@@ -2,7 +2,7 @@ import * as React from "react";
 import { Component, dispatchAction, dispatch, CarbonLabel } from "../CarbonFlux";
 import { AccountAction } from "./AccountActions";
 import LoginForm from "./LoginForm";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import { FormattedMessage } from "react-intl";
 import { GuiValidatedInput, ValidationTrigger } from "../shared/ui/GuiComponents";
 import TopMenu from "../shared/TopMenu";
@@ -69,7 +69,7 @@ class LoginPageForm extends LoginForm {
     }
 }
 
-export default class LoginPage extends RouteComponent<IRouteComponentProps> {
+export default class LoginPage extends RouteComponent<RouteComponentProps> {
     canHandleActions() {
         return true;
     }
@@ -89,7 +89,7 @@ export default class LoginPage extends RouteComponent<IRouteComponentProps> {
                     </h1>
                 </section>
                 <section className="login-form-container">
-                    <LoginPageForm messageId="@account.loginNeededMessage" location={this.props.location} />
+                    <LoginPageForm messageId="@account.loginNeededMessage" {...this.props} />
                 </section>
             </div>
         </div>;

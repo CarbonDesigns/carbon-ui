@@ -1,8 +1,8 @@
 import * as React from "react";
-import RouteComponent, { IRouteComponentProps } from "./RouteComponent";
+import RouteComponent, { RouteComponentProps } from "./RouteComponent";
 import TopMenu from "./shared/TopMenu";
 
-export default class WebPage extends RouteComponent<IRouteComponentProps> {
+export default class WebPage extends RouteComponent<RouteComponentProps> {
     render() {
         return <div>
             <TopMenu dark pathname={this.props.location.pathname}/>

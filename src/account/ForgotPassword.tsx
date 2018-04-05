@@ -1,5 +1,5 @@
 import * as React from "react";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import { Url } from "../Constants";
 import { IFieldState, IFormState, GuiValidatedInput, ValidationTrigger } from "../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
@@ -9,7 +9,7 @@ import { AccountAction } from "./AccountActions";
 import TopMenu from "../shared/TopMenu";
 import bem from "../utils/commonUtils";
 
-export default class ForgotPassword extends RouteComponent<IRouteComponentProps, IFormState>{
+export default class ForgotPassword extends RouteComponent<RouteComponentProps, IFormState>{
     refs: {
         email: GuiValidatedInput
     }

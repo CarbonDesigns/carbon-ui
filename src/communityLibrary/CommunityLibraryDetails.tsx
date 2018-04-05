@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from "react-router";
 import { backend } from "carbon-api";
 import { handles, Component, CarbonLabel } from "../CarbonFlux";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
 import SubscribeForm from "../shared/SubscribeForm";
 import bem from "../utils/commonUtils";

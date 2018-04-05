@@ -2,10 +2,10 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import {backend} from "carbon-api";
 import {handles, Component} from "./CarbonFlux";
-import RouteComponent, { IRouteComponentProps } from "./RouteComponent";
+import RouteComponent, { RouteComponentProps } from "./RouteComponent";
 import { LandingPage } from "./landing/LandingPage";
 
-interface LandingSelectorProps extends IRouteComponentProps {
+interface LandingSelectorProps extends RouteComponentProps {
     landingComponent: React.Component;
 }
 
@@ -24,7 +24,7 @@ export class LandingSelector extends RouteComponent<LandingSelectorProps, any>{
         if (backend.isLoggedIn()){
             this._resolveCompanyName()
                 .then(data => {
-                    this.context.history.replace({
+                    this.props.history.replace({
                         pathname: "/@" + (data.companyName || "guest"),
                         state: {companyId: backend.getUserId()}
                     });
@@ -37,7 +37,7 @@ export class LandingSelector extends RouteComponent<LandingSelectorProps, any>{
 
     render(){
         if (this.state.renderLanding){
-            return <LandingPage location={this.props.location}/>
+            return <LandingPage {...this.props}/>
         }
         return null;
     }

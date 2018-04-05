@@ -10,7 +10,7 @@ import { handles, Component, CarbonLabel } from "../CarbonFlux";
 import FlyoutButton from "../shared/FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
 import { AccountAction } from "../account/AccountActions";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
 import SubscribeForm from "../shared/SubscribeForm";
 import ScrollContainer from "../shared/ScrollContainer";
@@ -23,7 +23,7 @@ type LandingPageState = {
     activeGifs: number;
 }
 
-export class LandingPage extends RouteComponent<IRouteComponentProps, LandingPageState>{
+export class LandingPage extends RouteComponent<RouteComponentProps, LandingPageState>{
     sections: any;
     backgrounds: any[];
     activeSection: any;

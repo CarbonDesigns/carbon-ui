@@ -1,19 +1,18 @@
 import * as React from "react";
+import { Location } from "history";
 import { FormattedMessage } from "react-intl";
 import { Component, dispatchAction } from "../CarbonFlux";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import CommunityLibraryDetails from "./CommunityLibraryDetails";
 import CommunityLibraryPage from "./CommunityLibraryPage";
 import { ISharedResource } from "carbon-core";
 import queryString from "query-string";
 
-interface CommunityLibraryProps extends IRouteComponentProps {
+interface CommunityLibraryProps extends RouteComponentProps {
     params: {
         resourceId?: string;
     };
-    location: {
-        pathname: string;
-        search:string;
+    location: Location & {
         state: {
             data?: ISharedResource;
         }

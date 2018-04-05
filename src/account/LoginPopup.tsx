@@ -20,6 +20,6 @@ export default class LoginPopup extends RouteComponent {
     }
 
     render() {
-        return <LoginForm messageId="@account.loginMessage" location={this.props.location}/>;
+        return <LoginForm messageId="@account.loginMessage" {...this.props}/>;
     }
 }

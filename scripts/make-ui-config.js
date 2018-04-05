@@ -308,6 +308,7 @@ module.exports = function (settings) {
             contentBase: fullPath('../'),
             publicPath: settings.fullPublicPath + "/",
             host: settings.host.substring(settings.host.indexOf("//") + 2),
+            disableHostCheck: true,
             port: settings.port,
             hot: true,
             historyApiFallback: {

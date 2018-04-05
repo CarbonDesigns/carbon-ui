@@ -1,16 +1,16 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import { Location } from "history";
 import { Component, dispatchAction } from "./CarbonFlux";
-
 import { app, logger, backend, workspace } from "carbon-core";
-import RouteComponent, { IRouteComponentProps } from "./RouteComponent";
+import RouteComponent, { RouteComponentProps } from "./RouteComponent";
 import { LoginRequiredError } from "./Constants";
 import { CarbonAction } from "./CarbonActions";
 import * as queryString from "query-string";
 
 require("./dialogs/FatalDialog");
 
-export interface IAppLoaderComponentProps extends IRouteComponentProps {
+export interface IAppLoaderComponentProps extends RouteComponentProps {
     match: {
         params: {
             companyName: string,
@@ -18,9 +18,7 @@ export interface IAppLoaderComponentProps extends IRouteComponentProps {
             code?: string //for mirroring, think how to separate it
         },
     },
-    location: {
-        pathname: string;
-        search: string;
+    location: Location & {
         state: {
             companyId?: string;
             userId?: string; //for mirroring, think how to separate it

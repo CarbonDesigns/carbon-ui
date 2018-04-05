@@ -1,5 +1,5 @@
 import * as React from "react";
-import RouteComponent, { IRouteComponentProps } from "../RouteComponent";
+import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import { Url, MinPasswordLength } from "../Constants";
 import { IFieldState, IFormState, GuiValidatedInput, ValidationTrigger } from "../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
@@ -7,7 +7,7 @@ import { dispatchAction } from "../CarbonFlux";
 import { backend } from "carbon-api";
 import { AccountAction } from "./AccountActions";
 
-interface IResetPasswordProps extends IRouteComponentProps{
+interface IResetPasswordProps extends RouteComponentProps{
     params: {
         token: string;
     }

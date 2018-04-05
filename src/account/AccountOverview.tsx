@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Component, dispatchAction, CarbonLabel } from "../CarbonFlux";
 import { backend, IAccountOverview } from "carbon-api";
-import { IRouteComponentProps, default as RouteComponent } from "../RouteComponent";
+import { RouteComponentProps, default as RouteComponent } from "../RouteComponent";
 import { GuiInput, GuiValidatedInput, ValidationTrigger, IFieldState } from "../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
 import { AccountAction } from "./AccountActions";
@@ -20,7 +20,7 @@ interface IAccountOverviewState {
     activePageId?: any;
 }
 
-export default class AccountOverview extends RouteComponent<IRouteComponentProps, IAccountOverviewState>{
+export default class AccountOverview extends RouteComponent<RouteComponentProps, IAccountOverviewState>{
     refs: {
         username: GuiValidatedInput;
         email: GuiValidatedInput;
@@ -321,10 +321,9 @@ export default class AccountOverview extends RouteComponent<IRouteComponentProps
     }
 
     _onActiveChanged = (id) => {
-        var location:any = this.props.location;
-        this.context.history.push({
+        this.props.history.push({
             pathname: "/settings/" + id,
-            query: location.query
+            search: this.props.location.search
         });
     }
 

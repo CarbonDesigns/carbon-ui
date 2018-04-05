@@ -92,7 +92,7 @@ function getPlugins(settings) {
         apiScript = "//localhost:8090/target/carbon-api.js";
     }
     else {
-        let modules = resolveCoreModules();
+        let modules = resolveCoreModules(settings.coreFolder);
         coreScript = getDebugOrCdnPath(settings, path.relative(root, modules.core));
         apiScript = getDebugOrCdnPath(settings, path.relative(root, modules.api));
     }

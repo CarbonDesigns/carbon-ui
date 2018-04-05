@@ -34,6 +34,11 @@ try
     {
         $params += "--noUglify"
     }
+    if ($CopyCore)
+    {
+        $params += "--coreFolder"
+        $params += "target"
+    }
 
     if (-not $SkipCdn)
     {

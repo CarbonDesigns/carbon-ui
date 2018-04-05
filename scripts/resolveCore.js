@@ -14,10 +14,10 @@ function resolveCodeModule(root, dir, moduleFileName){
     return path.join(fullDir, modules[0]);
 }
 
-module.exports = function(){
+module.exports = function(coreFolder){
     var root = path.join(__dirname, "..");
     return {
-        core: resolveCodeModule(root, "node_modules/@carbonium/carbon-core/lib", "carbon-core"),
-        api: resolveCodeModule(root, "node_modules/@carbonium/carbon-api/lib", "carbon-api")
+        core: resolveCodeModule(root, coreFolder || "node_modules/@carbonium/carbon-core/lib", "carbon-core"),
+        api: resolveCodeModule(root, coreFolder || "node_modules/@carbonium/carbon-api/lib", "carbon-api")
     }
 };

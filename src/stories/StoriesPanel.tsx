@@ -12,6 +12,7 @@ import ScrollContainer from "../shared/ScrollContainer";
 import { GuiButton, GuiRadio, GuiInput, GuiTextArea } from "../shared/ui/GuiComponents";
 import { MarkupLine, Markup } from "../shared/ui/Markup";
 import { FormHeading, FormLine, FormGroup } from "../shared/FormComponents"
+import { TabAreaStyled, TabPageStyled } from "../components/CommonStyle";
 
 let buggg = TabContainer.prototype;
 let buggg2 = TabPage.prototype;
@@ -246,8 +247,8 @@ export default class StoriesPanel extends Component<any, any> {
         return (
             <Panel  {...this.props} ref="panel" header="Stories" id="stories-panel">
                 <TabContainer ref="container" id="stories-container">
-                    <TabArea className="gui-pages">
-                        <TabPage tabId="1" className="gui-page">
+                    <TabAreaStyled>
+                        <TabPageStyled tabId="1">
                             {this._renderEmptyMessage()}
                             <div className="stories-panel__controls markup">
                                 <div className="markup-line markup-line_center">
@@ -263,20 +264,20 @@ export default class StoriesPanel extends Component<any, any> {
                                 selectStory={_selectStory}
                                 activeStory={app.activeStory()}
                             />
-                        </TabPage>
+                        </TabPageStyled>
 
-                        <TabPage tabId="2" className="gui-page">
+                        <TabPageStyled tabId="2">
                             {(!this.state.details) ? null
                                 : <StoryDetails ref="details" item={this.state.details} newStory={false} goBack={this._viewList} onDelete={this._removeItem} />
                             }
-                        </TabPage>
+                        </TabPageStyled>
 
-                        <TabPage tabId="3" className="gui-page">
+                        <TabPageStyled tabId="3">
                             {(!this.state.details) ? null
                                 : <StoryDetails ref="new_story" item={this.state.details} newStory={true} goBack={this._viewList} />
                             }
-                        </TabPage>
-                    </TabArea>
+                        </TabPageStyled>
+                    </TabAreaStyled>
                 </TabContainer>
             </Panel>
 

@@ -17,6 +17,7 @@ import { GuiButton } from "../shared/ui/GuiComponents";
 import { FormattedMessage } from "react-intl";
 import icons from "../theme-icons";
 import ArrangeCommands from './ArrangeCommands';
+import { TabAreaStyled, TabPageStyled } from "../components/CommonStyle";
 
 interface IPropertiesPanelProps {
 }
@@ -62,14 +63,14 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
         return (
             <Panel ref="panel" {...rest} icon={icons.p_properties} header="Properties" id="edit-panel">
                 <TabContainer currentTabId={this.state.tabId}>
-                    <TabArea className="gui-pages">
-                        <TabPage className="gui-page" tabId="1">
+                    <TabAreaStyled>
+                        <TabPageStyled tabId="1">
                             {this.renderProperties()}
-                        </TabPage>
-                        <TabPage className="gui-page" tabId="2">
+                        </TabPageStyled>
+                        <TabPageStyled tabId="2">
                             <SymbolGroupsPanel />
-                        </TabPage>
-                    </TabArea>
+                        </TabPageStyled>
+                    </TabAreaStyled>
                 </TabContainer>
             </Panel>
         );

@@ -67,4 +67,5 @@ const SliderContainer = styled.div`
     grid-column-gap: 18px;
     justify-content:space-between;
     align-items:center;
+    width:100%;
 `;

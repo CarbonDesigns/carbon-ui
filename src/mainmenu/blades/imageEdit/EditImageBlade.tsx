@@ -13,6 +13,7 @@ import { IUIElement, IPage, IArtboard, app, IRect, workspace, backend, renderer 
 import { FormattedMessage } from "react-intl";
 import { ArtboardSelect } from "../../../shared/ui/GuiSelect";
 import { BladeBody } from "../BladePage";
+import { TabPageStyled } from "../../../components/CommonStyle";
 
 export type EditImageResult =
     { type: "url", url: string } |
@@ -152,7 +153,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
     };
 
     private renderEditTab() {
-        return <TabPage tabId="1" className="gui-page">
+        return <TabPageStyled tabId="1">
             <MarkupLine mods="stretch">
                 <CropEditor ref="cropEditor" image={this.state.image} dpr={this.props.dpr} size={this.props.previewSize} />
             </MarkupLine>
@@ -171,13 +172,13 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
                     />
                 </GuiButtonBlock>
             </MarkupSubmit>
-        </TabPage>
+        </TabPageStyled>
     }
 
     private renderUploadTab() {
         var loading = this.state.loading;
 
-        return <TabPage tabId="2" className={b('upload-page', { loading }, 'gui-page')}>
+        return <TabPageStyled tabId="2" className={b('upload-page', { loading })}>
             <MarkupLine className="edit-image__make-snapshot" onClick={this.hideAllErrors} mods="stretch">
                 <p className="edit-image__message">
                     <FormattedMessage id="@imageEdit.artboardSnapshot" />
@@ -231,7 +232,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
                     />
                 </MarkupSubmit>
             }
-        </TabPage>
+        </TabPageStyled>
     }
 
     render() {

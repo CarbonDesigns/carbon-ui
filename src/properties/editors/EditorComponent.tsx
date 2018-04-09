@@ -22,7 +22,7 @@ export interface IEditorProps{
 
 export default class EditorComponent<T, TProps extends IEditorProps = IEditorProps, TState = {}> extends Component<TProps, TState> {
     private _noPreview: boolean;
-    private _setValueTimer: number;
+    protected _setValueTimer: number;
 
     constructor(props, context?){
         super(props, context);

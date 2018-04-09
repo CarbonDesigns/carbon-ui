@@ -11,6 +11,7 @@ import bem from '../../utils/commonUtils';
 
 import libraryTabStore from "../LibraryTabStore";
 import SearchImages from "./SearchImages";
+import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
 
 export default class ImagesPage extends Component<any, any> {
     constructor(props) {
@@ -37,20 +38,20 @@ export default class ImagesPage extends Component<any, any> {
                 tabMods="level2"
             />
 
-            <TabArea className="gui-pages" id="icons-page__pages">
-                <TabPage tabId="1" className="gui-page user-images">
+            <TabAreaStyled id="icons-page__pages">
+                <TabPageStyled tabId="1">
                     <UserImages ref="tab1"/>
-                </TabPage>
-                <TabPage tabId="2" className="gui-page">
+                </TabPageStyled>
+                <TabPageStyled tabId="2">
                     <RecentImages ref="tab2"/>
-                </TabPage>
-                <TabPage tabId="3" className="gui-page web-images">
+                </TabPageStyled>
+                <TabPageStyled tabId="3">
                     <Unsplash ref="tab3"/>
-                </TabPage>
-                <TabPage tabId="4" className="gui-page">
+                </TabPageStyled>
+                <TabPageStyled tabId="4">
                     <SearchImages ref="tab4"/>
-                </TabPage>
-            </TabArea>
+                </TabPageStyled>
+            </TabAreaStyled>
         </TabContainer>
     }
 }

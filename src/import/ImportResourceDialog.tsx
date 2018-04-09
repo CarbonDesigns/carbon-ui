@@ -14,6 +14,7 @@ import bem from '../utils/commonUtils';
 import ResourceDetails from "./ResourceDetails";
 import ResourceTile from "./ResourceTile";
 import InfiniteGrid from "../shared/collections/InfiniteGrid";
+import { TabAreaStyled, TabPageStyled } from "../components/CommonStyle";
 
 const TabBuiltIn = "1";
 const TabGallery = "2";
@@ -153,17 +154,17 @@ export default class ImportResourceDialog extends Dialog<{}, ImportPageDialogSta
                         ]}
                         insertAfter={<Search className="resources-list__search-field" query={this.state.query} onQuery={this.onSearch} />}
                     />
-                    <TabArea className="gui-pages">
-                        <TabPage className="gui-page" tabId={TabBuiltIn}>
+                    <TabAreaStyled>
+                        <TabPageStyled tabId={TabBuiltIn}>
                             {this.renderTiles()}
-                        </TabPage>
-                        <TabPage className="gui-page" tabId={TabGallery}>
+                        </TabPageStyled>
+                        <TabPageStyled tabId={TabGallery}>
                             {this.renderTiles()}
-                        </TabPage>
-                        <TabPage className="gui-page" tabId={TabCompany}>
+                        </TabPageStyled>
+                        <TabPageStyled tabId={TabCompany}>
                             {this.renderTiles()}
-                        </TabPage>
-                    </TabArea>
+                        </TabPageStyled>
+                    </TabAreaStyled>
 
                 </TabContainer>
             </div>

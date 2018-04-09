@@ -69,18 +69,22 @@ export default class EnterInput extends Component<EnterInputProps, EnterInputSta
         }
         return {value: this.state.value, valid: true};
     }
+
     getValue() {
         return this.state.value;
     }
+
     setValue(value) {
         this.setState({ value });
     }
+
     onBlur = () => {
         if (this.props.changeOnBlur !== false) {
             this.fireOnChange();
         }
         this.setState({ focused: false });
-    };
+    }
+
     onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             this.fireOnChange();
@@ -103,6 +107,7 @@ export default class EnterInput extends Component<EnterInputProps, EnterInputSta
             this.props.onKeyDown(e);
         }
     }
+
     private onUndo() {
         if (this.state.value !== this.props.value) {
             this.setState({ value: this.props.value });
@@ -111,23 +116,28 @@ export default class EnterInput extends Component<EnterInputProps, EnterInputSta
             this.props.onUndo();
         }
     }
+
     private onRedo() {
         if (this.props.onRedo) {
             this.props.onRedo();
         }
     }
+
     private onActivated = () => {
         this.setState({ focused: true });
     }
+
     onFocus = e => {
         e.currentTarget.select();
     }
+
     onChange = e => {
         this.setState({ value: e.currentTarget.value });
         if (this.props.onChange) {
             this.props.onChange(e);
         }
-    };
+    }
+
     private fireOnChange() {
         if (this.props.onValueEntered) {
             let result = this.getResult();

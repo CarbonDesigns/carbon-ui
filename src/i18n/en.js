@@ -146,6 +146,8 @@ export default
         "@position": "Position", //
         "@rotation": "Transform", //
         "@symbol": "Symbol",
+        "@fills": "Fills",
+        "@strokes": "Strokes",
         "Default font": "Default font", //
         "Content font": "Content font", //
         "Typeface": "Typeface", //
@@ -256,8 +258,9 @@ export default
         "button.stencilsStyle": "Style", //
         "button.textStyle": "Text style", //
         "button.delete": "Delete", //
-        "X": "X", //
-        "Y": "Y", //
+        "x": "x", //
+        "x": "y", //
+        "@radius": "radius",
         "Point type": "Point type", //
         "Closed": "Closed", //
         "Visible": "Visible", //
@@ -504,6 +507,7 @@ export default
         "@addshadow": "add shadow",
         "@params": "Params",
         "@recent": "Recent",
+        "@opacity": "Opacity",
         "@color": "Color",
         "@lineCap": "Cap",
         "@lineJoin": "Join",

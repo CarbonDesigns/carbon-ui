@@ -10,6 +10,7 @@ import LinearGradientPicker from "./LinearGradientPicker";
 import { FormattedMessage } from "react-intl";
 
 import tinycolor from "tinycolor2";
+import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
 
 var basicColors = [
     "white",
@@ -114,13 +115,13 @@ export default class BrushTabs extends Component<any, any> {
                 items={tabs}
             />
 
-            <TabArea className="gui-pages">
-                <TabPage className="gui-page" tabId="1">
+            <TabAreaStyled>
+                <TabPageStyled tabId="1">
                     <ColorPicker display={true} color={brush.value || "rgba(0,0,0,0)"} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
-                </TabPage>
-                <TabPage className="gui-page" tabId="2">
+                </TabPageStyled>
+                <TabPageStyled tabId="2">
                     <LinearGradientPicker brush={brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} onPreview={this.props.onPreview} />
-                </TabPage>
+                </TabPageStyled>
                 {/*<TabPage className="gui-page swatches" tabId="2">
                     <div className="swatches__basic-colors">
                         <div className="swatch swatch_transparent" onClick={this.selectSwatch} data-value="none"></div>
@@ -165,7 +166,7 @@ export default class BrushTabs extends Component<any, any> {
                 {/*<div className="gui-page" ref="tab3">*/}
                 {/*<span>3</span>*/}
                 {/*</div>*/}
-            </TabArea>
+            </TabAreaStyled>
         </TabContainer>
     }
 }

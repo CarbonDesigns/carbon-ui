@@ -10,6 +10,7 @@ import ArrowKeyModifier from "../../shared/ui/ArrowKeyModifier";
 import GuiNumericInput from "../../shared/ui/GuiNumericInput";
 import { util } from "carbon-core";
 import CarbonActions from "../../CarbonActions";
+import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
 
 
 var b = function (elem = null, mods = null, mix = null) {
@@ -313,24 +314,18 @@ export default class ShadowPopup extends Component<any, any> {
                 />
                 {/*<FormattedMessage tagName="span" id="@recent" />,*/}
 
-                <TabArea className="gui-pages">
+                <TabAreaStyled>
 
-                    <TabPage className="gui-page" tabId="1">
+                    <TabPageStyled tabId="1">
                         <ShadowEditor value={this.state.value} changed={this._propsChanged}/>
-                    </TabPage>
+                    </TabPageStyled>
 
-                    <TabPage className="gui-page shadow-color-page" tabId="2">
+                    <TabPageStyled tabId="2">
                         <ColorPicker display={true} color={this.state.value.color}
                                       onChangeComplete={this.onColorPickerChange} presetColors={[]}/>
-                    </TabPage>
+                    </TabPageStyled>
 
-
-
-                    {/*<TabPage className="gui-page" tabId="3">*/}
-                    {/*<ShadowsList boxClassName="shadows-popup__recent-shadows" items={recent_shadows} onClick={console.log} insideFlyout={true} padding={true}/>*/}
-                    {/*</TabPage>*/}
-
-                </TabArea>
+                </TabAreaStyled>
             </TabContainer>
 
             <div className="bottom-right-controls">

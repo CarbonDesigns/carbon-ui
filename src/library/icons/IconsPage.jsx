@@ -9,6 +9,7 @@ import {TabContainer, TabArea, TabTabs, TabPage} from "../../shared/TabContainer
 import bem from '../../utils/commonUtils';
 import libraryTabStore from "../LibraryTabStore";
 import InternalIconsStore from "./InternalIconsStore";
+import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
 
 export default class IconsPage extends Component {
     constructor(props) {
@@ -34,20 +35,20 @@ export default class IconsPage extends Component {
                 ]}
                 tabMods="level2"
             />
-            <TabArea className="gui-pages" id="icons-page__pages">
-                <TabPage tabId="1" className="gui-page">
+            <TabAreaStyled id="icons-page__pages">
+                <TabPageStyled tabId="1">
                     <InternalIcons ref="tab1"/>
-                </TabPage>
-                <TabPage tabId="2" className="gui-page">
+                </TabPageStyled>
+                <TabPageStyled tabId="2">
                     <RecentIcons ref="tab2"/>
-                </TabPage>
-                <TabPage tabId="3" className="gui-page web-icons">
+                </TabPageStyled>
+                <TabPageStyled tabId="3">
                     <IconFinder ref="tab3"/>
-                </TabPage>
-                <TabPage tabId="4" className="gui-page tab-page_search">
+                </TabPageStyled>
+                <TabPageStyled tabId="4">
                     <SearchIcons ref="tab4"/>
-                </TabPage>
-            </TabArea>
+                </TabPageStyled>
+            </TabAreaStyled>
         </TabContainer>
     }
 }

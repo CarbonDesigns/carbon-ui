@@ -8,12 +8,9 @@ var fs = require("fs");
 var BundleResourcesPlugin = require("./BundleResourcesPlugin");
 var resolveCoreModules = require("./resolveCore");
 
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+var UglifyWebpackPlugin = require("uglifyjs-webpack-plugin");
 // var HtmlWebpackScriptCrossoriginPlugin = require('html-webpack-script-crossorigin-plugin');
-
-var CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
 var defaults = {
     minimize: false,
@@ -53,8 +50,8 @@ function getOutput(settings) {
         publicPath: settings.fullPublicPath + "/"
     };
 
-    output.filename = "carbon-[name]-[hash].js";
-    output.chunkFilename = "carbon-[name]-[chunkhash].js";
+    output.filename = "carbon-[name]-[hash:4].js";
+    output.chunkFilename = "carbon-[name]-[chunkhash:4].js";
     output.path = fullPath("../target/");
 
     return output;
@@ -102,8 +99,6 @@ function getPlugins(settings) {
 
     let resourceBundleOptions = { resourceFile: null };
     var plugins = [
-        //breaks incremental updates in watch mode...
-
         new BundleResourcesPlugin({
             cdn: settings.authority,
             publicPath: settings.publicPath,
@@ -120,8 +115,6 @@ function getPlugins(settings) {
             resourceBundleOptions: resourceBundleOptions
         }),
         // new HtmlWebpackScriptCrossoriginPlugin({}),
-
-        new CheckerPlugin(),
 
         new webpack.LoaderOptionsPlugin({
             debug: settings.debug
@@ -142,13 +135,6 @@ function getPlugins(settings) {
     plugins.push(new webpack.DefinePlugin(defines));
 
     if (settings.minimize) {
-        if (!settings.noUglify) {
-            plugins.push(new webpack.optimize.UglifyJsPlugin({
-                sourceMap: true,
-                minimize: true
-            }));
-        }
-
         plugins.push(
             // new InlineManifestWebpackPlugin({
             //     name: 'webpackManifest'
@@ -265,30 +251,30 @@ function getLoaders(settings) {
 
     //extract-text broken, need to remove less
     //if (settings.minimize) {
-        // loaders.push({
-        //     test: /\.less$/,
-        //     use: ExtractTextPlugin.extract({
-        //         use: [
-        //             "css-loader"
-        //         ]
-        //     })
-        // });
+    // loaders.push({
+    //     test: /\.less$/,
+    //     use: ExtractTextPlugin.extract({
+    //         use: [
+    //             "css-loader"
+    //         ]
+    //     })
+    // });
     //}
     //else {
-        var lessSettings = {};
-        loaders.push({
-            test: /\.less$/,
-            use: [
-                "style-loader",
-                {
-                    loader: "css-loader",
-                    options: {
-                        minimize: false,
-                        sourceMap: true
-                    }
-                },
-                "less-loader"]
-        });
+    var lessSettings = {};
+    loaders.push({
+        test: /\.less$/,
+        use: [
+            "style-loader",
+            {
+                loader: "css-loader",
+                options: {
+                    minimize: false,
+                    sourceMap: true
+                }
+            },
+            "less-loader"]
+    });
     //}
     return loaders;
 }
@@ -297,8 +283,8 @@ module.exports = function (settings) {
     settings = extend({}, defaults, settings);
     settings.authority = settings.host ? settings.host + (settings.port ? ":" + settings.port : "") : "";
     settings.fullPublicPath = settings.authority + settings.publicPath;
-    settings.hashPattern = settings.minimize ? "-[hash]" : "";
-    settings.chunkHashPattern = settings.minimize ? "-[chunkhash]" : "";
+    settings.hashPattern = settings.minimize ? "-[hash:4]" : "";
+    settings.chunkHashPattern = settings.minimize ? "-[chunkhash:4]" : "";
     settings.verbose && console.log(settings);
 
     var config = {
@@ -357,7 +343,13 @@ module.exports = function (settings) {
             }
         },
         cache: true,
-        mode: settings.debug ? "development" : "production"
+        mode: settings.debug ? "development" : "production",
+        optimization: {
+            runtimeChunk: {
+                name: "manifest",
+            },
+            minimizer: settings.minimize && !settings.noUglify ? [new UglifyWebpackPlugin({ sourceMap: true })] : [],
+        }
     };
 
     settings.verbose && console.log(config);

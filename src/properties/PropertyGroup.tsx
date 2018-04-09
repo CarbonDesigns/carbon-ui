@@ -34,7 +34,7 @@ import { FormattedMessage } from "react-intl";
 import SymbolGroupEditor from "./editors/custom/SymbolGroupEditor";
 import TupleEditor from "./editors/custom/TupleEditor";
 import * as Immutable from "immutable";
-import NumericSliderEditor from "./editors/custom/NumericSlider";
+import OpacityEditor from "./editors/custom/OpacityEditor";
 import styled from "styled-components";
 import FillsEditor from "./editors/custom/FillsEditor";
 import StrokesEditor from "./editors/custom/StrokesEditor";
@@ -91,8 +91,8 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <StrokePatternEditor e={elem} p={prop} key={key} />;
             case "numeric":
                 return <NumericEditor e={elem} p={prop} key={key} />;
-            case "numericslider":
-                return <NumericSliderEditor e={elem} p={prop} key={key} />;
+            case "opacity":
+                return <OpacityEditor e={elem} p={prop} key={key} />;
             case "text":
                 return <StringEditor e={elem} p={prop} key={key} />;
             case "toggle":

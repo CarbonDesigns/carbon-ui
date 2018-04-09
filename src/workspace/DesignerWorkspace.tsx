@@ -135,12 +135,10 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
                 <Viewport id="viewport" innerRef={x => { this.viewport = x }} key="viewport">
                     {/* canvases and view container will be inserted here */}
 
-                    <div id="workspace-top-edge" className="rulers">
-                        {/* <Tools key="tools"/> */}
+                    {/* <div id="workspace-top-edge" className="rulers">
                         <WindowControls key="windowcontrols" />
                         <ContextBar key="contextBar" />
-                        {/*<AltContext key="altContext"/>*/}
-                    </div>
+                    </div> */}
 
                     <div id="workspace-bottom-edge">
                         <PagesBar key="boards" />

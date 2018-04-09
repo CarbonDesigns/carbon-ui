@@ -48,7 +48,7 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
             },
             options: {
                 min: 0,
-                max: 10,
+                max: 100,
                 step: 1
             },
             value: e.strokeWidth()

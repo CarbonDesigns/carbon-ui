@@ -12,6 +12,7 @@ import libraryTabStore from "../LibraryTabStore";
 import BuiltInProviders from "./BuiltInProviders";
 import NotReady from "../../shared/NotReady";
 import DataSearch from "./DataSearch";
+import { TabAreaStyled, TabPageStyled } from '../../components/CommonStyle';
 
 require("./DataStore");
 
@@ -49,12 +50,12 @@ export default class DataPanel extends Component<{}, DataPanelState> {
                 ]}
                 tabMods="level2"
             />
-            <TabArea className="gui-pages">
-                <TabPage tabId="1" className="gui-page"> <BuiltInProviders /></TabPage>
-                <TabPage tabId="2" className="gui-page"> <CustomProviders /> </TabPage>
-                <TabPage tabId="3" className="gui-page"> <NotReady feature="dataJson"/> </TabPage>
-                <TabPage tabId="4" className="gui-page"> <DataSearch/> </TabPage>
-            </TabArea>
+            <TabAreaStyled>
+                <TabPageStyled tabId="1"> <BuiltInProviders /></TabPageStyled>
+                <TabPageStyled tabId="2"> <CustomProviders /> </TabPageStyled>
+                <TabPageStyled tabId="3"> <NotReady feature="dataJson"/> </TabPageStyled>
+                <TabPageStyled tabId="4"> <DataSearch/> </TabPageStyled>
+            </TabAreaStyled>
         </TabContainer>;
     }
 }

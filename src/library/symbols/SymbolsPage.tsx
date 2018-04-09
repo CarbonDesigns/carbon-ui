@@ -7,6 +7,7 @@ import { TabContainer, TabTabs, TabArea, TabPage } from "../../shared/TabContain
 import bem from '../../utils/commonUtils';
 
 import libraryTabStore from "../LibraryTabStore";
+import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
 
 
 export default class SymbolsPage extends Component<any, any> {
@@ -32,17 +33,17 @@ export default class SymbolsPage extends Component<any, any> {
                 ]}
                 tabMods="level2"
             />
-            <TabArea className="gui-pages" id="stencils-page__pages">
-                <TabPage tabId="1" className="gui-page">
+            <TabAreaStyled id="stencils-page__pages">
+                <TabPageStyled tabId="1">
                     <Symbols ref="tab1" />
-                </TabPage>
-                <TabPage tabId="2" className="gui-page">
+                </TabPageStyled>
+                <TabPageStyled tabId="2">
                     <RecentSymbols ref="tab2" />
-                </TabPage>
-                <TabPage tabId="3" className="gui-page tab-page_search">
+                </TabPageStyled>
+                <TabPageStyled tabId="3">
                     <SearchSymbols ref="tab4" />
-                </TabPage>
-            </TabArea>
+                </TabPageStyled>
+            </TabAreaStyled>
         </TabContainer>;
     }
 }

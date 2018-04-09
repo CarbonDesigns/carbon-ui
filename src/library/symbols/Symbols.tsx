@@ -92,7 +92,7 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
     }
 
     private renderPageSelect(page: IPage) {
-        return <PageSelect className={bem("stencils-page", "select")} mods="small" selectedItem={page} onSelect={this.onPageSelected}
+        return <PageSelect className={bem("stencils-page", "select")} selectedItem={page} onSelect={this.onPageSelected}
             items={app.pagesWithSymbols()}
             renderItem={this.renderPageItem}
             renderCustomItems={() => [

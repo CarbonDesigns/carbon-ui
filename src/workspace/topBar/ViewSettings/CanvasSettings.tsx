@@ -5,6 +5,7 @@ import { FormGroup, FormLine } from "./Form";
 
 import { app, Invalidate, Environment } from "carbon-core";
 import { FormattedMessage } from "react-intl";
+import { TabPageStyled } from "../../../components/CommonStyle";
 
 export default class CanvasSettings extends Component<any, any> {
     refs: {
@@ -53,7 +54,7 @@ export default class CanvasSettings extends Component<any, any> {
     }
 
     render() {
-        return <div className="view-settings__page gui-page" id="view-settings__page_canvas">
+        return <TabPageStyled className="view-settings__page">
             <div className="view-settings__page-heading">
                 <FormattedMessage tagName="h3" id="@canvas" />
             </div>
@@ -101,6 +102,6 @@ export default class CanvasSettings extends Component<any, any> {
                     </FormLine>
                 </FormGroup>
             </section>
-        </div>;
+        </TabPageStyled>;
     }
 }

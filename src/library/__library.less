@@ -3,13 +3,6 @@
 
 
 #library-panel {
-    .gui-pages {
-        //width: 100%;
-        //top: 32px;
-        //bottom: 0;
-        //.abs;
-    }
-
     #images-page{
         //user-images center by default and covered on-demand
         .user-images .image-holder{
@@ -60,22 +53,18 @@
             padding-top: 5px;
         }
     }
-    .gui-page .gui-tabs__tab:not(.gui-tabs__tab_active):hover {
-        & > i {.bgi('sprite4.svg');}
-        .op1;
-        .transition(opacity .15s);
-    }
+
     & > i { .size(@module2); }
 
 
-    .gui-pages {
-        &_level1 {
-            width: 100%;
-            top: 32px;
-            bottom: 0;
-            .abs;
-        }
-    }
+    // .gui-pages {
+    //     &_level1 {
+    //         width: 100%;
+    //         top: 32px;
+    //         bottom: 0;
+    //         .abs;
+    //     }
+    // }
 
 }
 
@@ -89,15 +78,6 @@
         .box-shadow(0 2px 5px rgba(1,2,3,.2));
     }
 }
-
-
-.gui-page {
-    .search {
-        .size(100%);
-    }
-}
-
-
 
 
 .library-page__header {

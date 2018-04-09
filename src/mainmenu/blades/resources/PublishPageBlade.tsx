@@ -19,6 +19,7 @@ import BladeContainer from "../BladeContainer";
 import EditableList from "../../../shared/EditableList";
 import AddButton from "../../../shared/ui/AddButton";
 import { ArtboardSelectorBlade } from "../ArtboardSelectorBlade";
+import { TabAreaStyled, TabPageStyled } from "../../../components/CommonStyle";
 
 type ScreenshotList = new (props) => EditableList<Screenshot>;
 const ScreenshotList = EditableList as ScreenshotList;
@@ -275,8 +276,8 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
     render() {
         return <BladeBody>
             <TabContainer currentTabId={this.state.publishStep}>
-                <TabArea className="gui-pages">
-                    <TabPage className="gui-page" tabId="1">
+                <TabAreaStyled>
+                    <TabPageStyled tabId="1">
                         <MarkupLine mods="stretch">
                             <div className="gui-input">
                                 <p className={"gui-input__label"}>
@@ -322,8 +323,8 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                         </MarkupLine>
 
                         <PublishPageForm page={this.state.page} coverUrl={this.state.coverUrl} defaultSetup={this.state.defaultSetup} screenshots={this.state.screenshots} />
-                    </TabPage>
-                    <TabPage className="gui-page" tabId="2">
+                    </TabPageStyled>
+                    <TabPageStyled tabId="2">
                         <MarkupLine><FormattedMessage id="@publish.done" tagName="p" /></MarkupLine>
                         <MarkupLine mods="slim">
                             <a className="publish__link" href={"/library/" + this.state.publishedPageId} target="_blank">
@@ -336,8 +337,8 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                         <MarkupLine>
                             <GuiButton caption="@close" mods="hover-white" onClick={this.close} />
                         </MarkupLine>
-                    </TabPage>
-                </TabArea>
+                    </TabPageStyled>
+                </TabAreaStyled>
             </TabContainer>
         </BladeBody>
     }

@@ -159,6 +159,7 @@ interface ITabTabsProps extends IReactElementProps, ITabMods<"nogrow" | "level2"
     tabClassName?: string;
     tabActiveClassName?: string;
     insertBefore?: any;
+    tabMods?:any;
     insertAfter?: any;
 }
 export class TabTabs extends React.Component<ITabTabsProps> {

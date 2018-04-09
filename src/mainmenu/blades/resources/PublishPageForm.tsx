@@ -10,6 +10,7 @@ import { TabContainer, TabArea, TabPage } from "../../../shared/TabContainer";
 import ResourceSharer from "../../../library/ResourceSharer";
 import { Operation } from "../../../shared/Operation";
 import { GuiProgressButton } from "../../../shared/ui/GuiProgressButton";
+import { TabPageStyled, TabAreaStyled } from "../../../components/CommonStyle";
 
 interface IPublishPageFormProps {
     page: IPage;
@@ -219,13 +220,13 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
         }
 
         return <TabContainer currentTabId={this.state.publishStep} className="publish__submit">
-            <TabArea className="gui-pages">
-                <TabPage className="gui-page" tabId="1">
+            <TabAreaStyled>
+                <TabPageStyled tabId="1">
                     <MarkupLine>
                         <GuiProgressButton mods="submit" onClick={this.onPublishButtonClick} caption="btn.publish" disabled={!this.props.page} loading={this.state.loading} />
                     </MarkupLine>
-                </TabPage>
-                <TabPage className="gui-page" tabId="2">
+                </TabPageStyled>
+                <TabPageStyled tabId="2">
                     <MarkupLine>
                         <FormattedMessage id="@publish.confirm" tagName="p" />
                     </MarkupLine>
@@ -235,8 +236,8 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                             <GuiButton mods="hover-white" onClick={this.onConfirmationCancelled} caption="@cancel" />
                         </GuiButtonBlock>
                     </MarkupLine>
-                </TabPage>
-            </TabArea>
+                </TabPageStyled>
+            </TabAreaStyled>
         </TabContainer>;
     }
 

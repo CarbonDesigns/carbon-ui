@@ -21,10 +21,23 @@ interface INumericEditorState {
     value: number | undefined;
 }
 
-export default class NumericSliderEditor extends EditorComponent<ISize, INumericEditorProps, INumericEditorState> {
+export default class OpacityEditor extends EditorComponent<ISize, INumericEditorProps, INumericEditorState> {
     render() {
         var p = this.props.p;
         var value = p.get("value");
+        var uom = this.extractOption(this.props, "uom", '');
+        var opacityProp = Immutable.Map({
+            descriptor: {
+                name: "opacity",
+                displayName: "@opacity"
+            },
+            value: value * 100,
+            options: {
+                min: 0,
+                max: 100,
+                step: 1
+            }
+        })
 
         return <PropertyLineContainer>
             <PropertyNameContainer><FormattedMessage id={this.displayName()} /></PropertyNameContainer>
@@ -33,30 +46,31 @@ export default class NumericSliderEditor extends EditorComponent<ISize, INumeric
                     valueChanged={this.onValueChanged}
                     valueChanging={this.onValueChanging}
                 />
-                <NumericEditor e={this.props.e} p={p}
-                    onSettingValue={this.changeTupleProperty}
+                <NumericEditor e={this.props.e} p={opacityProp}
+                    onSettingValue={this.changeOpacityProperty}
                     type="child"
-                    onPreviewingValue={this.previewTupleProperty} />
+                    uom={uom}
+                    onPreviewingValue={this.previewOpacityProperty} />
             </SliderContainer>
         </PropertyLineContainer>
     }
 
     onValueChanged = (value) => {
-        this.changeTupleProperty(value / 100, this.props.p);
+        this.changeOpacityProperty(value, this.props.p);
     }
 
     onValueChanging = (value) => {
-        this.previewTupleProperty(null, value / 100);
+        this.previewOpacityProperty(null, value);
         return value;
     }
 
-    changeTupleProperty = (value, p) => {
-        this.setValueByCommand(value);
+    changeOpacityProperty = (value, p) => {
+        this.setValueByCommand(value / 100);
         return false;
     };
 
-    previewTupleProperty(name, value) {
-        this.previewValue(value);
+    previewOpacityProperty(name, value) {
+        this.previewValue(value / 100);
         return false;
     }
 }
@@ -67,4 +81,5 @@ const SliderContainer = styled.div`
     grid-column-gap: 18px;
     justify-content:space-between;
     align-items:center;
+    width:100%;
 `;

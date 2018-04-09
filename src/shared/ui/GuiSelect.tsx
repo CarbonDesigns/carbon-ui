@@ -7,6 +7,8 @@ import FlyoutButton from '../FlyoutButton';
 import ScrollContainer from '../ScrollContainer';
 import { FormattedMessage } from "react-intl";
 import { IArtboard, IPage } from "carbon-core";
+import styled from "styled-components";
+import theme from "../../theme";
 
 function b(a, b, c) { return bem('drop', a, b, c) }
 
@@ -16,10 +18,7 @@ function stopPropagation(e) {
     }
 }
 
-export interface IGuiSelectProps<T> extends ISimpleReactElementProps, IHasMods<
-    "small" |
-    "medium"
-> {
+export interface IGuiSelectProps<T> extends ISimpleReactElementProps {
     selectedItem?: T;
 
     items: T[];
@@ -32,7 +31,6 @@ export interface IGuiSelectProps<T> extends ISimpleReactElementProps, IHasMods<
 
 export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
     static defaultProps: Partial<IGuiSelectProps<any>> = {
-        mods: "medium"
     }
 
     refs: {
@@ -64,10 +62,10 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
             selectedChild = <i>---</i>;
         }
 
-        return <div className="drop__pill">
+        return <ActiveItem>
             {selectedChild}
             <i className="ico ico-triangle" />
-        </div >
+        </ActiveItem>
     };
 
     private renderFlyoutContent() {
@@ -87,21 +85,18 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
             }));
         }
 
-        let mods = Object.assign({open: true}, this.props.mods);
-        return <div className={bem('drop', 'content', mods, this.props.className)}>
+        return <DropContent className={this.props.className}>
             <ScrollContainer
                 boxClassName="drop__list"
                 insideFlyout={true}
                 ref="scrollContainer"
             >{options}</ScrollContainer>
-        </div>
+        </DropContent>
     }
 
     render() {
-        var dropClasses = bem('drop', null, this.props.mods, this.props.className);
 
         return <FlyoutButton
-            className={dropClasses}
             renderContent={this.renderPill}
             position={{
                 targetVertical: "bottom",
@@ -118,3 +113,15 @@ export const ArtboardSelect = GuiSelect as ArtboardSelect;
 
 export type PageSelect = new (props) => GuiSelect<IPage>;
 export const PageSelect = GuiSelect as PageSelect;
+
+const DropContent = styled.div`
+    color:${theme.text_color};
+    font:${theme.input_font};
+`;
+
+const ActiveItem = styled.div`
+    color:${theme.text_color};
+    font:${theme.input_font};
+    height:24px;
+    background:${theme.input_background};
+`;

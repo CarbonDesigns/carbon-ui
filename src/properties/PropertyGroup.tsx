@@ -34,7 +34,10 @@ import { FormattedMessage } from "react-intl";
 import SymbolGroupEditor from "./editors/custom/SymbolGroupEditor";
 import TupleEditor from "./editors/custom/TupleEditor";
 import * as Immutable from "immutable";
-import NumericSliderEditor from "./editors/custom/NumericSlider";
+import OpacityEditor from "./editors/custom/OpacityEditor";
+import styled from "styled-components";
+import FillsEditor from "./editors/custom/FillsEditor";
+import StrokesEditor from "./editors/custom/StrokesEditor";
 
 interface IPropertyGroupProps {
     e: any, // page element
@@ -50,13 +53,13 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
         var properties = this.props.g.get("properties");
 
         if (this._hasVisiblePropertiesInTheGroup(properties)) {
-            return <div className="props-group">
-                <div className="props-group__heading">
+            return <div>
+                {/* <div className="props-group__heading">
                     <FormattedMessage tagName="h5" id={this.props.g.get("label") || "empty.label"} />
-                </div>
-                <section className="props-group__list">
+                </div> */}
+                <PropertyListSection>
                     {properties.map(p => this._chooseEditor(p))}
-                </section>
+                </PropertyListSection>
             </div>;
         }
         return null;
@@ -88,8 +91,8 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <StrokePatternEditor e={elem} p={prop} key={key} />;
             case "numeric":
                 return <NumericEditor e={elem} p={prop} key={key} />;
-            case "numericslider":
-                return <NumericSliderEditor e={elem} p={prop} key={key} />;
+            case "opacity":
+                return <OpacityEditor e={elem} p={prop} key={key} />;
             case "text":
                 return <StringEditor e={elem} p={prop} key={key} />;
             case "toggle":
@@ -102,6 +105,10 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <DropDownEditor e={elem} p={prop} key={key} />;
             case "brush":
                 return <BrushEditor e={elem} p={prop} key={key} />;
+            case "fills":
+                return <FillsEditor e={elem} p={prop} key={key} />;
+            case "strokes":
+                return <StrokesEditor e={elem} p={prop} key={key} />;
             case "multiToggle":
                 return <MultiToggleEditor e={elem} p={prop} key={key} />;
             case "textAlign":
@@ -126,7 +133,6 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <StatesEditor e={elem} p={prop} key={key} />;
             case "symbolGroup":
                 return <SymbolGroupEditor e={elem} p={prop} key={key} />;
-
             case "position": {
                 return <TupleEditor e={elem} p={prop} key={key} properties={[
                     Immutable.Map({
@@ -180,4 +186,10 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
     }
 }
 
+const PropertyListSection = styled.section`
+    display: flex;
+    flex-wrap: wrap;
+`;
+
 export default PropertyGroup;
+

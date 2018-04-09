@@ -5,14 +5,17 @@ import FlyoutButton from '../../shared/FlyoutButton';
 import EditorComponent from "./EditorComponent";
 import BrushSelector from "./BrushSelector";
 
-import {Brush} from "carbon-core";
-import {FormattedMessage} from "react-intl";
+import { Brush } from "carbon-core";
+import { FormattedMessage } from "react-intl";
+
+import styled from "styled-components";
+import theme from "../../theme";
 
 export default class BrushEditor extends EditorComponent<Brush> {
     private _initialValue: Brush;
 
     renderSelectedValue: any = () => {
-        return <q style={Brush.toCss(this.propertyValue())}></q>;
+        return <BrushIndicator><div style={Brush.toCss(this.propertyValue())}></div></BrushIndicator>;
     };
     saveInitialBrush = () => {
         this._initialValue = this.propertyValue();
@@ -22,7 +25,7 @@ export default class BrushEditor extends EditorComponent<Brush> {
         delete this._initialValue;
     };
     revertChanges = () => {
-        if (this._initialValue){
+        if (this._initialValue) {
             this.setValueByCommand(this._initialValue);
         }
     };
@@ -30,30 +33,43 @@ export default class BrushEditor extends EditorComponent<Brush> {
         this.previewValue(value);
     }
 
-    render(){
+    render() {
         var p = this.props.p;
-        var classes = cx("prop prop_colorpicker", this.widthClass(this.props.className || "prop_width-1-2"));
         var showGradient = this.extractOption(this.props, "gradient", false);
-        return <div className={classes}>
-            <div className="prop__name"><FormattedMessage id={this.displayName()}/></div>
-            <FlyoutButton
-                className="prop__value"
-                ref="flyout"
-                renderContent={this.renderSelectedValue}
-                position={{targetVertical: "bottom", disableAutoClose: true}}
-                onOpened={this.saveInitialBrush}
-                onClosed={this.onClosed}
-            >
-                <BrushSelector
-                    className="flyout__content" ref="selector"
-                    brush={this.propertyValue()}
-                    hasGradient={showGradient}
-                    onSelected={this.setValueByCommand}
-                    onPreview={this.onPreview}
-                    onCancelled={this.revertChanges}
-                />
-            </FlyoutButton>
-        </div>;
+        return <FlyoutButton
+            className="prop__value"
+            ref="flyout"
+            renderContent={this.renderSelectedValue}
+            position={{ targetVertical: "bottom", disableAutoClose: true }}
+            onOpened={this.saveInitialBrush}
+            onClosed={this.onClosed}
+        >
+            <BrushSelector
+                className="flyout__content" ref="selector"
+                brush={this.propertyValue()}
+                hasGradient={showGradient}
+                onSelected={this.setValueByCommand}
+                onPreview={this.onPreview}
+                onCancelled={this.revertChanges}
+            />
+        </FlyoutButton>;
     }
-
 }
+
+const BrushIndicator = styled.div`
+    width:47px;
+    height:28px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.11);
+    border-radius: 3px;
+    background:${theme.input_background};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & div {
+        width: 35px;
+        height: 21px;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.11);
+        border-radius: 2px;
+    }
+`;

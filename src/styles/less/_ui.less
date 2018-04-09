@@ -106,53 +106,15 @@
 }
 
 
-.gui-pages {
-    .clip;
-    .rel;
-    flex: auto;
+// .gui-pages {
+//     .clip;
+//     .rel;
+//     flex: auto;
 
-    .flex();
-    align-items: stretch;
-    flex-wrap: nowrap;
-}
-
-//noinspection ALL
-.gui-page {
-    display: flex;
-    flex-direction: column;
-    //    .transition("all .3s cubic-bezier(.39,.38,.59,1.32) 0");
-
-    transition: transform .3s;
-
-    width: 100%;
-    min-width: 100%;
-    flex-shrink: 0;
-
-    .gui-pages[data-current-tab="1"] > & {@left: -100% * (1 - 1); .transform(translateX(@left))}
-    .gui-pages[data-current-tab="2"] > & {@left: -100% * (2 - 1); .transform(translateX(@left))}
-    .gui-pages[data-current-tab="3"] > & {@left: -100% * (3 - 1); .transform(translateX(@left))}
-    .gui-pages[data-current-tab="4"] > & {@left: -100% * (4 - 1); .transform(translateX(@left))}
-    .gui-pages[data-current-tab="5"] > & {@left: -100% * (5 - 1); .transform(translateX(@left))}
-    .gui-pages[data-current-tab="6"] > & {@left: -100% * (6 - 1); .transform(translateX(@left))}
-    .gui-pages[data-current-tab="7"] > & {@left: -100% * (7 - 1); .transform(translateX(@left))}
-    .gui-pages[data-current-tab="8"] > & {@left: -100% * (8 - 1); .transform(translateX(@left))}
-
-    .op10();
-    .gui-pages[data-current-tab="1"] > & ,
-    .gui-pages[data-current-tab="2"] > & ,
-    .gui-pages[data-current-tab="3"] > & ,
-    .gui-pages[data-current-tab="4"] > & ,
-    .gui-pages[data-current-tab="5"] > & ,
-    .gui-pages[data-current-tab="6"] > & ,
-    .gui-pages[data-current-tab="7"] > & ,
-    .gui-pages[data-current-tab="8"] > & {.op1;}
-
-
-    &__content {
-        .flex(column);
-        height: 100%;
-    }
-}
+//     .flex();
+//     align-items: stretch;
+//     flex-wrap: nowrap;
+// }
 
 
 .gui-tabs {

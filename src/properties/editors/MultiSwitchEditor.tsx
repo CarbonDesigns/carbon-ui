@@ -1,33 +1,55 @@
 import * as React from "react";
-import EditorComponent, {IEditorProps} from "./EditorComponent";
+import EditorComponent, { IEditorProps } from "./EditorComponent";
 import * as cx from "classnames";
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
+import Icon from "../../components/Icon";
+import styled from "styled-components";
+import * as Immutable from "immutable";
+import theme from "../../theme";
 
-export default class MultiSwitchEditor extends EditorComponent<any, IEditorProps> {
-    render(){
+class MultiSwitchEditor extends EditorComponent<any, IEditorProps> {
+    render() {
         var items = this.extractOption(this.props, "items");
-        var classes = cx("prop prop_pushbuttons", this.widthClass(this.props.className || "prop_width-1-1"));
-        return <div className={classes}>
-            <div className="prop__name"><FormattedMessage id={this.displayName()}/></div>
-            <div className="prop__value">
-                {items.map(x => this.renderItem(x))}
-            </div>
+        if (!items) {
+            return <div></div>
+        }
+        return <div className={this.props.className}>
+            {items.map((x, index) => this.renderItem(x, index === 0, index === items.length - 1))}
         </div>;
     }
-    renderItem(x){
-        var buttonClasses = cx("prop__pushbutton", {"_active": x.value == this.propertyValue() });
-        var iconClasses = cx("ico ico-prop", x.icon);
-        return <q className={buttonClasses} onClick={this.onChange} key={"value__"+x.value} data-field={x.value}>
-            <i className={iconClasses}></i>
-        </q>
+
+    renderItem(x, first, last) {
+        return <SwitchItem active={x.value === this.propertyValue()} first={first} last={last} onClick={this.onChange} key={"value__" + x.value} data-field={x.value}>
+            <Icon className="icon" icon={x.icon}></Icon>
+        </SwitchItem>
     }
 
     onChange = (e) => {
         var value = parseInt(e.currentTarget.dataset.field);
 
-        if (this.props.onSettingValue && this.props.onSettingValue(value) === false){
+        if (this.props.onSettingValue && this.props.onSettingValue(value) === false) {
             return;
         }
         this.setValueByCommand(value);
     };
 }
+
+const SwitchItem = styled.div.attrs<any>({}) `
+    height:24px;
+    flex:1;
+    background:${theme.input_background};
+    margin:0 1px;
+    border-radius:1px;
+    display:flex;
+    justify-content:center;
+    cursor:pointer;
+    .icon {
+        background:${props => props.active ? theme.accent : theme.icon_default};
+    }
+`;
+
+export default styled(MultiSwitchEditor).attrs<any>({}) `
+    display:flex;
+    height:24px;
+    width:100%;
+`;

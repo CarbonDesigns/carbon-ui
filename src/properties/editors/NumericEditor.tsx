@@ -11,6 +11,9 @@ import { PropertyNameContainer, PropertyLineContainer, PropertyWithSubtitleConta
 interface INumericEditorProps extends IEditorProps {
     selectOnEnter?: boolean;
     type?: "child" | "subproperty";
+    step?: number;
+    uom?: string;
+    disabled?:boolean;
 }
 
 interface INumericEditorState {
@@ -166,7 +169,6 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
 
     render() {
         var prop = this.props.p;
-        var classes = cx("prop prop_spinner textbox prop_" + this.propertyName(), this.widthClass(this.props.className || "prop_width-1-2"));
         var value = this.state.value;
         value = value !== undefined ? this.formatValue(value) : '';
 
@@ -184,18 +186,28 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
 
         if (this.props.type === "subproperty") {
             return <PropertyWithSubtitleContainer className={this.props.className}>
-                {inputRender}
+                <InputContainer subproperty={this.props.type === "subproperty"}>
+                    {inputRender}
+                    <Uom>{this.props.uom}</Uom>
+                </InputContainer>
                 <PropertySmallNameContainer><FormattedMessage id={this.displayName()} /></PropertySmallNameContainer>
             </PropertyWithSubtitleContainer>;
         }
 
         if (this.props.type === "child") {
-            return inputRender;
+            return <InputContainer>
+                {inputRender}
+                <Uom>{this.props.uom}</Uom>
+            </InputContainer>;
         }
 
         return <PropertyLineContainer className={this.props.className}>
             <PropertyNameContainer><FormattedMessage id={this.displayName()} /></PropertyNameContainer>
-            {inputRender}
+            <InputContainer>
+
+                {inputRender}
+                <Uom>{this.props.uom}</Uom>
+            </InputContainer>
 
             {/* <div className="spinner-buttons">
                 <div className="spinner-button__up"
@@ -213,13 +225,27 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
     }
 }
 
-const InputStyled = styled(EnterInput) `
+const InputStyled = styled(EnterInput)`
     height:24px;
-    padding: 5px 8px;
+    padding: 5px 8px 5px 2px;
     color: ${theme.text_color};
     font: ${theme.input_font};
+    width:100%;
+    background:transparent;
+`;
+
+const InputContainer = styled.div.attrs<any>({}) `
+    height:24px;
     background-color: ${theme.input_background};
     border-radius: 1px;
     width:100%;
+    display:flex;
+    align-items: center;
+`;
 
-`
+const Uom = styled.div`
+    line-height:24px;
+    color: ${theme.text_color};
+    font: ${theme.input_font};
+    padding-left:8px;
+`;

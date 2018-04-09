@@ -2,6 +2,7 @@ import createTheme from 'styled-components-theme';
 
 export const colors = {
     accent:'#ff3d7d',
+    icon_default:'#fff',
     panel_background:'#292929',
     flyout_background: '#272727',
     flyout_shadow: '0 0 4px 1px rgba(0, 0, 0, 0.5)',
@@ -17,7 +18,7 @@ export const colors = {
     h2font: "400 14px 'Roboto', sans-serif;",
     default_font: "400 12px 'Roboto', sans-serif;",
     link_font: "400 10px 'Roboto', sans-serif;",
-    input_font: "400 10px 'Roboto', sans-serif;",
+    input_font: "400 12px 'Roboto', sans-serif;",
     prop_font: "400 9px 'Roboto', sans-serif;",
     prop_name_font: "400 14px 'Roboto', sans-serif;",
     link_padding: "8px",

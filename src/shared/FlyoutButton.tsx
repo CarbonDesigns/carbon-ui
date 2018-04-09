@@ -77,6 +77,10 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
         var position = this.props.position || { targetVertical: "bottom", targetHorizontal: "left" };
 
         var source = this.refs.host;
+        if(!source) {
+            return;
+        }
+
         var sourceHeight = source.offsetHeight;
         var sourceWidth = source.offsetWidth;
 

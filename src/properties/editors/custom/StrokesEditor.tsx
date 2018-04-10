@@ -6,7 +6,7 @@ import EditorComponent, { IEditorProps } from "../EditorComponent";
 import NumericEditor from "../NumericEditor";
 import { richApp } from "../../../RichApp";
 
-import { ISize, Brush } from "carbon-core";
+import { ISize, Brush, StrokePosition } from "carbon-core";
 import { PropertyNameContainer, PropertyTupleContainer, PropertyListHeader, PropertyListContainer, PropertyLineContainer } from "../../PropertyStyles";
 import { FormattedMessage } from "react-intl";
 import Slider from "../../../components/Slider";
@@ -14,12 +14,28 @@ import Slider from "../../../components/Slider";
 import styled from "styled-components";
 import BrushEditor from "../BrushEditor";
 import { dispatchAction } from "../../../CarbonFlux";
+import GuiSelect from "../../../shared/ui/GuiSelect";
 
 interface INumericEditorProps extends IEditorProps {
 }
 
 interface IFillsEditorState {
     value: number | undefined;
+}
+
+type StrokePositionSelect = new (props) => GuiSelect<StrokePosition>;
+const StrokePositionSelect = GuiSelect as StrokePositionSelect;
+
+function strokePositionLabel(s: StrokePosition) {
+    switch (s) {
+        case StrokePosition.Center:
+            return "@strokeposition.center";
+        case StrokePosition.Inside:
+            return "@strokeposition.inside";
+        case StrokePosition.Outside:
+            return "@strokeposition.outside";
+    }
+    assertNever(s);
 }
 
 export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, IFillsEditorState> {
@@ -61,17 +77,12 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
 
             <PropertyLineContainer>
                 <BrushEditor e={this.props.e} p={this.props.p} />
-                <SliderContainer>
-                    <Slider value={value.o * 100}
-                        valueChanged={this.onValueChanged}
-                        valueChanging={this.onValueChanging}
-                    />
-                    <NumericEditor e={this.props.e} p={opacityProp}
-                        onSettingValue={this.changeOpacityProperty}
-                        type="subproperty"
-                        uom="%"
-                        onPreviewingValue={this.previewOpacityProperty} />
-                </SliderContainer>
+                <StrokePositionSelect
+                    selectedItem={e.strokePosition()}
+                    items={StrokesEditor.StrokePositions}
+                    renderItem={StrokesEditor.renderStrokePositionLabel}
+                    onSelect={this._onChangeStrokePosition}>
+                </StrokePositionSelect>
             </PropertyLineContainer>
             <PropertyLineContainer>
                 <div></div>
@@ -83,6 +94,13 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
             </PropertyLineContainer>
 
         </PropertyListContainer>
+    }
+
+    static StrokePositions = [StrokePosition.Center, StrokePosition.Inside, StrokePosition.Outside];
+    private static renderStrokePositionLabel = (item) => <FormattedMessage id={strokePositionLabel(item)} tagName="p" />;
+
+    _onChangeStrokePosition() {
+
     }
 
     onValueChanged = (value) => {

@@ -158,8 +158,8 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
             value: locked ? 1 : 0
         }).set("options", {
             items: [
-                { value: 1, icon: themeIcons.path_union }, // TODO: icons
-                { value: 0, icon: themeIcons.path_union }
+                { value: 1, icon: themeIcons.corner1 },
+                { value: 0, icon: themeIcons.corner4 }
             ]
         })
 
@@ -172,7 +172,7 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
 
 const CornerEditorLineContainer = styled.div`
     display:grid;
-    grid-template-columns:60px 1fr;
+    grid-template-columns:80px 1fr;
     align-items: center;
     grid-column-gap: 10px;
     padding:0 9px;

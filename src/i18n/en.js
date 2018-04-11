@@ -386,6 +386,10 @@ export default
         "@publish.done": "The symbols have been published to the gallery.",
         "@publish.viewInGallery": "View in library",
 
+        "@strokeposition.center": "Center",
+        "@strokeposition.inside": "Inside",
+        "@strokeposition.outside": "Outside",
+
         "@import": "Import",
         "@import.header": "Import symbols",
         "@import.builtin": "Built-in",

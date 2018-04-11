@@ -2,15 +2,14 @@ import * as React from "react";
 import * as ReactDom from "react-dom";
 import { Component } from "../../CarbonFlux";
 import * as cx from "classnames";
-import { default as bem, join_bem_mods, IHasMods } from '../../utils/commonUtils';
 import FlyoutButton from '../FlyoutButton';
 import ScrollContainer from '../ScrollContainer';
 import { FormattedMessage } from "react-intl";
 import { IArtboard, IPage } from "carbon-core";
 import styled from "styled-components";
 import theme from "../../theme";
-
-function b(a, b, c) { return bem('drop', a, b, c) }
+import icons from "../../theme-icons";
+import Icon from "../../components/Icon";
 
 function stopPropagation(e) {
     if (e) {
@@ -62,32 +61,26 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
             selectedChild = <i>---</i>;
         }
 
-        return <ActiveItem>
+        return <CurrentItem>
             {selectedChild}
-            <i className="ico ico-triangle" />
-        </ActiveItem>
+            <Icon icon={icons.triangle_down} color={theme.icon_default}></Icon>
+        </CurrentItem>
     };
 
     private renderFlyoutContent() {
         let options = this.props.items.map((item, i) => {
-            let classes = bem('drop', 'item',
-                { selectable: true }
-            );
-
             var renderedItem = this.props.renderItem ? this.props.renderItem(item) : item;
-            return <div className={classes} key={i} data-index={i} onClick={this.selectItem} onMouseDown={stopPropagation}>{renderedItem}</div>;
+            return <DropItem key={i} data-index={i} onClick={this.selectItem} onMouseDown={stopPropagation}>{renderedItem}</DropItem>;
         });
 
         if (this.props.renderCustomItems) {
             options = options.concat(this.props.renderCustomItems().map((element, i) => {
-                let classes = bem('drop', 'item', { selectable: true });
-                return <div className={classes} key={this.props.items.length + i} onMouseDown={stopPropagation}>{element}</div>;
+                return <DropItem key={this.props.items.length + i} onMouseDown={stopPropagation}>{element}</DropItem>;
             }));
         }
 
         return <DropContent className={this.props.className}>
             <ScrollContainer
-                boxClassName="drop__list"
                 insideFlyout={true}
                 ref="scrollContainer"
             >{options}</ScrollContainer>
@@ -95,11 +88,12 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
     }
 
     render() {
-
         return <FlyoutButton
             renderContent={this.renderPill}
             position={{
                 targetVertical: "bottom",
+                targetHorizontal:"left",
+                sourceHorizontal:"left",
                 syncWidth: true
             }}>
             {this.renderFlyoutContent()}
@@ -117,11 +111,32 @@ export const PageSelect = GuiSelect as PageSelect;
 const DropContent = styled.div`
     color:${theme.text_color};
     font:${theme.input_font};
+    background:${theme.input_background};
+    box-shadow:${theme.dropdown_shadow};
+    padding:${theme.margin1} 0;
+    z-index:1000;
 `;
 
-const ActiveItem = styled.div`
+const CurrentItem = styled.div`
+    display:grid;
+    grid-template-columns: 1fr 8px;
+    align-items: center;
     color:${theme.text_color};
     font:${theme.input_font};
-    height:24px;
+    height:${theme.prop_height};
+    line-height:${theme.prop_height};
     background:${theme.input_background};
+    padding: 0 4px 0 ${theme.margin1};
+    width:100%;
+    z-index:1001;
+`;
+
+const DropItem = styled.div`
+    height:${theme.prop_height};
+    line-height:${theme.prop_height};
+    padding: 0 ${theme.margin1};
+    cursor:pointer;
+    &:hover {
+        background:${theme.accent};
+    }
 `;

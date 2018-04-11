@@ -64,4 +64,6 @@ export default {
     align_t: icon("align_t.svg", 20, 20),
     align_v: icon("align_v.svg", 20, 20),
     align_b: icon("align_b.svg", 20, 20),
+    corner1: icon("corner1.svg", 32, 23),
+    corner4: icon("corner4.svg", 32, 23),
 }

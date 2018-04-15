@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="9px" viewBox="0 0 10 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>photo-icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Part-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1521.000000, -959.000000)">
+        <g id="Layers-Section" transform="translate(1480.000000, 761.000000)" stroke="#FFFFFF">
+            <g id="photo-icon" transform="translate(41.000000, 198.000000)">
+                <g>
+                    <rect id="Mask" stroke-width="0.625" x="0.3125" y="0.3125" width="9.375" height="8.375"></rect>
+                    <path d="M7.56324601,8.6875 L4.6875,4.05413021 L1.81175399,8.6875 L7.56324601,8.6875 Z" id="Triangle-1" stroke-width="0.625"></path>
+                    <ellipse id="Oval-7" stroke-width="0.625" cx="7.8125" cy="3.11538462" rx="1" ry="1"></ellipse>
+                    <path d="M7.79278009,8.6875 C7.68584342,7.85131268 7.15830845,7.23557692 6.5625,7.23557692 C5.96669155,7.23557692 5.43915658,7.85131268 5.33221991,8.6875 L7.79278009,8.6875 Z" id="Oval-8" stroke-width="0.625"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

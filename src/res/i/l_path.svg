@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="10px" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Vector Icon Gre</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Part-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1520.000000, -939.000000)">
+        <g id="Layers-Section" transform="translate(1480.000000, 761.000000)" fill="#D8D8D8">
+            <g id="Vector-Icon-Gre" transform="translate(38.000000, 177.000000)">
+                <g transform="translate(6.717514, 6.717514) rotate(-135.000000) translate(-6.717514, -6.717514) translate(3.217514, 0.717514)">
+                    <path d="M3.57608696,11.0054348 C2.06340217,11.0054348 0.836956522,9.72220109 0.836956522,8.13961957 C0.836956522,6.5566712 2.73140761,2.53675272 3.57608696,1.4673913 C4.40090761,2.51620924 6.31521739,6.5566712 6.31521739,8.13961957 C6.31521739,9.72220109 5.08877174,11.0054348 3.57608696,11.0054348 L3.57608696,11.0054348 Z M3.57608696,0 C4.60736957,1.34266304 7,6.04491848 7,8.07065217 C7,10.0967527 5.46677174,11.7391304 3.57608696,11.7391304 C1.68540217,11.7391304 0.152173913,10.0967527 0.152173913,8.07065217 C0.152173913,6.04491848 2.52049457,1.36870924 3.57608696,0 Z" id="Fill-78"></path>
+                    <path d="M3.34782609,1.40869565 L3.34782609,7.51304348" id="Fill-3" stroke="#D8D8D8" stroke-width="0.9375"></path>
+                    <ellipse id="Oval" stroke="#D8D8D8" stroke-width="0.9375" cx="3.57608696" cy="7.74782609" rx="1" ry="1"></ellipse>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

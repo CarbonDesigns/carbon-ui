@@ -13,6 +13,7 @@ import Slider from "../../../components/Slider";
 
 import styled from "styled-components";
 import BrushEditor from "../BrushEditor";
+import { GuiCheckbox } from "../../../shared/ui/GuiComponents";
 
 interface INumericEditorProps extends IEditorProps {
 }
@@ -44,7 +45,8 @@ export default class FillsEditor extends EditorComponent<ISize, IEditorProps, IF
                 <FormattedMessage id="@fills" />
             </PropertyListHeader>
 
-            <PropertyLineContainer>
+            <PropertyFillLineContainer>
+                <GuiCheckbox labelless={true}/>
                 <BrushEditor e={this.props.e} p={this.props.p} />
                 <SliderContainer>
                     <Slider value={value.o * 100}
@@ -57,7 +59,7 @@ export default class FillsEditor extends EditorComponent<ISize, IEditorProps, IF
                         type="subproperty"
                         onPreviewingValue={this.previewOpacityProperty} />
                 </SliderContainer>
-            </PropertyLineContainer>
+            </PropertyFillLineContainer>
 
         </PropertyListContainer>
     }
@@ -94,11 +96,11 @@ const SliderContainer = styled.div`
     align-items: center;
 `;
 
-const BrushLineContainer = styled.div`
+const PropertyFillLineContainer = styled.div`
     display:grid;
-    grid-template-columns:1fr 2fr 1fr;
-    grid-column-gap: 10px;
-    padding:0 9px;
-    margin-top: 9px;
+    grid-template-columns:26px 60px 1fr;
+    align-items:center;
+    grid-column-gap: 12px;
+    padding:0 12px;
     width:100%;
 `;

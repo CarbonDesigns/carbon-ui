@@ -2,7 +2,6 @@ import * as React from "react";
 import * as ReactDom from "react-dom";
 import { Component } from "../CarbonFlux";
 import * as cx from "classnames";
-import { default as bem, join_bem_mods } from '../utils/commonUtils';
 import { nodeOffset, ensureElementVisible } from "../utils/domUtil";
 
 function stopPropagation(e) {

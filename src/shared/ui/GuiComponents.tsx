@@ -8,6 +8,10 @@ import DropDown, { IDropdownProps } from "../Dropdown";
 import * as cx from "classnames";
 import bem, { IHasMods } from '../../utils/commonUtils';
 import * as Immutable from "immutable";
+import styled from "styled-components";
+import Icon from "../../components/Icon";
+import icons from "../../theme-icons";
+import theme from "../../theme";
 
 interface IGuiInlineLabelProps extends IReactElementProps {
     text?: string
@@ -268,6 +272,7 @@ interface IGuiCheckboxProps {
     defaultMessage?: string;
     onChange?: React.EventHandler<React.ChangeEvent<HTMLInputElement>>;
 }
+
 export class GuiCheckbox extends Component<IGuiCheckboxProps> {
     constructor(props) {
         super(props);
@@ -275,43 +280,59 @@ export class GuiCheckbox extends Component<IGuiCheckboxProps> {
 
     render() {
         // Compiling classname by mods/mod.
-
-        // If this.props.mod == 'line', then it will become gui-check_line
-        var mods = (this.props.mod) ? this.props.mod : (this.props.mods || []);
-        if (mods) {
-            if (typeof mods === 'string') {
-                mods = [mods];
-            }
-            //TODO: cn is not declared
-            //mods.map(function(mod){cn += " gui-check_" + mod});
-        }
-
-        var mix = "";
-        if (this.props.inline && !!this.props.inline) {
-            mix += " gui-inline-label"
-        }
-        if (typeof this.props.className === 'string') {
-            mix += " " + this.props.className;
-        }
         var children = this.props.labelless
             ? null
             : (this.props.children)
                 ? this.props.children
                 : (<FormattedMessage tagName='p' id={this.props.label || "empty.label"} defaultMessage={this.props.defaultMessage} />);
-
-        return <label className={bem("gui-check", null, mods, mix)}>
+        // var icon = icons.checkmark;
+        return <CheckboxStyled>
             <input
                 key='input'
                 type="checkbox"
-                className={bem('gui-check', 'input')}
                 checked={this.props.checked}
                 onChange={this.props.onChange} name={this.props.name}
             />
-            <i key='helper' className={bem('gui-check', 'helper')} />
+            <Icon className="icon" icon={icons.checkmark} color={theme.icon_default} />
             {children}
-        </label>;
+        </CheckboxStyled>;
     }
 }
+
+const CheckboxStyled = styled.label`
+    position:relative;
+    display:flex;
+    color:${theme.text_color};
+    align-items:center;
+    height:16px;
+    cursor:pointer;
+    & input {
+        appearance:none;
+        width: 16px;
+        height: 16px;
+        border: 1px solid white;
+        border-radius:2.5px;
+        display: inline-block;
+        background: ${theme.input_background};
+    }
+
+    & input:checked {
+        border:none;
+        background-color: ${theme.accent};
+        background:linear-gradient(to right, ${theme.accent} 0%, ${theme.accent.darken(0.1)} 100%);
+    }
+
+    & input ~ div.icon {
+        display:none;
+        position:absolute;
+        top:5px;
+        left:8px;
+    }
+
+    & input:checked ~ div.icon {
+        display:block;
+    }
+`;
 
 export interface IGuiButtonProps extends IReactElementProps, IHasMods<
     "hover-white" |
@@ -454,10 +475,10 @@ export interface IGuiInputProps extends React.InputHTMLAttributes<HTMLInputEleme
     caption?: string;
     defaultMessage?: string;
     suffix?: any;
-    value?:any;
+    value?: any;
     selectOnFocus?: boolean;
     component?: string;
-    onChange?:(e:any)=>void;
+    onChange?: (e: any) => void;
 }
 
 export class GuiInput extends Component<IGuiInputProps>{
@@ -601,7 +622,7 @@ interface IGuiValidatedInputProps extends IGuiInputProps {
      * The force parameter specifies that validation should be performed regardless of the trigger,
      * for example if a form is submitted without key up or blur event on the component.
      */
-    onValidate?: (newValue: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => any/*ImmutableRecord<IFieldState>*/| null;
+    onValidate?: (newValue: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => any/*ImmutableRecord<IFieldState>*/ | null;
     trigger?: ValidationTrigger;
 }
 interface IGuiValidatedInputState {

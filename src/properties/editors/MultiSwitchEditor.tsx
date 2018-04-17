@@ -42,6 +42,7 @@ const SwitchItem = styled.div.attrs<any>({}) `
     border-radius:1px;
     display:flex;
     justify-content:center;
+    align-items:center;
     cursor:pointer;
     .icon {
         background:${props => props.active ? theme.accent : theme.icon_default};

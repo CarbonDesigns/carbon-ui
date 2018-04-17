@@ -12,7 +12,7 @@ import LoginPopup from "../account/LoginPopup";
 import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import TopMenu from "../shared/TopMenu";
-import SubscribeForm from "../shared/SubscribeForm";
+// import SubscribeForm from "../shared/SubscribeForm";
 import ScrollContainer from "../shared/ScrollContainer";
 import Antiscroll from "../external/antiscroll";
 
@@ -258,7 +258,7 @@ export class LandingPage extends RouteComponent<RouteComponentProps, LandingPage
                 <div className="hero-container__logo airbnb"></div>
             </section>
 
-            <SubscribeForm mainTextLabelId="@subscribe.details" />
+            {/* <SubscribeForm mainTextLabelId="@subscribe.details" /> */}
 
             {this.renderFeaturesSection({
                 className: "first-section",
@@ -297,7 +297,7 @@ export class LandingPage extends RouteComponent<RouteComponentProps, LandingPage
                 <article><CarbonLabel id="@opensource.join" /><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
             </section>
 
-            <SubscribeForm mainTextLabelId="@subscribe.details2" />
+            {/* <SubscribeForm mainTextLabelId="@subscribe.details2" /> */}
         </div>;
     }
 }

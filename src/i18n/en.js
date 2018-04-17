@@ -261,6 +261,10 @@ export default
         "x": "x", //
         "x": "y", //
         "@radius": "radius",
+        "@joins": "Joins",
+        "@ends": "Ends",
+        "@dash": "Dash",
+        "@gap": "Gap",
         "Point type": "Point type", //
         "Closed": "Closed", //
         "Visible": "Visible", //

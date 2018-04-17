@@ -13,8 +13,15 @@ import Slider from "../../../components/Slider";
 
 import styled from "styled-components";
 import BrushEditor from "../BrushEditor";
-import { dispatchAction } from "../../../CarbonFlux";
+import { dispatchAction, CarbonLabel } from "../../../CarbonFlux";
 import GuiSelect from "../../../shared/ui/GuiSelect";
+import { GuiCheckbox } from "../../../shared/ui/GuiComponents";
+import FlyoutButton from "../../../shared/FlyoutButton";
+import IconButton from "../../../components/IconButton";
+import icons from "../../../theme-icons";
+import theme from "../../../theme";
+import { FlyoutBody } from "../../../components/CommonStyle";
+import MultiSwitchEditor from "../MultiSwitchEditor";
 
 interface INumericEditorProps extends IEditorProps {
 }
@@ -38,7 +45,61 @@ function strokePositionLabel(s: StrokePosition) {
     assertNever(s);
 }
 
+
+class DashEditor extends React.Component<any, any> {
+    changeDash1 = (value) => {
+        return value;
+    }
+    render() {
+        var dash = Immutable.Map({
+            descriptor: {
+                name: "dash",
+                displayName: "@dash"
+            },
+            options: {
+                min: 0,
+                step: 1
+            },
+            value: 0
+        });
+        var gap = Immutable.Map({
+            descriptor: {
+                name: "gap",
+                displayName: "@gap"
+            },
+            options: {
+                min: 0,
+                step: 1
+            },
+            value: 0
+        });
+        return <DashEditorLine>
+            <NumericEditor e={this.props.e} p={dash}
+                onSettingValue={this.changeDash1}
+                type="subproperty" />
+            <NumericEditor e={this.props.e} p={gap}
+                onSettingValue={this.changeDash1}
+                type="subproperty" />
+            <NumericEditor e={this.props.e} p={dash}
+                onSettingValue={this.changeDash1}
+                type="subproperty" />
+            <NumericEditor e={this.props.e} p={gap}
+                onSettingValue={this.changeDash1}
+                type="subproperty" />
+
+        </DashEditorLine>;
+    }
+}
+
 export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, IFillsEditorState> {
+    _onJoinsChanged = () => {
+
+    }
+
+    _onEndsChanged = () => {
+
+    }
+
     render() {
         var p = this.props.p;
         var e = this.props.e;
@@ -70,12 +131,43 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
             value: e.strokeWidth()
         });
 
+        var joinsProperty = Immutable.Map({
+            descriptor: {
+                name: 'join',
+                displayName: "@join"
+            },
+            options: {
+                items: [
+                    { value: 0, icon: icons.join1 },
+                    { value: 1, icon: icons.join2 },
+                    { value: 2, icon: icons.join3 }
+                ]
+            },
+            value: 0
+        });
+
+        var endsProperty = Immutable.Map({
+            descriptor: {
+                name: 'ends',
+                displayName: "@ends"
+            },
+            options: {
+                items: [
+                    { value: 0, icon: icons.ends1 },
+                    { value: 1, icon: icons.ends1 },
+                    { value: 2, icon: icons.ends1 }
+                ]
+            },
+            value: 0
+        });
+
         return <PropertyListContainer>
             <PropertyListHeader>
                 <FormattedMessage id="@strokes" />
             </PropertyListHeader>
 
-            <PropertyLineContainer>
+            <StrokeLineContainer>
+                <GuiCheckbox labelless={true} />
                 <BrushEditor e={this.props.e} p={this.props.p} />
                 <StrokePositionSelect
                     selectedItem={e.strokePosition()}
@@ -83,16 +175,32 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
                     renderItem={StrokesEditor.renderStrokePositionLabel}
                     onSelect={this._onChangeStrokePosition}>
                 </StrokePositionSelect>
-            </PropertyLineContainer>
-            <PropertyLineContainer>
-                <div></div>
                 <NumericEditor e={this.props.e} p={widthProp}
-                        onSettingValue={this.changeStrokeWidthProperty}
-                        type="subproperty"
-                        uom="px"
-                        onPreviewingValue={this.previewStrokeWidthProperty} />
-            </PropertyLineContainer>
+                    onSettingValue={this.changeStrokeWidthProperty}
+                    type="subproperty"
+                    uom="px"
+                    onPreviewingValue={this.previewStrokeWidthProperty} />
 
+                <FlyoutButton
+                    renderContent={() =>
+                        <IconButton icon={icons.settings} />
+                    }
+
+                    position={{ targetVertical: "bottom", targetHorizontal: "right" }}
+                >
+                    <StrokeSettings>
+                        <FlyoutBody>
+                            <StrokeDetailsBody>
+                                <div className="joinsLabel" ><CarbonLabel id="@joins" /></div>
+                                <div className="endsLabel" ><CarbonLabel id="@ends" /></div>
+                                <MultiSwitchEditor className="joinsEditor" e={e} p={joinsProperty} onSettingValue={this._onJoinsChanged} />
+                                <MultiSwitchEditor className="endsEditor" e={e} p={endsProperty} onSettingValue={this._onEndsChanged} />
+                            </StrokeDetailsBody>
+                            <DashEditor />
+                        </FlyoutBody>
+                    </StrokeSettings>
+                </FlyoutButton>
+            </StrokeLineContainer>
         </PropertyListContainer>
     }
 
@@ -137,7 +245,7 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
     }
 
     setPropValueByCommand = (propName, value, async = false) => {
-        if (this._setValueTimer){
+        if (this._setValueTimer) {
             clearTimeout(this._setValueTimer);
         }
 
@@ -147,8 +255,8 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
         dispatchAction({ type: "Properties_Changed", changes, async });
     };
 
-    previewPropValue(propName, value){
-        if (this._setValueTimer){
+    previewPropValue(propName, value) {
+        if (this._setValueTimer) {
             clearTimeout(this._setValueTimer);
         }
 
@@ -158,6 +266,15 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
         dispatchAction({ type: "Properties_Preview", changes, async: false });
     }
 }
+
+const StrokeLineContainer = styled.div`
+    display:grid;
+    grid-column-gap: 12px;
+    grid-template-columns: 26px 60px 1fr 50px 18px;
+    align-items:center;
+    padding:0 12px;
+    margin-bottom: 12px;
+`;
 
 const SliderContainer = styled.div`
     grid-column-gap: 18px;
@@ -174,4 +291,53 @@ const BrushLineContainer = styled.div`
     padding:0 9px;
     margin-top: 9px;
     width:100%;
+`;
+
+const StrokeSettings = styled.div`
+`;
+
+const StrokeDetailsBody = styled.div`
+    width: 200px;
+    padding: 0 12px;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-column-gap: 12px;
+    grid-row-gap: 12px;
+    grid-template-columns: auto 1fr;
+    align-items:center;
+    text-align:right;
+
+    font:${theme.prop_name_font};
+    color:${theme.text_color};
+
+    & .joinsEditor {
+        grid-column:2;
+        grid-row:1;
+    }
+
+    & .joinsLabel {
+        grid-column:1;
+        grid-row:1;
+    }
+
+    & .endsEditor {
+        grid-column:2;
+        grid-row:2;
+    }
+
+    & .endsLabel {
+        grid-column:1;
+        grid-row:2;
+    }
+`;
+
+const DashEditorLine = styled.div`
+    display:grid;
+    width:100%;
+    grid-template-columns: 46px 46px 46px 46px;
+    align-items:center;
+    justify-items:center;
+    grid-column-gap: 4px;
+    margin-bottom: 12px;
+    margin-top: 12px;
 `;

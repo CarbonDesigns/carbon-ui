@@ -1,4 +1,3 @@
-import styled, { css } from "styled-components";
 import { backend } from "carbon-core"
 
 function icon(name, w, h): { src: string, width: number, height: number } {
@@ -66,4 +65,12 @@ export default {
     align_b: icon("align_b.svg", 20, 20),
     corner1: icon("corner1.svg", 32, 23),
     corner4: icon("corner4.svg", 32, 23),
+    checkmark: icon("checkmark.svg", 8, 7),
+    settings: icon("settings.svg", 14, 16),
+    join1: icon("join1.svg", 14, 14),
+    join2: icon("join2.svg", 14, 14),
+    join3: icon("join3.svg", 14, 14),
+    ends1: icon("ends1.svg", 14, 14),
+    ends2: icon("ends2.svg", 14, 14),
+    ends3: icon("ends3.svg", 14, 14)
 }

@@ -150,18 +150,19 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
         var e = this.props.e;
         var locked = value.locked;
 
-        var lockProperty = Immutable.fromJS({
+        var lockProperty = Immutable.Map({
             descriptor: {
                 name: 'lock',
                 displayName: "@lock"
             },
+            options:{
+                items: [
+                    { value: 1, icon: themeIcons.corner1 },
+                    { value: 0, icon: themeIcons.corner4 }
+                ]
+            },
             value: locked ? 1 : 0
-        }).set("options", {
-            items: [
-                { value: 1, icon: themeIcons.corner1 },
-                { value: 0, icon: themeIcons.corner4 }
-            ]
-        })
+        });
 
         return <CornerEditorLineContainer>
             <MultiSwitchEditor e={e} p={lockProperty} onSettingValue={this._onLockChanged} />

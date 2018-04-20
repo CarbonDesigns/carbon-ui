@@ -26,14 +26,14 @@ import MultiSwitchEditor from "../MultiSwitchEditor";
 interface INumericEditorProps extends IEditorProps {
 }
 
-interface IFillsEditorState {
-    value: number | undefined;
+interface IStrokesEditorState {
+    version: number;
 }
 
 type StrokePositionSelect = new (props) => GuiSelect<StrokePosition>;
 const StrokePositionSelect = GuiSelect as StrokePositionSelect;
 
-function strokePositionLabel(s: StrokePosition) {
+function strokePositionLabel(s: StrokePosition | undefined) {
     switch (s) {
         case StrokePosition.Center:
             return "@strokeposition.center";
@@ -41,6 +41,8 @@ function strokePositionLabel(s: StrokePosition) {
             return "@strokeposition.inside";
         case StrokePosition.Outside:
             return "@strokeposition.outside";
+        case undefined:
+            return "";
     }
     assertNever(s);
 }
@@ -91,13 +93,17 @@ class DashEditor extends React.Component<any, any> {
     }
 }
 
-export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, IFillsEditorState> {
-    _onJoinsChanged = () => {
-
+export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, IStrokesEditorState> {
+    constructor(props) {
+        super(props);
+        this.state = {version:0};
+    }
+    _onJoinsChanged = (value) => {
+        this.setPropValueByCommand("lineJoin", value);
     }
 
-    _onEndsChanged = () => {
-
+    _onCapChanged = (value) => {
+        this.setPropValueByCommand("lineCap", value);
     }
 
     render() {
@@ -131,6 +137,7 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
             value: e.strokeWidth()
         });
 
+        var lineJoin = e.getDisplayPropValue("lineJoin");
         var joinsProperty = Immutable.Map({
             descriptor: {
                 name: 'join',
@@ -143,23 +150,27 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
                     { value: 2, icon: icons.join3 }
                 ]
             },
-            value: 0
+            value: lineJoin
         });
 
-        var endsProperty = Immutable.Map({
+        var lineCap = e.getDisplayPropValue("lineCap");
+        var capProperty = Immutable.Map({
             descriptor: {
-                name: 'ends',
-                displayName: "@ends"
+                name: 'cap',
+                displayName: "@cap"
             },
             options: {
                 items: [
                     { value: 0, icon: icons.ends1 },
-                    { value: 1, icon: icons.ends1 },
-                    { value: 2, icon: icons.ends1 }
+                    { value: 1, icon: icons.ends2 },
+                    { value: 2, icon: icons.ends3 }
                 ]
             },
-            value: 0
+            value: lineCap
         });
+
+        var descriptor = e.findPropertyDescriptor("strokePosition");
+        var strokePosition = e.getDisplayPropValue("strokePosition", descriptor);
 
         return <PropertyListContainer>
             <PropertyListHeader>
@@ -167,10 +178,10 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
             </PropertyListHeader>
 
             <StrokeLineContainer>
-                <GuiCheckbox labelless={true} />
+                <GuiCheckbox labelless={true} checked={p.e} onChange={this._enableChanged} />
                 <BrushEditor e={this.props.e} p={this.props.p} />
                 <StrokePositionSelect
-                    selectedItem={e.strokePosition()}
+                    selectedItem={strokePosition}
                     items={StrokesEditor.StrokePositions}
                     renderItem={StrokesEditor.renderStrokePositionLabel}
                     onSelect={this._onChangeStrokePosition}>
@@ -192,9 +203,9 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
                         <FlyoutBody>
                             <StrokeDetailsBody>
                                 <div className="joinsLabel" ><CarbonLabel id="@joins" /></div>
-                                <div className="endsLabel" ><CarbonLabel id="@ends" /></div>
+                                <div className="capLabel" ><CarbonLabel id="@cap" /></div>
                                 <MultiSwitchEditor className="joinsEditor" e={e} p={joinsProperty} onSettingValue={this._onJoinsChanged} />
-                                <MultiSwitchEditor className="endsEditor" e={e} p={endsProperty} onSettingValue={this._onEndsChanged} />
+                                <MultiSwitchEditor className="capEditor" e={e} p={capProperty} onSettingValue={this._onCapChanged} />
                             </StrokeDetailsBody>
                             <DashEditor />
                         </FlyoutBody>
@@ -207,8 +218,14 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
     static StrokePositions = [StrokePosition.Center, StrokePosition.Inside, StrokePosition.Outside];
     private static renderStrokePositionLabel = (item) => <FormattedMessage id={strokePositionLabel(item)} tagName="p" />;
 
-    _onChangeStrokePosition() {
+    _onChangeStrokePosition = (value) => {
+        this.setPropValueByCommand("strokePosition", value);
+        this.setState({version: this.state.version + 1});
+    }
 
+    _enableChanged = (value) => {
+        var newBrush = Brush.extend(this.props.p as any, {e:value});
+        this.setValueByCommand(newBrush);
     }
 
     onValueChanged = (value) => {
@@ -269,18 +286,18 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
 
 const StrokeLineContainer = styled.div`
     display:grid;
-    grid-column-gap: 12px;
-    grid-template-columns: 26px 60px 1fr 50px 18px;
+    grid-column-gap: ${theme.margin1};
+    grid-template-columns: 26px 54px 1fr 50px 18px;
     align-items:center;
-    padding:0 12px;
-    margin-bottom: 12px;
+    padding:0 ${theme.margin1};
+    margin-bottom: ${theme.margin1};
 `;
 
 const SliderContainer = styled.div`
     grid-column-gap: 18px;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 60px;
+    grid-template-columns: 1fr ${theme.rightPropSize};
     align-items: center;
 `;
 
@@ -320,12 +337,12 @@ const StrokeDetailsBody = styled.div`
         grid-row:1;
     }
 
-    & .endsEditor {
+    & .capEditor {
         grid-column:2;
         grid-row:2;
     }
 
-    & .endsLabel {
+    & .capLabel {
         grid-column:1;
         grid-row:2;
     }

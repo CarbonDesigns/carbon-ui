@@ -188,7 +188,7 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
             return <PropertyWithSubtitleContainer className={this.props.className}>
                 <InputContainer subproperty={this.props.type === "subproperty"}>
                     {inputRender}
-                    <Uom>{this.props.uom}</Uom>
+                    {this.props.uom?(<Uom>{this.props.uom}</Uom>):null}
                 </InputContainer>
                 <PropertySmallNameContainer><FormattedMessage id={this.displayName()} /></PropertySmallNameContainer>
             </PropertyWithSubtitleContainer>;
@@ -227,11 +227,12 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
 
 const InputStyled = styled(EnterInput)`
     height:24px;
-    padding: 5px 8px 5px 2px;
+    padding: 5px 0;
     color: ${theme.text_color};
     font: ${theme.input_font};
     width:100%;
     background:transparent;
+    text-align:center;
 `;
 
 const InputContainer = styled.div.attrs<any>({}) `
@@ -241,11 +242,12 @@ const InputContainer = styled.div.attrs<any>({}) `
     width:100%;
     display:flex;
     align-items: center;
+    text-align:center;
 `;
 
 const Uom = styled.div`
     line-height:24px;
     color: ${theme.text_color};
     font: ${theme.input_font};
-    padding-left:8px;
+    padding-right:8px;
 `;

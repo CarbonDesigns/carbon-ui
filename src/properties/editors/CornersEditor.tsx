@@ -10,6 +10,7 @@ import * as Immutable from "immutable";
 import Slider from "../../components/Slider";
 import styled from "styled-components";
 import NumericEditor from "./NumericEditor";
+import theme from "../../theme";
 
 type CornersEditorState = {
     value: QuadAndLock;
@@ -186,7 +187,7 @@ const SliderContainer = styled.div`
     grid-column-gap: 18px;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 60px;
+    grid-template-columns: 1fr ${theme.rightPropSize};
     align-items: center;
 `;
 

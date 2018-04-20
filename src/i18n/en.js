@@ -258,11 +258,14 @@ export default
         "button.stencilsStyle": "Style", //
         "button.textStyle": "Text style", //
         "button.delete": "Delete", //
-        "x": "x", //
-        "x": "y", //
+        "@x": "x", //
+        "@y": "y", //
+        "@angle": "angle", //
+        "@width": "width", //
+        "@height": "height", //
         "@radius": "radius",
-        "@joins": "Joins",
-        "@ends": "Ends",
+        "@joins": "Join",
+        "@cap": "Cap",
         "@dash": "Dash",
         "@gap": "Gap",
         "Point type": "Point type", //
@@ -508,7 +511,6 @@ export default
         "Show more...": "Show more...",
         "Sign up": "Sign up",
         "@cornerRadius": "Corner radius",
-        "@strokePattern": "Stroke pattern",
         "@shadow": "Shadow",
         "@constraints": "Constraints",
         "@advanced": "Advanced",

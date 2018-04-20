@@ -51,14 +51,14 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
     private renderPill = () => {
         let selectedChild = null;
 
-        if (this.props.selectedItem) {
+        if (this.props.selectedItem !== null && this.props.selectedItem !== undefined) {
             selectedChild = this.props.renderItem ? this.props.renderItem(this.props.selectedItem) : this.props.selectedItem;
         }
         else if (this.props.caption) {
             selectedChild = <FormattedMessage id={this.props.caption} tagName="i" />
         }
         else {
-            selectedChild = <i>---</i>;
+            selectedChild = <i></i>;
         }
 
         return <CurrentItem>

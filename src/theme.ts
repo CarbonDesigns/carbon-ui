@@ -7,6 +7,7 @@ export const colors = {
     flyout_background: '#272727',
     margin1:'9px',
     margin2:'18px',
+    rightPropSize:"48px",
     prop_height:'24px',
     flyout_shadow: '0 0 4px 1px rgba(0, 0, 0, 0.5)',
     dropdown_shadow: '0px 1px 1px 0px rgba(0,0,0,0.5)',

@@ -14,6 +14,7 @@ import Slider from "../../../components/Slider";
 import styled from "styled-components";
 import BrushEditor from "../BrushEditor";
 import { GuiCheckbox } from "../../../shared/ui/GuiComponents";
+import theme from "../../../theme";
 
 interface INumericEditorProps extends IEditorProps {
 }
@@ -92,15 +93,15 @@ const SliderContainer = styled.div`
     grid-column-gap: 18px;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 60px;
+    grid-template-columns: 1fr ${theme.rightPropSize};
     align-items: center;
 `;
 
 const PropertyFillLineContainer = styled.div`
     display:grid;
-    grid-template-columns:26px 60px 1fr;
+    grid-template-columns:26px 54px 1fr;
     align-items:center;
-    grid-column-gap: 12px;
-    padding:0 12px;
+    grid-column-gap: ${theme.margin1};
+    padding:0 ${theme.margin1};
     width:100%;
 `;

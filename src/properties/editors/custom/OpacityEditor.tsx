@@ -12,6 +12,7 @@ import { FormattedMessage } from "react-intl";
 import Slider from "../../../components/Slider";
 
 import styled from "styled-components";
+import theme from "../../../theme";
 
 interface INumericEditorProps extends IEditorProps {
     selectOnEnter?: boolean;
@@ -77,8 +78,8 @@ export default class OpacityEditor extends EditorComponent<ISize, INumericEditor
 
 const SliderContainer = styled.div`
     display: inline-grid;
-    grid-template-columns: 2fr 1fr;
-    grid-column-gap: 18px;
+    grid-template-columns: 1fr ${theme.rightPropSize};
+    grid-column-gap: ${theme.margin2};
     justify-content:space-between;
     align-items:center;
     width:100%;

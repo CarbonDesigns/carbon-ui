@@ -12,7 +12,6 @@ import SwitchEditor from "./editors/SwitchEditor";
 import CheckboxEditor from "./editors/CheckboxEditor";
 import DropDownEditor from "./editors/DropdownEditor";
 import BrushEditor from "./editors/BrushEditor";
-import StrokePatternEditor from "./editors/custom/StrokePatternEditor";
 import MultiToggleEditor from "./editors/MultiToggleEditor";
 
 import TextAlignEditor from "./editors/custom/TextAlignEditor";
@@ -87,8 +86,6 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <ConstraintsEditor e={elem} p={prop} key={key} />;
             case "corners":
                 return <CornersEditor e={elem} p={prop} key={key} />;
-            case "strokePattern":
-                return <StrokePatternEditor e={elem} p={prop} key={key} />;
             case "numeric":
                 return <NumericEditor e={elem} p={prop} key={key} />;
             case "opacity":
@@ -138,14 +135,14 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                     Immutable.Map({
                         descriptor: {
                             name: "x",
-                            displayName: "x"
+                            displayName: "@x"
                         },
                         value: elem.x
                     }),
                     Immutable.Map({
                         descriptor: {
                             name: "y",
-                            displayName: "y"
+                            displayName: "@y"
                         },
                         value: elem.y
                     })
@@ -156,14 +153,14 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                     Immutable.Map({
                         descriptor: {
                             name: "width",
-                            displayName: "width"
+                            displayName: "@width"
                         },
                         value: elem.width
                     }),
                     Immutable.Map({
                         descriptor: {
                             name: "height",
-                            displayName: "height"
+                            displayName: "@height"
                         },
                         value: elem.height
                     })
@@ -174,7 +171,7 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                     Immutable.Map({
                         descriptor: {
                             name: "angle",
-                            displayName: "angle"
+                            displayName: "@angle"
                         },
                         value: elem.angle
                     })

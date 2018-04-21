@@ -96,14 +96,18 @@ class DashEditor extends React.Component<any, any> {
 export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, IStrokesEditorState> {
     constructor(props) {
         super(props);
-        this.state = {version:0};
+        this.state = { version: 0 };
     }
     _onJoinsChanged = (value) => {
         this.setPropValueByCommand("lineJoin", value);
+        this.setState({ version: this.state.version + 1 });
+        return false;
     }
 
     _onCapChanged = (value) => {
         this.setPropValueByCommand("lineCap", value);
+        this.setState({ version: this.state.version + 1 });
+        return false;
     }
 
     render() {
@@ -178,7 +182,7 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
             </PropertyListHeader>
 
             <StrokeLineContainer>
-                <GuiCheckbox labelless={true} checked={p.e} onChange={this._enableChanged} />
+                <GuiCheckbox labelless={true} checked={value.e} onChange={this._enableChanged} />
                 <BrushEditor e={this.props.e} p={this.props.p} />
                 <StrokePositionSelect
                     selectedItem={strokePosition}
@@ -220,16 +224,16 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
 
     _onChangeStrokePosition = (value) => {
         this.setPropValueByCommand("strokePosition", value);
-        this.setState({version: this.state.version + 1});
+        this.setState({ version: this.state.version + 1 });
     }
 
-    _enableChanged = (value) => {
-        var newBrush = Brush.extend(this.props.p as any, {e:value});
+    _enableChanged = (event) => {
+        var newBrush = Brush.extend(this.props.p.get('value') as any, { e: event.target.checked });
         this.setValueByCommand(newBrush);
     }
 
     onValueChanged = (value) => {
-        this.changeOpacityProperty(value, this.props.p);
+        this.changeOpacityProperty(value, this.props.p.get('value'));
     }
 
     onValueChanging = (value) => {

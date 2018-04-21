@@ -208,19 +208,6 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
                 {inputRender}
                 <Uom>{this.props.uom}</Uom>
             </InputContainer>
-
-            {/* <div className="spinner-buttons">
-                <div className="spinner-button__up"
-                    onMouseDown={this.holdMouseValueUp}
-                    onMouseUp={this.releaseMouseValueUp}
-                    onMouseLeave={this.releaseMouseValueUp}>
-                </div>
-                <div className="spinner-button__down"
-                    onMouseDown={this.holdMouseValueDown}
-                    onMouseUp={this.releaseMouseValueDown}
-                    onMouseLeave={this.releaseMouseValueDown}>
-                </div>
-            </div> */}
         </PropertyLineContainer>;
     }
 }

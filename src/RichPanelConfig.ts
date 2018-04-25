@@ -1,10 +1,10 @@
 import { LayoutDirection, LayoutDockPosition } from "carbon-core";
 
-const version = 9; // update version if layout has to changed on the client
+const version = 10; // update version if layout has to changed on the client
 
 export default {
     edit: {
-        version:version,
+        version: version,
         direction: LayoutDirection.Row,
         fixed: true,
         children: [
@@ -16,7 +16,7 @@ export default {
             {
                 direction: LayoutDirection.Column,
                 width: 305,
-                collapseDirection:LayoutDockPosition.Left,
+                collapseDirection: LayoutDockPosition.Left,
                 children: [
                     {
                         panelName: 'library',
@@ -30,33 +30,26 @@ export default {
             },
             {
                 panelName: 'designer',
-                fill:true,
-                fixed:true
+                fill: true,
+                fixed: true
             },
             {
                 panelName: 'comments',
                 width: 250,
                 collapsed: true,
-                collapseDirection:LayoutDockPosition.Right
+                collapseDirection: LayoutDockPosition.Right
             },
             {
                 direction: LayoutDirection.Column,
                 width: 300,
-                collapseDirection:LayoutDockPosition.Right,
-                children: [
-                    {
-                        panelName: 'swatches',
-                        height: 1 / 3
-                    },
-                    {
-                        panelName: 'properties',
-                        height: 2 / 3
-                    }]
+                collapseDirection: LayoutDockPosition.Right,
+                panelName: 'properties',
+                height: 1
             }
         ]
     },
     prototype: {
-        version:version,
+        version: version,
         direction: LayoutDirection.Row,
         fixed: true,
         children: [
@@ -74,42 +67,42 @@ export default {
                 panelName: 'layers',
                 width: 250,
                 collapsed: true,
-                collapseDirection:LayoutDockPosition.Left
+                collapseDirection: LayoutDockPosition.Left
             },
             {
                 panelName: 'designer',
-                fill:true,
-                fixed:true
+                fill: true,
+                fixed: true
             }
         ]
     },
     preview: {
-        version:version,
+        version: version,
         direction: LayoutDirection.Row,
         fixed: true,
         children: [
             {
                 width: 400,
                 panelName: 'editor',
-                collapseDirection:LayoutDockPosition.Left
+                collapseDirection: LayoutDockPosition.Left
             },
             {
                 panelName: 'preview',
-                fill:true,
-                fixed:true
+                fill: true,
+                fixed: true
             },
             {
                 width: 300,
                 panelName: 'comments',
-                collapsed:true,
-                collapseDirection:LayoutDockPosition.Right,
+                collapsed: true,
+                collapseDirection: LayoutDockPosition.Right,
             }
         ]
     },
     previewOnly: {
-        version:version,
+        version: version,
         panelName: 'preview',
-        fill:true,
-        fixed:true
+        fill: true,
+        fixed: true
     }
 }

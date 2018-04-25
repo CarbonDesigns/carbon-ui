@@ -26,7 +26,7 @@ export default class SelectBox extends Component<any, any>{
     }
 
     selectItem = (e) => {
-        var dropContainer = ReactDom.findDOMNode(this.refs['scroll_container'].refs['scrollBox']);
+        var dropContainer = this.refs['scroll_container'].refs['scrollBox'] as HTMLElement;
         // item is the number of dropContainer DOM child
         var item = Array.prototype.indexOf.call(dropContainer.children, e.currentTarget);
         if (item !== this.props.selectedItem) {

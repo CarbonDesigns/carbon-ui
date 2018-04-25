@@ -8,17 +8,20 @@ import FlyoutButton from "../../shared/FlyoutButton";
 import ViewSettingsPopup from "./ViewSettings/ViewSettingsPopup";
 
 export default class ViewSettingsButton extends Component<any>{
+    refs: {
+        button:HTMLElement;
+    }
     constructor(props){
         super(props);
     }
 
     onOpened = () => {
-        var node = ReactDom.findDOMNode(this.refs.button);
+        var node = this.refs.button;
         node.classList.add("_active");
     };
 
     onClosed = () => {
-        var node = ReactDom.findDOMNode(this.refs.button);
+        var node = this.refs.button;
         node.classList.remove("_active");
     };
 

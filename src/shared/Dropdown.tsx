@@ -36,11 +36,11 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
 
     refs: {
         content:any,
-        dropContainer:any
+        dropContainer:HTMLElement
     }
 
     selectItem = (e) => {
-        var dropContainer = ReactDom.findDOMNode(this.refs.dropContainer);
+        var dropContainer = this.refs.dropContainer;
         // item is the number of dropContainer DOM child
         var item = Array.prototype.indexOf.call(dropContainer.children, e.currentTarget);
         if (item !== this.props.selectedItem) {

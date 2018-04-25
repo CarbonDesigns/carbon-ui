@@ -338,6 +338,9 @@ export default
         "caption.publishpage": "Publish resources",
         "@caption.editCover": "Edit cover",
 
+        "@hex": "Hex",
+        "@rgba": "RGBA",
+
         "resources.static": "Published by carbonium.io",
         "resources.my": "Published by me",
         "resources.public": "Published by community",

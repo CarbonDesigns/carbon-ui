@@ -44,10 +44,12 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
     }
     inside: boolean;
 
-    onMouseDown = () => {
+    onMouseDown = (e) => {
         if (!this.inside) {
             dispatch(CarbonActionsFactory.cancel());
         }
+
+        return false;
     }
 
     componentDidMount() {
@@ -68,7 +70,7 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
     ensurePosition() {
         var _offset: any = {};
         var style: any = {
-            left: undefined, bottom: undefined, top: undefined, right: undefined,
+            left: 'unset', bottom: undefined, top: 'unset', right: undefined,
             width: undefined, height: undefined,
             opacity:1
         };
@@ -146,7 +148,7 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
             return <div></div>;
         }
 
-        return ReactDom.createPortal(<div ref="host" style={{opacity:0, position: 'absolute', zIndex: 100000}} className="flyouthost" onMouseEnter={e => this.inside = true} onMouseLeave={e => this.inside = false}>{this.props.children}</div>, host);
+        return ReactDom.createPortal(<div ref="host" style={{opacity:0, position: 'absolute', zIndex: 100000, top:0, left:0}} className="flyouthost" onMouseEnter={e => this.inside = true} onMouseLeave={e => this.inside = false}>{this.props.children}</div>, host);
     }
 }
 
@@ -192,7 +194,7 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
 
     onClick = (e) => {
         if (!this.props.showAction || this.props.showAction === "click") {
-            this.toggle();
+            this.open();
             e.stopPropagation();
         }
     }

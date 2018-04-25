@@ -7,6 +7,8 @@ import {Brush} from "carbon-core";
 
 import {FormattedMessage} from "react-intl";
 import CarbonActions from "../../CarbonActions";
+import styled from "styled-components";
+import theme from "../../theme";
 
 interface IBrushSelectorState {
     newStyle?:any;
@@ -40,21 +42,28 @@ export default class BrushSelector extends Component<any, IBrushSelectorState> {
     }
 
     render(){
-        var classes = cx("colorpicker-popup", this.props.className);
-        return <div className={classes} tabIndex={1}>
+        return <BrushPopup tabIndex={1}>
             <BrushTabs brush={this.props.brush} onSelected={this.selectBrush} hasGradient={this.props.hasGradient} onPreview={this.props.onPreview}/>
-            <footer>
+            {/* <footer>
                 <div className="swatches__color-input">
                     <i style={this.state.initialStyle}></i>
                     <span>→</span>
                     <ins></ins>
                     <i style={this.state.newStyle}></i>
                 </div>
-            </footer>
+            </footer> */}
             <div className="bottom-right-controls">
                 <div className="button_accept" onClick={this.ok}></div>
                 <div className="button_cancel" onClick={this.cancel}></div>
             </div>
-        </div>;
+        </BrushPopup>;
     }
 }
+
+const BrushPopup = styled.div.attrs<any>({})`
+    box-shadow: 0 0 14px #000000;
+    border-radius: 4px;
+    width:264px;
+    height:422px;
+    background-color:${theme.flyout_background};
+`;

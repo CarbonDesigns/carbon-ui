@@ -37,15 +37,12 @@ export default class BrushEditor extends EditorComponent<Brush> {
         var p = this.props.p;
         var showGradient = this.extractOption(this.props, "gradient", false);
         return <FlyoutButton
-            className="prop__value"
-            ref="flyout"
             renderContent={this.renderSelectedValue}
             position={{ targetVertical: "bottom", disableAutoClose: true }}
             onOpened={this.saveInitialBrush}
             onClosed={this.onClosed}
         >
             <BrushSelector
-                className="flyout__content" ref="selector"
                 brush={this.propertyValue()}
                 hasGradient={showGradient}
                 onSelected={this.setValueByCommand}

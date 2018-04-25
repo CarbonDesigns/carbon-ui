@@ -11,6 +11,8 @@ import { FormattedMessage } from "react-intl";
 
 import tinycolor from "tinycolor2";
 import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
+import styled from "styled-components";
+import theme from "../../theme";
 
 var basicColors = [
     "white",
@@ -99,22 +101,20 @@ export default class BrushTabs extends Component<any, any> {
         if (!Brush.isValid(brush)) {
             brush = Brush.Empty;
         }
-        let tabs =[
-            [<i key="ico" className="ico-colorpicker-solid" />, <FormattedMessage key="text" id="Solid" />]
+        let tabs = [
+            [<TabBackground data-tabid="1" key="1"><div className="icon solid"></div></TabBackground>]
         ]
         if (this.props.hasGradient) {
             if (brush.type === BrushType.lineargradient) {
                 tabId = "2";
             }
-            tabs.push( [<i key="ico" className="ico-colorpicker-gradient" />, <FormattedMessage key="text" id="Gradient" />]);
+            tabs.push([<TabBackground data-tabid="2" key="2"><div className="icon gradient"></div></TabBackground>]);
         }
 
-        {/*[<i key="ico" className="ico-colorpicker-swatches"/>, <FormattedMessage key="text" id="Swatches"/>],*/ }
         return <TabContainer currentTabId={tabId} onTabChanged={this.onTabChanged}>
-            <TabTabs
-                items={tabs}
-            />
-
+            <BrushTabsButtons>
+                {tabs}
+            </BrushTabsButtons>
             <TabAreaStyled>
                 <TabPageStyled tabId="1">
                     <ColorPicker display={true} color={brush.value || "rgba(0,0,0,0)"} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
@@ -122,51 +122,38 @@ export default class BrushTabs extends Component<any, any> {
                 <TabPageStyled tabId="2">
                     <LinearGradientPicker brush={brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} onPreview={this.props.onPreview} />
                 </TabPageStyled>
-                {/*<TabPage className="gui-page swatches" tabId="2">
-                    <div className="swatches__basic-colors">
-                        <div className="swatch swatch_transparent" onClick={this.selectSwatch} data-value="none"></div>
-                        {basicColors.map(x => {
-                            return <div className="swatch" onClick={this.selectSwatch} style={{backgroundColor: x}} data-value={x} key={x}></div>
-                        })}
-                    </div>*/}
-                {/*<div className="swatches__recent-colors">
-                        <div className="swatch" style1="background-color: #C5A">
-                            <i className="swatch__transparenter" style1="opacity: 0"></i>
-                        </div>
-                        <div className="swatch" style1="background-color: #7D3">
-                            <i className="swatch__transparenter" style1="opacity: 0"></i>
-                        </div>
-                        <div className="swatch" style1="background-color: #4B6">
-                            <i className="swatch__transparenter" style1="opacity: 0"></i>
-                        </div>
-                        <div className="swatch" style1="background-color: #CBE">
-                            <i className="swatch__transparenter" style1="opacity: 0"></i>
-                        </div>
-                        <div className="swatch" style1="background-color: #A6E">
-                            <i className="swatch__transparenter" style1="opacity: 0"></i>
-                        </div>
-                        <div className="swatch" style1="background-color: #10E">
-                            <i className="swatch__transparenter" style1="opacity: 0.65"></i>
-                        </div>
-                        <div className="swatch" style1="background-color: #CB2">
-                            <i className="swatch__transparenter" style1="opacity: 0"></i>
-                        </div>
-                    </div>*/}
-                {/*<div className="swatches__gamma-select">
-                        <BrushGammaSelector selectedItem={this.state.activeGamma} onSelect={this.viewGamma}/>
-                    </div>
-                    <div className="swatches__gamma-preview">
-                        {Gammas[this.state.activeGamma].colors.map(x => {
-                            return <div className="swatch" onClick={this.selectSwatch} style={{backgroundColor: x}} key={x} data-value={x}></div>
-                        })}
-                    </div>*/}
-                {/*</TabPage>*/}
-
-
-                {/*<div className="gui-page" ref="tab3">*/}
-                {/*<span>3</span>*/}
-                {/*</div>*/}
             </TabAreaStyled>
         </TabContainer>
     }
 }
+
+const BrushTabsButtons = styled.div`
+    width:100%;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+`;
+
+const TabBackground = styled.div`
+    width:26px;
+    height:26px;
+    background: ${theme.input_background};
+    border-radius:4px;
+    position: relative;
+    margin:8px;
+
+    .icon {
+        width:18px;
+        height:18px;
+        margin:4px;
+    }
+
+    .gradient {
+        background-image: linear-gradient(180deg, ${theme.accent} 0%, ${theme.accent.lighten(0.5)} 100%);
+    }
+
+    .solid {
+        background: ${theme.accent};
+    }
+`;

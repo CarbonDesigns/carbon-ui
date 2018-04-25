@@ -8,30 +8,20 @@ import Checkboard from 'react-color/lib/components/common/Checkboard';
 import Saturation from 'react-color/lib/components/common/Saturation';
 import color from 'react-color/lib/helpers/color';
 import SketchPresetColors from 'react-color/lib/components/sketch/SketchPresetColors'
+import styled from 'styled-components';
+import { CarbonLabel } from "../../CarbonFlux";
+import { colors as theme } from '../../theme';
 
 function SketchFields({ onChange, rgb, hsl, hex, disableAlpha, refCallback }) {
   const styles = {
-    fields: {
-      display: 'flex',
-      paddingTop: '4px',
-    },
-    single: {
-      flex: '1',
-      paddingLeft: '6px',
-    },
-    alpha: {
-      flex: '1',
-      paddingLeft: '6px',
-    },
-    double: {
-      flex: '2',
-    },
     input: {
-      width: '80%',
-      padding: '4px 10% 3px',
+      width: '100%',
       border: 'none',
-      boxShadow: 'inset 0 0 0 1px #ccc',
-      fontSize: '11px',
+      borderRadius: '2px',
+      fontSize: '14px',
+      backgroundColor: theme.input_background,
+      color: theme.text_color,
+      textAlign: 'center'
     },
     label: {
       display: 'block',
@@ -77,60 +67,58 @@ function SketchFields({ onChange, rgb, hsl, hex, disableAlpha, refCallback }) {
   }
 
   return (
-    <div style={styles.fields} className="flexbox-fix">
-      <div style={styles.double}>
-        <EditableInput
-          style={{ input: styles.input, label: styles.label }}
-          label="hex"
-          value={hex.replace('#', '')}
-          onChange={handleChange}
-          ref={refCallback}
-        />
-      </div>
-      <div style={styles.single}>
-        <EditableInput
-          style={{ input: styles.input, label: styles.label }}
-          label="r"
-          value={rgb.r}
-          onChange={handleChange}
-          dragLabel="true"
-          dragMax="255"
-        />
-      </div>
-      <div style={styles.single}>
-        <EditableInput
-          style={{ input: styles.input, label: styles.label }}
-          label="g"
-          value={rgb.g}
-          onChange={handleChange}
-          dragLabel="true"
-          dragMax="255"
-        />
-      </div>
-      <div style={styles.single}>
-        <EditableInput
-          style={{ input: styles.input, label: styles.label }}
-          label="b"
-          value={rgb.b}
-          onChange={handleChange}
-          dragLabel="true"
-          dragMax="255"
-        />
-      </div>
-      <div style={styles.alpha}>
-        <EditableInput
-          style={{ input: styles.input, label: styles.label }}
-          label="a"
-          value={Math.round(rgb.a * 100)}
-          onChange={handleChange}
-          dragLabel="true"
-          dragMax="100"
-        />
-      </div>
-    </div>
+    <RgbaLine>
+      <EditableInput
+        style={{ input: styles.input, label: styles.label }}
+        value={hex.replace('#', '')}
+        label="hex"
+        onChange={handleChange}
+        ref={refCallback}
+      />
+      <EditableInput
+        style={{ input: styles.input, label: styles.label }}
+        value={rgb.r}
+        label="r"
+        onChange={handleChange}
+        dragLabel="true"
+        dragMax="255"
+      />
+      <EditableInput
+        style={{ input: styles.input, label: styles.label }}
+        value={rgb.g}
+        label="g"
+        onChange={handleChange}
+        dragLabel="true"
+        dragMax="255"
+      />
+      <EditableInput
+        style={{ input: styles.input, label: styles.label }}
+        value={rgb.b}
+        label="b"
+        onChange={handleChange}
+        dragLabel="true"
+        dragMax="255"
+      />
+      <EditableInput
+        style={{ input: styles.input, label: styles.label }}
+        value={Math.round(rgb.a * 100)}
+        onChange={handleChange}
+        label="a"
+        dragLabel="true"
+        dragMax="100"
+      />
+    </RgbaLine>
   )
 }
 
+const RgbaLine = styled.div`
+  display:grid;
+  grid-template-columns: 60px 1fr 1fr 1fr 1fr;
+  grid-column-gap: 5px;
+  margin-top: 10px;
+  justify-content:center;
+  align-items:center;
+`;
 
 class SketchPicker extends React.Component<any, any> {
   _hexInput: any;
@@ -147,52 +135,63 @@ class SketchPicker extends React.Component<any, any> {
       presetColors, renderers } = this.props;
 
     var activeColor = { background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})` }
-    var className = cx("colorpicker", this.props.className, { disableAlpha: disableAlpha });
-    return <div className={className} style={this.props.style} onMouseDown={this.props.onMouseDown} onMouseUp={this.props.onMouseUp}>
-      <div className="colorpicker__saturation">
+    return <ColorPickerContainer onMouseDown={this.props.onMouseDown} onMouseUp={this.props.onMouseUp}>
+      <Cell>
         <Saturation
-          className="colorpicker__Saturation"
+          className="saturation"
           hsl={hsl}
           hsv={hsv}
           onChange={onChange}
         />
-      </div>
-      <div className="colorpicker__controls flexbox-fix">
-        <div className="colorpicker__sliders">
-          <div className="colorpicker__hue">
-            <Hue
-              className="colorpicker__Hue"
-              hsl={hsl}
-              onChange={onChange}
-            />
-          </div>
-          <div className="colorpicker__alpha">
-            <Alpha
-              className="colorpicker__Alpha"
-              rgb={rgb}
-              hsl={hsl}
-              renderers={renderers}
-              onChange={onChange}
-            />
-          </div>
-        </div>
-        {/* <div className="colorpicker__color">
-          <Checkboard />
-          <div className="colorpicker__activeColor" style={activeColor} />
-        </div> */}
-      </div>
+      </Cell>
+      <Cell>
+        <Hue
+          className="hue"
+          hsl={hsl}
+          onChange={onChange}
+        />
+      </Cell>
+      <Cell>
+        <Alpha
+          className="alpha"
+          rgb={rgb}
+          hsl={hsl}
+          renderers={renderers}
+          onChange={onChange}
+        />
+      </Cell>
+      <Cell>
+        <SketchFields
+          rgb={rgb}
+          hsl={hsl}
+          hex={hex}
+          onChange={onChange}
+          disableAlpha={disableAlpha}
+          refCallback={(e) => this._hexInput = e}
+        />
+      </Cell>
 
-      <SketchFields
-        rgb={rgb}
-        hsl={hsl}
-        hex={hex}
-        onChange={onChange}
-        disableAlpha={disableAlpha}
-        refCallback={(e) => this._hexInput = e}
-      />
-      <SketchPresetColors colors={presetColors} onClick={onChange} />
-    </div>
+      <Cell>
+        <SketchPresetColors colors={presetColors} onClick={onChange} />
+      </Cell>
+    </ColorPickerContainer>
   }
 }
+
+const ColorPickerContainer = styled.div`
+  display:grid;
+  grid-template-rows: 143px 8px 8px 48px 1fr;
+  grid-template-columns: 1fr;
+  width:100%;
+  height:100%;
+  padding: 0 ${theme.margin1};
+  grid-row-gap:10px;
+`;
+
+const Cell = styled.div`
+  position:relative;
+  width:100%;
+  height:100%;
+`;
 
 export default CustomPicker(SketchPicker)

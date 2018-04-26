@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="18px" viewBox="0 0 28 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Fill 120</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon/tabbar_hamburger" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M1,0 C0.448,0 0,0.448 0,1 C0,1.553 0.448,2 1,2 C1.552,2 2,1.553 2,1 C2,0.448 1.552,0 1,0 L1,0 Z M27,8 L7,8 C6.448,8 6,8.448 6,9 C6,9.553 6.448,10 7,10 L27,10 C27.552,10 28,9.553 28,9 C28,8.448 27.552,8 27,8 L27,8 Z M27,16 L7,16 C6.448,16 6,16.448 6,17 C6,17.553 6.448,18 7,18 L27,18 C27.552,18 28,17.553 28,17 C28,16.448 27.552,16 27,16 L27,16 Z M1,8 C0.448,8 0,8.448 0,9 C0,9.553 0.448,10 1,10 C1.552,10 2,9.553 2,9 C2,8.448 1.552,8 1,8 L1,8 Z M1,16 C0.448,16 0,16.448 0,17 C0,17.553 0.448,18 1,18 C1.552,18 2,17.553 2,17 C2,16.448 1.552,16 1,16 L1,16 Z M7,2 L27,2 C27.552,2 28,1.553 28,1 C28,0.448 27.552,0 27,0 L7,0 C6.448,0 6,0.448 6,1 C6,1.553 6.448,2 7,2 L7,2 Z" id="Fill-120" fill="#FFFFFF"></path>
+    </g>
+</svg>

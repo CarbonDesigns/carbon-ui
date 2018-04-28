@@ -4,6 +4,7 @@ import { Component } from "../CarbonFlux"
 import LessVars from "../styles/LessVars";
 import * as cx from "classnames";
 import bem from '../utils/commonUtils';
+import styled from "styled-components";
 
 interface ITabContainerProps extends IReactElementProps {
     currentTabId?: string;
@@ -67,11 +68,10 @@ export class TabContainer extends Component<ITabContainerProps, ITabContainerSta
     }
 
     render() {
-        var { onTabChanged, defaultTabId, currentTabId, type, className, children, ...rest } = this.props;
-        var cn = bem('gui-pages-container', null, type, className);
-        return <div className={cn} {...rest}>
+        var { onTabChanged, defaultTabId, currentTabId, type, children, ...rest } = this.props;
+        return <TabContainerStyled {...rest}>
             {children}
-        </div>
+        </TabContainerStyled>
     }
 
     getChildContext() {
@@ -88,6 +88,13 @@ export class TabContainer extends Component<ITabContainerProps, ITabContainerSta
         tabContainer: PropTypes.any
     }
 }
+
+const TabContainerStyled = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+    height:100%;
+`;
 
 interface ITabHeaderProps extends IReactElementProps {
     activeClassName: string;
@@ -159,9 +166,31 @@ interface ITabTabsProps extends IReactElementProps, ITabMods<"nogrow" | "level2"
     tabClassName?: string;
     tabActiveClassName?: string;
     insertBefore?: any;
-    tabMods?:any;
+    tabMods?: any;
     insertAfter?: any;
 }
+
+interface ITabItemProps extends IReactElementProps {
+    tabId: string;
+}
+
+export class TabItem extends React.Component<ITabItemProps> {
+    render() {
+        var { tabId, ...other } = this.props;
+        return <div data-target-tab={tabId}
+            {...other}
+            onClick={this.context.tabContainer.changeTab}>
+            {this.props.children}
+        </div>
+    }
+
+    static contextTypes = {
+        activeTabId: PropTypes.string,
+        oldTabId: PropTypes.string,
+        tabContainer: PropTypes.any
+    }
+}
+
 export class TabTabs extends React.Component<ITabTabsProps> {
     render() {
         var { items, tabsClassName, tabClassName, tabActiveClassName, tabMods, insertBefore, insertAfter, children, ...rest } = this.props;

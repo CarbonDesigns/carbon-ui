@@ -1,28 +1,40 @@
 import * as React from 'react'
-import * as cx from "classnames";
 import ColorPicker from "../../shared/ui/ColorPicker";
 import { Component } from "../../CarbonFlux";
 import { util } from "carbon-api";
 import { BrushType, Brush, Selection, IUIElement, Invalidate } from "carbon-core";
 import LinearGradientDecorator from "./gradient/LinearGradientDecorator";
+import styled from 'styled-components';
 
 function LinearGradientPoint(props) {
     let style: any = { left: (props.value[0] * 100) + '%' };
     if (props.active) {
         style.backgroundColor = props.value[1];
     }
-    return <div key={"p" + props.value[0]} className={cx("linear-gradient__point", { active: props.active })} style={style}>
+    return <GradientPoint key={"p" + props.value[0]} active={props.active} style={style}>
 
-    </div>
+    </GradientPoint>
 }
 
-const LineSize = 16;
+const LineSize = 8;
+const GradientPoint = styled.div.attrs<any>({}) `
+    width:${LineSize}px;
+    border-radius:${LineSize / 2}px;
+    height: ${LineSize}px;;
+    margin-left: ${-LineSize / 2}px;
+    position:absolute;
+    pointer-events: none;
+    z-index: 10;
+    background-color:white;
+    border:${(p: any) => p.active ? "2px solid white" : "2px solid rgba(10,10,10, 0.4)"};
+`;
 
 class LinearGradient extends React.Component<any, any> {
     refs: {
-        line: HTMLElement;
         canvas: any;
     };
+
+    line: HTMLElement;
 
     private _startX: number;
     private _startY: number;
@@ -47,7 +59,7 @@ class LinearGradient extends React.Component<any, any> {
     onMouseDown = (event) => {
         // check if hit existing
         let x = event.nativeEvent.offsetX
-        let size = this.refs.line.clientWidth;
+        let size = this.line.clientWidth;
         let pcnt = x / size;
         let stops = this.state.gradient.stops;
         let clickExisting = false;
@@ -138,7 +150,7 @@ class LinearGradient extends React.Component<any, any> {
 
     componentDidMount() {
         var canvas = this.refs.canvas;
-        var line = this.refs.line;
+        var line = this.line;
         canvas.width = line.clientWidth;
         canvas.height = line.clientHeight;
         this.ctx = canvas.getContext("2d");
@@ -152,7 +164,7 @@ class LinearGradient extends React.Component<any, any> {
     }
 
     _refreshCanvas() {
-        let width = this.refs.line.clientWidth;
+        let width = this.line.clientWidth;
         let ctx = this.ctx;
         if (!ctx) {
             return;
@@ -169,12 +181,31 @@ class LinearGradient extends React.Component<any, any> {
     render() {
         var g = this.state.gradient;
 
-        return <div ref="line" onMouseDown={this.onMouseDown} className="linear-gradient" >
-            <canvas ref="canvas" className="linear-gradient__canvas"></canvas>
-            {g.stops.map((s, idx) => <LinearGradientPoint key={"p"+s[0]} value={s} active={idx === this.state.activePoint} />)}
-        </div>
+        return <LinearGradientContainer innerRef={r => this.line = r} onMouseDown={this.onMouseDown} >
+            <canvas ref="canvas"></canvas>
+            {g.stops.map((s, idx) => <LinearGradientPoint key={"p" + s[0]} value={s} active={idx === this.state.activePoint} />)}
+        </LinearGradientContainer>
     }
 }
+
+const LinearGradientContainer = styled.div`
+    position: relative;
+    top:5px;
+    width:246px;
+    left:10px;
+    height: ${LineSize}px;
+    overflow: hidden;
+
+    & canvas {
+        z-index: 9;
+        position: absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom: 0;
+    }
+`;
+
 
 export default class LinearGradientPicker extends Component<any, any> {
     private _elements: IUIElement[];
@@ -286,9 +317,21 @@ export default class LinearGradientPicker extends Component<any, any> {
         if (this.props.brush.type !== BrushType.lineargradient) {
             return <div></div>;
         }
-        return <div className="linear-gradient-picker" style={this.props.style}>
+        return <LinearGradientPickerContainer style={this.props.style}>
             <LinearGradient ref="line" gradient={this.props.brush.value} onActivePointChanged={this._onActivePointChanged} onChange={this.onGradientChanged} onPreview={this.onGradientPreview} />
             <ColorPicker display={true} color={this.state.color} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} onMouseDown={this._onMouseDown} presetColors={[]} />
-        </div>;
+        </LinearGradientPickerContainer>;
     }
 }
+
+const LinearGradientPickerContainer = styled.div`
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    display:grid;
+    grid-template-rows: 21px 1fr;
+    height:100%;
+    flex-shrink:0;
+`;

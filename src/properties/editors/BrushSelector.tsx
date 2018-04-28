@@ -52,10 +52,10 @@ export default class BrushSelector extends Component<any, IBrushSelectorState> {
                     <i style={this.state.newStyle}></i>
                 </div>
             </footer> */}
-            <div className="bottom-right-controls">
+            {/* <div className="bottom-right-controls">
                 <div className="button_accept" onClick={this.ok}></div>
                 <div className="button_cancel" onClick={this.cancel}></div>
-            </div>
+            </div> */}
         </BrushPopup>;
     }
 }
@@ -64,6 +64,6 @@ const BrushPopup = styled.div.attrs<any>({})`
     box-shadow: 0 0 14px #000000;
     border-radius: 4px;
     width:264px;
-    height:422px;
+    height:364px;
     background-color:${theme.flyout_background};
 `;

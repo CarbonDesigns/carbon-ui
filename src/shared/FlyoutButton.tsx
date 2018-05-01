@@ -148,7 +148,7 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
             return <div></div>;
         }
 
-        return ReactDom.createPortal(<div ref="host" style={{opacity:0, position: 'absolute', zIndex: 100000, top:0, left:0}} className="flyouthost" onMouseEnter={e => this.inside = true} onMouseLeave={e => this.inside = false}>{this.props.children}</div>, host);
+        return ReactDom.createPortal(<div ref="host" style={{opacity:0, position: 'absolute', zIndex: 100000, top:0, left:0}} className="flyouthost" onMouseEnter={e => this.inside = true} onMouseMove={e => this.inside = true} onMouseLeave={e => this.inside = false}>{this.props.children}</div>, host);
     }
 }
 

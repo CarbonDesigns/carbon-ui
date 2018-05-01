@@ -1,6 +1,6 @@
 import * as React from "react";
 import ColorPicker from "../../shared/ui/ColorPicker";
-import { TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../../shared/TabContainer";
+import { TabContainer, TabTabs, TabHeader, TabPage, TabArea, TabItem } from "../../shared/TabContainer";
 import { BrushGammaSelector, Gammas } from "./BrushGammaSelector";
 import { richApp } from '../../RichApp';
 import { Component } from '../../CarbonFlux';
@@ -9,7 +9,7 @@ import LinearGradientPicker from "./LinearGradientPicker";
 
 import { FormattedMessage } from "react-intl";
 
-import tinycolor from "tinycolor2";
+import * as tinycolor from "tinycolor2";
 import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
 import styled from "styled-components";
 import theme from "../../theme";
@@ -102,13 +102,13 @@ export default class BrushTabs extends Component<any, any> {
             brush = Brush.Empty;
         }
         let tabs = [
-            [<TabBackground data-tabid="1" key="1"><div className="icon solid"></div></TabBackground>]
+            [<BrushTabItem tabId="1" key="1"><div className="icon solid"></div></BrushTabItem>]
         ]
         if (this.props.hasGradient) {
             if (brush.type === BrushType.lineargradient) {
                 tabId = "2";
             }
-            tabs.push([<TabBackground data-tabid="2" key="2"><div className="icon gradient"></div></TabBackground>]);
+            tabs.push([<BrushTabItem tabId="2" key="2"><div className="icon gradient"></div></BrushTabItem>]);
         }
 
         return <TabContainer currentTabId={tabId} onTabChanged={this.onTabChanged}>
@@ -116,10 +116,10 @@ export default class BrushTabs extends Component<any, any> {
                 {tabs}
             </BrushTabsButtons>
             <TabAreaStyled>
-                <TabPageStyled tabId="1">
+                <TabPageStyled tabId="1" className="solid">
                     <ColorPicker display={true} color={brush.value || "rgba(0,0,0,0)"} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onColorPickerChange} presetColors={[]} />
                 </TabPageStyled>
-                <TabPageStyled tabId="2">
+                <TabPageStyled tabId="2" className="gradient">
                     <LinearGradientPicker brush={brush} positionCSS={{ position: "absolute", left: 0 }} onChangeComplete={this.onGradientPickerChange} onPreview={this.props.onPreview} />
                 </TabPageStyled>
             </TabAreaStyled>
@@ -135,13 +135,14 @@ const BrushTabsButtons = styled.div`
     justify-content:flex-end;
 `;
 
-const TabBackground = styled.div`
+const BrushTabItem = styled(TabItem)`
     width:26px;
     height:26px;
     background: ${theme.input_background};
     border-radius:4px;
     position: relative;
     margin:8px;
+    cursor:pointer;
 
     .icon {
         width:18px;

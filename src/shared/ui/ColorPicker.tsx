@@ -186,6 +186,7 @@ const ColorPickerContainer = styled.div`
   height:100%;
   padding: 0 ${theme.margin1};
   grid-row-gap:10px;
+  position:relative;
 `;
 
 const Cell = styled.div`

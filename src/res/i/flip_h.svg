@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="18px" viewBox="0 0 15 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Flip</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="9.05882353" y="1.56521739" width="1.64705882" height="1.56521739"></rect>
+        <rect id="path-2" x="9.05882353" y="14.0869565" width="1.64705882" height="1.56521739"></rect>
+        <rect id="path-3" x="12.3529412" y="4.69565217" width="1.64705882" height="1.56521739"></rect>
+        <rect id="path-4" x="12.3529412" y="7.82608696" width="1.64705882" height="1.56521739"></rect>
+        <rect id="path-5" x="12.3529412" y="10.9565217" width="1.64705882" height="1.56521739"></rect>
+        <path d="M12.3529412,1.56521739 L12.4347826,1.56521739 C13.2992283,1.56521739 14,2.26598909 14,3.13043478 L12.3529412,3.13043478 L12.3529412,1.56521739 Z" id="path-6"></path>
+        <path d="M12.3529412,14.0869565 L12.4347826,14.0869565 C13.2992283,14.0869565 14,14.7877282 14,15.6521739 L12.3529412,15.6521739 L12.3529412,14.0869565 Z" id="path-7"></path>
+    </defs>
+    <g id="Part-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-239.000000, -340.000000)">
+        <g id="Group-10" transform="translate(24.000000, 179.000000)">
+            <g id="Group-7" transform="translate(-4.000000, 5.000000)">
+                <g id="Flip" transform="translate(220.000000, 156.000000)">
+                    <path d="M4.11764706,2.34782609 L0.8,2.34782609 C0.3581722,2.34782609 -3.87175207e-16,2.70599829 -3.33066907e-16,3.14782609 L-2.22044605e-16,14.0695652 C8.13118488e-16,14.511393 0.3581722,14.8695652 0.8,14.8695652 L4.11764706,14.8695652" id="Path-9" stroke="#FFFFFF" stroke-width="1.6"></path>
+                    <path d="M6.58823529,0 L6.58823529,17.6130429" id="Path-10" stroke="#FFFFFF" stroke-width="0.8"></path>
+                    <g id="Rectangle-33">
+                        <use fill="#FF3869" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#FFFFFF" stroke-width="0.8" x="9.45882353" y="1.96521739" width="1" height="1"></rect>
+                    </g>
+                    <g id="Rectangle-33-Copy-5">
+                        <use fill="#FF3869" fill-rule="evenodd" xlink:href="#path-2"></use>
+                        <rect stroke="#FFFFFF" stroke-width="0.8" x="9.45882353" y="14.4869565" width="1" height="1"></rect>
+                    </g>
+                    <g id="Rectangle-33-Copy">
+                        <use fill="#FF3869" fill-rule="evenodd" xlink:href="#path-3"></use>
+                        <rect stroke="#FFFFFF" stroke-width="0.8" x="12.7529412" y="5.09565217" width="1" height="1"></rect>
+                    </g>
+                    <g id="Rectangle-33-Copy-2">
+                        <use fill="#FF3869" fill-rule="evenodd" xlink:href="#path-4"></use>
+                        <rect stroke="#FFFFFF" stroke-width="0.8" x="12.7529412" y="8.22608696" width="1" height="1"></rect>
+                    </g>
+                    <g id="Rectangle-33-Copy-3">
+                        <use fill="#FF3869" fill-rule="evenodd" xlink:href="#path-5"></use>
+                        <rect stroke="#FFFFFF" stroke-width="0.8" x="12.7529412" y="11.3565217" width="1" height="1"></rect>
+                    </g>
+                    <g id="Rectangle-33">
+                        <use fill="#FF3869" fill-rule="evenodd" xlink:href="#path-6"></use>
+                        <path stroke="#FFFFFF" stroke-width="0.8" d="M13.5295293,2.73043478 C13.5751218,2.85518157 13.6,2.98990287 13.6,3.13043478 L14,2.73043478 L13.5295293,2.73043478 Z M12.7529412,2.73043478 L12.3529412,2.73043478 L12.7529412,3.13043478 L12.7529412,2.73043478 Z M12.7529412,2.0091841 L12.7529412,1.56521739 L12.3529412,1.56521739 L12.3529412,1.96521739 L12.4347826,1.96521739 C12.5450864,1.96521739 12.6518104,1.98054412 12.7529412,2.0091841 Z"></path>
+                    </g>
+                    <g id="Rectangle-33-Copy-4" transform="translate(13.176471, 14.869565) scale(1, -1) translate(-13.176471, -14.869565) ">
+                        <use fill="#FF3869" fill-rule="evenodd" xlink:href="#path-7"></use>
+                        <path stroke="#FFFFFF" stroke-width="0.8" d="M13.5295293,15.2521739 C13.5751218,15.3769207 13.6,15.511642 13.6,15.6521739 L14,15.2521739 L13.5295293,15.2521739 Z M12.7529412,15.2521739 L12.3529412,15.2521739 L12.7529412,15.6521739 L12.7529412,15.2521739 Z M12.7529412,14.5309232 L12.7529412,14.0869565 L12.3529412,14.0869565 L12.3529412,14.4869565 L12.4347826,14.4869565 C12.5450864,14.4869565 12.6518104,14.5022833 12.7529412,14.5309232 Z"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

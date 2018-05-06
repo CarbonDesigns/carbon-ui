@@ -204,7 +204,6 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
         return <PropertyLineContainer className={this.props.className}>
             <PropertyNameContainer><FormattedMessage id={this.displayName()} /></PropertyNameContainer>
             <InputContainer>
-
                 {inputRender}
                 <Uom>{this.props.uom}</Uom>
             </InputContainer>

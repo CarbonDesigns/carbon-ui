@@ -33,7 +33,8 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
     }
 
     refs: {
-        scrollContainer: ScrollContainer
+        scrollContainer: ScrollContainer,
+        flyout:any;
     }
 
     constructor(props) {
@@ -46,6 +47,7 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
         if (newItem !== this.props.selectedItem) {
             this.props.onSelect(newItem);
         }
+        this.refs.flyout.close();
     };
 
     private renderPill = () => {
@@ -89,6 +91,7 @@ export default class GuiSelect<T = any> extends Component<IGuiSelectProps<T>>{
 
     render() {
         return <FlyoutButton
+            ref="flyout"
             renderContent={this.renderPill}
             position={{
                 targetVertical: "bottom",

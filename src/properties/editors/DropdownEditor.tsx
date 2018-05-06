@@ -2,12 +2,15 @@ import * as React from "react";
 import * as ReactDom from "react-dom";
 import * as cx from "classnames";
 import bem from '../../utils/commonUtils';
-import {CarbonLabel} from "../../CarbonFlux";
+import { CarbonLabel } from "../../CarbonFlux";
 
 import EditorComponent, { IEditorProps } from "./EditorComponent";
 import FlyoutButton from '../../shared/FlyoutButton';
 import ScrollContainer from '../../shared/ScrollContainer';
 import { FormattedMessage } from "react-intl";
+import styled from "styled-components";
+import theme from "../../theme";
+import { PropertyLineContainer, PropertyNameContainer } from "../PropertyStyles";
 
 export interface IDropdownEditorProps extends IEditorProps {
     onValueChanged?: (item: any) => void;
@@ -21,6 +24,8 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
     refs: {
         prop: HTMLElement
     }
+
+    flyout:FlyoutButton;
 
     _getItemBy = (key, value) => {
         var items = this.extractOption(this.props, "items");
@@ -52,23 +57,16 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
                 this.setValueByCommand(matchingItem.value);
             }
         }
+        this.flyout.close();
     };
 
     _onOpened = () => {
-        var node = this.refs.prop;
-        if (node && node.classList) {
-            node.classList.add("_active");
-        }
         if (typeof this.props.onOpened === 'function') {
             this.props.onOpened();
         }
     };
 
     _onClosed = () => {
-        var node = this.refs.prop;
-        if (node && node.classList) {
-            node.classList.remove("_active");
-        }
         if (typeof this.props.onClosed === 'function') {
             this.props.onClosed();
         }
@@ -83,11 +81,6 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
     };
 
     _renderSelectedValue = () => {
-        // if (!this.state.value) {
-        //     return null;
-        // }
-
-
         var validItem = this._getItemBy('value', this.propertyValue());
 
         if (validItem && validItem.selectedContent) {
@@ -106,10 +99,10 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
                 ? selectedItem.name
                 : validValue;
 
-            return [
-                <b className="prop__v"><CarbonLabel id={caption}/></b>,
-                this._renderIcon(selectedItem)
-            ];
+            return <SelectedValue>
+                <CarbonLabel id={caption} />
+                {this._renderIcon(selectedItem)}
+            </SelectedValue>
         }
     };
 
@@ -117,6 +110,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
         if (this.props.children) {
             return this.props.children;
         }
+
         var items = this.extractOption(this.props, "items");
 
         if (typeof items === "function") {
@@ -124,49 +118,85 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
         }
 
         if (items) {
-            return <ScrollContainer className="flyout__content prop__options-container prop__drop" boxClassName="prop_selectbox__dropdown" insideFlyout={true}>
-                <div className={this.b("options")}>
+            return <DropContent>
+                <ScrollContainer insideFlyout={true}>
                     {items.map(item => {
                         var is_selected = this.propertyValue() === item.value;
-                        return <section
+                        return <DropItem
                             key={item.name}
-                            className={this.b("option", { selected: is_selected })}
+                            selected={is_selected}
                             onClick={((item) => ((ev) => this._onOptionSelected(item)))(item)}
                             data-name={item.name}
                         >
-                            {item.content ? item.content : <b key="name"><CarbonLabel id={item.name}/></b>}
+                            {item.content ? item.content : <b key="name"><CarbonLabel id={item.name} /></b>}
                             {this._renderIcon(item)}
-                        </section>
+                        </DropItem>
                     })}
-                </div>
-            </ScrollContainer>;
+                </ScrollContainer>
+            </DropContent>;
         }
         return null;
     }
 
     render() {
-        var p = this.props.p;
-
-        var classes = this.b(null, "selectbox", this.widthClass(this.props.className || "prop_width-1-1"));
-
-        return <div className={classes} ref="prop">
-            <div className="prop__name"><FormattedMessage id={this.displayName()} /></div>
-            <FlyoutButton
-                className="prop__value"
+        let p = this.props.p;
+        return <PropertyLineContainer>
+            <PropertyNameContainer><CarbonLabel id={this.displayName()} /></PropertyNameContainer>
+            <DropButton
                 renderContent={this._renderSelectedValue}
                 position={{
                     targetVertical: "bottom",
-                    syncWidth: true,
-                    disableAutoClose: this.props.disableAutoClose
+                    targetHorizontal:"left",
+                    sourceHorizontal:"left",
+                    disableAutoClose: this.props.disableAutoClose,
+                    syncWidth: true
                 }}
+                innerRef={x=>this.flyout = x}
                 onOpened={this._onOpened}
                 onClosed={this._onClosed}
             >
                 {this._renderContent()}
-            </FlyoutButton>
-        </div>
+            </DropButton>
+        </PropertyLineContainer>
     }
 }
+
+const DropContent = styled.div`
+    color:${theme.text_color};
+    font:${theme.input_font};
+    background:${theme.input_background};
+    box-shadow:${theme.dropdown_shadow};
+    padding:${theme.margin1} 0;
+    z-index:1000;
+`;
+
+const DropButton = styled(FlyoutButton).attrs<any>({}) `
+    width:100%;
+`;
+
+const DropItem = styled.div.attrs<{selected:boolean}>({})`
+    height:${theme.prop_height};
+    line-height:${theme.prop_height};
+    padding: 0 ${theme.margin1};
+    cursor:pointer;
+    &:hover {
+        background:${theme.accent};
+    }
+`;
+
+const SelectedValue = styled.div`
+    display:grid;
+    grid-template-columns: 1fr 8px;
+    align-items: center;
+    color:${theme.text_color};
+    font:${theme.input_font};
+    height:${theme.prop_height};
+    line-height:${theme.prop_height};
+    background:${theme.input_background};
+    padding: 0 4px 0 ${theme.margin1};
+    width:100%;
+    z-index:1001;
+`;
 
 //quick fix for typescript error
 export default class DropdownEditor extends BaseDropdownEditor<any, IDropdownEditorProps>{

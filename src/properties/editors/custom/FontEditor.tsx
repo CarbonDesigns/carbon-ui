@@ -6,11 +6,15 @@ import NumericEditor from "../NumericEditor";
 import DropDownEditor from "../DropdownEditor";
 import BrushEditor from "../BrushEditor";
 import MultiToggleEditor from "../MultiToggleEditor";
-import TextAlignEditor from "../custom/TextAlignEditor";
+import MultiSwitchEditor from "../MultiSwitchEditor";
 import FontFamilyList from './FontFamilyList';
 
-import { app, Font, Text, TextAlign, FontScript, FontWeight, FontStyle, UnderlineStyle, Brush } from "carbon-core";
-import { dispatch } from "../../../CarbonFlux";
+import { app, Font, Text, TextAlign, FontScript, FontWeight, FontStyle, UnderlineStyle, Brush, PatchType } from "carbon-core";
+import { dispatch, CarbonLabel } from "../../../CarbonFlux";
+import { PropertyLineContainer, PropertyListContainer, PropertyNameContainer } from "../../PropertyStyles";
+import styled from "styled-components";
+import theme from "../../../theme";
+import icons from "../../../theme-icons";
 
 var weights = [
     { name: "Thin (100)", value: 100 },
@@ -31,6 +35,7 @@ interface IFontEditorState {
     weight: Immutable.Map<string, any>;
     style: Immutable.Map<string, any>;
     align: Immutable.Map<string, any>;
+    valign: Immutable.Map<string, any>;
     lineSpacing: Immutable.Map<string, any>;
     color: Immutable.Map<string, any>;
 }
@@ -44,10 +49,7 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
         var family = Immutable.Map({
             descriptor: {
                 name: "family",
-                displayName: "Typeface"
-            },
-            options: {
-                size: 3 / 4
+                displayName: "@typeface"
             },
             value: font.family,
         });
@@ -57,7 +59,6 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
                 displayName: "Size"
             },
             options: {
-                size: 1 / 4,
                 min: 1
             },
             value: font.size,
@@ -65,7 +66,7 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
         var weight = Immutable.Map({
             descriptor: {
                 name: "weight",
-                displayName: "Weight"
+                displayName: "@weight"
             },
             options: this._createWeightOptions(metadata, font),
             value: font.weight,
@@ -73,7 +74,7 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
         var lineSpacing = Immutable.Map({
             descriptor: {
                 name: "lineSpacing",
-                displayName: "Line spacing"
+                displayName: "@line"
             },
             options: {
                 step: .1,
@@ -85,9 +86,6 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
             descriptor: {
                 name: "color",
                 displayName: "Color",
-            },
-            options: {
-                size: 1 / 4
             },
             value: Brush.createFromCssColor(font.color),
         });
@@ -106,17 +104,28 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
             },
             options: {
                 items: [
-                    { value: TextAlign.left, icon: "ico-prop_align-left", prop: "align" },
-                    { value: TextAlign.center, icon: "ico-prop_align-center", prop: "align" },
-                    { value: TextAlign.right, icon: "ico-prop_align-right", prop: "align" },
-                    { value: TextAlign.justify, icon: "ico-prop_align-right", prop: "align" },
-
-                    { value: TextAlign.top, icon: "ico-prop_align-top", prop: "valign" },
-                    { value: TextAlign.middle, icon: "ico-prop_align-middle", prop: "valign" },
-                    { value: TextAlign.bottom, icon: "ico-prop_align-bottom", prop: "valign" }
+                    { value: TextAlign.left, icon: icons.text_left },
+                    { value: TextAlign.center, icon: icons.text_center },
+                    { value: TextAlign.right, icon: icons.text_right },
+                    { value: TextAlign.justify, icon: icons.text_dist }
                 ]
             },
-            value: font,
+            value: font.align,
+        });
+
+        var valign = Immutable.Map({
+            descriptor: {
+                name: "valign",
+                displayName: "vAlign"
+            },
+            options: {
+                items: [
+                    { value: TextAlign.top, icon: icons.text_top },
+                    { value: TextAlign.middle, icon: icons.text_middle },
+                    { value: TextAlign.bottom, icon: icons.text_bottom }
+                ]
+            },
+            value: font.valign,
         });
 
         this.state = {
@@ -125,6 +134,7 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
             weight,
             style,
             align,
+            valign,
             lineSpacing,
             color,
             value: this.propertyValue()
@@ -149,8 +159,11 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
         if (oldFont.style !== newFont.style || oldFont.underline !== newFont.underline || oldFont.strikeout !== newFont.strikeout || oldFont.script !== newFont.script) {
             newState.style = oldState.style.set("value", newFont); //yes, full font
         }
-        if (oldFont.align !== newFont.align || oldFont.valign !== newFont.valign) {
-            newState.align = oldState.align.set("value", newFont); //yes, full font
+        if (oldFont.align !== newFont.align) {
+            newState.align = oldState.align.set("value", newFont.align);
+        }
+        if (oldFont.valign !== newFont.valign) {
+            newState.valign = oldState.valign.set("value", newFont.valign);
         }
         if (oldFont.color !== newFont.color) {
             newState.color = oldState.color.set("value", Brush.createFromCssColor(newFont.color));
@@ -180,6 +193,7 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
             items: metadata ? weights.filter(w => metadata.fonts.some(f => f.weight === w.value && f.style === font.style)) : []
         }
     }
+
     _createStyleOptions(metadata, font) {
         var options = { items: [] };
 
@@ -200,27 +214,48 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
     }
 
     render() {
-        return <div className="props-group__list">
-            <NumericEditor e={this.props.e} p={this.state.size} selectOnEnter={false}
-                onSettingValue={this.changeFontSize}
-                onPreviewingValue={this.previewFontSize} />
-
-            <DropDownEditor e={this.props.e} p={this.state.family} disableAutoClose formatSelectedValue={() => {return {name: this.state.family.get("value")}}}>
+        return <PropertyListContainer>
+            <DropDownEditor e={this.props.e} p={this.state.family} disableAutoClose formatSelectedValue={() => { return { name: this.state.family.get("value") } }}>
                 <FontFamilyList e={this.props.e} p={this.state.family} onSelected={this.changeFontFamily} ref="fontFamilyList" />
             </DropDownEditor>
-
-            <BrushEditor e={this.props.e} p={this.state.color}
-                onSettingValue={this.changeFontColor}
-                onPreviewingValue={this.previewFontColor} />
 
             <DropDownEditor e={this.props.e} p={this.state.weight}
                 onSettingValue={this.changeFontWeight} />
 
-            <MultiToggleEditor e={this.props.e} p={this.state.style}
-                onSettingValue={this.changeFontStyle} />
+            <ColorSizeLine>
+                <div></div>
+                <BrushEditor e={this.props.e} p={this.state.color}
+                    onSettingValue={this.changeFontColor}
+                    onPreviewingValue={this.previewFontColor} />
 
-            <TextAlignEditor e={this.props.e} p={this.state.align}
-                onSettingValue={this.changeTextAlign} />
+                <NumericEditor e={this.props.e} p={this.state.size} selectOnEnter={false}
+                    onSettingValue={this.changeFontSize}
+                    type="subproperty"
+                    onPreviewingValue={this.previewFontSize} />
+            </ColorSizeLine>
+
+            <PropertyLineContainer>
+                <PropertyNameContainer><CarbonLabel id="@spacing" /></PropertyNameContainer>
+                <NumericEditor e={this.props.e} p={this.state.lineSpacing}
+                    onSettingValue={this.changeLineSpacing}
+                    type="subproperty"
+                    onPreviewingValue={this.previewLineSpacing} />
+            </PropertyLineContainer>
+
+            <PropertyLineContainer>
+                <div></div>
+                <MultiSwitchEditor className="textAlign" e={this.props.e} p={this.state.align} onSettingValue={this.changeTextAlign} />
+            </PropertyLineContainer>
+            <PropertyLineContainer>
+                <div></div>
+                <MultiSwitchEditor className="textVAlign" e={this.props.e} p={this.state.valign} onSettingValue={this.changeTextVAlign} />
+            </PropertyLineContainer>
+
+            <PropertyLineContainer>
+                <div></div>
+                <MultiToggleEditor e={this.props.e} p={this.state.style} onSettingValue={this.changeFontStyle} />
+            </PropertyLineContainer>
+
 
             {/*
                 <NumericEditor e={this.props.e} p={charSpacingProperty}
@@ -228,10 +263,7 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
                                onPreviewingValue={this.previewFontProperty.bind(this, "charSpacing")}/>
             */}
 
-            <NumericEditor e={this.props.e} p={this.state.lineSpacing}
-                onSettingValue={this.changeLineSpacing}
-                onPreviewingValue={this.previewLineSpacing} />
-        </div>
+        </PropertyListContainer>
     }
 
     changeFontFamily = metadata => {
@@ -246,7 +278,8 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
                 this.focusViewIfNeeded();
             });
 
-    };
+    }
+
     prepareFamilyExtension(font, metadata) {
         var extension = { family: metadata.name, weight: font.weight, style: font.style };
         var i = 0;
@@ -273,10 +306,20 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
         return extension;
     }
 
-    changeTextAlign = changes => {
-        this.setValueByCommand(changes);
+    changeTextAlign = value => {
+        var font = this.props.p.get("value");
+        font = Font.extend(font, { align: value });
+        this.setValueByCommand(font);
         return false;
     };
+
+    changeTextVAlign = value => {
+        var font = this.props.p.get("value");
+        font = Font.extend(font, { valign: value });
+        this.setValueByCommand(font);
+        return false;
+    };
+
     changeFontStyle = changes => {
         if (changes.style) {
             var newFont = Font.extend(this.state.value, changes);
@@ -345,3 +388,12 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
         // }
     }
 }
+
+const ColorSizeLine = styled.div`
+    display:grid;
+    grid-template-columns: 1fr 60px 60px;
+    width:100%;
+    margin-bottom:15px;
+    margin-top:5px;
+    padding: 0 ${theme.margin1};
+`;

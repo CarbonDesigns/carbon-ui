@@ -150,12 +150,13 @@ export default
         "@strokes": "Strokes",
         "Default font": "Default font", //
         "Content font": "Content font", //
-        "Typeface": "Typeface", //
-        "Weight": "Weight", //
+        "@typeface": "Typeface", //
+        "@weight": "Weight", //
         "Style": "Style", //
         "Size": "Size", //
         "Sizing": "Content fitting", //
-        "Line spacing": "Line spacing", //
+        "@spacing": "Spacing", //
+        "@line": "Line", //
         "Char spacing": "Char spacing", //
         "Color": "Color", //
         "Overflow": "Overflow", //
@@ -169,9 +170,10 @@ export default
         "Solid": "Solid", //
         "Gradient": "Gradient", //
         "Screen sizes": "Screen sizes", //
-        "Radius": "Radius", //
+        "@radius": "Radius", //
+        "@shape": "Shape",
         "Polygon": "Polygon", //
-        "Points count": "Points count", //
+        "@points": "Points", //
         "Star": "Star", //
         "External radius": "External radius", //
         "Internal radius": "Internal radius", //
@@ -684,7 +686,7 @@ export default
         "@textMode": "Text mode",
         "@textMode.block": "Block",
         "@textMode.label": "Label",
-        "@wrap": "wrap",
+        "@wrap": "Wrap text",
         "@behaviorProps": "Behavior",
         "@textProp.editable": "Editable in preview",
 

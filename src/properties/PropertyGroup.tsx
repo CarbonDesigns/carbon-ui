@@ -130,21 +130,21 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                 return <StatesEditor e={elem} p={prop} key={key} />;
             case "symbolGroup":
                 return <SymbolGroupEditor e={elem} p={prop} key={key} />;
-            case "position": {
+            case "polygonData": {
                 return <TupleEditor e={elem} p={prop} key={key} properties={[
                     Immutable.Map({
                         descriptor: {
-                            name: "x",
-                            displayName: "@x"
+                            name: "radius",
+                            displayName: "@radius"
                         },
-                        value: elem.x
+                        value: elem.getDisplayPropValue("radius")
                     }),
                     Immutable.Map({
                         descriptor: {
-                            name: "y",
-                            displayName: "@y"
+                            name: "pointsCount",
+                            displayName: "@points"
                         },
-                        value: elem.y
+                        value: elem.getDisplayPropValue("pointsCount")
                     })
                 ]} />
             }

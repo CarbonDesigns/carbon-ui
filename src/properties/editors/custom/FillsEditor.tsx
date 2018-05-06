@@ -7,7 +7,7 @@ import NumericEditor from "../NumericEditor";
 import { richApp } from "../../../RichApp";
 
 import { ISize, Brush } from "carbon-core";
-import { PropertyNameContainer, PropertyTupleContainer, PropertyListHeader, PropertyListContainer, PropertyLineContainer } from "../../PropertyStyles";
+import { PropertyTupleContainer, PropertyListHeader, PropertyListContainer, PropertyLineContainer } from "../../PropertyStyles";
 import { FormattedMessage } from "react-intl";
 import Slider from "../../../components/Slider";
 

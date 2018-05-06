@@ -316,6 +316,10 @@ const CheckboxStyled = styled.label`
         background: ${theme.input_background};
     }
 
+    & p {
+        margin-left:${theme.margin1};
+    }
+
     & input:checked {
         border:none;
         background-color: ${theme.accent};

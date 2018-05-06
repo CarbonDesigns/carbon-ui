@@ -181,7 +181,7 @@ class LinearGradient extends React.Component<any, any> {
     render() {
         var g = this.state.gradient;
 
-        return <LinearGradientContainer innerRef={r => this.line = r} onMouseDown={this.onMouseDown} >
+        return <LinearGradientContainer innerRef={r => this.line = r} onMouseDownCapture={this.onMouseDown} >
             <canvas ref="canvas"></canvas>
             {g.stops.map((s, idx) => <LinearGradientPoint key={"p" + s[0]} value={s} active={idx === this.state.activePoint} />)}
         </LinearGradientContainer>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
-import * as cx from "classnames";
+import * as PropTypes from "prop-types";
 import { nodeOffset, ensureElementVisible } from "../utils/domUtil";
 import { Component, listenTo, dispatch, } from "../CarbonFlux";
 import { default as CarbonActionsFactory, CarbonAction } from "../CarbonActions";
@@ -44,22 +44,24 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
     }
     inside: boolean;
 
+    static childContextTypes = {
+        flyout: PropTypes.any
+    }
+
     onMouseDown = (e) => {
         if (!this.inside) {
             dispatch(CarbonActionsFactory.cancel());
         }
-
-        return false;
     }
 
     componentDidMount() {
-        document.body.addEventListener("mousedown", this.onMouseDown, { capture: true });
+        document.body.addEventListener("mousedown", this.onMouseDown, { capture: false });
         this.refs.host.clientWidth;
         setTimeout(()=>{this.ensurePosition();}, 0)
     }
 
     componentWillUnmount() {
-        document.body.removeEventListener("mousedown", this.onMouseDown, { capture: true });
+        document.body.removeEventListener("mousedown", this.onMouseDown, { capture: false });
     }
 
     preventDefault(e) {
@@ -248,6 +250,16 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
         }
     }
 
+    getChildContext() {
+        return {
+            flyout: this
+        };
+    }
+
+    static childContextTypes = {
+        flyout: PropTypes.any
+    }
+
     componentDidUpdate(prevProps, prevState: Readonly<FlyoutButtonState>) {
         if (this.state.open) {
             if (!prevState.open) {
@@ -295,7 +307,7 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
         return (
             <div ref="host"
                 id={this.props.id}
-                className={cx(this.props.className, { opened: this.state.open })}
+                className={this.props.className}
                 onClick={this.onClick}
                 onDoubleClick={this.onDblClick}
                 onMouseDownCapture={this.onMouseDown}

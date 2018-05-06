@@ -10,6 +10,17 @@ export const PropertyLineContainer = styled.div`
     margin-top: 9px;
     width:100%;
     min-height:36px;
+    align-items: center;
+`;
+
+export const PropertyFullLineContainer = styled.div`
+    display:grid;
+    grid-template-columns:1fr;
+    padding:0 9px;
+    margin-top: 9px;
+    width:100%;
+    min-height:36px;
+    align-items: center;
 `;
 
 export const PropertyListContainer = styled.div`
@@ -29,6 +40,7 @@ export const PropertyWithSubtitleContainer = styled.div`
     display:block;
     height:24px;
     overflow:visible;
+    width:100%;
 `;
 
 export const PropertySmallNameContainer = styled(PropertyNameContainer)`

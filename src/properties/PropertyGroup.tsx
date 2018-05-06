@@ -137,12 +137,19 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                             name: "radius",
                             displayName: "@radius"
                         },
+                        options: {
+                            min: 0.1
+                        },
                         value: elem.getDisplayPropValue("radius")
                     }),
                     Immutable.Map({
                         descriptor: {
                             name: "pointsCount",
                             displayName: "@points"
+                        },
+                        options: {
+                            min: 3,
+                            max: 20
                         },
                         value: elem.getDisplayPropValue("pointsCount")
                     })

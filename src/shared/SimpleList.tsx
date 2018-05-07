@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { FormattedMessage } from "react-intl";
-import * as cx from "classnames";
 import Dots from "./dots";
 import ScrollContainer from "./ScrollContainer";
 import EnterInput from "./EnterInput";
@@ -11,12 +10,10 @@ import {
 } from "../CarbonFlux";
 import { richApp } from "../RichApp";
 import { PropertyTracker } from "carbon-core";
-import bem from '../utils/commonUtils';
-
-function bem_simple_list(elem, mods?, mix?) {
-    return bem("simple-list", elem, mods, mix)
-}
-
+import IconButton from '../components/IconButton';
+import icons from "../theme-icons";
+import theme from "../theme";
+import styled from 'styled-components';
 
 export class SimpleListItem extends React.Component<any, any> {
 
@@ -49,31 +46,39 @@ export class SimpleListItem extends React.Component<any, any> {
         var controls = [];
 
         if (typeof onDelete === 'function') {
-            controls.push(<div
-                key="delete"
-                className={bem_simple_list("item-control", "delete")}
-                onClick={() => onDelete(item, event)}><i className="ico-trash" /></div>)
+            controls.push(
+                <IconButton key="delete" icon={icons.delete}onClick={() => onDelete(item, event)}/>
+            )
         }
         if (typeof onEdit === 'function') {
-            controls.push(<div
-                key="edit"
-                className={bem_simple_list("item-control", "edit")}
-                onClick={(event) => onEdit(item, event)}><Dots /></div>)
+            controls.push(
+                <IconButton key="edit" icon={icons.edit} onClick={() => onEdit(item, event)}/>
+            )
         }
 
         var body = (typeof renderItemBody === 'function')
             ? renderItemBody(item)
-            : <div className={bem_simple_list("item-body")} onClick={this.onClick}>{item.content}</div>;
+            : <div onClick={this.onClick}>{item.content}</div>;
 
         // Rendering.
         return (
-            <div className={bem_simple_list("item", { active: active })} {...rest}>
+            <ListItem active={ active} {...rest}>
                 {body}
-                {(controls.length) ? <div className={bem_simple_list("item-controls")}>{controls}</div> : null}
-            </div>
+                {(controls.length) ? <ListControls>{controls}</ListControls> : null}
+            </ListItem>
         )
     }
 }
+
+const ListItem = styled.div.attrs<{active:boolean}>({})`
+    display:grid;
+    width:100%;
+    grid-template-columns: 1fr 14px;
+`;
+
+const ListControls = styled.div`
+    display:grid;
+`;
 
 export default class SimpleList extends Component<any, any> {
     static defaultProps = {
@@ -94,14 +99,12 @@ export default class SimpleList extends Component<any, any> {
 
         var content = (items.length)
             ? items.map(item => <SimpleListItem key={item.id} item={item} active={item === activeItem} {...itemProps} />)
-            : (emptyMessage != null)
-                ? <p className={bem_simple_list("message")}>{emptyMessage}</p>
+            : (emptyMessage)
+                ? <EmptyListMessage>{emptyMessage}</EmptyListMessage>
                 : null;
 
         if (this.props.scrolling) {
             return <ScrollContainer
-                className={bem_simple_list('scroll-container', null, ["wrap thin", className])}
-                boxClassName={bem_simple_list(null, { padding: padding }, boxClassName)}
                 insideFlyout={insideFlyout}>
                 {content}
             </ScrollContainer>
@@ -111,3 +114,10 @@ export default class SimpleList extends Component<any, any> {
         </div>;
     }
 }
+
+const EmptyListMessage = styled.p`
+    width:100%;
+    text-align:center;
+    font:${theme.default_font};
+    color:${theme.text_color};
+`;

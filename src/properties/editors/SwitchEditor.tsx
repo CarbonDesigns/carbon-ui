@@ -7,7 +7,7 @@ export default class SwitchEditor extends EditorComponent<boolean, IEditorProps>
     render(){
         var items = this.extractOption(this.props, "items");
         var hasLabels = this.extractOption(this.props, "hasLabels");
-        var classes = cx("prop prop_pushbuttons", this.widthClass(this.props.className || "prop_width-1-1"));
+        var classes = cx("prop prop_pushbuttons");
         return <div className={classes}>
             <div className="prop__name"><FormattedMessage id={this.displayName()}/></div>
             <div className="prop__value">

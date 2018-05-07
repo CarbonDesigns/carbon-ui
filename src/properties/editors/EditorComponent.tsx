@@ -55,7 +55,6 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
 
         var changes = {};
         changes[this.propertyName()] = value;
-
         dispatchAction({ type: "Properties_Preview", changes, async: false });
     }
 
@@ -126,35 +125,5 @@ export default class EditorComponent<T, TProps extends IEditorProps = IEditorPro
             }
         }
         return defaultValue;
-    }
-
-    widthClass(defaultValue){
-        var size = this.extractOption(this.props, "size");
-        switch (size){
-            case 1:
-                return "prop_width-1-1";
-            case 1/2:
-                return "prop_width-1-2";
-            case 1/3:
-                return "prop_width-1-3";
-            case 1/4:
-                return "prop_width-1-4";
-            case 3/4:
-                return "prop_width-1-34";
-            case 1/8:
-                return "prop_width-1-18";
-            case 7/8:
-                return "prop_width-1-78";
-            default:
-                return defaultValue;
-        }
-    }
-
-    b(elem, mods = null, mix = null) { return bem("prop", elem, mods, mix) }
-
-    prop_cn(mods, mix) {
-        var cn = bem("prop", null, mods, mix);
-        cn += " prop_" + this.propertyType();
-        return cn;
     }
 }

@@ -23,7 +23,7 @@ function actionProperty(action) {
 export default class ActionsEditor extends EditorComponent<any, any> {
     render() {
         var p = this.props.p;
-        var classes = cx("prop prop_actions", this.widthClass(1));
+        var classes = cx("prop prop_actions");
         var actions = p.get('value') || [];
         return (<div className={classes}>
             {actions.map((a,i)=> {

@@ -61,11 +61,12 @@ export const PropertyListHeader = styled.div`
     width:100%;
     height: 25px;
     line-height:15px;
-    display:flex;
+    display:grid;
+    grid-template-columns: 1fr 14px;
     align-items:center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background:${theme.input_background};
     font:${theme.prop_name_font};
     color:${theme.text_color};
-    padding: 0 9px;
+    padding: 0 ${theme.margin1};
 `;

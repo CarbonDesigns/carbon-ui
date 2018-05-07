@@ -44,10 +44,6 @@ class FlyoutContent extends Component<IFlyoutContentProps, any> {
     }
     inside: boolean;
 
-    static childContextTypes = {
-        flyout: PropTypes.any
-    }
-
     onMouseDown = (e) => {
         if (!this.inside) {
             dispatch(CarbonActionsFactory.cancel());

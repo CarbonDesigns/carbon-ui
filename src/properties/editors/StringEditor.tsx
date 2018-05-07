@@ -13,7 +13,7 @@ interface IStringEditorProps extends IEditorProps{
 export default class StringEditor extends EditorComponent<string, IStringEditorProps> {
     render(){
         var p = this.props.p;
-        var classes = cx("prop prop_textinput textbox", this.widthClass(this.props.className || "prop_width-1-1"));
+        var classes = cx("prop prop_textinput textbox");
         return <div className={classes}>
             {this.renderPropertyName(p)}
             <EnterInput value={this.propertyValue()} className="prop__input"

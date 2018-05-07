@@ -6,8 +6,7 @@ import {FormattedMessage} from "react-intl";
 export default class MultiToggleEditor extends EditorComponent<any, IEditorProps> {
     render(){
         var items = this.extractOption(this.props, "items");
-        var wcn = this.widthClass(this.props.className || "prop_width-1-1");
-        var classes = cx("prop prop_pushbuttons", wcn);
+        var classes = cx("prop prop_pushbuttons");
         return <div className={classes}>
             <div className="prop__name"><FormattedMessage id={this.displayName()}/></div>
             <div className="prop__value">

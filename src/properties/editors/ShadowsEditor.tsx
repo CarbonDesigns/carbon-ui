@@ -1,17 +1,21 @@
 import * as React from "react";
-import {Component} from "../../CarbonFlux";
-import EditorComponent, {IEditorProps} from "./EditorComponent";
-import ShadowPopup from "./ShadowPopup";
+import * as Immutable from "immutable";
+import { Component, CarbonLabel } from "../../CarbonFlux";
+import EditorComponent, { IEditorProps } from "./EditorComponent";
 import FlyoutButton, { FlyoutPosition } from "../../shared/FlyoutButton";
 import ShadowsList from "./ShadowsList";
-import {Shadow, PatchType, createUUID} from "carbon-core";
+import { Shadow, PatchType, createUUID } from "carbon-core";
 import AddButton from "../../shared/ui/AddButton";
+import IconButton from "../../components/IconButton";
+import theme from "../../theme";
+import icons from "../../theme-icons";
+import { PropertyNameContainer, PropertyTupleContainer, PropertyListHeader, PropertyListContainer, PropertyLineContainer } from "../PropertyStyles";
 
 interface IShadowEditorState {
     newShadow: Shadow;
 }
 
-interface IShadowEditorProps extends IEditorProps{
+interface IShadowEditorProps extends IEditorProps {
     items: any[];
 }
 
@@ -20,55 +24,46 @@ export default class ShadowsEditor extends EditorComponent<Shadow[], IShadowEdit
 
     constructor(props) {
         super(props);
-        this.state = {newShadow: Object.assign({id: createUUID()}, Shadow.Default)};
     }
 
-    private static FlyoutPosition: FlyoutPosition = {targetVertical: "bottom", disableAutoClose: true};
+    _addShadow = () => {
+        var newShadow = Object.assign({ id: createUUID() }, Shadow.Default);
+        this.patchValueByCommand(PatchType.Insert, newShadow, true);
+    }
+
+    _addInnerShadow = () => {
+        var newShadow = Object.assign({ id: createUUID() }, Shadow.Default, {inset:true});
+        this.patchValueByCommand(PatchType.Insert, newShadow, true);
+    }
+
 
     render() {
-        var items = this.props.p.get('value');
-        var classes = this.prop_cn(null, this.widthClass(this.props.className || "prop_width-1-1"));
+        let items = this.props.p.get('value');
+        let shadows = items.filter(x=>!x.inset);
+        let innerShadows = items.filter(x=>x.inset);
 
-        return (<div className={classes} style={{height: "auto"}}>
-            <div className={ this.b('editor') }>
-                <ShadowsList items={items} onOpened={this.onOpenedExisting} onPreview={this.onPreview} onConfirmed={this.onConfirmed}
-                             onCancelled={this.onCancelled} onEnableChanged={this.onEnableChanged}
-                             onDeleted={this.onDeleted}/>
-
-                <FlyoutButton
-                    renderContent={ShadowsEditor.renderSelectedValue}
-                    position={ShadowsEditor.FlyoutPosition}
-                    onOpened={this.onOpenedNew}
-                    ref="add">
-                    <ShadowPopup
-                        className="flyout__content"
-                        value={this.state.newShadow}
-                        onConfirmed={this.onConfirmed}
-                        onPreview={this.onPreview}
-                        onCancelled={this.onCancelled}/>
-                </FlyoutButton>
-            </div>
-
-        </div>);
+        return [<PropertyListContainer>
+            <PropertyListHeader>
+                <CarbonLabel id="@outerShadows" />
+                <IconButton icon={icons.add} onClick={this._addShadow}></IconButton>
+            </PropertyListHeader>
+            <ShadowsList items={shadows} onPreview={this.onPreview} onConfirmed={this.onConfirmed}
+                onCancelled={this.onCancelled} onEnableChanged={this.onEnableChanged}
+                onDeleted={this.onDeleted} />
+        </PropertyListContainer>,
+        <PropertyListContainer>
+            <PropertyListHeader>
+                <CarbonLabel id="@innerShadows" />
+                <IconButton icon={icons.add} onClick={this._addInnerShadow}></IconButton>
+            </PropertyListHeader>
+            <ShadowsList items={innerShadows} onPreview={this.onPreview} onConfirmed={this.onConfirmed}
+                onCancelled={this.onCancelled} onEnableChanged={this.onEnableChanged}
+                onDeleted={this.onDeleted} />
+        </PropertyListContainer>
+        ]
     }
 
-    static renderSelectedValue = () => {
-        return <AddButton caption="@addshadow" />;
-    };
-
-    onOpenedNew = () => {
-        this.saveInitialShadows();
-
-        var newShadow = Object.assign({id: createUUID()}, Shadow.Default);
-        this.patchValueByCommand(PatchType.Insert, this.state.newShadow, true);
-        this.setState({newShadow: newShadow});
-    }
-
-    onOpenedExisting = () => {
-        this.saveInitialShadows();
-    }
-
-    onPreview = (shadow)=> {
+    onPreview = (shadow) => {
         this.previewPatchValue(PatchType.Change, shadow);
     }
 
@@ -87,9 +82,5 @@ export default class ShadowsEditor extends EditorComponent<Shadow[], IShadowEdit
 
     onDeleted = (shadowItem) => {
         this.patchValueByCommand(PatchType.Remove, shadowItem.shadow, true);
-    }
-
-    private saveInitialShadows() {
-        this.initialShadows = this.propertyValue().slice();
     }
 }

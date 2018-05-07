@@ -1,108 +1,214 @@
 import * as React from "react";
-import {Component} from "../../CarbonFlux";
-import {FormattedMessage} from "react-intl";
-import {GuiCheckbox, GuiButton} from "../../shared/ui/GuiComponents";
-import bem from '../../utils/commonUtils';
+import { Component } from "../../CarbonFlux";
+import { FormattedMessage } from "react-intl";
+import { GuiCheckbox, GuiButton } from "../../shared/ui/GuiComponents";
 import SimpleList from '../../shared/SimpleList';
 import FlyoutButton, { FlyoutPosition } from '../../shared/FlyoutButton';
-import ShadowPopup from './ShadowPopup';
-
-function cn(elem = null, mods = null, mix = null) {
-    return bem("shadows-list", elem, mods, mix)
-}
-
-var value_dim = <span className={cn("param-value-dim")}>px</span>;
+import styled from "styled-components";
+import theme from "../../theme";
+import BrushEditor from "./BrushEditor";
+import NumericEditor from "./NumericEditor";
+import * as Immutable from "immutable";
+import { Brush } from "carbon-core";
 
 class ShadowFlat extends Component<any, any> {
-    refs: {
-        modify: FlyoutButton
-    }
-
-    constructor(props){
+   constructor(props) {
         super(props);
-        this.state = {enabled:props.value.enabled};
+        this.state = { enabled: props.value.enabled };
     }
 
-    _renderParam (value, name){
-        //fixme - translate titles
-        return <span className={cn("param", {zero: parseInt(value)===0})}>
-            <span className={cn("param-label")}>{name}</span>
-            <span className={cn("param-value")}>{value}{value_dim}</span>
-        </span>
+    _changeEnabled = (e) => {
+        var newShadow = Object.assign({}, this.props.value, { enabled: e.target.checked });
+        this.props.onEnableChanged && this.props.onEnableChanged(newShadow);
     }
 
-    _changeEnabled = (e)=>{
-        var newshadow = Object.assign({}, this.props.value, {enabled:e.target.checked});
-        this.setState({enabled:e.target.checked});
-        this.props.onEnableChanged && this.props.onEnableChanged(newshadow);
+    changeXProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { x: value});
+        this.props.onConfirmed && this.props.onConfirmed(newShadow);
+
+        return false;
     }
 
-    private openPopup = () => {
-        this.refs.modify.toggle();
+    previewXProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { x: value});
+        this.props.onPreview && this.props.onPreview(newShadow);
+
+        return value;
+    }
+
+    changeYProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { y: value});
+        this.props.onConfirmed && this.props.onConfirmed(newShadow);
+
+        return false;
+    }
+
+    previewYProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { y: value});
+        this.props.onPreview && this.props.onPreview(newShadow);
+
+        return value;
+    }
+
+    changeBlurProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { blur: value});
+        this.props.onConfirmed && this.props.onConfirmed(newShadow);
+
+        return false;
+    }
+
+    previewBlurProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { y: value});
+        this.props.onPreview && this.props.onPreview(newShadow);
+
+        return value;
+    }
+
+    changeSpreadProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { spread: value});
+        this.props.onConfirmed && this.props.onConfirmed(newShadow);
+
+        return false;
+    }
+
+    previewSpreadProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { spread: value});
+        this.props.onPreview && this.props.onPreview(newShadow);
+
+        return value;
+    }
+
+    changeColorProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { color: value.value});
+        this.props.onConfirmed && this.props.onConfirmed(newShadow);
+
+        return false;
+    }
+
+    previewColorProperty = (value) => {
+        var newShadow = Object.assign({}, this.props.value, { color: value.value});
+        this.props.onPreview && this.props.onPreview(newShadow);
+
+        return value;
     }
 
     render() {
         var item = this.props.value;
-        return <div className={cn("shadow")}>
-            {item.enabled==null ? null : <GuiCheckbox
-                className={cn("shadow-checkbox")}
-                onChange={this._changeEnabled}
-                checked={this.state.enabled}
-                labelless={true}
-            />}
+        var xProp = Immutable.Map({
+            descriptor: {
+                name: "x",
+                displayName: "@x"
+            },
+            options: {
+                step: 1
+            },
+            value: item.x
+        });
+        var yProp = Immutable.Map({
+            descriptor: {
+                name: "y",
+                displayName: "@y"
+            },
+            options: {
+                step: 1
+            },
+            value: item.y
+        });
+        var blurProp = Immutable.Map({
+            descriptor: {
+                name: "blur",
+                displayName: "@blur"
+            },
+            options: {
+                step: 0.1
+            },
+            value: item.blur
+        });
+        var spreadProp = Immutable.Map({
+            descriptor: {
+                name: "spread",
+                displayName: "@spread"
+            },
+            options: {
+                step: 1
+            },
+            value: item.spread
+        });
+        var colorProp = Immutable.Map({
+            descriptor: {
+                name: "color",
+                displayName: "Color"
+            },
+            value: Brush.createFromCssColor(item.color),
+        });
 
-            <span className={cn("params")} onClick={this.openPopup}>
-                {this._renderParam(item.x, 'x')}
-                {this._renderParam(item.y, 'y')}
-                {this._renderParam(item.blur, 'b')}
-            </span>
-            <i title={item.inset ? "Inset shadow" : "Outset shadow"} className={cn("inset")} onClick={this.openPopup}>{item.inset ? <i className="ico-inset"/> : <i className="ico-outset"/>}</i>
-            <i className={cn("color")} style={{backgroundColor: item.color}} onClick={this.openPopup}>
-                <i className={cn("color-transparency")} style={{opacity: (1)}}/>
-            </i>
-            <FlyoutButton
-                renderContent={()=>null}
-                position={ShadowFlat.FlyoutPosition}
-                onOpened={this.props.onOpened}
-                ref="modify">
-                <ShadowPopup
-                    className="flyout__content"
-                    value={this.props.value}
-                    onConfirmed={this.props.onConfirmed}
-                    onPreview={this.props.onPreview}
-                    onCancelled={this.props.onCancelled}/>
 
-            </FlyoutButton>
-        </div>
+        return <ShadowLineContainer>
+            <GuiCheckbox labelless={true} checked={item.enabled} onChange={this._changeEnabled} />
+            <BrushEditor e={this.props.e} p={colorProp} onSettingValue={this.changeColorProperty} onPreviewingValue={this.previewColorProperty} />
+            <NumericEditor e={this.props.e} p={xProp}
+                onSettingValue={this.changeXProperty}
+                type="subproperty"
+                onPreviewingValue={this.previewYProperty} />
+            <NumericEditor e={this.props.e} p={yProp}
+                onSettingValue={this.changeYProperty}
+                type="subproperty"
+                onPreviewingValue={this.previewBlurProperty} />
+            <NumericEditor e={this.props.e} p={blurProp}
+                onSettingValue={this.changeBlurProperty}
+                type="subproperty"
+                onPreviewingValue={this.previewBlurProperty} />
+            <NumericEditor e={this.props.e} p={spreadProp}
+                onSettingValue={this.changeSpreadProperty}
+                type="subproperty"
+                onPreviewingValue={this.previewSpreadProperty} />
+        </ShadowLineContainer>
+
+        // <div className={cn("shadow")}>
+        //     {item.enabled == null ? null : <GuiCheckbox
+        //         className={cn("shadow-checkbox")}
+        //         onChange={this._changeEnabled}
+        //         checked={this.state.enabled}
+        //         labelless={true}
+        //     />}
+
+        //     </FlyoutButton>
+        // </div>
     }
 
-    private static FlyoutPosition: FlyoutPosition = {targetVertical: "bottom", disableAutoClose: true};
+    private static FlyoutPosition: FlyoutPosition = { targetVertical: "bottom", disableAutoClose: true };
 }
 
 
 export default class ShadowsList extends Component<any, any> {
-    render(){
-        if(!(this.props.items instanceof Array)) {
+    render() {
+        if (!(this.props.items instanceof Array)) {
             return <div></div>;
         }
 
-        var items = this.props.items.map((itemProps)=>{return {
-            id: itemProps.id,
-            shadow: itemProps,
-            content : <ShadowFlat value={itemProps} onOpened={this.props.onOpened} onPreview={this.props.onPreview} onConfirmed={this.props.onConfirmed} onCancelled={this.props.onCancelled} onEnableChanged={this.props.onEnableChanged} />
-        }});
+        var items = this.props.items.map((itemProps) => {
+            return {
+                id: itemProps.id,
+                shadow: itemProps,
+                content: <ShadowFlat value={itemProps} onPreview={this.props.onPreview} onConfirmed={this.props.onConfirmed} onCancelled={this.props.onCancelled} onEnableChanged={this.props.onEnableChanged} />
+            }
+        });
 
         var props = {
-            className    : "props_shadows__list",
-            boxClassName : cn(),
-            padding      : this.props.padding,
-            insideFlyout : this.props.insideFlyout,
-            // emptyMessage : null,
-            items        : items,
-            onDelete     : this.props.onDeleted,
-            // onEdit       : null
+            insideFlyout: this.props.insideFlyout,
+            items: items,
+            onDelete: this.props.onDeleted,
         };
 
-        return <SimpleList {...props} scrolling={false}/>
+        return <SimpleList {...props} scrolling={false} />
     }
 }
+
+const ShadowLineContainer = styled.div`
+    display:grid;
+    grid-column-gap: ${theme.margin1};
+    grid-template-columns: 26px 54px 1fr 1fr 1fr 1fr;
+    align-items:center;
+    padding:0 ${theme.margin1};
+    margin-bottom: ${theme.margin1};
+`;

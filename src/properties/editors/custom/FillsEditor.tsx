@@ -52,7 +52,7 @@ export default class FillsEditor extends EditorComponent<ISize, IEditorProps, IF
             </PropertyListHeader>
 
             <PropertyFillLineContainer>
-                <GuiCheckbox labelless={true} checked={value.e} onChange={this._enableChanged}/>
+                <GuiCheckbox labelless={true} checked={value.e} onChange={this._enableChanged} />
                 <BrushEditor e={this.props.e} p={this.props.p} />
                 <SliderContainer>
                     <Slider value={value.o * 100}
@@ -75,7 +75,7 @@ export default class FillsEditor extends EditorComponent<ISize, IEditorProps, IF
     }
 
     onValueChanging = (value) => {
-        this.previewOpacityProperty(null, value);
+        this.previewOpacityProperty(value);
         return value;
     }
 
@@ -86,7 +86,7 @@ export default class FillsEditor extends EditorComponent<ISize, IEditorProps, IF
         return false;
     };
 
-    previewOpacityProperty(name, value) {
+    previewOpacityProperty = (value) => {
         var brush = Brush.extend(this.props.p.get('value'), { o: value / 100 });
 
         this.previewValue(brush);

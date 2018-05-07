@@ -40,6 +40,10 @@ export default class IconButton extends Component<IIconButtonProps, {}> {
     render() {
         var { icon, color, width, height, disabled, children, ...props } = this.props;
 
+        if(typeof icon === 'string') {
+            icon = icons[icon];
+        }
+
         return <IconButtonComponent width={width} height={height} disabled={disabled} {...props}>
             {!this.props.icon?children:<Icon className="icon" icon={icon}/>}
         </IconButtonComponent>;

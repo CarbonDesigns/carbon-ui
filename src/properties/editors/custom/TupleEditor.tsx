@@ -39,10 +39,11 @@ export default class TupleEditor extends EditorComponent<ISize, ITupleEditorProp
         var newBox = Object.assign({}, this.propertyValue(), changes);
         this.setValueByCommand(newBox);
         return false;
-    };
-    previewTupleProperty(name, value) {
+    }
+
+    previewTupleProperty = (value, p) => {
         var changes = {};
-        changes[this.props.p.get("descriptor").name] = value;
+        changes[p.get("descriptor").name] = value;
         var newBox = Object.assign({}, this.propertyValue(), changes);
         this.previewValue(newBox);
         return false;

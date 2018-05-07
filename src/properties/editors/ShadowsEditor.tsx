@@ -41,7 +41,7 @@ export default class ShadowsEditor extends EditorComponent<Shadow[], IShadowEdit
         let shadows = items.filter(x=>!x.inset);
         let innerShadows = items.filter(x=>x.inset);
 
-        return [<PropertyListContainer>
+        return [<PropertyListContainer key="outer">
             <PropertyListHeader>
                 <CarbonLabel id="@outerShadows" />
                 <IconButton icon={icons.add} onClick={this._addShadow}></IconButton>
@@ -50,7 +50,7 @@ export default class ShadowsEditor extends EditorComponent<Shadow[], IShadowEdit
                 onCancelled={this.onCancelled} onEnableChanged={this.onEnableChanged}
                 onDeleted={this.onDeleted} />
         </PropertyListContainer>,
-        <PropertyListContainer>
+        <PropertyListContainer key="inner">
             <PropertyListHeader>
                 <CarbonLabel id="@innerShadows" />
                 <IconButton icon={icons.add} onClick={this._addInnerShadow}></IconButton>

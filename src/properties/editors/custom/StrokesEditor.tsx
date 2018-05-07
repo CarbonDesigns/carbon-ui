@@ -49,44 +49,121 @@ function strokePositionLabel(s: StrokePosition | undefined) {
 
 
 class DashEditor extends React.Component<any, any> {
-    changeDash1 = (value) => {
-        return value;
+    changeDashByIndex(index) {
+        return (value) => {
+            var newValue = this.props.value.slice();
+            if (newValue.length < index) {
+                for (var i = 0; i <= index; ++i) {
+                    newValue[i] = 0;
+                }
+            }
+            newValue[index] = value;
+            this.immutableProps[index] = this.immutableProps[index].set('value', value);
+            this.props.onChange(newValue);
+            return false;
+        }
     }
+    previewDashByIndex(index) {
+        return (value) => {
+            var newValue = this.props.value.slice();
+            if (newValue.length <= index) {
+                for (var i = 0; i <= index; ++i) {
+                    newValue[i] = 0;
+                }
+            }
+            newValue[index] = value;
+            this.immutableProps[index] = this.immutableProps[index].set('value', value);
+            this.props.onPreview(newValue);
+            return false;
+        }
+    }
+
+    private changeDash1: any;
+    private changeDash2: any;
+    private changeDash3: any;
+    private changeDash4: any;
+    private previewDash1: any;
+    private previewDash2: any;
+    private previewDash3: any;
+    private previewDash4: any;
+    private immutableProps: any[];
+
+    constructor(props) {
+        super(props);
+        this.changeDash1 = this.changeDashByIndex(0);
+        this.changeDash2 = this.changeDashByIndex(1);
+        this.changeDash3 = this.changeDashByIndex(2);
+        this.changeDash4 = this.changeDashByIndex(3);
+        this.previewDash1 = this.previewDashByIndex(0);
+        this.previewDash2 = this.previewDashByIndex(1);
+        this.previewDash3 = this.previewDashByIndex(2);
+        this.previewDash4 = this.previewDashByIndex(3);
+        this.immutableProps = [
+            Immutable.Map({
+                descriptor: {
+                    name: "dash",
+                    displayName: "@dash"
+                },
+                options: {
+                    min: 0,
+                    step: 1
+                },
+                value: this.props.value[0] || 0
+            }),
+            Immutable.Map({
+                descriptor: {
+                    name: "gap",
+                    displayName: "@gap"
+                },
+                options: {
+                    min: 0,
+                    step: 1
+                },
+                value: this.props.value[1] || 0
+            }),
+            Immutable.Map({
+                descriptor: {
+                    name: "dash",
+                    displayName: "@dash"
+                },
+                options: {
+                    min: 0,
+                    step: 1
+                },
+                value: this.props.value[2] || 0
+            }),
+            Immutable.Map({
+                descriptor: {
+                    name: "gap",
+                    displayName: "@gap"
+                },
+                options: {
+                    min: 0,
+                    step: 1
+                },
+                value: this.props.value[3] || 0
+            })
+        ]
+    }
+
     render() {
-        var dash = Immutable.Map({
-            descriptor: {
-                name: "dash",
-                displayName: "@dash"
-            },
-            options: {
-                min: 0,
-                step: 1
-            },
-            value: 0
-        });
-        var gap = Immutable.Map({
-            descriptor: {
-                name: "gap",
-                displayName: "@gap"
-            },
-            options: {
-                min: 0,
-                step: 1
-            },
-            value: 0
-        });
+
         return <DashEditorLine>
-            <NumericEditor e={this.props.e} p={dash}
+            <NumericEditor e={this.props.e} p={this.immutableProps[0]}
                 onSettingValue={this.changeDash1}
+                onPreviewingValue={this.previewDash1}
                 type="subproperty" />
-            <NumericEditor e={this.props.e} p={gap}
-                onSettingValue={this.changeDash1}
+            <NumericEditor e={this.props.e} p={this.immutableProps[1]}
+                onSettingValue={this.changeDash2}
+                onPreviewingValue={this.previewDash2}
                 type="subproperty" />
-            <NumericEditor e={this.props.e} p={dash}
-                onSettingValue={this.changeDash1}
+            <NumericEditor e={this.props.e} p={this.immutableProps[2]}
+                onSettingValue={this.changeDash3}
+                onPreviewingValue={this.previewDash3}
                 type="subproperty" />
-            <NumericEditor e={this.props.e} p={gap}
-                onSettingValue={this.changeDash1}
+            <NumericEditor e={this.props.e} p={this.immutableProps[3]}
+                onSettingValue={this.changeDash4}
+                onPreviewingValue={this.previewDash4}
                 type="subproperty" />
 
         </DashEditorLine>;
@@ -106,6 +183,18 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
 
     _onCapChanged = (value) => {
         this.setPropValueByCommand("lineCap", value);
+        this.setState({ version: this.state.version + 1 });
+        return false;
+    }
+
+    _onDashChanged = (value) => {
+        this.setPropValueByCommand("dashPattern", value);
+        this.setState({ version: this.state.version + 1 });
+        return false;
+    }
+
+    _onDashPreview = (value) => {
+        this.previewPropValue("dashPattern", value);
         this.setState({ version: this.state.version + 1 });
         return false;
     }
@@ -173,8 +262,8 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
             value: lineCap
         });
 
-        var descriptor = e.findPropertyDescriptor("strokePosition");
-        var strokePosition = e.getDisplayPropValue("strokePosition", descriptor);
+        var strokePosition = e.getDisplayPropValue("strokePosition");
+        var dashValue = e.getDisplayPropValue("dashPattern");
 
         return <PropertyListContainer>
             <PropertyListHeader>
@@ -208,10 +297,10 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
                             <StrokeDetailsBody>
                                 <div className="joinsLabel" ><CarbonLabel id="@joins" /></div>
                                 <div className="capLabel" ><CarbonLabel id="@cap" /></div>
-                                <MultiSwitchEditor className="joinsEditor" e={e} p={joinsProperty} onSettingValue={this._onJoinsChanged} />
-                                <MultiSwitchEditor className="capEditor" e={e} p={capProperty} onSettingValue={this._onCapChanged} />
+                                <MultiSwitchEditor type="subproperty" className="joinsEditor" e={e} p={joinsProperty} onSettingValue={this._onJoinsChanged} />
+                                <MultiSwitchEditor type="subproperty" className="capEditor" e={e} p={capProperty} onSettingValue={this._onCapChanged} />
                             </StrokeDetailsBody>
-                            <DashEditor />
+                            <DashEditor value={dashValue} onPreview={this._onDashPreview} onChange={this._onDashChanged} />
                         </FlyoutBody>
                     </StrokeSettings>
                 </FlyoutButton>
@@ -260,7 +349,7 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
         return false;
     };
 
-    previewStrokeWidthProperty(name, value) {
+    previewStrokeWidthProperty = (value, p) => {
         this.previewPropValue("strokeWidth", value);
         return false;
     }

@@ -94,10 +94,16 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
             return false;
         }
     }
+    _preview4Value = (name) => {
+        return (value) => {
+            this._previewValue(name, value);
+            return false;
+        }
+    }
 
     renderValues(locked, value) {
+        let maxRadius = Math.min(this.props.e.width, this.props.e.height) / 2 | 0;
         if (locked) {
-            let maxRadius = Math.min(this.props.e.width, this.props.e.height) / 2 | 0;
             var radiusProp = Immutable.Map({
                 descriptor: {
                     name: 'radius',
@@ -121,7 +127,7 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
                     onSettingValue={this._setting4Value("upperLeft")}
                     uom={'px'}
                     type="subproperty"
-                    onPreviewingValue={this._onPreviewingValue} />
+                    onPreviewingValue={this._preview4Value("upperLeft")} />
             </SliderContainer>
         }
 
@@ -132,11 +138,15 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
                     key={n}
                     e={this.props.e}
                     onSettingValue={this._setting4Value(n)}
-                    onPreviewingValue={this._onPreviewingValue}
+                    onPreviewingValue={this._preview4Value(n)}
                     p={Immutable.Map({
                         descriptor: {
                             name: n,
                             displayName: n
+                        },
+                        options:{
+                            min:0,
+                            max:maxRadius
                         },
                         value: value[n]
                     })}
@@ -166,7 +176,7 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
         });
 
         return <CornerEditorLineContainer>
-            <MultiSwitchEditor e={e} p={lockProperty} onSettingValue={this._onLockChanged} />
+            <MultiSwitchEditor e={e} p={lockProperty} type="subproperty" onSettingValue={this._onLockChanged} />
             {this.renderValues(locked, value)}
         </CornerEditorLineContainer>;
     }

@@ -13,7 +13,7 @@ interface INumericEditorProps extends IEditorProps {
     type?: "child" | "subproperty";
     step?: number;
     uom?: string;
-    disabled?:boolean;
+    disabled?: boolean;
 }
 
 interface INumericEditorState {
@@ -25,10 +25,33 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
     private miniStep: number;
     private timeoutId: any;
     private _holding: boolean;
+    private _originalValue: number;
+
+    DraggableHeader: any;
 
     constructor(props: INumericEditorProps) {
         super(props);
         this.state = { value: props.p.get("value") };
+
+        this.DraggableHeader = draggable(PropertySmallNameContainer, this._onStartDragging, this._onEndDragging, this._onDragging);
+    }
+
+    _onStartDragging = () => {
+        this._originalValue = this.state.value;
+    }
+
+    _onEndDragging = (value) => {
+        var delta = value * this.step;
+        const newValue = this.validateNewValue(this._originalValue + delta);
+        this.setValueByCommand(newValue);
+        this.setState({value:newValue})
+    }
+
+    _onDragging = (value) => {
+        var delta = value * this.step;
+        const newValue = this.validateNewValue(this._originalValue + delta);
+        this.previewValue(newValue);
+        this.setState({value:newValue})
     }
 
     componentWillReceiveProps(nextProps: Readonly<INumericEditorProps>) {
@@ -185,12 +208,13 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
         />);
 
         if (this.props.type === "subproperty") {
+            const DraggableHeader = this.DraggableHeader;
             return <PropertyWithSubtitleContainer className={this.props.className}>
                 <InputContainer subproperty={this.props.type === "subproperty"}>
                     {inputRender}
-                    {this.props.uom?(<Uom>{this.props.uom}</Uom>):null}
+                    {this.props.uom ? (<Uom>{this.props.uom}</Uom>) : null}
                 </InputContainer>
-                <PropertySmallNameContainer><FormattedMessage id={this.displayName()} /></PropertySmallNameContainer>
+                <DraggableHeader><FormattedMessage id={this.displayName()} /></DraggableHeader>
             </PropertyWithSubtitleContainer>;
         }
 
@@ -211,7 +235,7 @@ export default class NumericEditor extends EditorComponent<number, INumericEdito
     }
 }
 
-const InputStyled = styled(EnterInput)`
+const InputStyled = styled(EnterInput) `
     height:24px;
     padding: 5px 0;
     color: ${theme.text_color};
@@ -237,3 +261,36 @@ const Uom = styled.div`
     font: ${theme.input_font};
     padding-right:8px;
 `;
+
+function draggable(WrappedComponent, onStartDragging, onEndDragging, onChange) {
+    return class extends React.Component {
+        constructor(props) {
+            super(props);
+        }
+
+        private _startPosition: number;
+
+        _onMouseUp = (event) => {
+            document.removeEventListener("mouseup", this._onMouseUp);
+            document.removeEventListener("mousemove", this._onMouseMove);
+            var delta = event.pageX - this._startPosition;
+            onEndDragging(delta);
+        }
+
+        _onMouseMove = (event) => {
+            var delta = event.pageX - this._startPosition;
+            onChange(delta);
+        }
+
+        _startDragging = (event) => {
+            document.addEventListener("mouseup", this._onMouseUp);
+            document.addEventListener("mousemove", this._onMouseMove);
+            this._startPosition = event.pageX;
+            onStartDragging();
+        }
+
+        render() {
+            return <WrappedComponent onMouseDown={this._startDragging} {...this.props} />;
+        }
+    };
+}

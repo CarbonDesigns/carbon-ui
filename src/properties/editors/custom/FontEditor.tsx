@@ -244,11 +244,11 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
 
             <PropertyLineContainer>
                 <div></div>
-                <MultiSwitchEditor className="textAlign" e={this.props.e} p={this.state.align} onSettingValue={this.changeTextAlign} />
+                <MultiSwitchEditor className="textAlign" type="subproperty" e={this.props.e} p={this.state.align} onSettingValue={this.changeTextAlign} />
             </PropertyLineContainer>
             <PropertyLineContainer>
                 <div></div>
-                <MultiSwitchEditor className="textVAlign" e={this.props.e} p={this.state.valign} onSettingValue={this.changeTextVAlign} />
+                <MultiSwitchEditor className="textVAlign"  type="subproperty" e={this.props.e} p={this.state.valign} onSettingValue={this.changeTextVAlign} />
             </PropertyLineContainer>
 
             <PropertyLineContainer>

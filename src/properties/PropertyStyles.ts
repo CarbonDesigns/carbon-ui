@@ -46,6 +46,7 @@ export const PropertyWithSubtitleContainer = styled.div`
 export const PropertySmallNameContainer = styled(PropertyNameContainer)`
     font:${theme.prop_font};
     text-align:center;
+    cursor:ew-resize;
 `
 
 export const PropertyTupleContainer = styled.div`

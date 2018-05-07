@@ -25,7 +25,12 @@ const IconStyled = styled.div.attrs<{ src?: any, defaultColor?: any, width?: any
 export default class Icon extends Component<IIconProps, {}> {
     render() {
         var { icon, color, className, ...props } = this.props;
+        if(typeof icon === 'string') {
+            icon = icons[src];
+        }
+
         var { src, width, height } = icon || { src: "", width: 0, height: 0 };
+
         return <IconStyled src={src} width={width} height={height} defaultColor={color} className={className} {...props}>
         </IconStyled>;
     }

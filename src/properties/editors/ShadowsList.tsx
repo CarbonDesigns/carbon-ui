@@ -33,7 +33,7 @@ class ShadowFlat extends Component<any, any> {
         var newShadow = Object.assign({}, this.props.value, { x: value});
         this.props.onPreview && this.props.onPreview(newShadow);
 
-        return value;
+        return false;
     }
 
     changeYProperty = (value) => {
@@ -47,7 +47,7 @@ class ShadowFlat extends Component<any, any> {
         var newShadow = Object.assign({}, this.props.value, { y: value});
         this.props.onPreview && this.props.onPreview(newShadow);
 
-        return value;
+        return false;
     }
 
     changeBlurProperty = (value) => {
@@ -58,10 +58,10 @@ class ShadowFlat extends Component<any, any> {
     }
 
     previewBlurProperty = (value) => {
-        var newShadow = Object.assign({}, this.props.value, { y: value});
+        var newShadow = Object.assign({}, this.props.value, { blur: value});
         this.props.onPreview && this.props.onPreview(newShadow);
 
-        return value;
+        return false;
     }
 
     changeSpreadProperty = (value) => {
@@ -75,7 +75,7 @@ class ShadowFlat extends Component<any, any> {
         var newShadow = Object.assign({}, this.props.value, { spread: value});
         this.props.onPreview && this.props.onPreview(newShadow);
 
-        return value;
+        return false;
     }
 
     changeColorProperty = (value) => {
@@ -149,34 +149,24 @@ class ShadowFlat extends Component<any, any> {
             <NumericEditor e={this.props.e} p={xProp}
                 onSettingValue={this.changeXProperty}
                 type="subproperty"
-                onPreviewingValue={this.previewYProperty} />
+                onPreviewingValue={this.previewXProperty} />
+
             <NumericEditor e={this.props.e} p={yProp}
                 onSettingValue={this.changeYProperty}
                 type="subproperty"
-                onPreviewingValue={this.previewBlurProperty} />
+                onPreviewingValue={this.previewYProperty} />
+
             <NumericEditor e={this.props.e} p={blurProp}
                 onSettingValue={this.changeBlurProperty}
                 type="subproperty"
                 onPreviewingValue={this.previewBlurProperty} />
+
             <NumericEditor e={this.props.e} p={spreadProp}
                 onSettingValue={this.changeSpreadProperty}
                 type="subproperty"
                 onPreviewingValue={this.previewSpreadProperty} />
         </ShadowLineContainer>
-
-        // <div className={cn("shadow")}>
-        //     {item.enabled == null ? null : <GuiCheckbox
-        //         className={cn("shadow-checkbox")}
-        //         onChange={this._changeEnabled}
-        //         checked={this.state.enabled}
-        //         labelless={true}
-        //     />}
-
-        //     </FlyoutButton>
-        // </div>
     }
-
-    private static FlyoutPosition: FlyoutPosition = { targetVertical: "bottom", disableAutoClose: true };
 }
 
 

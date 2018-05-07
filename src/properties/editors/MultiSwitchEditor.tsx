@@ -6,16 +6,31 @@ import Icon from "../../components/Icon";
 import styled from "styled-components";
 import * as Immutable from "immutable";
 import theme from "../../theme";
+import { PropertyLineContainer, PropertyNameContainer } from "../PropertyStyles";
+import { CarbonLabel } from "../../CarbonFlux";
 
-class MultiSwitchEditor extends EditorComponent<any, IEditorProps> {
+interface IMultiSwitchEditorProps extends IEditorProps {
+    type?: "subproperty";
+}
+
+export default class MultiSwitchEditor extends EditorComponent<IEditorProps, any> {
     render() {
         var items = this.extractOption(this.props, "items");
         if (!items) {
             return <div></div>
         }
-        return <div className={this.props.className}>
+        let switchControl = <MultiSwitchEditorContainer className={this.props.className}>
             {items.map((x, index) => this.renderItem(x, index === 0, index === items.length - 1))}
-        </div>;
+        </MultiSwitchEditorContainer>;
+
+        if (this.props.type === "subproperty") {
+            return switchControl;
+        } else {
+            return <PropertyLineContainer>
+                <PropertyNameContainer><CarbonLabel id={this.displayName()} /></PropertyNameContainer>
+                {switchControl}
+            </PropertyLineContainer>
+        }
     }
 
     renderItem(x, first, last) {
@@ -49,7 +64,7 @@ const SwitchItem = styled.div.attrs<any>({}) `
     }
 `;
 
-export default styled(MultiSwitchEditor).attrs<any>({}) `
+const MultiSwitchEditorContainer = styled.div`
     display:flex;
     height:24px;
     width:100%;

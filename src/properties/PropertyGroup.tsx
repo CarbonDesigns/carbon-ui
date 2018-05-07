@@ -173,6 +173,26 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                     })
                 ]} />
             }
+
+            case "position": {
+                return <TupleEditor e={elem} p={prop} key={key} properties={[
+                    Immutable.Map({
+                        descriptor: {
+                            name: "x",
+                            displayName: "@x"
+                        },
+                        value: prop.get('value').x
+                    }),
+                    Immutable.Map({
+                        descriptor: {
+                            name: "y",
+                            displayName: "@y"
+                        },
+                        value: prop.get('value').y
+                    })
+                ]} />
+            }
+
             case "rotation": {
                 return <TupleEditor e={elem} p={prop} key={key} properties={[
                     Immutable.Map({

@@ -3,7 +3,7 @@ import theme from "../theme";
 
 export const PropertyLineContainer = styled.div`
     display:grid;
-    grid-template-columns:80px 1fr;
+    grid-template-columns:minmax(max-content, 80px) 1fr;
     justify-items: center;
     grid-column-gap: 10px;
     padding:0 9px;

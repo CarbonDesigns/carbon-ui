@@ -301,7 +301,7 @@ export default
 
         "New board": "New board", //
         "New page": "New page", //
-        "States": "States",
+        "@states": "States",
         "Artboard": "Artboard",
         "State": "State",
         "Dash pattern": "Dash pattern",
@@ -443,7 +443,7 @@ export default
         "@loading": "Loading...", //
         "@empty": "Nothing found", //
         "refresh.toolbox": "Refresh library", //
-        "@tilesize": "Thumbnail appearance",
+        "@tilesize": "Thumbnail",
         "@tilesize.small": "Small tile (1x1)",
         "@tilesize.large": "Wide tile (1x2)",
         "@tilesize.xlarge": "Large tile (2x2)",

@@ -5,7 +5,6 @@ import EditorComponent, { IEditorProps } from "./EditorComponent";
 import FlyoutButton, { FlyoutPosition } from "../../shared/FlyoutButton";
 import ShadowsList from "./ShadowsList";
 import { Shadow, PatchType, createUUID } from "carbon-core";
-import AddButton from "../../shared/ui/AddButton";
 import IconButton from "../../components/IconButton";
 import theme from "../../theme";
 import icons from "../../theme-icons";

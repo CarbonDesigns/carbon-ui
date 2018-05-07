@@ -9,8 +9,7 @@ export function loadCore(): Promise<void> {
 
     return new Promise(resolve => {
         carbon.coreCallback = resolve;
-
-        var script = document.createElement("script");
+        let script = document.createElement("script");
         script.async = true;
         script.src = carbon.coreScript;
         script.crossOrigin = "anonymous";

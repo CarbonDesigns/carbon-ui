@@ -1,6 +1,6 @@
 import { LayoutDirection, LayoutDockPosition } from "carbon-core";
 
-const version = 10; // update version if layout has to changed on the client
+const version = 11; // update version if layout has to changed on the client
 
 export default {
     edit: {
@@ -33,12 +33,12 @@ export default {
                 fill: true,
                 fixed: true
             },
-            {
-                panelName: 'comments',
-                width: 250,
-                collapsed: true,
-                collapseDirection: LayoutDockPosition.Right
-            },
+            // {
+            //     panelName: 'comments',
+            //     width: 250,
+            //     collapsed: true,
+            //     collapseDirection: LayoutDockPosition.Right
+            // },
             {
                 direction: LayoutDirection.Column,
                 width: 300,
@@ -90,13 +90,13 @@ export default {
                 panelName: 'preview',
                 fill: true,
                 fixed: true
-            },
-            {
-                width: 300,
-                panelName: 'comments',
-                collapsed: true,
-                collapseDirection: LayoutDockPosition.Right,
             }
+            // {
+            //     width: 300,
+            //     panelName: 'comments',
+            //     collapsed: true,
+            //     collapseDirection: LayoutDockPosition.Right,
+            // }
         ]
     },
     previewOnly: {

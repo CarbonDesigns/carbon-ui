@@ -10,14 +10,12 @@ import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";
 import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
 import { say } from "../shared/Utils";
-import bem from "bem";
 import { MonacoEditor } from "./MonacoEditor"
 import EditorToolbar from './EditorToolbar';
 
 let et = EditorToolbar.prototype;
 let dd = MonacoEditor.prototype;
 // TODO: inherited visibility and lock style
-function b(a, b?, c?) { return bem('editor', a, b, c) }
 
 export class EditorPanel extends Component<any, any> {
     refs: {

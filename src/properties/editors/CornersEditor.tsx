@@ -132,9 +132,9 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
         }
 
         return <FourCornersContainer>
-            {["upperLeft", "upperRight", "bottomRight", "bottomLeft"].map((n) => {
+            {["upperLeft", "upperRight", "bottomRight", "bottomLeft"].map((n, i) => {
                 return <NumericEditor
-                    type="child"
+                    type="subproperty"
                     key={n}
                     e={this.props.e}
                     onSettingValue={this._setting4Value(n)}
@@ -142,7 +142,7 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
                     p={Immutable.Map({
                         descriptor: {
                             name: n,
-                            displayName: n
+                            displayName: i.toString()
                         },
                         options:{
                             min:0,

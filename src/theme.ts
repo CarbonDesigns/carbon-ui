@@ -1,7 +1,9 @@
 import createTheme from 'styled-components-theme';
-
+import * as tinycolor from "tinycolor2";
+const accent = '#ff3d7d';
 export const colors = {
-    accent:'#ff3d7d',
+    accent:accent,
+    accent_secondary: tinycolor(accent).spin(19).darken(4).toString(),
     icon_default:'#fff',
     panel_background:'#292929',
     flyout_background: '#272727',
@@ -34,4 +36,5 @@ export const colors = {
 }
 
 const theme = createTheme(...Object.keys(colors));
+
 export default theme

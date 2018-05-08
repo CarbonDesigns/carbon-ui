@@ -486,16 +486,14 @@ export interface IGuiInputProps extends React.InputHTMLAttributes<HTMLInputEleme
 }
 
 export class GuiInput extends Component<IGuiInputProps>{
-    refs: {
-        input: HTMLInputElement;
-    }
+    private input: HTMLInputElement;
 
     focus() {
-        this.refs.input.focus();
+        this.input.focus();
     }
 
     blur() {
-        this.refs.input.blur();
+        this.input.blur();
     }
 
     selectOnFocus = (e) => {
@@ -505,24 +503,23 @@ export class GuiInput extends Component<IGuiInputProps>{
     }
 
     select() {
-        this.refs.input.select();
+        this.input.select();
     }
 
     getValue() {
-        return this.refs.input.value;
+        return this.input.value;
     }
 
     render() {
         // todo - borrow from edit input
         var { className, component, label, caption, defaultMessage, placeholder, mods, suffix, selectOnFocus, ...rest } = this.props;
-        var cn = bem(component || "gui-input", null, mods, className);
         var renderedLabel = null;
 
         if (label) {
             renderedLabel = label;
         }
         else if (caption || defaultMessage) {
-            renderedLabel = (<p className={bem(component || "gui-input", "label")}>
+            renderedLabel = (<p>
                 <FormattedMessage id={caption} defaultMessage={defaultMessage} />
             </p>);
         }
@@ -531,18 +528,34 @@ export class GuiInput extends Component<IGuiInputProps>{
             placeholder = this.formatLabel(placeholder, placeholder);
         }
 
-        var renderedInput = <input
-            ref="input"
-            className={bem(component || "gui-input", "input")}
+        var renderedInput = <GuiInputStyled
+            innerRef={x => this.input = x}
             onFocus={this.selectOnFocus}
             type={this.props.type}
             placeholder={placeholder}
             {...rest}
         />;
 
-        return <label className={cn}>{renderedLabel}{renderedInput}{suffix}</label>
+        return <GuiInputContainer>{renderedLabel}{renderedInput}{suffix}</GuiInputContainer>
     }
 }
+
+const GuiInputContainer = styled.label`
+    position:relative;
+`;
+
+const GuiInputStyled = styled.input`
+    background-color:${theme.input_background};
+    color:${theme.text_color};
+    height:32px;
+    text-align:center;
+    line-height:32px;
+    width:100%;
+    border-radius:1px;
+    &::placeholder {
+        color:${theme.text_color.darken()};
+    }
+`;
 
 interface IGuiTextAreaProps extends React.InputHTMLAttributes<HTMLTextAreaElement>, IHasMods<
     "resize-v" |
@@ -715,7 +728,7 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
             onBlur={e => { this.validateIf(ValidationTrigger.blur); onBlur && onBlur(e); }}
             onKeyUp={e => { this.validateIf(ValidationTrigger.keyUp); onKeyUp && onKeyUp(e); }}
             onChange={e => { this.validateIf(ValidationTrigger.change); onChange && onChange(e); }}
-            suffix={this.renderFieldSuffix(this.state.fieldState, component || "gui-input")}
+            suffix={this.renderFieldSuffix(this.state.fieldState, component)}
             {...rest} />
     }
 
@@ -741,19 +754,38 @@ export class GuiValidatedInput extends Component<IGuiValidatedInputProps, IGuiVa
             return <div className={`${component}__input-ico ${component}__input-ico_checking`} key="checking_ico"><i className="ico-checking"></i></div>;
         }
         if (status === "ok") {
-            return <div className={`${component}__input-ico ${component}__input-ico_valid`} key="valid_ico"><i className="ico-ok-white"></i></div>;
+            return <IconValidateOK key="valid_ico" />;
         }
         if (status === "error") {
             return [
-                <div className={`${component}__input-ico ${component}__input-ico_error`} key="error_ico">
-                    <i className="ico-warning"></i>
-                </div>,
-                <span key='tooltip' className={`${component}__error-tooltip`}>{field.get("error")}</span>
+                <IconValidateError key="error_ico" title={field.get("error")} />,
+                <ErrorMessage key='tooltip'>{field.get("error")}</ErrorMessage>
             ];
         }
         return null;
     }
 }
+
+const ErrorMessage = styled.span`
+    color:${theme.accent_secondary};
+    width:100%;
+    text-align:center;
+    display:block;
+    font:${theme.default_font};
+    margin-top:4px;
+`;
+
+const IconValidateError = styled.div`
+    position:absolute;
+    width:16px;
+    height:16px;
+    border-radius:2px;
+    background:${theme.accent_secondary};
+    right:9px;
+    top:8px;
+`;
+
+const IconValidateOK = styled.div``;
 
 export class GuiRequiredInput extends GuiValidatedInput {
     private validateField = (value: string, state: any/*ImmutableRecord<IFieldState>*/, force?: boolean) => {

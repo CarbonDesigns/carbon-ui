@@ -10,6 +10,8 @@ import UserAvatarButton from '../shared/UserAvatarButton';
 import DropButtonItem from '../shared/DropButtonItem';
 import RegistrationPopup from '../account/RegistrationPopup';
 import { AccountAction } from '../account/AccountActions';
+import styled from "styled-components";
+import theme from "../theme";
 
 interface IUserBarProps extends IReactElementProps{
 }
@@ -60,10 +62,11 @@ export default class UserBar extends Component<IUserBarProps, IUserBarState> {
 
     _renderSignup(){
         return  <FlyoutButton
-                className="signup__button"
-                content={<FormattedMessage id="Sign up" tagName="p"/>}
+                content={<SignupButton><FormattedMessage id="@signup" tagName="p"/></SignupButton>}
                 position={{
                     targetVertical: "bottom",
+                    targetHorizontal: "right",
+                    sourceHorizontal:"right",
                     disableAutoClose: true
                 }}
             >
@@ -74,12 +77,31 @@ export default class UserBar extends Component<IUserBarProps, IUserBarState> {
     }
 
     render(){
-        return <div className="userbar">
+        return <UserBarContainer>
             { this.state.loggedIn
                 ? this._renderUserAvatar()
                 : this._renderSignup()
             }
-        </div>
+        </UserBarContainer>
     }
 }
 
+const UserBarContainer = styled.div`
+    display: flex;
+    padding-right:32px;
+`;
+
+const SignupButton = styled.div`
+    width:100px;
+    height:100%;
+    border-left: 2px solid ${theme.workspace_background};
+    border-right: 2px solid ${theme.workspace_background};
+    border-bottom: 1px solid ${theme.accent};
+    cursor:pointer;
+    font:${theme.h1font};
+    color:${theme.text_color};
+    text-transform: uppercase;
+    display:grid;
+    align-items:center;
+    justify-items:center;
+`;

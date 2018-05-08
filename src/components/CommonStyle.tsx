@@ -47,3 +47,12 @@ export const TabPageStyled = styled(TabPage).attrs<any>({})`
     flex-shrink: 0;
     position:relative;
 `
+
+export const MainButtonComponent = styled.button`
+    height:24px;
+    min-width:30px;
+    cursor:pointer;
+    color: ${theme.text_color};
+    background-image: linear-gradient(to right, #ff4295 0%, #ff292c 100%);
+    border-radius: 1px;
+`

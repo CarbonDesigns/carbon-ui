@@ -424,6 +424,9 @@ export default
         "@imageEdit.uploadImage": "Upload a new image",
         "@imageEdit.urlError": "Could not download the image",
 
+        "@makeRepeaterGrid": "Make repeater grid",
+        "@socialHeader": "or sign up",
+
         "@project.name": "Project name",
         "@project.avatar": "Create your project avatar",
         "@project.comment": "{num} {num, plural, one {artboard} other {artboards}}",
@@ -514,7 +517,7 @@ export default
         "@frame": "Frame",
         "@artboardType": "Artboard type",
         "Show more...": "Show more...",
-        "Sign up": "Sign up",
+        "@signup": "Sign up",
         "@cornerRadius": "Corner radius",
         "@outerShadows": "Shadows",
         "@innerShadows": "Inner shadows",

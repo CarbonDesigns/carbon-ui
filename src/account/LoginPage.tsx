@@ -13,7 +13,7 @@ import { backend } from "carbon-api";
 
 var Socials: React.StatelessComponent<any> = props =>
     <div className="form__text loginpage-signup__alternative">
-        {separatorOr(props.message, "translateme")}
+        {separatorOr(props.message)}
         <div className="signup__with-socials">
             {
                 LoginProviders.map(p =>

@@ -87,4 +87,5 @@ export default {
     point_mirrored: icon("add.svg", 12, 12),// TODO
     point_assymetric: icon("add.svg", 12, 12),// TODO
     point_disconnected: icon("add.svg", 12, 12),// TODO
+    social_icons: icon("social-icons.svg", 0, 0),// TODO
 }

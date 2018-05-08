@@ -52,7 +52,7 @@ export default class RepateDropButton extends Component<any> {
                 <TextInput type="number" placeholder="v margin"></TextInput>
                 <TextInput type="number" placeholder="h margin"></TextInput>
             </TextGroup>
-            <RepeatButton label="Make repeater grid" onClick={this._repeate}></RepeatButton>
+            <RepeatButton label="@makeRepeaterGrid" onClick={this._repeate}></RepeatButton>
         </RepeatFlyoutBody>
     </FlyoutButton>
     }

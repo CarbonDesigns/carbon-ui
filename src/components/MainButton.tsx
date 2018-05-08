@@ -7,26 +7,19 @@ import * as cx from "classnames";
 import theme from "../theme";
 import icons from "../theme-icons";
 import Icon from "./Icon";
+import { MainButtonComponent } from "../components/CommonStyle";
 
 interface IMainButtonProps extends IReactElementProps {
-    label:string;
+    label: string;
 }
 
-const MainButtonComponent = styled.button`
-    height:24px;
-    min-width:30px;
-    cursor:pointer;
-    color: ${theme.text_color};
-    background-image: linear-gradient(to right, #ff4295 0%, #ff292c 100%);
-    border-radius: 1px;
-`
 
 export default class MainButton extends Component<IMainButtonProps, {}> {
     render() {
         var { ...props } = this.props;
 
         return <MainButtonComponent {...props}>
-            <CarbonLabel id={this.props.label}/>
+            <CarbonLabel id={this.props.label} />
         </MainButtonComponent>;
     }
 }

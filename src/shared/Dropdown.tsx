@@ -20,7 +20,7 @@ export interface IDropdownProps {
     onSelect: (item: any) => void,
     onClick?: () => void,
 
-    renderSelected?: (item: any) => void,
+    renderSelected?: (item?: any) => void,
     renderEmpty?: () => void,
 }
 interface IDropDownState{

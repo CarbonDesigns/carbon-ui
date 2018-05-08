@@ -1,17 +1,21 @@
 import * as React from "react";
 import classNames from 'classnames';
 import {FormattedMessage} from "react-intl";
+import Icon from "../components/Icon";
+import styled from "styled-components";
+import theme from "../theme";
 
 interface IDropButtonItemProps extends IReactElementProps{
     action?: string;
     labelId?: string;
+    icon?:any;
     onClick?: ()=>void;
 }
 
 export default class DropButtonItem extends React.Component<IDropButtonItemProps, any>{
     _renderIcon(){
-        if(this.props.id) {
-            return (<i className="big-icon dropdown__left-icon"></i>);
+        if(this.props.icon) {
+            return (<Icon icon={this.props.icon}/>);
         }
 
         return null;
@@ -36,10 +40,19 @@ export default class DropButtonItem extends React.Component<IDropButtonItemProps
             labelId = "empty.label";
         }
         return (
-            <p className="dropdown__item" id={this.props.id} onMouseDown={this._stopPropagation} onClick={this._action}>
+            <DropItemContainer id={this.props.id} className={this.props.className} onMouseDown={this._stopPropagation} onClick={this._action}>
                 {this._renderIcon()}
-                <span className="text pill-cap"><FormattedMessage id={labelId}/></span>
-            </p>
+                <FormattedMessage id={labelId}/>
+            </DropItemContainer>
         )
     }
 }
+
+const DropItemContainer = styled.div`
+    font:${theme.default_font};
+    color:${theme.text_color};
+    cursor:pointer;
+    &:hover{
+        background-color:${theme.accent};
+    }
+`;

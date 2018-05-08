@@ -1,4 +1,4 @@
-import { backend } from "carbon-core"
+import { backend } from "carbon-api"
 
 function icon(name, w, h): { src: string, width: number, height: number } {
     return {

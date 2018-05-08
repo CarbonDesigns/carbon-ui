@@ -18,6 +18,8 @@ import { FormattedMessage } from "react-intl";
 import icons from "../theme-icons";
 import ArrangeCommands from './ArrangeCommands';
 import { TabAreaStyled, TabPageStyled } from "../components/CommonStyle";
+import styled from "styled-components";
+import theme from "../theme";
 
 interface IPropertiesPanelProps {
 }
@@ -93,11 +95,9 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
         }
 
         if (!content || content.isEmpty()) {
-            return <Markup>
-                <MarkupLine mods="center">
+            return <EmptyMessage>
                     <FormattedMessage tagName="p" id="@properties.empty" />
-                </MarkupLine>
-            </Markup>
+            </EmptyMessage>
         }
 
         return <ScrollContainer id="edit__properties" className="thin dark">
@@ -111,5 +111,13 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
         </ScrollContainer>
     }
 }
+
+const EmptyMessage = styled.div`
+    font:${theme.default_font};
+    color:${theme.text_color};
+    width:100%;
+    text-align:center;
+    margin-top:24px;
+`;
 
 export default PropertiesPanel;

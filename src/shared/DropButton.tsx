@@ -1,42 +1,41 @@
 import * as React from "react";
 import * as cx from "classnames";
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
+import styled from "styled-components";
 
-interface IDropButtonProps extends IReactElementProps
-{
-    caption?:string;
-    disabled?:boolean;
-    extension_data?:any;
-    black?:boolean;
-    width?:any;
-    height?:any;
+interface IDropButtonProps extends IReactElementProps {
+    caption?: string;
+    disabled?: boolean;
+    extension_data?: any;
+    black?: boolean;
+    width?: any;
+    height?: any;
 }
 
-interface IDropButtonState
-{
-    open:boolean;
+interface IDropButtonState {
+    open: boolean;
 }
 
 export default class DropButton extends React.Component<IDropButtonProps, IDropButtonState>{
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            open:false
+            open: false
         };
     }
 
     open = () => {
-        if (!this.state.open){
+        if (!this.state.open) {
             this.toggle();
         }
     };
     close = () => {
-        if (this.state.open){
+        if (this.state.open) {
             this.toggle();
         }
     };
     toggle = () => {
-        this.setState({open: !this.state.open});
+        this.setState({ open: !this.state.open });
     };
 
     onKeyDown = (e) => {
@@ -44,13 +43,13 @@ export default class DropButton extends React.Component<IDropButtonProps, IDropB
     };
 
 
-    static stopPropagation(e){
+    static stopPropagation(e) {
         e.stopPropagation();
     }
 
-    _renderText(){
-        if(this.props.caption) {
-            return (<div className="pill-cap"><FormattedMessage id={this.props.caption}/></div>)
+    _renderText() {
+        if (this.props.caption) {
+            return (<div className="pill-cap"><FormattedMessage id={this.props.caption} /></div>)
         }
         return null;
     }
@@ -59,7 +58,7 @@ export default class DropButton extends React.Component<IDropButtonProps, IDropB
         return null;
     }
 
-    render(){
+    render() {
         var pill_content = this._buttonExtension(this.props.extension_data);
         if (pill_content === null) {
             pill_content = (
@@ -69,13 +68,11 @@ export default class DropButton extends React.Component<IDropButtonProps, IDropB
         }
 
         return (
-            <div id={this.props.id}
+            <ActionButton id={this.props.id}
                 onMouseDown={this.toggle} onKeyDown={this.onKeyDown} onBlur={this.close} tabIndex={0}
-                className={ cx('action-button dropdown-pill', this.props.className, {
-                    open     : this.state.open && !this.props.disabled,
-                    disabled : this.props.disabled,
-                    black: this.props.black
-                }) }>
+                open={this.state.open && !this.props.disabled}
+                disabled={this.props.disabled}
+                black={this.props.black}>
                 {
                     pill_content
                 }
@@ -84,7 +81,11 @@ export default class DropButton extends React.Component<IDropButtonProps, IDropB
                         {this.props.children}
                     </div>
                 </div>
-            </div>
+            </ActionButton>
         )
     }
 }
+
+const ActionButton = styled.div.attrs<{ open: boolean, disabled: boolean, black: boolean }>({}) `
+    display:grid;
+`;

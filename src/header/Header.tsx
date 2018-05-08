@@ -1,14 +1,10 @@
 import * as React from "react";
-import DropButton from '../shared/DropButton';
-import DropButtonItem from '../shared/DropButtonItem';
-import ActionButton from './ActionButton';
 import UserBar from "./UserBar";
 import FlyoutButton from "../shared/FlyoutButton";
 import { app, PreviewDisplayMode } from "carbon-core";
 import { listenTo, Component, ComponentWithImmutableState, CarbonLabel, dispatch } from '../CarbonFlux';
 import AppActions from '../RichAppActions';
 import * as cx from "classnames";
-import bem from '../utils/commonUtils';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { Record } from "immutable";
 import Dropdown from "../shared/Dropdown";
@@ -125,8 +121,8 @@ class StoriesSelector extends Component<StoriesSelectorProps, StoriesSelectorSta
                     />
                 </FlyoutButton>
 
-                <div className={bem("preview", "story-switcher", { prev: true, disabled: storyIndex <= 0 })} onClick={this._prevStory}></div>
-                <div className={bem("preview", "story-switcher", { next: true, disabled: storyIndex < 0 || storyIndex >= storiesCount - 1 })} onClick={this._nextStory}></div>
+                {/* <div className={bem("preview", "story-switcher", { prev: true, disabled: storyIndex <= 0 })} onClick={this._prevStory}></div> */}
+                {/* <div className={bem("preview", "story-switcher", { next: true, disabled: storyIndex < 0 || storyIndex >= storiesCount - 1 })} onClick={this._nextStory}></div> */}
             </div>
         );
     }

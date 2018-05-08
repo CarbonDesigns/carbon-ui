@@ -16,6 +16,8 @@ type CornersEditorState = {
     value: QuadAndLock;
 }
 
+const corners = ["⌜", "⌝", "⌟", "⌞"]
+
 export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorProps, CornersEditorState> {
 
     constructor(props) {
@@ -142,7 +144,7 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
                     p={Immutable.Map({
                         descriptor: {
                             name: n,
-                            displayName: i.toString()
+                            displayName: corners[i]
                         },
                         options:{
                             min:0,

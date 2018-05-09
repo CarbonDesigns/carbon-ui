@@ -98,11 +98,11 @@ const ViewportMargin = 40;
 const Viewport = styled.div`
     position:absolute;
     top:0;
-    bottom:0;
     left:0;
     right:0;
+    bottom:0;
     background-color: ${theme.workspace_background};
-    overflow: hidden;
+    overflow: auto;
     user-select: none;
 `;
 

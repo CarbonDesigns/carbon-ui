@@ -23,6 +23,7 @@ import SwatchesPanel from './properties/SwatchesPanel';
 import FullScreenApi from "./shared/FullScreenApi";
 import { Splash } from "./Splash";
 import { EditorPanel } from "./editor/EditorPanel";
+import { PreviewPanel } from "./editor/PreviewPanel";
 
 // window['Perf'] = Perf
 
@@ -59,6 +60,7 @@ export class RichAppContainer extends AppLoaderComponent {
                     swatches: { contentFactory: React.createFactory(SwatchesPanel) },
                     designer: { contentFactory: React.createFactory(Workspace) },
                     preview: { contentFactory: React.createFactory(PreviewWorkspace) },
+                    previewPanel: { contentFactory: React.createFactory(PreviewPanel) },
                     stories: { contentFactory: React.createFactory(StoriesPanel) },
                     editor: { contentFactory: React.createFactory(EditorPanel) }
                 }} />

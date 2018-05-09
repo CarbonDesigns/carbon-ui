@@ -136,6 +136,7 @@ const PanelBody = styled.div`
     display: flex;
     flex-direction: column;
     flex: auto;
+    height:100%;
 `;
 
 const PanelHeader = styled.div`

@@ -113,7 +113,7 @@ export default class ContextBar extends Component<any, any> {
             selectComposite: Selection.selectComposite()
         };
         app.onBuildMenu.raise(context, menu);
-        this.setState({ items: menu.items, isolationActive: app.isolationActive() });
+        // this.setState({ items: menu.items, isolationActive: app.isolationActive() });
     }
 
     private static onClick(e: React.MouseEvent<HTMLElement>) {
@@ -163,7 +163,7 @@ export default class ContextBar extends Component<any, any> {
     }
 
     render() {
-        var contextbar_classname = cx("contextbar", { "contextbar_pinned": this.state.pinned, "isolation_active": this.state.isolationActive });
+        var contextbar_classname = cx("contextbar", { "contextbar_pinned": this.state.pinned });
 
         return (
             <div className={contextbar_classname}>

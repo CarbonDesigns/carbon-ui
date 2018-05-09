@@ -32,6 +32,7 @@ export default {
     p_properties: icon("p_props.svg", 17, 17),
     p_layers: icon("p_layers.svg", 11, 12),
     p_symbols: icon("p_symbols.svg", 15, 17),
+    p_preview: icon("p_preview.svg", 20, 20),//TODO:
     menu_main: icon("menu_main.svg", 20, 20),
     undo: icon("undo.svg", 17, 13),
     redo: icon("redo.svg", 17, 13),

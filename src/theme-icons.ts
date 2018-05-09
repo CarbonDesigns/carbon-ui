@@ -54,7 +54,7 @@ export default {
     layer_lock: icon("layer_lock.svg", 7, 11),
     layer_unlock: icon("layer_lock.svg", 7, 11), // TODO:
     layer_code: icon("layer_code.svg", 9, 9),
-    top_edit: icon("top_design.svg?v=2", 13, 25),
+    top_edit: icon("top_design2.svg", 13, 25),
     top_prototype: icon("top_prototype.svg", 24, 19),
     dist_h: icon("dist_h.svg", 20, 20),
     dist_v: icon("dist_v.svg", 20, 20),

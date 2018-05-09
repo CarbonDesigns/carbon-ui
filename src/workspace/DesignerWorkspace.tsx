@@ -4,6 +4,7 @@ import ContextBar from './topBar/contextbar';
 // import Tools          from './topBar/tools';
 import Breadcrumbs from './bottomBar/breadcrumbs';
 import PagesBar from './bottomBar/pagesbar';
+import HotKeyListener from "../HotkeyListener";
 
 import * as React from "react";
 
@@ -13,7 +14,7 @@ import ContextMenu from "../shared/ContextMenu";
 import ImageDrop from "./ImageDrop";
 
 import { richApp } from "../RichApp";
-import { listenTo, Component, ComponentWithImmutableState } from "../CarbonFlux";
+import { listenTo, Component, ComponentWithImmutableState, handles } from "../CarbonFlux";
 import { Clipboard } from "carbon-core";
 import { Record } from "immutable";
 import * as cx from "classnames";
@@ -24,6 +25,7 @@ import { cancellationStack, ICancellationHandler } from "../shared/ComponentStac
 import styled from "styled-components";
 import theme from "../theme";
 import Tools from '../tools/tools';
+import CarbonActions from '../CarbonActions';
 
 require("./IdleDialog");
 
@@ -85,6 +87,17 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         }
     }
 
+    onAction(action: any) {
+        if (action.type === CarbonActions.inlineEditModeChanged) {
+            if (action.mode) {
+                HotKeyListener.suspend();
+            }
+            else {
+                HotKeyListener.resume();
+            }
+        }
+    }
+
     onCancel() {
         app.actionManager.invoke("cancel");
     }
@@ -113,10 +126,12 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         this.refs.animationSettings.attach();
 
         cancellationStack.push(this);
+        HotKeyListener.attach(Environment);
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
+        HotKeyListener.detach();
 
         this._renderLoop.unmount();
 

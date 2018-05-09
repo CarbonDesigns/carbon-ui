@@ -1,5 +1,5 @@
 import * as React from "react";
-import HotKeyListener from "./HotkeyListener";
+// import HotKeyListener from "./HotkeyListener";
 import { Component } from "./CarbonFlux";
 import { CoreIntl } from "carbon-core"
 
@@ -21,11 +21,11 @@ export default class RichAppRoot extends Component {
 
     componentDidMount() {
         super.componentDidMount();
-        HotKeyListener.attach();
+        // HotKeyListener.attach();
     }
     componentWillUnmount() {
         super.componentWillUnmount();
-        HotKeyListener.detach();
+        // HotKeyListener.detach();
     }
 }
 

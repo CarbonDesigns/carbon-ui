@@ -4,7 +4,6 @@ import { app, Selection, WorkspaceTool, workspace } from "carbon-core";
 import AppStore from "../AppStore";
 import AppActions from "../RichAppActions";
 import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../CarbonFlux";
-import HotKeyListener from "../HotkeyListener";
 import { Record } from "immutable";
 import styled, {css} from "styled-components";
 import icons from "../theme-icons";

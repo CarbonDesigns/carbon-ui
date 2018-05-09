@@ -47,6 +47,9 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
 
     initialize(editor: monaco.editor.IStandaloneCodeEditor) {
         this._setEditor(editor);
+        if(!core.Environment.controller) {
+            return;
+        }
 
         let previewModel = (core.Environment.controller as any).previewModel;
         if (!previewModel) {

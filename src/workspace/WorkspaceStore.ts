@@ -1,7 +1,7 @@
 import { handles, CarbonStore, dispatchAction } from "../CarbonFlux";
 import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
-import HotKeyListener from "../HotkeyListener";
+
 import { app, ArtboardType } from "carbon-core";
 
 export default class WorkspaceStore extends CarbonStore {
@@ -23,10 +23,10 @@ export default class WorkspaceStore extends CarbonStore {
     @handles(CarbonActions.inlineEditModeChanged)
     inlineEditModeChanged({mode}){
         if (mode){
-            HotKeyListener.suspend();
+            // HotKeyListener.suspend();
         }
         else{
-            HotKeyListener.resume();
+            // HotKeyListener.resume();
         }
     }
 }

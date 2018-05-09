@@ -17,7 +17,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
     _refreshCallback: (value: any, preview: boolean) => void;
     _setActivePointCallback: (value: number) => void;
 
-    constructor(refreshCallback, setActivePointCallback) {
+    constructor(private view, refreshCallback, setActivePointCallback) {
         super();
         this._activePoint = 0;
         this._refreshCallback = refreshCallback;
@@ -26,13 +26,13 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
 
     attach(element: any) {
         super.attach(element);
-        Environment.view.registerForLayerDraw(LayerType.Interaction, this);
+        this.view.registerForLayerDraw(LayerType.Interaction, this);
         Environment.controller.captureMouse(this);
     }
 
     detach() {
         super.detach();
-        Environment.view.unregisterForLayerDraw(LayerType.Interaction, this);
+        this.view.unregisterForLayerDraw(LayerType.Interaction, this);
         Environment.controller.releaseMouse(this);
     }
 
@@ -125,7 +125,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
             let dy = this._startY - pos.y;
 
             let box = this.element.boundaryRect();
-            let scale = Environment.view.scale();
+            let scale = event.view.scale();
 
             let gClone = clone(g);
             if (this._movePoint === 0) {
@@ -204,8 +204,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
         let p1 = this.element.globalViewMatrix().transformPoint2(box.width * g.x1,box.height * g.y1);
         let p2 = this.element.globalViewMatrix().transformPoint2(box.width * g.x2, box.height * g.y2);
 
-
-        let r = (PointRadius + 3) * this._contextScale / Environment.view.scale();
+        let r = (PointRadius + 3) * this._contextScale / event.view.scale();
 
         for (let i = 0; i < g.stops.length; ++i) {
             var s = g.stops[i];

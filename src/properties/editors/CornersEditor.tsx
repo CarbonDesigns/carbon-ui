@@ -41,6 +41,8 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
         }
         // this.setState({value: current});
         this.setValueByCommand(current);
+
+        return false;
     };
 
     _previewValue(key, val) {
@@ -59,10 +61,13 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
         }
 
         this.previewValue(current);
+
+        return false;
     };
 
     _onLockChanged = (value) => {
         this._setValue('locked', !!value);
+        return false;
     };
 
     _onCornerChanging = (value) => {
@@ -76,6 +81,7 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
         let maxRadius = Math.min(this.props.e.width, this.props.e.height) / 2 | 0;
         var v = value * maxRadius / 100;
         this._setValue('upperLeft', v);
+        return false;
     }
 
     changeRadiusProperty = (value) => {
@@ -83,11 +89,11 @@ export default class CornersEditor extends EditorComponent<QuadAndLock, IEditorP
     }
 
     previewRadiusProperty = (value) => {
-        return value;
+        return false;
     }
 
     _onPreviewingValue(value) {
-        return value;
+        return false;
     }
 
     _setting4Value = (name) => {

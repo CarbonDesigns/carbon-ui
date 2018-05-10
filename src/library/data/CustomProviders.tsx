@@ -3,7 +3,6 @@ import * as cx from "classnames";
 import { GuiButton, GuiInput, GuiCheckbox, GuiTextArea } from "../../shared/ui/GuiComponents";
 import { Component, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import CatalogView from "./CatalogView";
-import Toolbox from "../Toolbox";
 import customCatalogStore, { CustomCatalogStoreState } from "./CustomCatalogStore";
 import { Markup, MarkupLine, MarkupSubmit } from "../../shared/ui/Markup";
 

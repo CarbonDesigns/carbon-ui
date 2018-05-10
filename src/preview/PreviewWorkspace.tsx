@@ -406,7 +406,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             var view = new PreviewView(app);
             view.setup({ Layer: Page });
             view.viewContainerElement = this.viewport;
-            var previewModel = new PreviewModel(app);
+            var previewModel = new PreviewModel(app, view, controller);
             var controller = new PreviewController(app, view, previewModel);
             Environment.set(view, controller);
 
@@ -426,7 +426,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     _initialize(view, previewModel, controller) {
         app.platform.detachEvents();
-        app.platform.attachEvents(this.viewport);
+        app.platform.attachEvents(this.viewport, app, view, controller);
 
         this.view = view;
         view.setupRendering([this.context], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));

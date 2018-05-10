@@ -201,13 +201,13 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
             // } else {
             //     this._initialize(view, previewModel, controller);
             // }
-            this._initialize(view);
+            this._initialize(view, controller);
         }
     }
 
-    _initialize(view) {
+    _initialize(view, controller) {
         app.platform.detachEvents();
-        app.platform.attachEvents(this.refs.viewport);
+        app.platform.attachEvents(this.refs.viewport, app, view, controller);
         this.view = view;
         view.setupRendering([this.context], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
 

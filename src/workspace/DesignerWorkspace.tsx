@@ -26,6 +26,7 @@ import styled from "styled-components";
 import theme from "../theme";
 import Tools from '../tools/tools';
 import CarbonActions from '../CarbonActions';
+import Toolbox from '../library/Toolbox';
 
 require("./IdleDialog");
 
@@ -125,6 +126,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         this.refs.contextMenu.bind(this._renderLoop.viewContainer);
         this.refs.animationSettings.attach();
         app.actionManager.attach(this._renderLoop.view);
+        Toolbox.attach(this._renderLoop.view, this._renderLoop.controller);
 
         cancellationStack.push(this);
         HotKeyListener.attach(Environment);
@@ -140,6 +142,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         this._imageDrop.destroy();
         this.refs.contextMenu.unbind(this._renderLoop.viewContainer);
         this.refs.animationSettings.detach();
+        Toolbox.detach();
 
         cancellationStack.pop();
     }

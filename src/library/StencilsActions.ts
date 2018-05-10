@@ -1,4 +1,4 @@
-import { IPage } from "carbon-core";
+import { IPage, IView } from "carbon-core";
 import { StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 
 /**

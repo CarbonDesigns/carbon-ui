@@ -3,7 +3,7 @@ import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
 import { richApp } from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
-import { app, Point, Symbol, Environment, Rect, IUIElement } from "carbon-core";
+import { app, Point, Symbol, Rect, IUIElement, IView, IController } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection, Matrix, workspace } from "carbon-core";
 import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 import { nodeOffset, onCssTransitionEnd } from "../utils/domUtil";
@@ -26,6 +26,8 @@ interface ToolboxState {
 
 export class Toolbox extends CarbonStore<ToolboxState>{
     private stores: { [name: string]: IToolboxStore };
+    private view:IView;
+    private controller:IController;
 
     constructor() {
         super();
@@ -52,11 +54,21 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         }
     }
 
+    attach(view:IView, controller:IController) {
+        this.view = view;
+        this.controller = controller;
+    }
+
+    detach() {
+        this.view=  null;
+        this.controller = null;
+    }
+
     clicked(e: StencilClickEvent, info: StencilInfo) {
         let stencil = this.findStencil(info);
         var element = this.elementFromTemplate(info, stencil);
-        var scale = Environment.view.scale();
-        var location = Environment.controller.choosePasteLocation([element], e.ctrlKey || e.metaKey);
+        var scale = this.view.scale();
+        var location = this.controller.choosePasteLocation([element], e.ctrlKey || e.metaKey);
         var w = element.boundaryRect().width;
         var h = element.boundaryRect().height;
         var x, y;
@@ -72,7 +84,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         }
 
         var p1 = nodeOffset(e.currentTarget);
-        var p2 = Environment.view.pointToScreen({ x: x * scale, y: y * scale });
+        var p2 = this.view.pointToScreen({ x: x * scale, y: y * scale });
         var node = dragAndDrop.cloneNode(e.currentTarget);
         var nodeScaleX = w * scale/e.currentTarget.clientWidth;
         var nodeScaleY = h * scale/e.currentTarget.clientHeight;
@@ -86,7 +98,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
             onCssTransitionEnd(node, () => {
                 document.body.removeChild(node);
                 element.setTransform(Matrix.createTranslationMatrix(Math.round(x), Math.round(y)));
-                Environment.controller.insertAndSelect([element], location.parent);
+                this.controller.insertAndSelect([element], location.parent);
                 this.onElementAdded(info, stencil);
             }, LessVars.stencilAnimationTime);
         }, 1);
@@ -104,7 +116,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
     };
     onDragEnter = (event, interaction: Interaction) => {
         event.dragEnter.classList.add("dragover"); //#viewport
-        Environment.controller.beginDragElements(event, [interaction.placeholder], interaction.dropPromise);
+        this.controller.beginDragElements(event, [interaction.placeholder], interaction.dropPromise);
     };
     onDragLeave = (event, interaction: Interaction) => {
         event.dragLeave.classList.remove("dragover"); //#viewport
@@ -119,7 +131,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
     onDrop = (event: MouseEvent, interaction: Interaction) => {
         Selection.makeSelection(Selection.previousElements);
 
-        let eventData = Environment.controller.createEventData(event);
+        let eventData = this.controller.createEventData(event);
 
         interaction.dropElement.classList.remove("dragover"); //#viewport
 

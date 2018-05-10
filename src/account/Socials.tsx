@@ -20,7 +20,7 @@ var Socials: React.StatelessComponent<ISocialsProps> = props =>
         <SignupIconsLine>
             {
                 LoginProviders.map(p =>
-                    <div className={"background " + p.toLowerCase()} >
+                    <div key={p} className={"background " + p.toLowerCase()} >
                         <div className={"icon " + p.toLowerCase()} onClick={onClick} data-provider={p} key={p}>
                         </div>
                     </div>)

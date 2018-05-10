@@ -108,7 +108,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
             selectComposite: Selection.selectComposite(),
             eventData: Environment.controller.createEventData(event)
         };
-        app.onBuildMenu.raise(context, menu);
+        app.onBuildMenu.raise(context, menu, this._renderLoop.view);
 
         return Promise.resolve(menu);
     }
@@ -124,6 +124,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
 
         this.refs.contextMenu.bind(this._renderLoop.viewContainer);
         this.refs.animationSettings.attach();
+        app.actionManager.attach(this._renderLoop.view);
 
         cancellationStack.push(this);
         HotKeyListener.attach(Environment);
@@ -134,6 +135,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         HotKeyListener.detach();
 
         this._renderLoop.unmount();
+        app.actionManager.detach();
 
         this._imageDrop.destroy();
         this.refs.contextMenu.unbind(this._renderLoop.viewContainer);

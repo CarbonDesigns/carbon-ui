@@ -1,7 +1,7 @@
 import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
 import * as Immutable from "immutable";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
-import { PropertyTracker, Selection, Brush, app, PropertyMetadata, ChangeMode, ArtboardType, ActionManager, UIElementFlags, Shape } from "carbon-core";
+import { PropertyTracker, Selection, Brush, app, PropertyMetadata, ChangeMode, ArtboardType, UIElementFlags, Shape } from "carbon-core";
 import { SwatchesAction, SwatchSlotName } from './SwatchesActions';
 import { PropertyAction } from "./PropertyActions";
 import { WorkspaceAction } from "../workspace/WorkspaceAction";

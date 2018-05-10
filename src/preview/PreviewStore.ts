@@ -2,7 +2,7 @@ import PreviewActions from './PreviewActions';
 import {Range, Map, List, fromJS, Record} from 'immutable';
 import {handles, CarbonStore, listenTo, Dispatcher} from "../CarbonFlux";
 import LayoutActions from "../layout/LayoutActions";
-import {Environment, Devices, PreviewDisplayMode} from "carbon-core";
+import {Invalidate, Environment, Devices, PreviewDisplayMode} from "carbon-core";
 
 var State = Record({
     frameVisible: false,
@@ -25,7 +25,7 @@ class PreviewStore extends CarbonStore<any> {
     @handles(LayoutActions.resizingPanel)
     onResizing() {
         if (this.state.previewActive) {
-            Environment.view && Environment.view.invalidate();
+            Invalidate.request();
         }
     }
 

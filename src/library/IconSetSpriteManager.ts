@@ -36,6 +36,7 @@ export default class IconSetSpriteManager {
             setupContext: () => { },
             contextScale,
             scale: 1,
+            scaleMatrix:Matrix.Identity,
             pageMatrix: Matrix.Identity,
             fill: null,
             stroke: null

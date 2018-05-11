@@ -63,13 +63,11 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
 
     private static onMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
         let node = layersStore.getLayerNodeFromEvent(e);
-        Environment.view._highlightTarget = LayerItem.findSelectionTarget(node);
-        Invalidate.requestInteractionOnly();
+        app.actionManager.invoke("highlightTarget", LayerItem.findSelectionTarget(node));
     }
     private static onMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
         if (!dragController.onDragLeave(e)) {
-            delete Environment.view._highlightTarget;
-            Invalidate.requestInteractionOnly();
+            app.actionManager.invoke("highlightTarget", null);
         }
     }
 
@@ -82,8 +80,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
             var artboard = this.props.layer.element;
             (app.activePage as IArtboardPage).setActiveArtboardById(artboard.id);
             if (artboard) {
-                Environment.view.ensureScale([artboard]);
-                Environment.view.ensureCentered([artboard]);
+                app.actionManager.invoke("ensureScaleAndCentered", [artboard]);
                 Selection.clearSelection();
                 app.actionManager.invoke("pointerTool");
             }

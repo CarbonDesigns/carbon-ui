@@ -2,7 +2,7 @@ import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import { LayerAction } from "./LayersActions";
-import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell, Primitive, SetPropsPrimitive } from "carbon-core";
+import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell, Primitive, SetPropsPrimitive, IsolationContext } from "carbon-core";
 import { iconType } from "../utils/appUtils";
 
 type IdMap = { [id: string]: boolean };
@@ -37,8 +37,9 @@ class LayersStore extends CarbonStore<LayersStoreState> {
     refreshLayersTree(expandedMap: IdMap = this.state.expanded) {
         let elements;
         var topLevel = false;
-        if (Environment.view.isolationLayer && Environment.view.isolationLayer.isActive) {
-            elements = Environment.view.isolationLayer.children;
+
+        if (IsolationContext.isolationLayer) {
+            elements = IsolationContext.isolationLayer.children;
         }
         else {
             let artboard = app.activePage.getActiveArtboard();

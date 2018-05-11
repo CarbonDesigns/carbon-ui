@@ -8,7 +8,7 @@ import * as cx from "classnames";
 import VirtualList from "../shared/collections/VirtualList";
 import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";
-import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
+import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer, IsolationContext } from "carbon-core";
 import { say } from "../shared/Utils";
 import { MarkupLine } from "../shared/ui/Markup";
 import LayerItem from "./LayerItem";
@@ -131,16 +131,15 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
     }
 
     goBack = () => {
-        let isolationLayer = Environment.view.getLayer(LayerType.Isolation) as IIsolationLayer;
-        if (isolationLayer.isActive) {
+        let isolationLayer = IsolationContext.isolationLayer as IIsolationLayer;
+        if (isolationLayer && isolationLayer.isActive) {
             app.actionManager.invoke("cancel");
         }
         else {
             Selection.clearSelection();
             (app.activePage as IArtboardPage).setActiveArtboard(null);
             var artboards = app.activePage.children;
-            Environment.view.ensureScale(artboards);
-            Environment.view.ensureCentered(artboards);
+            app.actionManager.invoke("ensureScaleAndCentered", artboards);
         }
     }
 
@@ -151,11 +150,7 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
 
         let name = "";
 
-        var isolationLayer: any = null;
-
-        if (Environment.view) {
-            isolationLayer = Environment.view.getLayer(LayerType.Isolation) as IIsolationLayer;
-        }
+        var isolationLayer = IsolationContext.isolationLayer as IIsolationLayer;
 
         if (isolationLayer && isolationLayer.isActive) {
             name = isolationLayer.getOwner().name;

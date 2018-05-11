@@ -120,7 +120,7 @@ export default class ZoomBar extends Component<any, any> {
             v = (this._maxZoom - 1) * v + 1
         }
 
-        Environment.view.zoom(v);
+        app.actionManager.invoke("zoom", v);
     }
 
     scaleToValue(scale) {
@@ -144,7 +144,7 @@ export default class ZoomBar extends Component<any, any> {
         if (zoom) {
             zoom = zoom / 100;
             this.setState({ scale: zoom });
-            Environment.view.zoom(zoom);
+            app.actionManager.invoke("zoom", zoom);
         }
     };
 
@@ -155,7 +155,7 @@ export default class ZoomBar extends Component<any, any> {
                 newValue = this._minZoom;
             }
             this.setState({ scale: newValue });
-            Environment.view.zoom(newValue);
+            app.actionManager.invoke("zoom", newValue);
             e.preventDefault();
         } else if (e.keyCode === 40 /*ArrowDown*/) {
             let newValue = (this.state.scale * 100 - (e.shiftKey ? 10 : 1)) / 100;
@@ -163,7 +163,7 @@ export default class ZoomBar extends Component<any, any> {
                 newValue = this._maxZoom;
             }
             this.setState({ scale: newValue });
-            Environment.view.zoom(newValue);
+            app.actionManager.invoke("zoom", newValue);
             e.preventDefault();
         }
     }
@@ -199,7 +199,7 @@ export default class ZoomBar extends Component<any, any> {
                             <ZoomMenuAction action="zoom1:2" />
                             <ZoomMenuAction action="zoom1:4" />
                         </ZoomScales>
-                        <Slider ref="slider" vertical={true} value={this.scaleToValue(scale)} valueChanged={this._onValueChanged} />
+                        <Slider ref="slider" vertical={true} value={this.scaleToValue(scale)} valueChanging={this._onValueChanged} />
                     </ZoomMenu>
                 </FlyoutButton>
                 <ContiniouseAction icon={icons.zoom_in} action="zoomIn" tabIndex="1" />

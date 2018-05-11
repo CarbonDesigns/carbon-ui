@@ -17,8 +17,8 @@ export default class CanvasSettings extends Component<any, any> {
 
     constructor(props) {
         super(props);
-        this.state = { showPixels:
-            Environment.view.showPixels(),
+        this.state = {
+            showPixels: Environment.view.showPixels(),
             pixelGrid: Environment.view.showPixelGrid(),
             showFrames: app.showFrames(),
             clipArtboards: app.clipArtboards()

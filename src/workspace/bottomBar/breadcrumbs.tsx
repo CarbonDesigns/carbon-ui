@@ -1,6 +1,7 @@
 import * as React from "react";
+import * as PropTypes from "prop-types";
 import { CompositeElement, PrimitiveType } from "carbon-core";
-import { app, Artboard, Selection, Environment, LayerType, IIsolationLayer, Invalidate, IComposite, Primitive } from "carbon-core";
+import { app, Artboard, Selection, LayerType, IIsolationLayer, Invalidate, IComposite, Primitive } from "carbon-core";
 import * as cx from "classnames";
 import { listenTo, Component } from "../../CarbonFlux";
 import { iconType } from "../../utils/appUtils";
@@ -12,6 +13,11 @@ import {
 import { CarbonAction } from "../../CarbonActions";
 
 export default class Breadcrumbs extends Component<any, any> {
+    static contextTypes = {
+        workspace: PropTypes.object,
+        intl: PropTypes.object
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -39,8 +45,11 @@ export default class Breadcrumbs extends Component<any, any> {
     _buildBreadcrumbElements(element) {
         var e = element;
         var res = [];
-        var view = Environment.view;
-        var layer = Environment.view.getLayer(LayerType.Isolation) as IIsolationLayer;
+        var view = this.context.workspace.view;
+        var layer = null;
+        if (view) {
+            layer = view.getLayer(LayerType.Isolation) as IIsolationLayer;
+        }
 
         if (layer.isActive) {
             let owner = layer.getOwner();
@@ -157,9 +166,9 @@ export default class Breadcrumbs extends Component<any, any> {
 
     _highlight(element) {
         if (element) {
-            Environment.view._highlightTarget = element.element;
+            this.context.workspace.view._highlightTarget = element.element;
         } else {
-            delete Environment.view._highlightTarget;
+            delete this.context.workspace.view._highlightTarget;
         }
 
         Invalidate.requestInteractionOnly();

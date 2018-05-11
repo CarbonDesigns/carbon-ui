@@ -33,7 +33,7 @@ class AppStore extends CarbonStore<AppStoreState> {
             canUndo: false,
             canRedo: false,
             selectionCount: 0,
-            scale: Environment.view ? Environment.view.scale() : 0,
+            scale: 1,
             activeMode: 'edit',
             loaded: false,
             appName: app.props.name,
@@ -80,10 +80,6 @@ class AppStore extends CarbonStore<AppStoreState> {
         // }
 
         dispatch(LayoutActions.setLayout(mode, RichPanelConfig[mode]));
-    }
-
-    _onScaleChanged = () => {
-        this.setState({ scale: Environment.view.scale() });
     }
 
     @handles(CarbonActions.loaded)

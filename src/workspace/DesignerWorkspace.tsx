@@ -7,6 +7,7 @@ import PagesBar from './bottomBar/pagesbar';
 import HotKeyListener from "../HotkeyListener";
 
 import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import { app, Selection, Environment, RenderLoop } from "carbon-core";
 import ContextMenu from "../shared/ContextMenu";
@@ -14,7 +15,7 @@ import ContextMenu from "../shared/ContextMenu";
 import ImageDrop from "./ImageDrop";
 
 import { richApp } from "../RichApp";
-import { listenTo, Component, ComponentWithImmutableState, handles } from "../CarbonFlux";
+import { listenTo, Component, ComponentWithImmutableState, handles, dispatch } from "../CarbonFlux";
 import { Clipboard } from "carbon-core";
 import { Record } from "immutable";
 import * as cx from "classnames";
@@ -63,12 +64,17 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     private _renderLoop = new RenderLoop();
     private _imageDrop = new ImageDrop();
 
+    static childContextTypes = {
+        workspace: PropTypes.object
+    }
+
     refs: {
         contextMenu: any;
         animationSettings: any;
     };
 
     private viewport: HTMLElement;
+    private workspace = {view:null, controller:null};
 
     constructor(props) {
         super(props);
@@ -103,6 +109,10 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         app.actionManager.invoke("cancel");
     }
 
+    getChildContext() {
+        return {workspace:this.workspace};
+    }
+
     _buildContextMenu(event) {
         var menu = { items: [] };
         var context = {
@@ -125,11 +135,15 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
 
         this.refs.contextMenu.bind(this._renderLoop.viewContainer);
         this.refs.animationSettings.attach();
-        app.actionManager.attach(this._renderLoop.view);
+        app.actionManager.attach(this._renderLoop.view, this._renderLoop.controller);
         Toolbox.attach(this._renderLoop.view, this._renderLoop.controller);
+        this.workspace.view = this._renderLoop.view;
+        this.workspace.controller = this._renderLoop.controller;
 
         cancellationStack.push(this);
         HotKeyListener.attach(Environment);
+
+        dispatch({ type: "Carbon_ScaleChanged", scale:this._renderLoop.view.scale(), async:true });
     }
 
     componentWillUnmount() {
@@ -143,6 +157,9 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         this.refs.contextMenu.unbind(this._renderLoop.viewContainer);
         this.refs.animationSettings.detach();
         Toolbox.detach();
+
+        this.workspace.view = null;
+        this.workspace.controller = null;
 
         cancellationStack.pop();
     }

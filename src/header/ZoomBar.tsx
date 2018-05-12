@@ -121,6 +121,7 @@ export default class ZoomBar extends Component<any, any> {
         }
 
         app.actionManager.invoke("zoom", v);
+        return value;
     }
 
     scaleToValue(scale) {

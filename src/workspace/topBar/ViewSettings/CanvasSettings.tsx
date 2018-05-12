@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as PropTypes from "prop-types";
 
 import { Component, handles } from "../../../CarbonFlux";
 import { FormGroup, FormLine } from "./Form";
@@ -15,11 +16,26 @@ export default class CanvasSettings extends Component<any, any> {
         clipArtboards: HTMLInputElement;
     }
 
+    static contextTypes = {
+        workspace: PropTypes.object,
+        intl: PropTypes.object
+    }
+
     constructor(props) {
         super(props);
         this.state = {
-            showPixels: Environment.view.showPixels(),
-            pixelGrid: Environment.view.showPixelGrid(),
+            showPixels: false,
+            pixelGrid: false,
+            showFrames: app.showFrames(),
+            clipArtboards: app.clipArtboards()
+        };
+    }
+
+    componentWillMount() {
+        super.componentWillMount();
+        this.state = {
+            showPixels: this.context.workspace.view.showPixels(),
+            pixelGrid: this.context.workspace.view.showPixelGrid(),
             showFrames: app.showFrames(),
             clipArtboards: app.clipArtboards()
         };
@@ -28,14 +44,14 @@ export default class CanvasSettings extends Component<any, any> {
     showPixelsChanged = (e) => {
         var checked = this.refs.showPixels.checked;
         this.setState({ showPixels: checked });
-        Environment.view.showPixels(checked);
+        this.context.workspace.view.showPixels(checked);
         Invalidate.request();
     };
 
     pixelGridChanged = (e) => {
         var checked = this.refs.pixelGrid.checked;
         this.setState({ pixelGrid: checked });
-        Environment.view.showPixelGrid(checked);
+        this.context.workspace.view.showPixelGrid(checked);
         Invalidate.request();
     };
 

@@ -9,7 +9,7 @@ import HotKeyListener from "../HotkeyListener";
 import * as React from "react";
 import * as PropTypes from "prop-types";
 
-import { app, Selection, Environment, RenderLoop } from "carbon-core";
+import { app, Selection, Environment, RenderLoop, SystemExtensions, IDisposable } from "carbon-core";
 import ContextMenu from "../shared/ContextMenu";
 
 import ImageDrop from "./ImageDrop";
@@ -60,9 +60,11 @@ const Viewport = styled.div`
 `;
 
 
-class Workspace extends ComponentWithImmutableState<any, any> implements ICancellationHandler {
+class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements ICancellationHandler {
     private _renderLoop = new RenderLoop();
     private _imageDrop = new ImageDrop();
+    private _unloadSubscriptionToken:IDisposable;
+    private systemExtensions: SystemExtensions = new SystemExtensions();
 
     static childContextTypes = {
         workspace: PropTypes.object
@@ -74,7 +76,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     };
 
     private viewport: HTMLElement;
-    private workspace = {view:null, controller:null};
+    private workspace = { view: null, controller: null };
 
     constructor(props) {
         super(props);
@@ -110,7 +112,7 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
     }
 
     getChildContext() {
-        return {workspace:this.workspace};
+        return { workspace: this.workspace };
     }
 
     _buildContextMenu(event) {
@@ -124,6 +126,20 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
         return Promise.resolve(menu);
     }
 
+    initExtensions() {
+        let view = this._renderLoop.view;
+        let controller = this._renderLoop.controller;
+
+        app.onLoad(() => {
+            this.systemExtensions.initExtensions(app, view, controller);
+
+            this._unloadSubscriptionToken = app.onUnload(()=>{
+                this.systemExtensions.detachExtensions();
+                this.initExtensions();
+            })
+        }, true)
+    }
+
     componentDidMount() {
         super.componentDidMount();
 
@@ -135,19 +151,30 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
 
         this.refs.contextMenu.bind(this._renderLoop.viewContainer);
         this.refs.animationSettings.attach();
-        app.actionManager.attach(this._renderLoop.view, this._renderLoop.controller);
-        Toolbox.attach(this._renderLoop.view, this._renderLoop.controller);
-        this.workspace.view = this._renderLoop.view;
-        this.workspace.controller = this._renderLoop.controller;
+        let view = this._renderLoop.view;
+        let controller = this._renderLoop.controller;
+        app.actionManager.attach(view, controller);
+        Toolbox.attach(view, controller);
+        this.workspace.view = view;
+        this.workspace.controller = controller;
 
         cancellationStack.push(this);
         HotKeyListener.attach(Environment);
 
-        dispatch({ type: "Carbon_ScaleChanged", scale:this._renderLoop.view.scale(), async:true });
+        dispatch({ type: "Carbon_ScaleChanged", scale: view.scale(), async: true });
+        app.actionManager.invoke("restoreWorkspaceState");
+        this.initExtensions();
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
+        if(this._unloadSubscriptionToken) {
+            this._unloadSubscriptionToken.dispose();
+            this._unloadSubscriptionToken = null;
+        }
+
+        this.systemExtensions.detachExtensions();
+
         HotKeyListener.detach();
 
         this._renderLoop.unmount();
@@ -190,4 +217,4 @@ class Workspace extends ComponentWithImmutableState<any, any> implements ICancel
 
 }
 
-export default Workspace;
+export default DesignerWorkspace;

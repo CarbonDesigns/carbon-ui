@@ -119,9 +119,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     private _renderingCallback:()=>void;
     private _renderingCallbackContinuous:()=>void;
     private viewport: HTMLDivElement;
+    private device: HTMLDivElement;
     refs: {
         canvas: HTMLCanvasElement;
-        device: HTMLDivElement;
     }
 
     private touchEmulator = new TouchEmulator();
@@ -374,7 +374,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         }
 
         var canvas = this.canvas;
-        var device = this.refs.device;
+        var device = this.device;
         if (needResize || canvas.width !== (0 | (canvasWidth * this.contextScale))) {
             canvas.width = canvasWidth * this.contextScale;
             canvas.style.width = canvasWidth + "px";
@@ -404,6 +404,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     attachToView() {
         if (this.context && !this._attached) {
             var view = new PreviewView(app);
+            view.setActivePage(app.activePage);
             view.setup({ Layer: Page });
             view.viewContainerElement = this.viewport;
             var previewModel = new PreviewModel(app, view, controller);
@@ -411,7 +412,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             Environment.set(view, controller);
 
             app.onLoad(() => {
-                if (view.page === NullPage) {
+                if (app.activePage === NullPage) {
                     var pageChangedToken = app.pageChanged.bind(() => {
                         this._initialize(view, previewModel, controller);
                         pageChangedToken.dispose();
@@ -465,13 +466,22 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         return (
             <Viewport id="viewport" innerRef={x=>this.viewport = x} key="viewport" tabIndex={1}>
-                <div className="preview__device" ref="device">
+                <PreviewDevice innerRef={x=>this.device=x}>
                     <canvas ref="canvas"
                         style={{
                             position: 'absolute'
                         }} />
-                </div>
+                </PreviewDevice>
             </Viewport>
         );
     }
 }
+
+const PreviewDevice = styled.div`
+    display: block;
+    overflow:hidden;
+    position: relative;
+    background-color: black;
+    width:100%;
+    height:100%;
+`;

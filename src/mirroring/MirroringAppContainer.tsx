@@ -5,8 +5,6 @@ import AppLoaderComponent from '../AppLoaderComponent';
 import { app, backend, params } from "carbon-core";
 import { LoginRequiredError } from "../Constants";
 
-//import "./_preview.less";
-
 export default class MirroringAppContainer extends AppLoaderComponent {
     constructor(props) {
         super(props);

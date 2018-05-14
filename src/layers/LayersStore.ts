@@ -2,7 +2,7 @@ import { Range, Map, List, fromJS, Record } from 'immutable';
 import { handles, CarbonStore } from "../CarbonFlux";
 import CarbonActions, { CarbonAction } from "../CarbonActions";
 import { LayerAction } from "./LayersActions";
-import { app, NullPage, Environment, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell, Primitive, SetPropsPrimitive, IsolationContext } from "carbon-core";
+import { app, NullPage, Brush, PrimitiveType, Types, RepeatContainer, ILayer, LayerType, IUIElement, IRepeatContainer, RepeatCell, Primitive, SetPropsPrimitive, IsolationContext } from "carbon-core";
 import { iconType } from "../utils/appUtils";
 
 type IdMap = { [id: string]: boolean };

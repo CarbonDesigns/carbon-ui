@@ -5,7 +5,7 @@ import { Component, listenTo, stopPropagationHandler, CarbonLabel, dispatch } fr
 import bem from "../utils/commonUtils";
 import { ensureElementVisible } from "../utils/domUtil";
 import { ICancellationHandler, cancellationStack } from "./ComponentStack";
-import { workspace, app } from "carbon-core";
+import { Workspace, app } from "carbon-core";
 
 function b(a?, b?, c?) { return bem("context-menu", a, b, c) }
 
@@ -55,7 +55,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
             onMouseDown={stopPropagationHandler} onClick={this.onClick.bind(this)}>
             {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
             <span className={b("label")}>{this.props.item.label || this.formatLabel(this.props.item.name)}</span>
-            <span className={b("shortcut")}>{workspace.shortcutManager.getActionHotkey(item.actionId)}</span>
+            <span className={b("shortcut")}>{Workspace.shortcutManager.getActionHotkey(item.actionId)}</span>
         </li>
     }
 }

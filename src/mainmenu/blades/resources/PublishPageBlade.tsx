@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import BladePage from "../BladePage";
-import { app, backend, IPage, Rect, workspace, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ISharedResource, ResourceScope, IPublishPageResult, Screenshot, renderer } from "carbon-core";
+import { app, backend, IPage, Rect, IUIElement, ArtboardType, Symbol, IArtboard, GroupContainer, ISymbol, Point, ISharedPageSetup, ISharedResource, ResourceScope, IPublishPageResult, Screenshot, renderer } from "carbon-core";
 import { Component, dispatchAction } from "../../../CarbonFlux";
 import * as cx from "classnames";
 import { FormattedMessage } from "react-intl";

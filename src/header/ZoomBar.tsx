@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CompositeElement } from "carbon-core";
-import { app, Environment } from "carbon-core";
+import { app } from "carbon-core";
 import Slider from "../components/Slider";
 import EnterInput from "../shared/EnterInput";
 import { richApp } from "../RichApp";

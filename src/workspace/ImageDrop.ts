@@ -2,7 +2,7 @@ import * as Dropzone from "dropzone";
 import { dispatch, dispatchAction } from "../CarbonFlux";
 import ImagesActions from "../library/images/ImagesActions";
 import DropzoneRegistry from "./DropzoneRegistry";
-import { IUIElement, createUUID, RepeatContainer, IImage, app, backend, Selection, Matrix, Image, Origin, IDisposable, IContainer, model, ChangeMode, workspace, IFileElement, FileType, IController } from "carbon-core";
+import { IUIElement, createUUID, RepeatContainer, IImage, app, backend, Selection, Matrix, Image, Origin, IDisposable, IContainer, model, ChangeMode, IFileElement, FileType, IController } from "carbon-core";
 
 const hiddenInput = document.createElement("div");
 const SvgMimeType = "image/svg+xml";
@@ -111,7 +111,7 @@ export default class ImageDrop {
                 for (let i = 0; i < data.files.length; ++i) {
                     let item = data.items[i];
                     let file = dropHandler.files[i];
-                    let task = file.drop(item.getAsFile());
+                    let task = file.drop(item.getAsFile(), this.controller);
                     promises.push(task);
                 }
 

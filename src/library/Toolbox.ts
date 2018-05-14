@@ -4,7 +4,7 @@ import { richApp } from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
 import { app, Point, Symbol, Rect, IUIElement, IView, IController } from "carbon-core";
-import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection, Matrix, workspace } from "carbon-core";
+import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection, Matrix } from "carbon-core";
 import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 import { nodeOffset, onCssTransitionEnd } from "../utils/domUtil";
 import LessVars from "../styles/LessVars";
@@ -152,7 +152,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
                 app.activePage.nameProvider.assignNewName(element);
             }
         }
-        workspace.view.fitToViewportIfNeeded(element);
+        app.actionManager.invoke("fitToViewportIfNeeded", {element});
 
         return element;
     }

@@ -1,4 +1,4 @@
-import { app, ArtboardType, backend, Matrix, createUUID, workspace, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup, renderer, RenderEnvironment, RenderFlags, IUIElement, model, Origin, IStateboard, Artboard } from "carbon-core";
+import { app, ArtboardType, backend, Matrix, createUUID, TileSize, IArtboard, IPage, ISize, IRect, IRectData, SymbolGroup, renderer, RenderEnvironment, RenderFlags, IUIElement, model, Origin, IStateboard, Artboard } from "carbon-core";
 import { ToolboxConfig, SpriteStencil, ToolboxGroup, SymbolStencil } from "./LibraryDefs";
 
 let PADDING = 5;

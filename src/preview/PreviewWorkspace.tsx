@@ -7,7 +7,7 @@ import {
     PreviewView,
     PreviewModel,
     Context,
-    Environment,
+    Workspace,
     Layer,
     Circle,
     Brush,
@@ -17,7 +17,9 @@ import {
     PreviewDisplayMode,
     ISize,
     Matrix,
-    IView
+    IView,
+    AutoDisposable,
+    IDisposable
 } from "carbon-core";
 import {
     AnimationType,
@@ -109,7 +111,6 @@ const Viewport = styled.div`
 export default class PreviewWorkspace extends ComponentWithImmutableState<any, any> {
     private previewModel: any;
     private _renderingRequestId:number;
-    private _invalidateToken:any;
     private view:IView;
     private _attached:boolean;
     private _oldViewportSize:ISize;
@@ -120,6 +121,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     private _renderingCallbackContinuous:()=>void;
     private viewport: HTMLDivElement;
     private device: HTMLDivElement;
+    private detachDisposables = new AutoDisposable();
+    private _onStateChangedBinding:IDisposable;
+
     refs: {
         canvas: HTMLCanvasElement;
     }
@@ -130,7 +134,6 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         super(props);
         this.state = { data: PreviewStore.state,  emulateTouch:true };
         this._renderingRequestId = 0;
-        this._invalidateToken = Invalidate.requested.bind(this, this._onInvalidateRequested);
     }
 
     _onInvalidateRequested = () => {
@@ -289,6 +292,13 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
         document.body.classList.add("fullscreen");
         document.body.classList.add("preview");
+
+        this.detachDisposables.add(Invalidate.requested.bind(this, this._onInvalidateRequested));
+    }
+
+
+    onStateChanged(stateId) {
+        dispatch(EditorActions.changeState(stateId));
     }
 
     _getCurrentArtboard() {
@@ -409,7 +419,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             view.viewContainerElement = this.viewport;
             var previewModel = new PreviewModel(app, view, controller);
             var controller = new PreviewController(app, view, previewModel);
-            Environment.set(view, controller);
+            Workspace.set();
 
             app.onLoad(() => {
                 if (app.activePage === NullPage) {
@@ -422,6 +432,22 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
                     this._initialize(view, previewModel, controller);
                 }
             });
+
+            this.detachDisposables.add(previewModel.onPageChanged.bind((page) => {
+                dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
+            }));
+
+            this.detachDisposables.add(previewModel.onPageChanged.bind((page) => {
+                dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
+                if(this._onStateChangedBinding) {
+                    this._onStateChangedBinding.dispose();
+                    this._onStateChangedBinding = null;
+                }
+
+                if(previewModel.activeArtboard) {
+                    this._onStateChangedBinding = previewModel.activeArtboard.stateChanged.bind(this, this.onStateChanged)
+                }
+            }));
         }
     }
 
@@ -444,16 +470,15 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         super.componentWillUnmount();
         this._attached = false;
 
-        if (this._invalidateToken) {
-            this._invalidateToken.dispose();
-            this._invalidateToken = null;
-        }
+        this.detachDisposables.dispose();
 
         window.removeEventListener("resize", this.onresize);
         this.touchEmulator.disable();
 
         document.body.classList.remove("fullscreen");
         document.body.classList.remove("preview");
+
+        PreviewModel.current = null;
     }
 
     _setPage(page) {

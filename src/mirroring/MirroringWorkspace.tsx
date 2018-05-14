@@ -9,7 +9,9 @@ import {
     IView,
     IDisposable,
     IMirroringProxyPage,
-    ContextType
+    ContextType,
+    ArtboardProxyPage,
+    Workspace
 } from "carbon-core";
 
 import {listenTo, Component, ComponentWithImmutableState, dispatch, IComponentImmutableState} from "../CarbonFlux";
@@ -188,7 +190,10 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
         if (this.context && !this._attached) {
             var view = new MirroringView(app);
             var controller = new MirroringController(app, view, this.props.userId);
-            app.environment.set(view, controller);
+
+            view._proxyPage = new ArtboardProxyPage(app, view, controller);
+            view.setActivePage(view._proxyPage);
+            Workspace.set();
 
             view.setup({Layer: Page});
             view.viewContainerElement = this.refs.viewport;

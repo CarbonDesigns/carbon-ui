@@ -3,7 +3,7 @@ import { dispatch, Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import EditorActions from "./EditorActions";
 import Dropdown from "../shared/Dropdown";
 import { FormattedMessage } from "react-intl";
-import { app, PreviewDisplayMode, IArtboard, DataNode, Artboard, Environment } from "carbon-core";
+import * as core from "carbon-core";
 import PreviewActions from "../preview/PreviewActions";
 import EditorStore from "./EditorStore";
 import PreviewStore from "../preview/PreviewStore";
@@ -33,8 +33,8 @@ export default class EditorToolbar extends Component<any, any> {
         if (currentIndex >= 0) {
             let codeItem = EditorStore.state.codeItems[currentIndex];
             if (codeItem) {
-                var item: any = DataNode.getImmediateChildById(app.activePage, codeItem.id, true);
-                if ((item instanceof Artboard)) {
+                var item: any = core.DataNode.getImmediateChildById(core.app.activePage, codeItem.id, true);
+                if ((item instanceof core.Artboard)) {
                     states = item.getStates();
                     let stateId = EditorStore.state.stateId;
                     stateIndex = states.findIndex(s=>s.id === stateId);
@@ -73,20 +73,20 @@ export default class EditorToolbar extends Component<any, any> {
     renderDisplayMode = () => {
         let id = "@preview.originalsize";
         switch (this.state.displayMode) {
-            case PreviewDisplayMode.Fill:
+            case core.PreviewDisplayMode.Fill:
                 id = "@preview.fill"
                 break;
-            case PreviewDisplayMode.Fit:
+            case core.PreviewDisplayMode.Fit:
                 id = "@preview.fit"
                 break;
-            case PreviewDisplayMode.Responsive:
+            case core.PreviewDisplayMode.Responsive:
                 id = "@preview.responsive"
                 break;
         }
         return <FormattedMessage id={id} tagName="div" />;
     }
 
-    changeDisplayMode = (value: PreviewDisplayMode) => {
+    changeDisplayMode = (value: core.PreviewDisplayMode) => {
         dispatch(PreviewActions.changePreviewDisplayMode(value));
     }
 
@@ -105,7 +105,7 @@ export default class EditorToolbar extends Component<any, any> {
 
     changeState=(index)=> {
         let state = this.state.states[index];
-        (Environment.controller as any).previewModel.activeArtboard.setProps({stateId:state.id});
+        core.PreviewModel.current.activeArtboard.setProps({stateId:state.id});
     }
 
     renderCurrentState = (selectedStateIndex) => {

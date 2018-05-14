@@ -9,13 +9,13 @@ import HotKeyListener from "../HotkeyListener";
 import * as React from "react";
 import * as PropTypes from "prop-types";
 
-import { app, Selection, Environment, RenderLoop, SystemExtensions, IDisposable } from "carbon-core";
+import { app, Selection, Workspace, RenderLoop, SystemExtensions, IDisposable, AutoDisposable } from "carbon-core";
 import ContextMenu from "../shared/ContextMenu";
 
 import ImageDrop from "./ImageDrop";
 
 import { richApp } from "../RichApp";
-import { listenTo, Component, ComponentWithImmutableState, handles, dispatch } from "../CarbonFlux";
+import { listenTo, Component, ComponentWithImmutableState, handles, dispatch, dispatchAction } from "../CarbonFlux";
 import { Clipboard } from "carbon-core";
 import { Record } from "immutable";
 import * as cx from "classnames";
@@ -63,8 +63,9 @@ const Viewport = styled.div`
 class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements ICancellationHandler {
     private _renderLoop = new RenderLoop();
     private _imageDrop;
-    private _unloadSubscriptionToken:IDisposable;
+    private _unloadSubscriptionToken: IDisposable;
     private systemExtensions: SystemExtensions = new SystemExtensions();
+    private dispatchDisposables = new AutoDisposable();
 
     static childContextTypes = {
         workspace: PropTypes.object
@@ -133,7 +134,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
         app.onLoad(() => {
             this.systemExtensions.initExtensions(app, view, controller);
 
-            this._unloadSubscriptionToken = app.onUnload(()=>{
+            this._unloadSubscriptionToken = app.onUnload(() => {
                 this.systemExtensions.detachExtensions();
                 this.initExtensions();
             })
@@ -147,6 +148,9 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
         this._renderLoop.mountDesignerView(app, this.viewport);
         let view = this._renderLoop.view;
         let controller = this._renderLoop.controller;
+        this.workspace.view = view;
+        this.workspace.controller = controller;
+        this.registerDispatchEvents(view, controller);
 
         this._imageDrop = new ImageDrop(controller);
 
@@ -159,20 +163,51 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
 
         app.actionManager.attach(view, controller);
         Toolbox.attach(view, controller);
-        this.workspace.view = view;
-        this.workspace.controller = controller;
 
         cancellationStack.push(this);
-        HotKeyListener.attach(Environment);
+        HotKeyListener.attach(view, controller);
 
         dispatch({ type: "Carbon_ScaleChanged", scale: view.scale(), async: true });
+        dispatch(CarbonActions.toolChanged(controller.currentTool));
         app.actionManager.invoke("restoreWorkspaceState");
         this.initExtensions();
     }
 
+    registerDispatchEvents(view, controller) {
+        if (controller.inlineEditModeChanged) {
+            let token = controller.inlineEditModeChanged.bindAsync(mode => dispatch(CarbonActions.inlineEditModeChanged(mode)));
+            this.dispatchDisposables.add(token);
+        }
+
+        if (view.activeLayerChanged) {
+            let token = view.activeLayerChanged.bindAsync(layer => dispatch(CarbonActions.activeLayerChanged(layer)));
+            this.dispatchDisposables.add(token);
+        }
+
+        let token = controller.onArtboardChanged.bindAsync((newArtboard, oldArtboard) =>
+            dispatch(CarbonActions.activeArtboardChanged(oldArtboard, newArtboard)));
+        this.dispatchDisposables.add(token);
+
+        if (controller.currentToolChanged) {
+            token = controller.currentToolChanged.bindAsync((tool) => {
+                dispatch(CarbonActions.toolChanged(tool));
+            });
+            this.dispatchDisposables.add(token);
+        }
+
+        if (view.scaleChanged) {
+            let token = view.scaleChanged.bindAsync(scale => dispatchAction({ type: "Carbon_ScaleChanged", scale }));
+            this.dispatchDisposables.add(token);
+        }
+    }
+
     componentWillUnmount() {
         super.componentWillUnmount();
-        if(this._unloadSubscriptionToken) {
+        Selection.makeSelection([]);
+
+        this.dispatchDisposables.dispose();
+
+        if (this._unloadSubscriptionToken) {
             this._unloadSubscriptionToken.dispose();
             this._unloadSubscriptionToken = null;
         }

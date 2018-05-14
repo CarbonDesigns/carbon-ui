@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Dots from '../shared/dots';
-import { workspace } from "carbon-core";
+import { Workspace } from "carbon-core";
 // import {FormattedMessage} from "react-intl";
 
 /**
@@ -19,7 +19,7 @@ var _render_mods = function (base, mods, glue = '_') {
 
 var _render_full_classname = function (base, props) {
     var cn = base;
-    if (props.classMods != null) {
+    if (props.classMods) {
         cn += ' ' + _render_mods(base, props.classMods);
     }
     if (props.disabled) {
@@ -28,7 +28,7 @@ var _render_full_classname = function (base, props) {
     if (props.padded && !props.icon) {
         cn += ' ' + base + '_padded';
     }
-    if (props.className != null) {
+    if (props.className) {
         cn += ' ' + props.className;
     }
 
@@ -38,7 +38,7 @@ var _render_full_classname = function (base, props) {
 
 var _get_icon = function (props) {
     var icon;
-    if (props.icon != null) {
+    if (props.icon) {
         var base_icon_cn = "pane-icon";
         switch (props.icon) {
             case 'dots':
@@ -55,7 +55,7 @@ var _get_caption = function (props) {
     //todo wrap to pane-caption only strings
     var caption;
     switch (false) {
-        case !((props.children != null) && !!props.children):
+        case !((props.children) && !!props.children):
             caption = <span className="pane-caption">{props.children}</span>;
             break;
         default:
@@ -82,7 +82,7 @@ export class PaneButton extends React.Component<IPanelButtonProps>  {
         var cn = _render_full_classname("pane-button", this.props);
         var caption = _get_caption(this.props);
         var { children, className, onClick, icon, label, disabled, actionId, actionArg, ...rest } = this.props;
-        var title = workspace.shortcutManager.getActionHotkey(actionId);
+        var title = Workspace.shortcutManager.getActionHotkey(actionId);
         return (
             <div className={cn} onClick={this.onClick} data-action={actionId} data-action-arg={actionArg} title={title}>
                 {_get_icon(this.props)}
@@ -107,7 +107,7 @@ export class PaneListItem extends React.Component<any>  {
         var icon = _get_icon(this.props);
         var caption = _get_caption(this.props);
         var { children, className, actionId, actionArg } = this.props;
-        var title = workspace.shortcutManager.getActionHotkey(actionId);
+        var title = Workspace.shortcutManager.getActionHotkey(actionId);
 
         return (
             <div className={cn} onClick={this.onClick} data-action={actionId} data-action-arg={actionArg} title={title}>

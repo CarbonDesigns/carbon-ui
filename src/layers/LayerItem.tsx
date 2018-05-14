@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDom from "react-dom";
 import * as PropTypes from "prop-types";
 import * as cx from "classnames";
-import { Selection, Environment, Invalidate, app, IArtboardPage, Brush, Text, IText, workspace, Artboard } from "carbon-core";
+import { Selection, Invalidate, app, IArtboardPage, Brush, Text, IText, Artboard } from "carbon-core";
 import { Component, dispatch, dispatchAction } from "../CarbonFlux";
 import { LayerNode } from "./LayersStore";
 import dragController from "./LayersDragController";

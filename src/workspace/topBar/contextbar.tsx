@@ -10,7 +10,7 @@ import { PaneButton } from "../../shared/Pane";
 import { PaneList } from "../../shared/Pane";
 import { PaneListItem } from "../../shared/Pane";
 import CarbonActions, { CarbonAction } from "../../CarbonActions";
-import { app, Selection, Environment, ContextBarPosition, workspace } from "carbon-core";
+import { app, Selection, ContextBarPosition, Workspace } from "carbon-core";
 import { handles, Component, CarbonLabel } from "../../CarbonFlux";
 import FlyoutButton from "../../shared/FlyoutButton";
 
@@ -34,7 +34,7 @@ export class ContextButton extends React.Component<any, any> {
         }
 
         let {children, icon, actionId, actionArg, ...rest} = this.props;
-        let title = workspace.shortcutManager.getActionHotkey(actionId);
+        let title = Workspace.shortcutManager.getActionHotkey(actionId);
 
         return (
             <div className="contextbar__button" data-action={actionId} data-action-arg={actionArg} title={title} onClick={this.props.onClick}>
@@ -138,7 +138,7 @@ export default class ContextBar extends Component<any, any> {
                     <PaneList>
                         {item.items.map(a => <PaneListItem key={item.name + a.name} onClick={ContextBar.onClick} icon={a.icon} disabled={a.disabled} actionId={a.actionId} actionArg={a.actionArg} padded={hasIcons}>
                             <CarbonLabel id={a.name} />
-                            <span className="pane-shortcut">{workspace.shortcutManager.getActionHotkey(a.actionId)}</span>
+                            <span className="pane-shortcut">{Workspace.shortcutManager.getActionHotkey(a.actionId)}</span>
                         </PaneListItem>)}
                     </PaneList>
                 </Pane>

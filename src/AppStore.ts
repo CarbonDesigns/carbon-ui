@@ -3,7 +3,7 @@ import CarbonActions, { CarbonAction } from "./CarbonActions"
 import { handles, CarbonStore, Dispatcher, dispatch } from './CarbonFlux';
 import RichPanelConfig from './RichPanelConfig';
 import LayoutActions from './layout/LayoutActions';
-import { Selection, app, CommandManager, Environment, IDisposable, backend, WorkspaceTool, PreviewDisplayMode } from "carbon-core";
+import { Selection, app, CommandManager, IDisposable, backend, WorkspaceTool, PreviewDisplayMode } from "carbon-core";
 import { ProjectAvatars } from "./Constants";
 
 type AppStoreState = {
@@ -29,7 +29,7 @@ class AppStore extends CarbonStore<AppStoreState> {
         this.state = {
             mainMenuVisible: false,
             frameVisible: false,
-            activeTool: Environment.controller ? Environment.controller.currentTool : "pointerTool",
+            activeTool: "pointerTool",
             canUndo: false,
             canRedo: false,
             selectionCount: 0,
@@ -73,7 +73,7 @@ class AppStore extends CarbonStore<AppStoreState> {
         this.setState({ activeMode: mode });
 
         // if (mode === "edit") {
-        //     Environment.controller.resetCurrentTool();
+        //     Workspace.controller.resetCurrentTool();
         // }
         // else if (mode === "prototype") {
         //     app.actionManager.invoke("protoTool" as WorkspaceTool);

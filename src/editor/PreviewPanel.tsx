@@ -6,7 +6,7 @@ import Panel from '../layout/Panel'
 import { richApp } from '../RichApp';
 import VirtualList from "../shared/collections/VirtualList";
 import ScrollContainer from "../shared/ScrollContainer";
-import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
+import { app, Invalidate, Selection, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
 import PreviewWorkspace from "../preview/PreviewWorkspace";
 import EditorToolbar from "../editor/EditorToolbar";
 import styled from 'styled-components';

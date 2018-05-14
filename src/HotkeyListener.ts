@@ -1,4 +1,4 @@
-import { app, Clipboard, params, IShortcut, IEnvironment } from "carbon-core";
+import { app, Clipboard, params, IShortcut, IWorkspace, IView, IController, Workspace } from "carbon-core";
 import * as Mousetrap from "mousetrap";
 import { dispatchAction } from "./CarbonFlux";
 import { cancellationStack, searchStack } from "./shared/ComponentStack";
@@ -18,7 +18,7 @@ Mousetrap.prototype.handleKey = function () {
     }
 };
 
-function onKeyEvent(workspace, e, hotkey) {
+function onKeyEvent(arg, e, hotkey) {
     var handler = hotkeyMap[hotkey + ":" + e.type];
     if (!handler) {
         handler = hotkeyMap[hotkey];
@@ -40,7 +40,7 @@ function onKeyEvent(workspace, e, hotkey) {
             dispatchAction({ type: "Workspace_Command", command: handler.action as WorkspaceCommand });
         }
         else {
-            app.actionManager.invoke(handler.action, workspace);
+            app.actionManager.invoke(handler.action, arg);
         }
         return false;
     }
@@ -57,12 +57,12 @@ function bindFallbackClipboard() {
 }
 
 export default {
-    attach: function (workspace: IEnvironment) {
+    attach: function (view:IView, controller:IController) {
         if (!this._attached) {
-            workspace.shortcutManager.mapScheme(DefaultScheme);
+            Workspace.shortcutManager.mapScheme(DefaultScheme);
 
-            for (var action in workspace.shortcutManager.actionShortcuts) {
-                var shortcuts = workspace.shortcutManager.actionShortcuts[action];
+            for (var action in Workspace.shortcutManager.actionShortcuts) {
+                var shortcuts = Workspace.shortcutManager.actionShortcuts[action];
                 for (var i = 0; i < shortcuts.length; i++) {
                     var shortcut = shortcuts[i];
                     var hotkey = shortcut.key;
@@ -72,7 +72,7 @@ export default {
                     }
                     if (!hotkeyMap.hasOwnProperty(hotkey)) {
                         hotkeyMap[hotkey] = { action, shortcut };
-                        Mousetrap.bind(shortcut.key, (e, k) => { onKeyEvent(workspace, e, k) }, shortcutType);
+                        Mousetrap.bind(shortcut.key, (e, k) => { onKeyEvent({view, controller}, e, k) }, shortcutType);
                     }
                 }
             }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IUIElement, IPage, IArtboard, app, IRect, workspace, backend } from "carbon-core";
+import { IUIElement, IPage, IArtboard, app, IRect, backend } from "carbon-core";
 import { FormattedMessage } from "react-intl";
 import { ArtboardSelect } from "../../shared/ui/GuiSelect";
 import { Component } from "../../CarbonFlux";

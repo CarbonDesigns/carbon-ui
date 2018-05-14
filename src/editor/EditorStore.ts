@@ -3,7 +3,6 @@ import * as Immutable from "immutable";
 
 var emptyCode: string = require("./model/empty.txt") as any;
 
-//import { IDisposable, IArtboard, app, Environment, Sandbox, PreviewModel, util, AutoDisposable, Services } from "carbon-core";
 import * as core from "carbon-core";
 import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
@@ -34,7 +33,6 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
     private parentEditorModel: monaco.editor.IModel;
     private editorDisposables: core.IDisposable[] = [];
 
-    private _onPageChangedBinding: core.IDisposable;
     private _onStateChangedBinding: core.IDisposable;
     private _ignoreChange: boolean = false;
 
@@ -47,11 +45,8 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
 
     initialize(editor: monaco.editor.IStandaloneCodeEditor) {
         this._setEditor(editor);
-        if(!core.Environment.controller) {
-            return;
-        }
 
-        let previewModel = (core.Environment.controller as any).previewModel;
+        let previewModel = core.PreviewModel.current;
         if (!previewModel) {
             return;
         }
@@ -105,53 +100,10 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
 
         this.initialized = true;
 
-        core.Environment.detaching.bind(() => {
-            if (this._onPageChangedBinding) {
-                this._onPageChangedBinding.dispose();
-                this._onPageChangedBinding = null;
-            }
-            if(this._onStateChangedBinding) {
-                this._onStateChangedBinding.dispose();
-                this._onStateChangedBinding = null;
-            }
-        });
-
         this.setFromArtboard(previewModel.activeArtboard);
-        this._onPageChangedBinding = previewModel.onPageChanged.bind((page) => {
-            dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
-            if(this._onStateChangedBinding) {
-                this._onStateChangedBinding.dispose();
-                this._onStateChangedBinding = null;
-            }
 
-            if(previewModel.activeArtboard) {
-                this._onStateChangedBinding = previewModel.activeArtboard.stateChanged.bind(this, this.onStateChanged)
-            }
-        });
-
-        core.Environment.attached.bind((view, controller) => {
-            let previewModel = (controller as any).previewModel;
-            if (this._onPageChangedBinding) {
-                this._onPageChangedBinding.dispose();
-                this._onPageChangedBinding = null;
-            }
-            if(this._onStateChangedBinding) {
-                this._onStateChangedBinding.dispose();
-                this._onStateChangedBinding = null;
-            }
-
-            if (previewModel) {
-                this._onPageChangedBinding = previewModel.onPageChanged.bind((page) => {
-                    dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
-                });
-            }
-        });
 
         // TODO: bind on event to refresh list of artboards
-    }
-
-    onStateChanged(stateId) {
-        dispatch(EditorActions.changeState(stateId));
     }
 
     @handles(EditorActions.changeState)
@@ -185,7 +137,11 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         if (!this.state.hasPreview) {
             (this.state.currentItem as any).code(this.currentEditorModel.getValue());
         } else {
-            let previewModel = (core.Environment.controller as any).previewModel;
+            let previewModel = core.PreviewModel.current;
+            if(!previewModel) {
+                return;
+            }
+
             let previewArtboard = previewModel.activeArtboard;
 
             if (previewArtboard && previewArtboard.runtimeProps.sourceArtboard) {
@@ -307,7 +263,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
 
         this._setModelFromPage(page);
         this.proxyModelDisposable.dispose();
-        let previewModel = (core.Environment.controller as any).previewModel;
+        let previewModel = core.PreviewModel.current;
         if (!previewModel) {
             return;
         }
@@ -320,7 +276,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             return;
         }
 
-        let previewModel = (core.Environment.controller as any).previewModel;
+        let previewModel = core.PreviewModel.current;
         if (!previewModel || !previewModel.activeArtboard) {
             return;
         }

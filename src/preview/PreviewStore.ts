@@ -2,11 +2,11 @@ import PreviewActions from './PreviewActions';
 import {Range, Map, List, fromJS, Record} from 'immutable';
 import {handles, CarbonStore, listenTo, Dispatcher} from "../CarbonFlux";
 import LayoutActions from "../layout/LayoutActions";
-import {Invalidate, Environment, Devices, PreviewDisplayMode} from "carbon-core";
+import * as core from "carbon-core";
 
 var State = Record({
     frameVisible: false,
-    displayMode: PreviewDisplayMode.Fit,
+    displayMode: core.PreviewDisplayMode.Fit,
     previewActive: true,
     activeDevice:0
 });
@@ -25,14 +25,15 @@ class PreviewStore extends CarbonStore<any> {
     @handles(LayoutActions.resizingPanel)
     onResizing() {
         if (this.state.previewActive) {
-            Invalidate.request();
+            core.Invalidate.request();
         }
     }
 
     @handles(PreviewActions.navigateTo)
     onNavigateToPage({artboardId, animation, data}) {
         //this.state = this.state.set("activePage",{artboardId, animation});
-        (Environment.controller as any).previewModel.navigateToArtboard(artboardId, animation, data);
+        let previewModel = core.PreviewModel.current;
+        core.PreviewModel.current.navigateToArtboard(artboardId, animation, data);
     }
 
     @handles(PreviewActions.navigateBack)
@@ -42,7 +43,7 @@ class PreviewStore extends CarbonStore<any> {
 
     @handles(PreviewActions.changeDevice)
     onChangeDevice({device}) {
-        var d = Devices[device];
+        var d = core.Devices[device];
         this.state = this.state.withMutations(m=>{
             // m.set("activeDevice", device);
             // m.set("deviceWidth", d.w);

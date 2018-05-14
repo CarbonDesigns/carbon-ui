@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Component } from "../../CarbonFlux";
 import bem from "../../utils/commonUtils";
-import { Rect, IRect, renderer, workspace } from "carbon-core";
+import { Rect, IRect, renderer, Workspace } from "carbon-core";
 import { IUIElement } from "carbon-model";
 
 function b(a, b?, c?) { return bem("edit-image", a, b, c) }
@@ -66,7 +66,7 @@ export class ElementPreview extends Component<ElementPreviewProps> {
             this._context.save();
             this._context.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
 
-            this._context.fillStyle = workspace.settings.general.pageFill;
+            this._context.fillStyle = Workspace.settings.general.pageFill;
             this._context.fillRect(0, 0, this.refs.canvas.width, this.refs.canvas.height)
 
             this._context.drawImage(this._image,
@@ -83,7 +83,7 @@ export class ElementPreview extends Component<ElementPreviewProps> {
     private drawEmptyBackground() {
         this._context.save();
 
-        this._context.fillStyle = workspace.settings.general.pageFill;
+        this._context.fillStyle = Workspace.settings.general.pageFill;
         this._context.fillRect(0, 0, this.refs.canvas.width, this.refs.canvas.height)
 
         this._context.restore();

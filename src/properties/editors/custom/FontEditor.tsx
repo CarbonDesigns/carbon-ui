@@ -383,8 +383,8 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
     focusViewIfNeeded() {
         //TODO: inconvenient either way, think if we need to support the scenario of first changing font property
         //and only then typing text
-        // if (Environment.controller.isInlineEditMode){
-        //     Environment.view.focus();
+        // if (Workspace.controller.isInlineEditMode){
+        //     Workspace.view.focus();
         // }
     }
 }

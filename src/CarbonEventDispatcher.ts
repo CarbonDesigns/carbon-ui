@@ -2,9 +2,8 @@ import CarbonActions from './CarbonActions';
 import AppActions from "./RichAppActions";
 import IdleDialog from "./workspace/IdleDialog";
 import { dispatch, dispatchAction } from "./CarbonFlux";
-import { app, backend, PropertyTracker, Selection, Environment, IDisposable, IPage, CommandManager } from "carbon-core";
+import { app, backend, PropertyTracker, Selection, IDisposable, IPage, CommandManager } from "carbon-core";
 
-let workspaceTokens: IDisposable[] = [];
 let frequentTokens: IDisposable[] = [];
 
 export function registerEvents() {
@@ -63,39 +62,6 @@ export function registerEvents() {
     });
     Selection.propertiesRequested.bindAsync((e) => {
         dispatchAction({ type: "Carbon_PropertiesRequested", composite: e })
-    });
-
-    Environment.detaching.bind(() => {
-        workspaceTokens.forEach(x => x.dispose());
-        workspaceTokens.length = 0;
-    });
-
-    Environment.attached.bind((view, controller) => {
-        if (controller.inlineEditModeChanged) {
-            let token = controller.inlineEditModeChanged.bindAsync(mode => dispatch(CarbonActions.inlineEditModeChanged(mode)));
-            workspaceTokens.push(token);
-        }
-
-        if (view.activeLayerChanged) {
-            let token = view.activeLayerChanged.bindAsync(layer => dispatch(CarbonActions.activeLayerChanged(layer)));
-            workspaceTokens.push(token);
-        }
-
-        let token = controller.onArtboardChanged.bindAsync((newArtboard, oldArtboard) =>
-            dispatch(CarbonActions.activeArtboardChanged(oldArtboard, newArtboard)));
-        workspaceTokens.push(token);
-
-        if (controller.currentToolChanged) {
-            token = controller.currentToolChanged.bindAsync((tool) => {
-                dispatch(CarbonActions.toolChanged(tool));
-            });
-            workspaceTokens.push(token);
-        }
-
-        if (view.scaleChanged) {
-            let token = view.scaleChanged.bindAsync(scale => dispatchAction({ type: "Carbon_ScaleChanged", scale }));
-            workspaceTokens.push(token);
-        }
     });
 
     app.pageChanged.bindAsync((oldPage, newPage) => dispatch(CarbonActions.pageChanged(oldPage, newPage)));

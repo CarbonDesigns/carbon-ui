@@ -94,6 +94,7 @@ var CarbonActions = {
     toolChanged: tool => {
         return {
             type:"CARBON_TOOL_CHANGED",
+            async:true,
             tool
         }
     }

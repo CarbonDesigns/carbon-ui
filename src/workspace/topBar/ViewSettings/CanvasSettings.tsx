@@ -4,7 +4,7 @@ import * as PropTypes from "prop-types";
 import { Component, handles } from "../../../CarbonFlux";
 import { FormGroup, FormLine } from "./Form";
 
-import { app, Invalidate, Environment } from "carbon-core";
+import { app, Invalidate } from "carbon-core";
 import { FormattedMessage } from "react-intl";
 import { TabPageStyled } from "../../../components/CommonStyle";
 

@@ -8,7 +8,7 @@ import * as cx from "classnames";
 import VirtualList from "../shared/collections/VirtualList";
 import LessVars from "../styles/LessVars";
 import ScrollContainer from "../shared/ScrollContainer";
-import { app, Invalidate, Selection, Environment, IArtboardPage, LayerType, IIsolationLayer, IsolationContext } from "carbon-core";
+import { app, Invalidate, Selection, IArtboardPage, LayerType, IIsolationLayer, IsolationContext } from "carbon-core";
 import { say } from "../shared/Utils";
 import { MarkupLine } from "../shared/ui/Markup";
 import LayerItem from "./LayerItem";

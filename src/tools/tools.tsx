@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as cx from "classnames";
-import { app, Selection, WorkspaceTool, workspace } from "carbon-core";
+import { app, Selection, WorkspaceTool } from "carbon-core";
 import AppStore from "../AppStore";
 import AppActions from "../RichAppActions";
 import { listenTo, Component, ComponentWithImmutableState, dispatch } from "../CarbonFlux";

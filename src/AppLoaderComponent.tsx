@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Location } from "history";
 import { Component, dispatchAction } from "./CarbonFlux";
-import { app, logger, backend, workspace } from "carbon-core";
+import { app, logger, backend, Workspace } from "carbon-core";
 import RouteComponent, { RouteComponentProps } from "./RouteComponent";
 import { LoginRequiredError } from "./Constants";
 import { CarbonAction } from "./CarbonActions";
@@ -53,13 +53,13 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
 
         super.componentDidMount();
 
-        workspace.fatalErrorOccurred.bind(this.onFatalError);
+        Workspace.fatalErrorOccurred.bind(this.onFatalError);
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
         app.unload();
-        workspace.fatalErrorOccurred.unbind(this.onFatalError);
+        Workspace.fatalErrorOccurred.unbind(this.onFatalError);
     }
 
     _resolveCompanyId(app) {

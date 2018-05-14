@@ -9,7 +9,7 @@ import { say } from "../../../shared/Utils";
 import separatorOr from "../../../shared/SeparatorOr";
 import CropEditor from "./CropEditor";
 import bem from "../../../utils/commonUtils";
-import { IUIElement, IPage, IArtboard, app, IRect, workspace, backend, renderer } from "carbon-core";
+import { IUIElement, IPage, IArtboard, app, IRect, backend, renderer } from "carbon-core";
 import { FormattedMessage } from "react-intl";
 import { ArtboardSelect } from "../../../shared/ui/GuiSelect";
 import { BladeBody } from "../BladePage";

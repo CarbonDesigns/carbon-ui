@@ -14,7 +14,7 @@ function iconPath(name) {
 
 export default {
     tool_selection: icon("tool_selection.svg", 20, 20),
-    tool_directSelection: icon("tool_directSelection.svg", 20, 20),
+    tool_directSelection: icon("tool_direct.svg", 20, 20),
     tool_image: icon("tool_image.svg", 16, 16),
     tool_line: icon("tool_line.svg", 20, 20),
     tool_oval: icon("tool_oval.svg", 21, 21),

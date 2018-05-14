@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" viewBox="0 0 28 16">
+  <defs>
+    <linearGradient id="p_assymetric-a" x1="97.885%" x2="1.266%" y1="0%" y2="78.842%">
+      <stop offset="0%"/>
+      <stop offset="100%"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(.84 1.68)">
+    <path d="M1.20199799,13.9467464 C1.321431,6.18646185 4.70701858,2.30631955 11.3587607,2.30631955 C19.9109753,2.30631955 24.5282318,6.15564661 25.2105303,13.8543007 L1.20199799,13.9467464 Z"/>
+    <circle cx="1.411" cy="2.621" r="1.411" fill="#EAEAEA"/>
+    <circle cx="25.2" cy="2.621" r="1.411" fill="#EAEAEA"/>
+    <path stroke="#EAEAEA" stroke-width="1.44" d="M1.3127126,2.56688943 L25.520254,2.56688943"/>
+    <path stroke="#FFF" stroke-width="1.44" d="M1.20199799,13.9467464 C1.58661037,6.24722838 4.42175442,2.39746935 9.70743014,2.39746935 C19.6614949,2.39746935 24.8291949,6.21641315 25.2105303,13.8543007"/>
+    <circle cx="9.072" cy="2.621" r="2.621" fill="url(#p_assymetric-a)" stroke="#FFF" stroke-width="1.44"/>
+  </g>
+</svg>

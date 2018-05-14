@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" viewBox="0 0 28 16">
+  <defs>
+    <linearGradient id="p_mirrored-a" x1="97.885%" x2="1.266%" y1="0%" y2="78.842%">
+      <stop offset="0%"/>
+      <stop offset="100%"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(.84 1)">
+    <path stroke="#FFF" stroke-width="1.44" d="M1.20199799,13.9467464 C2.34843073,6.33486828 6.2474133,2.51612323 12.8989457,2.49051126 C19.5504781,2.4648993 23.6543396,6.25282913 25.2105303,13.8543007"/>
+    <circle cx="1.411" cy="2.621" r="1.411" fill="#EAEAEA"/>
+    <circle cx="25.2" cy="2.621" r="1.411" fill="#EAEAEA"/>
+    <path stroke="#EAEAEA" stroke-width="1.44" d="M1.3127126,2.56688943 L25.520254,2.56688943"/>
+    <circle cx="13.104" cy="2.621" r="2.621" fill="url(#p_mirrored-a)" stroke="#FFF" stroke-width="1.44"/>
+  </g>
+</svg>

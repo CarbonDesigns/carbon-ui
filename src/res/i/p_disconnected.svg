@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16">
+  <defs>
+    <linearGradient id="p_disconnected-a" x1="97.885%" x2="1.266%" y1="0%" y2="78.842%">
+      <stop offset="0%"/>
+      <stop offset="100%"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(.36 1.24)">
+    <path stroke="#FFF" stroke-width="1.44" d="M0.341032751,12.0230573 C1.26379071,9.29628308 2.36124643,7.29681924 3.63339992,6.02466576 C4.9055534,4.75251228 7.27088188,3.28919191 10.7293854,1.63470466 L21.0380434,11.9433627"/>
+    <polyline stroke="#F2F2F0" stroke-width="1.44" points="1.526 2.323 11.282 2.323 21.038 11.943"/>
+    <circle cx="10.601" cy="2.259" r="2.259" fill="url(#p_disconnected-a)" stroke="#FFF" stroke-width="1.44"/>
+    <circle cx="1.217" cy="2.607" r="1.217" fill="#F2F2F0" stroke="#F2F2F0" stroke-width=".72"/>
+    <circle cx="21.377" cy="12.339" r="1.217" fill="#F2F2F0" stroke="#F2F2F0" stroke-width=".72"/>
+  </g>
+</svg>

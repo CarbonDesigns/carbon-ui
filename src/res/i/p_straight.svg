@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="15" viewBox="0 0 26 15">
+  <defs>
+    <linearGradient id="p_straight-a" x1="97.885%" x2="1.266%" y1="0%" y2="78.842%">
+      <stop offset="0%"/>
+      <stop offset="100%"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(1.2 1)">
+    <polygon points="1.384 12.023 11.772 1.635 22.081 11.943"/>
+    <polyline stroke="#F2F2F0" stroke-width="1.44" points="1.384 12.023 11.772 1.635 22.081 11.943"/>
+    <circle cx="11.644" cy="2.259" r="2.259" fill="url(#p_straight-a)" stroke="#FFF" stroke-width="1.44"/>
+    <circle cx="1.217" cy="12.339" r="1.217" fill="#F2F2F0" stroke="#F2F2F0" stroke-width=".72"/>
+    <circle cx="22.419" cy="12.339" r="1.217" fill="#F2F2F0" stroke="#F2F2F0" stroke-width=".72"/>
+  </g>
+</svg>

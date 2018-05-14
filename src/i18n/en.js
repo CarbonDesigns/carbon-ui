@@ -687,6 +687,8 @@ export default
 
         "@rowsCount":"Rows",
         "@colsCount":"Columns",
+        "@vmargin":"V Margin",
+        "@hmargin":"H Margin",
         "@iconCellSize":"Icon size",
 
         "@textMode": "Text mode",

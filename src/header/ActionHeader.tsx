@@ -86,7 +86,7 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
         return <ActionHeaderComponent>
             <IconButton icon={icons.undo} width={46} height={46} onClick={this.undoAction} />
             <IconButton icon={icons.redo} width={46} height={46} onClick={this.redoAction} />
-            <ZoomBar />
+
             <RepeatDropButton/>
             <FlyoutButton
                 position={{ targetVertical: "bottom", targetHorizontal: "center" }}
@@ -107,10 +107,10 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
             <FlyoutButton
                 position={{ targetVertical: "bottom", targetHorizontal: "center" }}
                 renderContent={() =>
-                    <IconButton icon={icons.symbols_small} width={46} height={46} title="@arrange.menu"/>
+                    <IconButton icon={icons.m_arrange} width={46} height={46} title="@arrange.menu"/>
                 }>
                 <FlyoutBody>
-                    <FlyoutHeader icon={icons.symbols_small} label="@arrange"/>
+                    <FlyoutHeader icon={icons.m_arrange} label="@arrange"/>
                     <VerticalGroup>
                         <ActionLinkButton id="bringToFront"/>
                         <ActionLinkButton id="sendToBack"/>
@@ -122,10 +122,10 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
             <FlyoutButton
                 position={{ targetVertical: "bottom", targetHorizontal: "center" }}
                 renderContent={() =>
-                    <IconButton icon={icons.path_binary} width={46} height={46} />
+                    <IconButton icon={icons.m_pathop} width={46} height={46} />
                 }>
                 <FlyoutBody>
-                    <FlyoutHeader icon={icons.symbols_small} label="@path.operations"/>
+                    <FlyoutHeader icon={icons.m_pathop} label="@path.operations"/>
                     <HorizontalGroup>
                         <IconButton icon={icons.path_union} width={46} height={46} onClick={this.pathUnion} />
                         <IconButton icon={icons.path_intersect} width={46} height={46} onClick={this.pathIntersect} />
@@ -142,10 +142,10 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
             <FlyoutButton
                 position={{ targetVertical: "bottom", targetHorizontal: "center" }}
                 renderContent={() =>
-                    <IconButton icon={icons.group} width={46} height={46} title="@group.menu"/>
+                    <IconButton icon={icons.m_group} width={46} height={46} title="@group.menu"/>
                 }>
                 <FlyoutBody>
-                    <FlyoutHeader icon={icons.symbols_small} label="@group.operations"/>
+                    <FlyoutHeader icon={icons.m_group} label="@group.operations"/>
                     <VerticalGroup>
                         <ActionLinkButton id="group"/>
                         <ActionLinkButton id="ungroup"/>
@@ -156,6 +156,7 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
                     </VerticalGroup>
                 </FlyoutBody>
             </FlyoutButton>
+            <ZoomBar />
         </ActionHeaderComponent>;
     }
 }

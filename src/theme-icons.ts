@@ -22,9 +22,9 @@ export default {
     tool_pen: icon("tool_pen.svg", 16, 17),
     tool_rectangle: icon("tool_rectangle.svg", 19, 19),
     tool_text: icon("tool_text.svg", 14, 20),
-    tool_triangle: icon("tool_triangle.svg", 20, 20),
-    tool_polygon: icon("tool_polygon", 20, 20),
-    tool_star: icon("tool_star.svg", 20, 20),
+    tool_triangle: icon("tool_triangle.svg", 21, 18),
+    tool_polygon: icon("tool_polygon.svg", 20, 20),
+    tool_star: icon("tool_star.svg", 19, 18),
     tool_hand: icon("tool_hand.svg", 20, 20),
     tool_artboard: icon("tool_artboard.svg", 17, 18),
     tool_artboardViewer: icon("tool_artboardViewer.svg", 20, 20),
@@ -40,14 +40,16 @@ export default {
     zoom_out: icon("zoom-out.svg", 15, 15),
     triangle_down: icon("triangle_down.svg", 7, 7),
     path_binary: icon("path_binary.svg", 20, 20),
-    group: icon("path_binary.svg", 20, 20), // TODO:
-    path_union: icon("path_binary.svg", 20, 20), // TODO:
-    path_difference: icon("path_binary.svg", 20, 20), // TODO:
-    path_subtract: icon("path_binary.svg", 20, 20), // TODO:
-    path_intersect: icon("path_binary.svg", 20, 20), // TODO:
+    path_union: icon("path_union.svg", 24, 23),
+    path_difference: icon("path_diff.svg", 22, 21),
+    path_subtract: icon("path_subtract.svg", 24, 23),
+    path_intersect: icon("path_intersect.svg", 23, 22),
     repeat_menu: icon("repeat.svg", 19, 11),
     repeat_small: icon("repeat_small.svg", 20, 12),
     symbols_small: icon("symbols_small.svg", 16, 20),
+    m_arrange: icon("m_arrange.svg", 17, 19),
+    m_pathop: icon("m_pathop.svg", 18, 18),
+    m_group: icon("m_group.svg", 20, 19),
     layer_collapsed: icon("layer_c.svg", 6, 8),
     layer_expanded: icon("layer_e.svg", 8, 6),
     layer_visible: icon("layer_visible.svg", 11, 6),

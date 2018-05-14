@@ -62,7 +62,7 @@ const Viewport = styled.div`
 
 class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements ICancellationHandler {
     private _renderLoop = new RenderLoop();
-    private _imageDrop = new ImageDrop();
+    private _imageDrop;
     private _unloadSubscriptionToken:IDisposable;
     private systemExtensions: SystemExtensions = new SystemExtensions();
 
@@ -91,7 +91,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
     onChange() {
         this.mergeStateData({ activeTool: appStore.state.activeTool });
 
-        if (app.isLoaded && !this._imageDrop.active() && this._renderLoop.isAttached()) {
+        if (app.isLoaded && this._imageDrop && !this._imageDrop.active() && this._renderLoop.isAttached()) {
             this._imageDrop.setup(this._renderLoop.viewContainer);
         }
     }
@@ -119,7 +119,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
         var menu = { items: [] };
         var context = {
             selectComposite: Selection.selectComposite(),
-            eventData: Environment.controller.createEventData(event)
+            eventData: this._renderLoop.controller.createEventData(event)
         };
         app.onBuildMenu.raise(context, menu, this._renderLoop.view);
 
@@ -143,7 +143,12 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
     componentDidMount() {
         super.componentDidMount();
 
+        // at this point view and controller will be created
         this._renderLoop.mountDesignerView(app, this.viewport);
+        let view = this._renderLoop.view;
+        let controller = this._renderLoop.controller;
+
+        this._imageDrop = new ImageDrop(controller);
 
         if (app.isLoaded && !this._imageDrop.active()) {
             this._imageDrop.setup(this._renderLoop.viewContainer);
@@ -151,8 +156,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
 
         this.refs.contextMenu.bind(this._renderLoop.viewContainer);
         this.refs.animationSettings.attach();
-        let view = this._renderLoop.view;
-        let controller = this._renderLoop.controller;
+
         app.actionManager.attach(view, controller);
         Toolbox.attach(view, controller);
         this.workspace.view = view;

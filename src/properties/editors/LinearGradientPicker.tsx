@@ -259,7 +259,7 @@ export default class LinearGradientPicker extends Component<any, any> {
         super.componentDidMount();
         if (Selection.elements.length > 0) {
             this._elements = Selection.elements.slice();
-            this._decorator = new LinearGradientDecorator((Selection as any).view, this.onGradientChangedExternaly, this._onActivePointChanged);
+            this._decorator = new LinearGradientDecorator((Selection as any).view, (Selection as any).view.controller, this.onGradientChangedExternaly, this._onActivePointChanged);
             this._elements[0].addDecorator(this._decorator);
             this._elements.forEach(e => e.selectFrameVisible(false));
             Selection.refreshSelection();

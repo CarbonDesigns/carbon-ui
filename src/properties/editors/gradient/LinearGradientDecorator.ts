@@ -1,5 +1,5 @@
 import { IMouseEventHandler, KeyboardState, IMouseEventData, IDisposable, AngleAdjuster, NearestPoint, BrushType } from "carbon-core";
-import { UIElementDecorator, Environment, ILayer, IContext, IEnvironment, Invalidate, Brush, ChangeMode, LayerType, ILayerDrawHandlerObject } from "carbon-core";
+import { UIElementDecorator, ILayer, IContext, IEnvironment, Invalidate, Brush, ChangeMode, LayerType, ILayerDrawHandlerObject } from "carbon-core";
 
 const PointRadius = 6;
 const PointBorder = 1;
@@ -17,7 +17,7 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
     _refreshCallback: (value: any, preview: boolean) => void;
     _setActivePointCallback: (value: number) => void;
 
-    constructor(private view, refreshCallback, setActivePointCallback) {
+    constructor(private view, private controller, refreshCallback, setActivePointCallback) {
         super();
         this._activePoint = 0;
         this._refreshCallback = refreshCallback;
@@ -27,13 +27,13 @@ export default class LinearGradientDecorator extends UIElementDecorator implemen
     attach(element: any) {
         super.attach(element);
         this.view.registerForLayerDraw(LayerType.Interaction, this);
-        Environment.controller.captureMouse(this);
+        this.controller.captureMouse(this);
     }
 
     detach() {
         super.detach();
         this.view.unregisterForLayerDraw(LayerType.Interaction, this);
-        Environment.controller.releaseMouse(this);
+        this.controller.releaseMouse(this);
     }
 
     onLayerDraw(layer: ILayer, context: IContext, environment: any) {

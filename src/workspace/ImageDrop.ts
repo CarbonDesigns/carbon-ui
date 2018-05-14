@@ -2,7 +2,7 @@ import * as Dropzone from "dropzone";
 import { dispatch, dispatchAction } from "../CarbonFlux";
 import ImagesActions from "../library/images/ImagesActions";
 import DropzoneRegistry from "./DropzoneRegistry";
-import { IUIElement, createUUID, RepeatContainer, IImage, app, backend, Environment, Selection, Matrix, Image, Origin, IDisposable, IContainer, model, ChangeMode, workspace, IFileElement, FileType } from "carbon-core";
+import { IUIElement, createUUID, RepeatContainer, IImage, app, backend, Selection, Matrix, Image, Origin, IDisposable, IContainer, model, ChangeMode, workspace, IFileElement, FileType, IController } from "carbon-core";
 
 const hiddenInput = document.createElement("div");
 const SvgMimeType = "image/svg+xml";
@@ -26,6 +26,10 @@ const dropHandler: IDropHandler = {
 export default class ImageDrop {
     private dropzone: Dropzone;
     private backendToken: IDisposable;
+
+    constructor(private controller:IController) {
+
+    }
 
     setup(viewNode) {
         var handlers = {
@@ -80,11 +84,11 @@ export default class ImageDrop {
                     dropHandler.resolveDropped = resolve;
                     dropHandler.rejectDropped = reject;
                 });
-                Environment.controller.beginDragElements(e, dropHandler.files, dropPromise);
+                this.controller.beginDragElements(e, dropHandler.files, dropPromise);
             },
             dragover: function (e: MouseEvent) {
-                var eventData = Environment.controller.createEventData(e);
-                Environment.controller.onmousemove(eventData);
+                var eventData = this.controller.createEventData(e);
+                this.controller.onmousemove(eventData);
             },
             dragleave: function (e) {
                 if (dropHandler.rejectDropped) {
@@ -93,7 +97,7 @@ export default class ImageDrop {
                 }
             },
             drop: function (e: DragEvent) {
-                Environment.controller.resetCurrentTool();
+                this.controller.resetCurrentTool();
 
                 const maxItemsForIncrementalUpdate = 5;
                 let data = e.dataTransfer;
@@ -192,13 +196,13 @@ export default class ImageDrop {
         }
     }
 
-    private static tryInsertIntoRepeater(e: MouseEvent, files: FileList, images: IImage[]): boolean {
+    private tryInsertIntoRepeater(e: MouseEvent, files: FileList, images: IImage[]): boolean {
         if (images.length <= 1) {
             return false;
         }
 
-        var eventData = Environment.controller.createEventData(e);
-        var parent = Environment.controller.getCurrentDropTarget();
+        var eventData = this.controller.createEventData(e);
+        var parent = this.controller.getCurrentDropTarget();
         var repeater = RepeatContainer.tryFindRepeaterParent(parent);
         if (!repeater) {
             return false;

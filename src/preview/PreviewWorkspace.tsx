@@ -19,7 +19,9 @@ import {
     Matrix,
     IView,
     AutoDisposable,
-    IDisposable
+    IDisposable,
+    IPlatformSpecificHandler,
+    createPlatformHandler
 } from "carbon-core";
 import {
     AnimationType,
@@ -451,9 +453,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         }
     }
 
+    platformHandler:IPlatformSpecificHandler;
     _initialize(view, previewModel, controller) {
-        app.platform.detachEvents();
-        app.platform.attachEvents(this.viewport, app, view, controller);
+        this.platformHandler = createPlatformHandler();
+        this.platformHandler.attachEvents(this.viewport, app, view, controller);
 
         this.view = view;
         view.setupRendering([this.context], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
@@ -479,6 +482,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         document.body.classList.remove("preview");
 
         PreviewModel.current = null;
+
+        this.platformHandler.detachEvents();
     }
 
     _setPage(page) {

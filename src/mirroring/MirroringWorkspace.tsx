@@ -11,7 +11,9 @@ import {
     IMirroringProxyPage,
     ContextType,
     ArtboardProxyPage,
-    Workspace
+    Workspace,
+    createPlatformHandler,
+    IPlatformSpecificHandler
 } from "carbon-core";
 
 import {listenTo, Component, ComponentWithImmutableState, dispatch, IComponentImmutableState} from "../CarbonFlux";
@@ -209,10 +211,11 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
             this._initialize(view, controller);
         }
     }
+    platformHandler:IPlatformSpecificHandler;
 
     _initialize(view, controller) {
-        app.platform.detachEvents();
-        app.platform.attachEvents(this.refs.viewport, app, view, controller);
+        this.platformHandler = createPlatformHandler();
+        this.platformHandler.attachEvents(this.refs.viewport, app, view, controller);
         this.view = view;
         view.setupRendering([this.context], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
 
@@ -243,6 +246,7 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
 
         window.removeEventListener("resize", this.onresize);
         document.body.classList.remove("fullscreen");
+        this.platformHandler.detachEvents();
     }
 
     _setPage(page) {

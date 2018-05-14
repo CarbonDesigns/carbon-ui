@@ -150,11 +150,11 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 tool: "pathTool",
                 icon: icons.tool_path
             },
-            {
-                type: "single",
-                tool: "handTool",
-                icon: icons.tool_hand
-            },
+            // {
+            //     type: "single",
+            //     tool: "handTool",
+            //     icon: icons.tool_hand
+            // },
             {
                 type: "group",
                 name: 'group-artboard',

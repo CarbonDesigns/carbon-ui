@@ -66,6 +66,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
     private _unloadSubscriptionToken: IDisposable;
     private systemExtensions: SystemExtensions = new SystemExtensions();
     private dispatchDisposables = new AutoDisposable();
+    private mounted = false;
 
     static childContextTypes = {
         workspace: PropTypes.object
@@ -90,6 +91,10 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
 
     @listenTo(richApp.workspaceStore, appStore)
     onChange() {
+        if(!this.mounted) {
+            return;
+        }
+
         this.mergeStateData({ activeTool: appStore.state.activeTool });
 
         if (app.isLoaded && this._imageDrop && !this._imageDrop.active() && this._renderLoop.isAttached()) {
@@ -143,6 +148,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
 
     componentDidMount() {
         super.componentDidMount();
+        this.mounted = true;
 
         // at this point view and controller will be created
         this._renderLoop.mountDesignerView(app, this.viewport);
@@ -203,6 +209,8 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
 
     componentWillUnmount() {
         super.componentWillUnmount();
+        this.mounted = false;
+
         Selection.makeSelection([]);
 
         this.dispatchDisposables.dispose();

@@ -3,7 +3,7 @@ import { handles, CarbonStore, dispatch, dispatchAction } from "../CarbonFlux";
 import { richApp } from '../RichApp';
 import CarbonActions from "../CarbonActions";
 import { StencilsAction } from "./StencilsActions";
-import { app, Point, Symbol, Rect, IUIElement, IView, IController } from "carbon-core";
+import { app, Point, Symbol, Rect, IUIElement, IView, IController, ICoordinate, domUtil } from "carbon-core";
 import { ImageSource, ImageSourceType, IPage, ILayer, ChangeMode, Selection, Matrix } from "carbon-core";
 import { IToolboxStore, StencilInfo, StencilClickEvent, Stencil } from "./LibraryDefs";
 import { nodeOffset, onCssTransitionEnd } from "../utils/domUtil";
@@ -22,6 +22,22 @@ interface Interaction {
 }
 
 interface ToolboxState {
+}
+
+function pointToScreen(view:IView, point: ICoordinate) {
+    var parentOffset = containerOffset();
+    return {
+        x: parentOffset.left + point.x - view.page.scrollX,
+        y: parentOffset.top + point.y - view.page.scrollY
+    };
+}
+function viewContainerElement() {
+    return document.getElementById('viewContainer');
+}
+
+function containerOffset() {
+    var htmlParent = this.viewContainerElement();
+    return domUtil.offset(htmlParent);
 }
 
 export class Toolbox extends CarbonStore<ToolboxState>{
@@ -84,7 +100,7 @@ export class Toolbox extends CarbonStore<ToolboxState>{
         }
 
         var p1 = nodeOffset(e.currentTarget);
-        var p2 = this.view.pointToScreen({ x: x * scale, y: y * scale });
+        var p2 = pointToScreen(this.view, { x: x * scale, y: y * scale });
         var node = dragAndDrop.cloneNode(e.currentTarget);
         var nodeScaleX = w * scale/e.currentTarget.clientWidth;
         var nodeScaleY = h * scale/e.currentTarget.clientHeight;

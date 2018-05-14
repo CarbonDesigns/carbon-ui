@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
 import { Component } from "../CarbonFlux";
-import { platform } from "carbon-api";
 
 interface EnterInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     value?: string | number;

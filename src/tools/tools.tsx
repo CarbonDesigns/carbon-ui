@@ -54,7 +54,7 @@ var State = Record({
     loaded: false
 });
 
-type ToolDefinition = { type: "single", tool: WorkspaceTool, icon?: any } | { type: "group", name: string, children: { tool: WorkspaceTool, icon?:any }[] };
+type ToolDefinition = { type: "single", tool: WorkspaceTool, icon?: any, hidden?: boolean } | { type: "group", name: string, children: { tool: WorkspaceTool, icon?:any }[] };
 type ToolMetadata = { edit: ToolDefinition[], prototype: ToolDefinition[], preview: ToolDefinition[] };
 
 export default class Tools extends ComponentWithImmutableState<any, any> {
@@ -150,11 +150,12 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
                 tool: "pathTool",
                 icon: icons.tool_path
             },
-            // {
-            //     type: "single",
-            //     tool: "handTool",
-            //     icon: icons.tool_hand
-            // },
+            {
+                type: "single",
+                tool: "handTool",
+                icon: icons.tool_hand,
+                hidden:true
+            },
             {
                 type: "group",
                 name: 'group-artboard',
@@ -284,7 +285,11 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         Selection.modeChangedEvent.unbind(this, this._onSelectionModeChanged);
     }
 
-    _renderButton(type, icon, active, group, is_group = false) {
+    _renderButton(type, icon, active, group, is_group = false, hidden=false) {
+        if(hidden) {
+            return;
+        }
+
         var actionLabel = app.actionManager.getActionLabel(type);
 
         var mouseDown, click, mouseUp;
@@ -359,7 +364,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
             );
         }
         else {
-            return this._renderButton(item.tool, item.icon, activeTool === item.tool, null, false);
+            return this._renderButton(item.tool, item.icon, activeTool === item.tool, null, false, item.hidden);
         }
     }
 

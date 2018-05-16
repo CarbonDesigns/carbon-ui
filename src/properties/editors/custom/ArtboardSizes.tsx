@@ -2,6 +2,9 @@ import * as React from "react";
 import EditorComponent from "../EditorComponent";
 import * as cx from "classnames";
 import {app, Artboard} from "carbon-core";
+import styled from "styled-components";
+import theme from "../../../theme";
+import { arrDown, arrRight } from "../../../components/CommonStyle";
 
 
 const ScreenSizes = [
@@ -358,7 +361,62 @@ export default class ArtboardSizes extends EditorComponent<any, any, any>{
     }
 
     render(){
-       return (
-        <div className="artboards">{this.state.screenSizes.map(g=><ScreenTypeGroup name={g.name}  key={g.name} g={g} children={g.children}/>)}</div>);
+       return (<Artboards>{this.state.screenSizes.map(g=><ScreenTypeGroup name={g.name}  key={g.name} g={g} children={g.children}/>)}</Artboards>);
     }
 }
+
+const Artboards = styled.div`
+    flex: auto;
+    font:${theme.default_font};
+    color:${theme.text_color};
+
+    .screen-group-header {
+        display:flex;
+        align-items:center;
+        background-color:${theme.input_background};
+    }
+    .screen-group-item {
+        margin-left: 20px;
+        position: relative;
+        .size {
+            position: absolute;
+            right: 10px;
+        }
+        margin: 2px 0 2px 20px;
+    }
+
+    .screen {
+        padding:0 ${theme.margin1};
+        height: 24px;
+        line-height: 24px;
+
+        position:relative;
+        transition:all .4s;
+        &:hover {
+            /* .bgfade(2); */
+            cursor:pointer;
+        }
+    }
+
+    .size {
+        color:${theme.text_color_lowimportance};
+        margin-right:${theme.margin1};
+    }
+
+    .screen__arrow {
+        & {
+            margin-right:8px;
+            position:relative;
+            ${arrDown('3px', '#FFF')};
+
+        }
+
+        &.collapsed {
+            ${arrRight('4px', '#FFF')};
+        }
+
+        .collapsed & {
+            ${arrRight('4px', '#FFF')};
+        }
+    }
+`;

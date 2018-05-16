@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import theme from "../theme";
 import { TabArea, TabPage } from "../shared/TabContainer";
 
@@ -56,3 +56,19 @@ export const MainButtonComponent = styled.button`
     background-image: linear-gradient(to right, #ff4295 0%, #ff292c 100%);
     border-radius: 1px;
 `
+
+export function arrDown(size, color) {
+    return css`
+        border-color: transparent ${color} ${color} transparent;
+        border-width: ${size};
+        border-style: solid;
+    `
+}
+export function arrRight(size, color) {
+    return css`
+        border-color: transparent transparent transparent ${color};
+        border-width: ${size};
+        border-style: solid none solid solid;
+        margin-top : -1px;
+    `
+}

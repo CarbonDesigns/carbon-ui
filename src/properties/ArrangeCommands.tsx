@@ -8,6 +8,10 @@ import ActionIconButton from "../components/ActionIconButton";
 
 class ArrangeCommands extends React.Component<any, any>{
     render() {
+        if(!this.props.e || !this.props.e.children.length || !this.props.e.children.every(e=>e.contextBarAllowed())){
+            return <div></div>
+        }
+
         return <div {...this.props}>
             <div style={{ width: 0, height: 0, overflow:"hidden" }}>
                 <svg>

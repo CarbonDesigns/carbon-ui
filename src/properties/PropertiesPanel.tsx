@@ -106,7 +106,7 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
                 nameProperty={this.state.nameProperty}
                 lockedProperty={this.state.lockedProperty}
             /> */}
-            <ArrangeCommands/>
+            <ArrangeCommands e={this.state.element}/>
             {content}
         </ScrollContainer>
     }

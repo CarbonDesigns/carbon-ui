@@ -58,6 +58,9 @@ export default class EditorToolbar extends Component<any, any> {
 
     @listenTo(PreviewStore)
     onChange() {
+        if(!this.mounted) {
+            return;
+        }
         this.setState({ displayMode: PreviewStore.state.displayMode });
     }
 

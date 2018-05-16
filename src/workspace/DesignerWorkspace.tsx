@@ -28,12 +28,12 @@ import theme from "../theme";
 import Tools from '../tools/tools';
 import CarbonActions from '../CarbonActions';
 import Toolbox from '../library/Toolbox';
+import { MonacoEditor } from '../editor/MonacoEditor';
 
 require("./IdleDialog");
 
 const State = Record({
-    activeTool: null,
-    attached: false
+    activeMode: null
 })
 
 const WorkspaceStyled = styled.div`
@@ -80,22 +80,12 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
     private viewport: HTMLElement;
     private workspace = { view: null, controller: null };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: new State({
-                activeTool: appStore.state.activeTool
-            })
-        };
-    }
 
     @listenTo(richApp.workspaceStore, appStore)
     onChange() {
-        if(!this.mounted) {
+        if (!this.mounted) {
             return;
         }
-
-        this.mergeStateData({ activeTool: appStore.state.activeTool });
 
         if (app.isLoaded && this._imageDrop && !this._imageDrop.active() && this._renderLoop.isAttached()) {
             this._imageDrop.setup(this._renderLoop.viewContainer);
@@ -237,9 +227,9 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
 
         cancellationStack.pop();
     }
-
     render() {
         var status_text = 'saved2';
+
         return (
             <WorkspaceStyled>
                 <Tools key="tools" />
@@ -261,7 +251,42 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
                 </Viewport>
             </WorkspaceStyled>);
     }
-
 }
 
-export default DesignerWorkspace;
+export default class DesignerWorkspaceWithCode extends ComponentWithImmutableState<any, any> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: new State({
+                activeMode: appStore.state.activeMode
+            })
+        };
+    }
+
+
+    @listenTo(appStore)
+    onChange() {
+        this.mergeStateData({
+            activeMode: appStore.state.activeMode
+        });
+    }
+
+    render() {
+        if (this.state.data.activeMode === "prototype") {
+            return (
+                <MonacoContainer>
+                    <MonacoEditor value="test" language="ts" onChange={() => { }} />
+                </MonacoContainer>
+            )
+        }
+
+        return <DesignerWorkspace />
+    }
+}
+
+const MonacoContainer = styled(WorkspaceStyled)`
+    display:flex;
+    width:100%;
+    height:100%;
+    flex: auto;
+`;

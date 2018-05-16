@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { listenTo, Component, handles, dispatch } from "../CarbonFlux";
+import { listenTo, Component, handles, dispatch, ComponentWithImmutableState } from "../CarbonFlux";
 import styled from "styled-components";
 import { app, Selection, ISelectComposite } from "carbon-core";
 import { FormattedMessage, defineMessages } from 'react-intl';
@@ -20,16 +20,23 @@ import TextInput from "../components/TextInput";
 import MainButton from "../components/MainButton";
 import Slider from "../components/Slider";
 import RepeatDropButton from "./RepeateDropButton";
+import { Record } from "immutable";
 
 interface IActionHeaderProps extends IReactElementProps {
 
 }
 
 interface IActionHeaderState {
-    selection: any[];
+    data: any;
 }
 
-export default class ActionHeader extends Component<IActionHeaderProps, IActionHeaderState> {
+const State = Record({
+    selection: null,
+    activeMode: null
+})
+
+
+export default class ActionHeader extends ComponentWithImmutableState<IActionHeaderProps, IActionHeaderState> {
     static contextTypes = {
         router: PropTypes.any,
         intl: PropTypes.object
@@ -37,7 +44,12 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
 
     constructor(props) {
         super(props);
-        this.state = { selection: Selection.selectComposite().elements }
+
+        this.state = {
+            data: new State({
+                selection: Selection.selectComposite().elements
+            })
+        };
     }
 
     canHandleActions() {
@@ -52,8 +64,17 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
         }
     }
 
+    @listenTo(appStore)
+    onChange() {
+        this.mergeStateData({
+            activeMode: appStore.state.activeMode
+        });
+    }
+
     onElementSelected() {
-        this.setState({ selection: Selection.selectComposite().elements });
+        this.mergeStateData({
+            selection: Selection.selectComposite().elements
+        });
     }
 
     undoAction() {
@@ -81,83 +102,90 @@ export default class ActionHeader extends Component<IActionHeaderProps, IActionH
     }
 
     render() {
-        var hasSelection = this.state.selection.length > 0;
+        var hasSelection = this.state.data.selection.length > 0;
 
-        return <ActionHeaderComponent>
-            <IconButton icon={icons.undo} width={46} height={46} onClick={this.undoAction} />
-            <IconButton icon={icons.redo} width={46} height={46} onClick={this.redoAction} />
+        if (this.state.data.activeMode === "prototype") {
+            return <ActionHeaderComponent>
 
-            <RepeatDropButton/>
-            <FlyoutButton
-                position={{ targetVertical: "bottom", targetHorizontal: "center" }}
-                renderContent={() =>
-                    <IconButton icon={icons.symbols_small} width={46} height={46} title="@symbol.menu"/>
-                }>
-                <FlyoutBody>
-                    <FlyoutHeader icon={icons.symbols_small} label="@symbols"/>
-                    <VerticalGroup>
-                        <ActionLinkButton id="symbols.create"/>
-                        <ActionLinkButton id="symbols.markAsText"/>
-                        <ActionLinkButton id="symbols.markAsBackground"/>
-                        <ActionLinkButton id="symbols.editMaster"/>
-                        <ActionLinkButton id="symbols.detach"/>
-                    </VerticalGroup>
-                </FlyoutBody>
-            </FlyoutButton>
-            <FlyoutButton
-                position={{ targetVertical: "bottom", targetHorizontal: "center" }}
-                renderContent={() =>
-                    <IconButton icon={icons.m_arrange} width={46} height={46} title="@arrange.menu"/>
-                }>
-                <FlyoutBody>
-                    <FlyoutHeader icon={icons.m_arrange} label="@arrange"/>
-                    <VerticalGroup>
-                        <ActionLinkButton id="bringToFront"/>
-                        <ActionLinkButton id="sendToBack"/>
-                        <ActionLinkButton id="bringForward"/>
-                        <ActionLinkButton id="sendBackward"/>
-                    </VerticalGroup>
-                </FlyoutBody>
-            </FlyoutButton>
-            <FlyoutButton
-                position={{ targetVertical: "bottom", targetHorizontal: "center" }}
-                renderContent={() =>
-                    <IconButton icon={icons.m_pathop} width={46} height={46} />
-                }>
-                <FlyoutBody>
-                    <FlyoutHeader icon={icons.m_pathop} label="@path.operations"/>
-                    <HorizontalGroup>
-                        <IconButton icon={icons.path_union} width={46} height={46} onClick={this.pathUnion} />
-                        <IconButton icon={icons.path_intersect} width={46} height={46} onClick={this.pathIntersect} />
-                        <IconButton icon={icons.path_difference} width={46} height={46} onClick={this.pathDifference} />
-                        <IconButton icon={icons.path_subtract} width={46} height={46} onClick={this.pathSubtract} />
-                    </HorizontalGroup>
-                    <VerticalGroup>
-                        <ActionLinkButton id="pathFlatten"/>
-                        <ActionLinkButton id="convertToPath"/>
-                    </VerticalGroup>
-                </FlyoutBody>
-            </FlyoutButton>
+                <ZoomBar />
+            </ActionHeaderComponent>;
+        } else {
+            return <ActionHeaderComponent>
+                <IconButton icon={icons.undo} width={46} height={46} onClick={this.undoAction} />
+                <IconButton icon={icons.redo} width={46} height={46} onClick={this.redoAction} />
 
-            <FlyoutButton
-                position={{ targetVertical: "bottom", targetHorizontal: "center" }}
-                renderContent={() =>
-                    <IconButton icon={icons.m_group} width={46} height={46} title="@group.menu"/>
-                }>
-                <FlyoutBody>
-                    <FlyoutHeader icon={icons.m_group} label="@group.operations"/>
-                    <VerticalGroup>
-                        <ActionLinkButton id="group"/>
-                        <ActionLinkButton id="ungroup"/>
-                        <ActionLinkButton id="group.mask"/>
-                        <ActionLinkButton id="group.vstack"/>
-                        <ActionLinkButton id="group.hstack"/>
-                        <ActionLinkButton id="group.canvas"/>
-                    </VerticalGroup>
-                </FlyoutBody>
-            </FlyoutButton>
-            <ZoomBar />
-        </ActionHeaderComponent>;
+                <RepeatDropButton />
+                <FlyoutButton
+                    position={{ targetVertical: "bottom", targetHorizontal: "center" }}
+                    renderContent={() =>
+                        <IconButton icon={icons.symbols_small} width={46} height={46} title="@symbol.menu" />
+                    }>
+                    <FlyoutBody>
+                        <FlyoutHeader icon={icons.symbols_small} label="@symbols" />
+                        <VerticalGroup>
+                            <ActionLinkButton id="symbols.create" />
+                            <ActionLinkButton id="symbols.markAsText" />
+                            <ActionLinkButton id="symbols.markAsBackground" />
+                            <ActionLinkButton id="symbols.editMaster" />
+                            <ActionLinkButton id="symbols.detach" />
+                        </VerticalGroup>
+                    </FlyoutBody>
+                </FlyoutButton>
+                <FlyoutButton
+                    position={{ targetVertical: "bottom", targetHorizontal: "center" }}
+                    renderContent={() =>
+                        <IconButton icon={icons.m_arrange} width={46} height={46} title="@arrange.menu" />
+                    }>
+                    <FlyoutBody>
+                        <FlyoutHeader icon={icons.m_arrange} label="@arrange" />
+                        <VerticalGroup>
+                            <ActionLinkButton id="bringToFront" />
+                            <ActionLinkButton id="sendToBack" />
+                            <ActionLinkButton id="bringForward" />
+                            <ActionLinkButton id="sendBackward" />
+                        </VerticalGroup>
+                    </FlyoutBody>
+                </FlyoutButton>
+                <FlyoutButton
+                    position={{ targetVertical: "bottom", targetHorizontal: "center" }}
+                    renderContent={() =>
+                        <IconButton icon={icons.m_pathop} width={46} height={46} />
+                    }>
+                    <FlyoutBody>
+                        <FlyoutHeader icon={icons.m_pathop} label="@path.operations" />
+                        <HorizontalGroup>
+                            <IconButton icon={icons.path_union} width={46} height={46} onClick={this.pathUnion} />
+                            <IconButton icon={icons.path_intersect} width={46} height={46} onClick={this.pathIntersect} />
+                            <IconButton icon={icons.path_difference} width={46} height={46} onClick={this.pathDifference} />
+                            <IconButton icon={icons.path_subtract} width={46} height={46} onClick={this.pathSubtract} />
+                        </HorizontalGroup>
+                        <VerticalGroup>
+                            <ActionLinkButton id="pathFlatten" />
+                            <ActionLinkButton id="convertToPath" />
+                        </VerticalGroup>
+                    </FlyoutBody>
+                </FlyoutButton>
+
+                <FlyoutButton
+                    position={{ targetVertical: "bottom", targetHorizontal: "center" }}
+                    renderContent={() =>
+                        <IconButton icon={icons.m_group} width={46} height={46} title="@group.menu" />
+                    }>
+                    <FlyoutBody>
+                        <FlyoutHeader icon={icons.m_group} label="@group.operations" />
+                        <VerticalGroup>
+                            <ActionLinkButton id="group" />
+                            <ActionLinkButton id="ungroup" />
+                            <ActionLinkButton id="group.mask" />
+                            <ActionLinkButton id="group.vstack" />
+                            <ActionLinkButton id="group.hstack" />
+                            <ActionLinkButton id="group.canvas" />
+                        </VerticalGroup>
+                    </FlyoutBody>
+                </FlyoutButton>
+                <ZoomBar />
+            </ActionHeaderComponent>;
+        }
     }
 }
 
@@ -167,6 +195,8 @@ const ActionHeaderComponent = styled.div`
     position: relative;
     display: flex;
     height:100%;
+    width:100%;
+    justify-content:flex-end;
 `;
 
 

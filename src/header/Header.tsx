@@ -156,7 +156,8 @@ const HeaderBase = styled.div`
     background:${theme.panel_background};
     position:relative;
     margin-bottom: 5px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 60px 360px 1fr auto;
     align-items: center;
     flex-wrap: nowrap;
     align-items: stretch;

@@ -195,7 +195,6 @@ export default class MirroringWorkspace extends ComponentWithImmutableState<IMir
 
             view._proxyPage = new ArtboardProxyPage(app, view, controller);
             view.setActivePage(view._proxyPage);
-            Workspace.set();
 
             view.setup({Layer: Page});
             view.viewContainerElement = this.refs.viewport;

@@ -16,7 +16,7 @@ export class MonacoEditor extends React.Component<Props, {}> {
     }
 
     render(): JSX.Element {
-        return <div className='monaco-editor' ref='editor'></div>;
+        return <div style={{flex:'auto'}} ref='editor'></div>;
     }
 
     componentDidMount() {

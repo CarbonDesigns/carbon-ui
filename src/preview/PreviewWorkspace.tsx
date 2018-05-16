@@ -421,7 +421,6 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             view.viewContainerElement = this.viewport;
             var previewModel = new PreviewModel(app, view, controller);
             var controller = new PreviewController(app, view, previewModel);
-            Workspace.set();
 
             app.onLoad(() => {
                 if (app.activePage === NullPage) {

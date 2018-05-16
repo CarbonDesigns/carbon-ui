@@ -11,9 +11,7 @@ import ScrollContainer from "../shared/ScrollContainer";
 import { app, Invalidate, Selection, IArtboardPage, LayerType, IIsolationLayer } from "carbon-core";
 import { say } from "../shared/Utils";
 import { MonacoEditor } from "./MonacoEditor"
-import EditorToolbar from './EditorToolbar';
 
-let et = EditorToolbar.prototype;
 let dd = MonacoEditor.prototype;
 // TODO: inherited visibility and lock style
 
@@ -42,7 +40,6 @@ export class EditorPanel extends Component<any, any> {
     render() {
         let { children, ...rest } = this.props;
         return <Panel ref="panel" header="Editor" id="editor_panel" {...rest}>
-            <EditorToolbar />
             <MonacoEditor value="test" language="ts" onChange={this.onChange} />
         </Panel>;
     }

@@ -41,7 +41,7 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
     render() {
         return <ModeBar>
             {
-                ['edit', 'prototype', 'preview'].map((item) => {
+                ['edit', 'prototype'].map((item) => {
                     return (
                         <ModeBarItem active={(item === this.state.activeMode)} key={item}
                             onClick={() => app.setMode(item)}>

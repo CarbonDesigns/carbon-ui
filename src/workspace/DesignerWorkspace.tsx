@@ -161,12 +161,16 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
         Toolbox.attach(view, controller);
 
         cancellationStack.push(this);
-        HotKeyListener.attach(view, controller);
 
         dispatch({ type: "Carbon_ScaleChanged", scale: view.scale(), async: true });
         dispatch(CarbonActions.toolChanged(controller.currentTool));
         app.actionManager.invoke("restoreWorkspaceState");
         this.initExtensions();
+
+        // must be attached the last, after all extensions initialized
+        app.onLoad(() => {
+            HotKeyListener.attach(view, controller);
+        });
     }
 
     registerDispatchEvents(view, controller) {

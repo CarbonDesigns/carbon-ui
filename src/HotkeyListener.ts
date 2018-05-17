@@ -42,6 +42,7 @@ function onKeyEvent(arg, e, hotkey) {
         else {
             app.actionManager.invoke(handler.action, arg);
         }
+        e.preventDefault();
         return false;
     }
 }
@@ -87,6 +88,9 @@ export default {
     },
     detach: function () {
         Mousetrap.reset();
+        this._attached = false;
+        Workspace.shortcutManager.clear();
+        hotkeyMap = {};
     },
     suspend: function () {
         suspended = true;

@@ -95,8 +95,8 @@ const ModeBarItem = styled.div.attrs<{active?:boolean}>({})`
             display:block;
             left:0;
             right:0;
-            bottom: 7px;
-            height:1px;
+            bottom: 2px;
+            height:2px;
             background-color:${theme.accent};
         }
     `:''};

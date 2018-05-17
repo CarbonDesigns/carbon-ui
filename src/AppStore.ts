@@ -18,6 +18,7 @@ type AppStoreState = {
     loaded: boolean;
     appName: string;
     appAvatar: string;
+    prototypeMode:string;
 }
 
 class AppStore extends CarbonStore<AppStoreState> {
@@ -35,6 +36,7 @@ class AppStore extends CarbonStore<AppStoreState> {
             selectionCount: 0,
             scale: 1,
             activeMode: 'edit',
+            prototypeMode: "visual",
             loaded: false,
             appName: app.props.name,
             appAvatar: app.props.avatar
@@ -47,6 +49,9 @@ class AppStore extends CarbonStore<AppStoreState> {
         switch (action.type) {
             case "Carbon_Selection":
                 this.onSelectionChanged();
+                return;
+            case "Carbon_PrototypeMode":
+                this.setState({prototypeMode:action.mode});
                 return;
             case "Carbon_AppSettingsChanged":
                 this.setState({ appName: action.settings.name, appAvatar: action.settings.avatar });

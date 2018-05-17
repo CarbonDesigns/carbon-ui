@@ -5,6 +5,7 @@ export type CarbonAction =
     { type: "Carbon_AppUpdated" } |
     { type: "Carbon_Cancel" } |
     { type: "Carbon_Scroll" } |
+    { type: "Carbon_PrototypeMode", mode: "visual" | "code" } |
     { type: "Carbon_AppChanged", primitives: Primitive[] } |
     { type: "Carbon_AppSettingsChanged", settings: AppSettings } |
     { type: "Carbon_Selection", composite: ISelectComposite } |
@@ -18,83 +19,83 @@ export type CarbonAction =
 
 //TODO: migrate to union types
 var CarbonActions = {
-    loaded:(app)=>{
-        return {type: "Carbon_AppLoaded", app}
+    loaded: (app) => {
+        return { type: "Carbon_AppLoaded", app }
     },
-    cancel:()=>{
-        return {type: "Carbon_Cancel"}
+    cancel: () => {
+        return { type: "Carbon_Cancel" }
     },
     scroll: () => {
-        return {type: "Carbon_Scroll"}
+        return { type: "Carbon_Scroll" }
     },
-    pageChanged:(oldPage, newPage)=>{
+    pageChanged: (oldPage, newPage) => {
         return {
-            type:"CARBON_PAGE_CHANGED",
+            type: "CARBON_PAGE_CHANGED",
             oldPage,
             newPage,
-            async:true
+            async: true
         }
     },
-    activeArtboardChanged:(oldArtboard, newArtboard)=>{
+    activeArtboardChanged: (oldArtboard, newArtboard) => {
         return {
-            type:"CARBON_ARTBOARD_CHANGED",
+            type: "CARBON_ARTBOARD_CHANGED",
             oldArtboard,
             newArtboard
         }
     },
-    pageAdded:(page)=>{
+    pageAdded: (page) => {
         return {
-            type:"CARBON_PAGE_ADDED",
+            type: "CARBON_PAGE_ADDED",
             page
         }
     },
-    pageRemoved:(page)=>{
+    pageRemoved: (page) => {
         return {
-            type:"CARBON_PAGE_REMOVED",
+            type: "CARBON_PAGE_REMOVED",
             page
         }
     },
-    actionPerformed:(name)=>{
+    actionPerformed: (name) => {
         return {
-            type:"CARBON_ACTION_PERFORMED",
+            type: "CARBON_ACTION_PERFORMED",
             name
         }
     },
-    elementUsed:(element)=> {
+    elementUsed: (element) => {
         return {
-            type:"CARBON_ELEMENT_USED",
-            async:true,
+            type: "CARBON_ELEMENT_USED",
+            async: true,
             element
         }
     },
-    modeChanged:(mode)=>{
+    modeChanged: (mode) => {
         return {
-            type:"CARBON_MODE_CHANGED",
+            type: "CARBON_MODE_CHANGED",
             mode
         }
     },
-    activeLayerChanged:(layer: ILayer)=>{
+    activeLayerChanged: (layer: ILayer) => {
         return {
-            type:"CARBON_LAYER_CHANGED",
+            type: "CARBON_LAYER_CHANGED",
             layer
         }
     },
-    recentColorsChanged:(colors)=>{
+    recentColorsChanged: (colors) => {
         return {
-            type:"CARBON_RECENTCOLORS_CHANGED",
+            type: "CARBON_RECENTCOLORS_CHANGED",
             colors
         }
     },
     inlineEditModeChanged: mode => {
         return {
-            type:"CARBON_INLINE_MODE",
+            type: "CARBON_INLINE_MODE",
             mode
         }
     },
     toolChanged: tool => {
         return {
-            type:"CARBON_TOOL_CHANGED",
-            async:true,
+            type: "CARBON_TOOL_CHANGED",
+            async: true,
             tool
         }
     }

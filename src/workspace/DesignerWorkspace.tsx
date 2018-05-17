@@ -33,7 +33,8 @@ import { MonacoEditor } from '../editor/MonacoEditor';
 require("./IdleDialog");
 
 const State = Record({
-    activeMode: null
+    activeMode: null,
+    prototypeMode:null
 })
 
 const WorkspaceStyled = styled.div`
@@ -262,7 +263,8 @@ export default class DesignerWorkspaceWithCode extends ComponentWithImmutableSta
         super(props);
         this.state = {
             data: new State({
-                activeMode: appStore.state.activeMode
+                activeMode: appStore.state.activeMode,
+                prototypeMode: appStore.state.prototypeMode
             })
         };
     }
@@ -271,12 +273,13 @@ export default class DesignerWorkspaceWithCode extends ComponentWithImmutableSta
     @listenTo(appStore)
     onChange() {
         this.mergeStateData({
-            activeMode: appStore.state.activeMode
+            activeMode: appStore.state.activeMode,
+            prototypeMode: appStore.state.prototypeMode
         });
     }
 
     render() {
-        if (this.state.data.activeMode === "prototype") {
+        if (this.state.data.activeMode === "prototype" && this.state.data.prototypeMode === "code") {
             return (
                 <MonacoContainer>
                     <MonacoEditor value="test" language="ts" onChange={() => { }} />

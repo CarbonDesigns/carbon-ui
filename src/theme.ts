@@ -16,6 +16,7 @@ export const colors = {
     text:'#d7d7d7',
     text_active:'#ff4295',
     text_color: '#ffffff',
+    text_color_alternate: '#000',
     text_color_lowimportance:'#afacac',
     button_default: "#9b9a9b",
     button_hover: "white",

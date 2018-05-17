@@ -16,6 +16,8 @@ export default
         "@redo": "Redo",
         "@save": "Save",
         "@select": "Select",
+        "@visual": "Visual",
+        "@code": "Code",
 
         "zoomOut": "Zoom out",
         "zoomIn": "Zoom in",

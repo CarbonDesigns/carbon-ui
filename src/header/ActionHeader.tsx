@@ -21,6 +21,7 @@ import MainButton from "../components/MainButton";
 import Slider from "../components/Slider";
 import RepeatDropButton from "./RepeateDropButton";
 import { Record } from "immutable";
+import CodeDesignSwitch from "./CodeDesignSwitch";
 
 interface IActionHeaderProps extends IReactElementProps {
 
@@ -32,7 +33,8 @@ interface IActionHeaderState {
 
 const State = Record({
     selection: null,
-    activeMode: null
+    activeMode: null,
+    prototypeMode:null
 })
 
 
@@ -47,7 +49,8 @@ export default class ActionHeader extends ComponentWithImmutableState<IActionHea
 
         this.state = {
             data: new State({
-                selection: Selection.selectComposite().elements
+                selection: Selection.selectComposite().elements,
+                prototypeMode:appStore.state.prototypeMode
             })
         };
     }
@@ -67,7 +70,8 @@ export default class ActionHeader extends ComponentWithImmutableState<IActionHea
     @listenTo(appStore)
     onChange() {
         this.mergeStateData({
-            activeMode: appStore.state.activeMode
+            activeMode: appStore.state.activeMode,
+            prototypeMode:appStore.state.prototypeMode
         });
     }
 
@@ -106,8 +110,8 @@ export default class ActionHeader extends ComponentWithImmutableState<IActionHea
 
         if (this.state.data.activeMode === "prototype") {
             return <ActionHeaderComponent>
-
-                <ZoomBar />
+                <CodeDesignSwitch mode={this.state.data.prototypeMode}/>
+                {(this.state.data.prototypeMode === "visual") && <ZoomBar />}
             </ActionHeaderComponent>;
         } else {
             return <ActionHeaderComponent>

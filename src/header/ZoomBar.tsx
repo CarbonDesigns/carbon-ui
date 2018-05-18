@@ -101,6 +101,9 @@ export default class ZoomBar extends Component<any, any> {
 
     @listenTo(appStore)
     onChange() {
+        if(!this.mounted) {
+            return;
+        }
         this.setState({ scale: appStore.state.scale, selectionCount: appStore.state.selectionCount });
     }
 

@@ -9,8 +9,6 @@ import EditorStore from "./EditorStore";
 import PreviewStore from "../preview/PreviewStore";
 
 export default class EditorToolbar extends Component<any, any> {
-    private mounted = false;
-
     _onRestart = (e) => {
         dispatch(EditorActions.restart());
 
@@ -62,16 +60,6 @@ export default class EditorToolbar extends Component<any, any> {
             return;
         }
         this.setState({ displayMode: PreviewStore.state.displayMode });
-    }
-
-    componentDidMount() {
-        super.componentDidMount();
-        this.mounted = true;
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        this.mounted = false;
     }
 
     renderCurrentArtboard = (selectedItemIndex) => {

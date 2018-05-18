@@ -67,7 +67,6 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
     private _unloadSubscriptionToken: IDisposable;
     private systemExtensions: SystemExtensions = new SystemExtensions();
     private dispatchDisposables = new AutoDisposable();
-    private mounted = false;
 
     static childContextTypes = {
         workspace: PropTypes.object

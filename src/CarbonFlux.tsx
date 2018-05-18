@@ -32,6 +32,7 @@ import { WorkspaceAction } from "./workspace/WorkspaceAction";
  * http://facebook.github.io/react/docs/advanced-performance.html
  */
 export class Component<P = {}, S = {}> extends React.PureComponent<P,S> {
+    protected mounted = false;
 
     static contextTypes = {
         intl: PropTypes.object
@@ -47,6 +48,7 @@ export class Component<P = {}, S = {}> extends React.PureComponent<P,S> {
     __handlersMap: any;
 
     componentDidMount() {
+        this.mounted = true;
         var listenTo = this.__storeListeners;
         if (listenTo) {
             for (var i = 0; i < listenTo.length; ++i) {
@@ -65,6 +67,7 @@ export class Component<P = {}, S = {}> extends React.PureComponent<P,S> {
     }
 
     componentWillUnmount() {
+        this.mounted = false;
         var listenTo = this.__storeListeners;
         if (listenTo) {
             for (var i = 0; i < listenTo.length; ++i) {

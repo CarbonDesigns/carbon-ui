@@ -36,6 +36,7 @@ import EditorActions from "../editor/EditorActions";
 import { TouchEmulator } from './TouchEmulator';
 import styled from "styled-components";
 import theme from "../theme";
+import CarbonActions from "../CarbonActions";
 
 // TODO:
 
@@ -112,19 +113,19 @@ const Viewport = styled.div`
 
 export default class PreviewWorkspace extends ComponentWithImmutableState<any, any> {
     private previewModel: any;
-    private _renderingRequestId:number;
-    private view:IView;
-    private _attached:boolean;
-    private _oldViewportSize:ISize;
-    private canvas:any;
-    private contextScale:number;
-    private _lastDrawnPage:any;
-    private _renderingCallback:()=>void;
-    private _renderingCallbackContinuous:()=>void;
+    private _renderingRequestId: number;
+    private view: IView;
+    private _attached: boolean;
+    private _oldViewportSize: ISize;
+    private canvas: any;
+    private contextScale: number;
+    private _lastDrawnPage: any;
+    private _renderingCallback: () => void;
+    private _renderingCallbackContinuous: () => void;
     private viewport: HTMLDivElement;
     private device: HTMLDivElement;
     private detachDisposables = new AutoDisposable();
-    private _onStateChangedBinding:IDisposable;
+    private _onStateChangedBinding: IDisposable;
 
     refs: {
         canvas: HTMLCanvasElement;
@@ -134,7 +135,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     constructor(props) {
         super(props);
-        this.state = { data: PreviewStore.state,  emulateTouch:true };
+        this.state = { data: PreviewStore.state, emulateTouch: true };
         this._renderingRequestId = 0;
     }
 
@@ -144,7 +145,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     @handles(EditorActions.restart)
     restart() {
-        if(this.previewModel) {
+        if (this.previewModel) {
             this.previewModel.restart();
         }
     }
@@ -434,25 +435,36 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
                 }
             });
 
-            this.detachDisposables.add(previewModel.onPageChanged.bind((page) => {
-                dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
+            this.detachDisposables.add(controller.onArtboardChanged.bindAsync((newArtboard, oldArtboard) => {
+                dispatch(CarbonActions.activeArtboardChanged(oldArtboard, newArtboard));
+
+                if (newArtboard) {
+                    dispatch(PreviewActions.navigateTo(newArtboard.id, {}));
+                    dispatch(EditorActions.changeArtboard(newArtboard));
+                } else  {
+                    dispatch(EditorActions.showPageCode(app.activePage.id));
+                }
+            }));
+
+            this.detachDisposables.add(app.actionManager.subscribe("onArtboardChanged", function (selection, a, b, data) {
+                controller.onArtboardChanged.raise(data.newArtboard, data.oldArtboard);
             }));
 
             this.detachDisposables.add(previewModel.onPageChanged.bind((page) => {
-                dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
-                if(this._onStateChangedBinding) {
+                // dispatch(EditorActions.changeArtboard(previewModel.activeArtboard));
+                if (this._onStateChangedBinding) {
                     this._onStateChangedBinding.dispose();
                     this._onStateChangedBinding = null;
                 }
 
-                if(previewModel.activeArtboard) {
+                if (previewModel.activeArtboard) {
                     this._onStateChangedBinding = previewModel.activeArtboard.stateChanged.bind(this, this.onStateChanged)
                 }
             }));
         }
     }
 
-    platformHandler:IPlatformSpecificHandler;
+    platformHandler: IPlatformSpecificHandler;
     _initialize(view, previewModel, controller) {
         this.platformHandler = createPlatformHandler();
         this.platformHandler.attachEvents(this.viewport, app, view, controller);
@@ -462,7 +474,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         view.contextScale = this.contextScale;
 
         this.previewModel = previewModel;
-        previewModel.initialize().then(()=>{
+        previewModel.initialize().then(() => {
             this._attached = true;
             this.ensureCanvasSize();
         });
@@ -494,8 +506,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var data = this.state.data;
 
         return (
-            <Viewport id="viewport" innerRef={x=>this.viewport = x} key="viewport" tabIndex={1}>
-                <PreviewDevice innerRef={x=>this.device=x}>
+            <Viewport id="viewport" innerRef={x => this.viewport = x} key="viewport" tabIndex={1}>
+                <PreviewDevice innerRef={x => this.device = x}>
                     <canvas ref="canvas"
                         style={{
                             position: 'absolute'

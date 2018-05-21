@@ -99,11 +99,11 @@ export default class EditorToolbar extends Component<any, any> {
             return;
         }
 
-        if (item.type === "artboard") {
-            dispatch(PreviewActions.navigateTo(item.id, {}));
-        } else if (item.type === "page") {
-            dispatch(EditorActions.showPageCode(item.id));
-        }
+        // if (item.type === "artboard") {
+        dispatch(PreviewActions.navigateTo(item.id, {}));
+        // } else if (item.type === "page") {
+            // dispatch(EditorActions.showPageCode(item.id));
+        // }
     }
 
     changeState=(index)=> {

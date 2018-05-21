@@ -371,7 +371,11 @@ export default
         "@menu.saveProjectAs": "Save project as...", //
 
         "@useInCode": "Use in code",
-
+        "@hide/show": "Hide / Show",
+        "@lock/unlock": "Lock / Unlock",
+        "@group.menu": "Group",
+        "@arrange.menu": "Arrange",
+        "@symbol.menu": "Symbols",
 
         "featurenotready": "This feature is not ready yet, but we are actively working on it. Press a button below if you would like to get notified when it is ready. (and to motivate us work faster ;) )", //
         "btn.notifyfeature": "Notify me", //

@@ -38,7 +38,6 @@ export class Component<P = {}, S = {}> extends React.PureComponent<P,S> {
         intl: PropTypes.object
     };
 
-
     constructor(props, context?) {
         super(props, context);
     }

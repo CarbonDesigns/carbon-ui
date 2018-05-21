@@ -20,7 +20,7 @@ interface LayerItemProps extends ISimpleReactElementProps {
     index: number;
     selected: boolean;
     expanded: boolean;
-    useInCode:boolean;
+    useInCode: boolean;
     ancestorSelected: boolean;
     onHide: (node: LayerNode, selected: boolean) => void;
     onLock: (node: LayerNode, selected: boolean) => void;
@@ -78,15 +78,19 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
     private onIconDoubleClick = (ev) => {
         if (this.props.layer.element instanceof Artboard) {
             var artboard = this.props.layer.element;
-            (app.activePage as IArtboardPage).setActiveArtboardById(artboard.id);
-            if (artboard) {
-                app.actionManager.invoke("ensureScaleAndCentered", [artboard]);
-                Selection.clearSelection();
-                app.actionManager.invoke("pointerTool");
-            }
+            this.activateArtboard(artboard);
         }
     }
 
+    private activateArtboard(artboard) {
+        app.actionManager.invoke("setActiveArtboardById", artboard.id);
+        if (artboard) {
+            app.actionManager.invoke("ensureScaleAndCentered", [artboard]);
+            Selection.clearSelection();
+            app.actionManager.invoke("pointerTool");
+        }
+
+    }
 
     static addToSelection = (ev) => {
         ev.stopPropagation();
@@ -120,7 +124,11 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
 
         let mode = Selection.getSelectionMode(keys, true);
 
-        Selection.makeSelection([element], mode);
+        if (element instanceof Artboard) {
+            this.activateArtboard(element);
+        } else {
+            Selection.makeSelection([element], mode);
+        }
     }
 
     private static findSelectionTarget(node: LayerNode) {
@@ -148,9 +156,9 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
                 value={this.props.layer.element.name}
                 onValueEntered={value => {
                     this.props.layer.element.name = (value);
-                    this.setState({editing: false});
+                    this.setState({ editing: false });
                 }}
-                autoFocus/>
+                autoFocus />
         }
         return <span onDoubleClick={this.onTitleDoubleClick}>
             {this.props.layer.element.displayName()}
@@ -159,15 +167,15 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
 
     private renderCollapser() {
         var layer = this.props.layer;
-        if(!layer.hasChildren) {
+        if (!layer.hasChildren) {
             return null;
         }
         return <IconButton
-            icon={this.props.expanded?icons.layer_expanded:icons.layer_collapsed}
+            icon={this.props.expanded ? icons.layer_expanded : icons.layer_collapsed}
             width={10}
             height={10}
             data-index={this.props.index}
-            onClick={this.onToggleExpand}/>
+            onClick={this.onToggleExpand} />
     }
 
     render() {
@@ -185,14 +193,14 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
                 onMouseUp={dragController.onDrop}
                 onClick={this.selectElement}
                 indent={layer.indent}
-                className={cx("layer", {selected:this.props.selected})}
+                className={cx("layer", { selected: this.props.selected })}
             >
                 {this.renderCollapser()}
                 <LayerCaption>{this.renderTitle()}</LayerCaption>
                 <ActionButtons>
-                    <IconButton className={cx("layerButton", {active:!visible})} icon={icons.layer_visible} width={16} height={16} onClick={this.onToggleVisible}/>
-                    <IconButton className={cx("layerButton", {active:locked})} icon={icons.layer_lock} width={16} height={16} onClick={this.onToggleLock} />
-                    <IconButton className={cx("layerButton", {active:useInCode})} icon={icons.layer_code} width={16} height={16} onClick={this.onToggleCode} />
+                    <IconButton className={cx("layerButton", { active: !visible })} icon={icons.layer_visible} width={16} height={16} onClick={this.onToggleVisible} title="@hide/show" />
+                    <IconButton className={cx("layerButton", { active: locked })} icon={icons.layer_lock} width={16} height={16} onClick={this.onToggleLock} title="@lock/unlock" />
+                    <IconButton className={cx("layerButton", { active: useInCode })} icon={icons.layer_code} width={16} height={16} onClick={this.onToggleCode} title="@useInCode" />
                 </ActionButtons>
             </LayerContainer>
         );
@@ -209,12 +217,13 @@ const ActionButtons = styled.div`
 
 const layer_height = 32;
 
-const LayerContainer = styled.div.attrs<any>({})`
+const LayerContainer = styled.div.attrs<any>({}) `
     display:flex;
     align-items:center;
     height:${layer_height}px;
-    padding-left:${props=>(props.indent+1)*16}px;
+    padding-left:${props => (props.indent + 1) * 16}px;
     border-radius:1px;
+    cursor:pointer;
 
     .layers__container_moving &:hover {
         background:none;
@@ -245,16 +254,3 @@ const LayerCaption = styled.div`
         padding-left:8px;
     }
 `;
-
-var LockButton = (props) => {
-    return <div className="layer__lock" onClick={props.onClick}><i className="layer__lock-icon" /></div>;
-};
-
-var VisibleButton = (props) => {
-    return <div className="layer__vis" onClick={props.onClick}><i className="layer__vis-icon" /></div>;
-};
-
-var SelectCheckbox = (props) => {
-    if (!props.canSelect) { return <div className="layer__selection"></div>; }
-    return <div className="layer__selection" onClick={props.onClick} data-index={props.index}><i className="layer__selection-icon" /></div>;
-};

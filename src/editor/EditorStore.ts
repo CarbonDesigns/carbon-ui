@@ -51,21 +51,21 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             return;
         }
 
-        let name = null;
-        let id = null;
-        let stateId = "default";
-        if (previewModel.activeArtboard) {
-            name = previewModel.activeArtboard.name
-            id = previewModel.activeArtboard.compilationUnitId;
-            stateId = previewModel.activeArtboard.stateId;
-        }
+        // let name = null;
+        // let id = null;
+        // let stateId = "default";
+        // if (previewModel.activeArtboard) {
+        //     name = previewModel.activeArtboard.name
+        //     id = previewModel.activeArtboard.compilationUnitId;
+        //     stateId = previewModel.activeArtboard.stateId;
+        // }
 
-        this.setState({
-            currentItem: previewModel.activeArtboard,
-            currentItemName: name,
-            currentCompilationUnitId:id,
-            stateId:stateId,
-            codeItems: this._codeItemsMetainfo() });
+        // this.setState({
+        //     currentItem: previewModel.activeArtboard,
+        //     currentItemName: name,
+        //     currentCompilationUnitId:id,
+        //     stateId:stateId,
+        //     codeItems: this._codeItemsMetainfo() });
 
         if (this.initialized) {
             return;
@@ -181,6 +181,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
     _setModelFromArtboard(artboard: core.IArtboard) {
         if (!artboard) {
             this.editor && this.editor.setModel(null);
+            this.activeProxyVersion = -1;
             return;
         }
         let codeModel: monaco.editor.IModel = this.codeCache[artboard.id];
@@ -200,6 +201,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
     _setModelFromPage(page: core.IPage & core.IElementWithCode) {
         if (!page) {
             this.editor && this.editor.setModel(null);
+            this.activeProxyVersion = -1;
             return;
         }
         let pageModelName = './' + core.CodeNameProvider.escapeName(page.name) + ".ts";

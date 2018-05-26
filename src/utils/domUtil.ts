@@ -1,6 +1,6 @@
 export function nodeOffset(elem) {
     var docElem, win,
-        box = {top: 0, left: 0},
+        box = { top: 0, left: 0 },
         doc = elem && elem.ownerDocument;
 
     if (!doc) {
@@ -16,8 +16,8 @@ export function nodeOffset(elem) {
     }
     win = window;
     return {
-        top: box.top + ( win.pageYOffset || docElem.scrollTop ) - ( docElem.clientTop || 0 ),
-        left: box.left + ( win.pageXOffset || docElem.scrollLeft ) - ( docElem.clientLeft || 0 )
+        top: box.top + (win.pageYOffset || docElem.scrollTop) - (docElem.clientTop || 0),
+        left: box.left + (win.pageXOffset || docElem.scrollLeft) - (docElem.clientLeft || 0)
     };
 }
 
@@ -26,16 +26,16 @@ export function nodeOffset(elem) {
  * @param element The element to position.
  * @param container The container to use as a constraint.
  */
-export function ensureElementVisible(element: HTMLElement, container: HTMLElement) {
-    var documentWidth = container.clientWidth;
+export function ensureElementVisible(element: HTMLElement, container: HTMLElement, paddingRight = 0, paddingBottom = 0) {
+    var documentWidth = container.clientWidth - paddingRight;
     var offset = nodeOffset(element);
 
     if (offset.left + element.clientWidth > documentWidth) {
-        element.style.right = '0px';
+        element.style.right = paddingRight + 'px';
         element.style.left = 'inherit';
     }
 
-    var documentHeight = container.clientHeight;
+    var documentHeight = container.clientHeight - paddingBottom;
     var actualHeight = element.offsetHeight;
     if (actualHeight === 0) {
         for (var i = 0; i < element.children.length; ++i) {
@@ -47,14 +47,15 @@ export function ensureElementVisible(element: HTMLElement, container: HTMLElemen
     if (heightDiff < 0) {
         element.style.top = (element.offsetTop + heightDiff) + "px";
     }
+    element.style.position = 'absolute';
 }
 
-export function findTransformProp(){
+export function findTransformProp() {
     return 'transform' in document.body.style
         ? 'transform' : 'webkitTransform' in document.body.style
-        ? 'webkitTransform' : 'mozTransform' in document.body.style
-        ? 'mozTransform' : 'oTransform' in document.body.style
-        ? 'oTransform' : 'msTransform';
+            ? 'webkitTransform' : 'mozTransform' in document.body.style
+                ? 'mozTransform' : 'oTransform' in document.body.style
+                    ? 'oTransform' : 'msTransform';
 }
 
 function checkIsRetina() {

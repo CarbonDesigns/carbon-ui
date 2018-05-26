@@ -74,7 +74,6 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
             allowJs: false,
             noLib: true,
-            // noEmitOnError:true,
             allowNonTsExtensions: true,
             noResolve: false,
             noImplicitAny: true,

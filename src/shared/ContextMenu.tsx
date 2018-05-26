@@ -2,12 +2,11 @@ import * as React from "react";
 import * as ReactDom from "react-dom";
 import * as cx from "classnames";
 import { Component, listenTo, stopPropagationHandler, CarbonLabel, dispatch } from "../CarbonFlux";
-import bem from "../utils/commonUtils";
 import { ensureElementVisible } from "../utils/domUtil";
 import { ICancellationHandler, cancellationStack } from "./ComponentStack";
 import { Workspace, app } from "carbon-core";
-
-function b(a?, b?, c?) { return bem("context-menu", a, b, c) }
+import styled from "styled-components";
+import theme from "../theme";
 
 type ContextMenuItemState = {
     submenuVisible: boolean;
@@ -25,7 +24,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
         if (!this.props.item.disabled) {
             app.actionManager.invoke(this.props.item.actionId, this.props.item.actionArg);
         }
-       // dispatch(FlyoutActions.hide());
+        this.props.onClose();
     }
     private onMouseEnter = () => {
         this.setState({ submenuVisible: true });
@@ -40,35 +39,38 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
     render() {
         var item = this.props.item;
         if (item === '-') {
-            return <li className={b('separator')} />
+            return <Separator />
         }
 
         if (this.props.item.items) {
-            return <li className={b('item', {"padded": this.props.hasIcons})} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-                {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
-                <span className={b("label", "with-submenu")}>{this.props.item.label || this.formatLabel(item.name)}</span>
-                <div className={b('item-arrow')}></div>
-                {this.state.submenuVisible && <SubMenu className={b("submenu", { disabled: item.disabled })} items={this.props.item.items} onCancelled={this.onSubmenuCancelled} />}
-            </li>
+            return <ContextMenuItemContainer hasIcon={this.props.hasIcons} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+                {/* {item.icon && <i className={cx("icon", item.icon)} />} */}
+                <ContextMenuItemLabel>{this.props.item.label || this.formatLabel(item.name)}</ContextMenuItemLabel>
+                {/* <div className={b('item-arrow')}></div> */}
+                {this.state.submenuVisible && <SubMenu disabled={item.disabled} onClose={this.props.onClose} items={this.props.item.items} onCancelled={this.onSubmenuCancelled} />}
+            </ContextMenuItemContainer>
         }
-        return <li className={b("item", { disabled: this.props.item.disabled, "padded": !item.icon && this.props.hasIcons})}
+        return <ContextMenuItemContainer hasIcon={!item.icon && this.props.hasIcons}
+            disabled={this.props.item.disabled}
             onMouseDown={stopPropagationHandler} onClick={this.onClick.bind(this)}>
-            {item.icon && <i className={cx("icon", b("icon"), item.icon)} />}
-            <span className={b("label")}>{this.props.item.label || this.formatLabel(this.props.item.name)}</span>
-            <span className={b("shortcut")}>{Workspace.shortcutManager.getActionHotkey(item.actionId)}</span>
-        </li>
+            {/* {item.icon && <i className={cx("icon", item.icon)} />} */}
+            <ContextMenuItemLabel>{this.props.item.label || this.formatLabel(this.props.item.name)}</ContextMenuItemLabel>
+            <ContextMenuItemShortcut>{Workspace.shortcutManager.getActionHotkey(item.actionId)}</ContextMenuItemShortcut>
+        </ContextMenuItemContainer>
     }
 }
 
 interface SubMenuProps extends ISimpleReactElementProps {
     items: any[];
+    disabled?: boolean;
     onCancelled: () => void;
+    onClose: () => void;
 }
 class SubMenu extends Component<SubMenuProps> implements ICancellationHandler {
     componentDidMount() {
         super.componentDidMount();
         let node = ReactDom.findDOMNode(this) as HTMLElement;
-        ensureElementVisible(node, document.documentElement);
+        ensureElementVisible(node, document.documentElement, 0, 40);
 
         //if there is no space on the right, flip on the other side
         if (node.style.right === "0px") {
@@ -89,13 +91,15 @@ class SubMenu extends Component<SubMenuProps> implements ICancellationHandler {
 
     render() {
         let hasIcons = this.props.items.some(x => x.icon);
-        return <ul className={this.props.className}>
-            {this.props.items.map(item => <ContextMenuItem item={item} key={item.name || item.actionArg} hasIcons={hasIcons} />)}
-        </ul>
+        return <ContextSubMenuStyled>
+            {this.props.items.map(item => <ContextMenuItem item={item} onClose={this.props.onClose} key={item.name || item.actionArg} hasIcons={hasIcons} />)}
+        </ContextSubMenuStyled>
     }
 }
 
 export default class ContextMenu extends Component<any, any> {
+    menu: any;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -127,34 +131,19 @@ export default class ContextMenu extends Component<any, any> {
     _showMenu(event?) {
         this.props.onBuildMenu(event)
             .then((menu) => {
-                var flyoutTarget = 'flyout_target'; // this.refs['menu'].parentNode;
-                var flyoutContent = this.renderMenu(menu);
-                var flyoutPosition = this._getFlyoutPositionFromEvent(event);
-
-                this._popupContextMenu(flyoutTarget, flyoutContent, flyoutPosition);
+                this.setState({ menu: menu, x: event.pageX, y: event.pageY });
             });
     }
 
-
-    _popupContextMenu(target, content, position, onClose?) {
-      //  dispatch(FlyoutActions.show(target, content, position, onClose));
-    };
-
-    _hideContextMenu() {
-        //dispatch(FlyoutActions.hide());
-    };
-
-    _getFlyoutPositionFromEvent(event) {
-        return { absolute: true, x: event.pageX, y: event.pageY }
+    _hideContextMenu = () => {
+        this.setState({ menu: null });
     };
 
     toggle = (event?, target?, action?) => {
         if (!this.state.open) {
-            this.setState({ open: true });
             this._showMenu(event);
         }
         else {
-            this.setState({ open: false });
             this._hideContextMenu();
         }
     };
@@ -170,20 +159,6 @@ export default class ContextMenu extends Component<any, any> {
             this.props.onClosed();
         }
     }
-
-    // @listenTo(flyoutStore)
-    // storeChanged() {
-    //     var target = flyoutStore.state.target;
-
-    //     if (target === this.refs.menu) {
-    //         this._runOnOpenCallback();
-    //     }
-    //     else if (!target && this.state.open) {
-    //         this.setState({ open: false });
-    //         this._runOnCloseCallback();
-    //     }
-    // }
-
     onMouseDown = (e) => {
         e.stopPropagation();
     };
@@ -213,15 +188,89 @@ export default class ContextMenu extends Component<any, any> {
 
     renderMenu(menu) {
         let hasIcons = menu.items.some(x => x.icon);
-        return <ul className="context-menu txt">
-            {menu.items.map((item, i) => <ContextMenuItem item={item} key={'u' + item.name + i} hasIcons={hasIcons} />)}
-        </ul>;
+        return <ContextMenuStyled>
+            {menu.items.map((item, i) => <ContextMenuItem onClose={this._hideContextMenu} item={item} key={'u' + item.name + i} hasIcons={hasIcons} />)}
+        </ContextMenuStyled>;
     }
 
     render() {
-        return <div ref="menu"></div>
-    }
+        var host = document.body;
+        if (!host || !this.state.menu) {
+            return <div></div>;
+        }
 
+        return ReactDom.createPortal(<ContextMenuContainer ref={x => this.menu = x} onClose={this._hideContextMenu} style={{ position: 'absolute', left: this.state.x, top: this.state.y }} >{this.renderMenu(this.state.menu)}</ContextMenuContainer>, host);
+    }
 }
 
+class ContextMenuContainer extends Component<any, any> {
+    refs: {
+        menu:HTMLElement
+    }
+
+    _onMouseDown = (event) => {
+        this.props.onClose();
+    }
+
+    _preventDefault = (event) => {
+        event.stopPropagation();
+    }
+
+    componentDidMount() {
+        let menu = this.refs.menu;
+        if(!menu) {
+            return;
+        }
+        ensureElementVisible(menu, document.documentElement, 0, 40);
+    }
+
+    render() {
+        return <div onMouseDown={this._onMouseDown} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+            <div ref="menu" onMouseDown={this._preventDefault} {...this.props}>{this.props.children}</div>
+        </div>
+    }
+}
+
+const Separator = styled.li`
+    margin: 0.3rem 0;
+    border-top: 1px solid ${theme.input_background};
+`;
+
+const ContextMenuStyled = styled.ul`
+    background:${theme.flyout_background};
+    box-shadow: ${theme.flyout_shadow};
+    padding: ${theme.margin1} 0;
+    color: ${theme.text_color};
+    font: ${theme.default_text};
+    position:relative;
+`;
+
+const ContextSubMenuStyled = styled(ContextMenuStyled) `
+    left:100%;
+    position: absolute;
+`;
+
+const ContextMenuItemContainer = styled.li.attrs<any>({}) `
+    height:22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    height: 2rem;
+    padding: 0 ${theme.margin1};
+    cursor:pointer;
+    color: ${p => p.disabled ? theme.button_disabled : theme.button_default};
+    &:hover {
+        color:${p => p.disabled ? theme.button_disabled : theme.button_hover};
+    }
+    z-index:5;
+    min-width:160px;
+`;
+
+const ContextMenuItemLabel = styled.span`
+`;
+
+const ContextMenuItemShortcut = styled.span`
+    margin-left:${theme.margin2};
+`;
 

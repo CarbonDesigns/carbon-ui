@@ -1,10 +1,16 @@
 import * as React from "react";
 import * as cx from "classnames";
+import * as ReactDom from "react-dom";
 import { richApp } from '../RichApp';
 import { Component, listenTo, CarbonLabel } from "../CarbonFlux";
 import Dropdown from "../shared/Dropdown";
+import { ensureElementVisible } from "../utils/domUtil";
 import { RequestAnimationSettings, app, ActionType, AnimationType, EasingType } from "carbon-core";
 import { FormattedMessage, defineMessages } from 'react-intl';
+import styled from "styled-components";
+import theme from "../theme";
+import icons from "../theme-icons";
+import Icon from "../components/Icon";
 
 var TransitionTypeValues = [
     { label: "transitionType.slideleft", value: AnimationType.SlideLeft },
@@ -51,7 +57,7 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
             artboardIndex: artboardIndex,
             segueIndex: segueIndex < 0 ? 0 : segueIndex,
             easingIndex: easingIndex < 0 ? 0 : easingIndex,
-            duration: duration/1000
+            duration: duration / 1000
         };
     }
 
@@ -77,73 +83,44 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
 
     changeDuration = (event) => {
         this.setState({ duration: event.target.value });
-        this.props.newAction.animation.duration = parseFloat(event.target.value)*1000;
+        this.props.newAction.animation.duration = parseFloat(event.target.value) * 1000;
     }
 
     renderTarget = (selectedItemIndex) => {
-        const __target = <FormattedMessage id="transition.target" />;
-
-        const current = this._artboards[selectedItemIndex].name();
-
-        return <div className="tile-editor">
-            <div className="tile-editor__label">{__target}</div>
-            <div className="tile-editor__value">{current}</div>
-        </div>
+        return this._artboards[selectedItemIndex].name();
     }
 
-
     renderTransitionType = (selectedItemIndex) => {
-        const __type = <FormattedMessage id="transition.type" />;
-
-        const value = <FormattedMessage id={TransitionTypeValues[selectedItemIndex].label} />
-
-        return <div className="tile-editor">
-            <div className="tile-editor__label">{__type}</div>
-            <div className="tile-editor__value">
-                {value}
-            </div>
-        </div>
+        return <FormattedMessage id={TransitionTypeValues[selectedItemIndex].label} />;
     }
 
     renderEasing = (selectedItemIndex) => {
-        const __easing = <FormattedMessage id="transition.easing" />
-
-        const value = <FormattedMessage id={EasingValues[selectedItemIndex].label} />
-
-        return <div className="tile-editor">
-            <div className="tile-editor__label">{__easing}</div>
-            <div className="tile-editor__value">{value}</div>
-        </div>
+        return <FormattedMessage id={EasingValues[selectedItemIndex].label} />;
     }
 
     render() {
-        const __duration = <FormattedMessage id="transition.duration" />;
+        const duration = <FormattedMessage id="transition.duration" />;
 
-        return <div className="transition-dialog">
-            {/* <CarbonLabel id="@animation.header" tagName="h2" /> */}
-            {/* <p className="transition-dialog__line  transition-dialog__intro">
-                from&nbsp;
-                <strong>page 1</strong>
-                &nbsp;(button 1 - click)
-            </p> */}
+        return <TransitionDialog>
+            <DialogLine>
+                <div className="_label"><FormattedMessage id="transition.target" /></div>
 
-            <div className="transition-dialog__line">
                 <Dropdown
                     autoClose={true}
-                    className="drop_down_no-padding"
                     selectedItem={this.state.artboardIndex}
                     onSelect={this.changeArtboard}
                     renderSelected={this.renderTarget}
                 >
                     {this._artboards.map(a => <p key={a.id()}><span>{a.name()}</span></p>)}
                 </Dropdown>
-            </div>
+            </DialogLine>
 
-            <div className="transition-dialog__line">
-                {/* Transition effect */}
+
+            {/* Transition effect */}
+            <DialogLine>
+                <div className="_label"><FormattedMessage id="transition.type" /></div>
                 <Dropdown
                     autoClose={true}
-                    className="drop_down_no-padding"
                     selectedItem={this.state.segueIndex}
                     onSelect={this.changeTransitionType}
                     renderSelected={this.renderTransitionType}
@@ -152,44 +129,39 @@ class AnimationSettings extends Component<IAnimationSettingsProps, any> {
                         <p key={v.label}><FormattedMessage id={v.label} /></p>
                     )}
                 </Dropdown>
-            </div>
+            </DialogLine>
 
             {/* Duration */}
-            <div className=" transition-dialog__line">
-                <div className="tile-editor">
-                    <div className="tile-editor__label">
-                        {__duration}
-                    </div>
-                    <div className="tile-editor__value transition-dialog__duration-input">
-                        <input
-                            type="number"
-                            value={this.state.duration}
-                            step="0.1"
-                            onChange={this.changeDuration}
-                        />
-                        {/* <span>s</span> */}
-                    </div>
-                </div>
+            <DialogLine>
+                <div className="_label">{duration}</div>
+                <InputStyled
+                    type="number"
+                    value={this.state.duration}
+                    step="0.1"
+                    onChange={this.changeDuration}
+                />
+            </DialogLine>
 
 
-                {/*Easing */}
-                <div className=" transition-dialog__line">
-                    <Dropdown
-                        autoClose={true}
-                        className="drop_down_no-padding"
-                        selectedItem={this.state.easingIndex}
-                        onSelect={this.changeEasing}
-                        renderSelected={this.renderEasing}
-                    >
-                        {EasingValues.map(v => {
-                            return <p key={v.label}><FormattedMessage id={v.label} /></p>
-                        })}
-                    </Dropdown>
-                </div>
-            </div>
-        </div>
+            {/*Easing */}
+            <DialogLine>
+                <div className="_label"><FormattedMessage id="transition.easing" /></div>
+                <Dropdown
+                    autoClose={true}
+                    className="drop_down_no-padding"
+                    selectedItem={this.state.easingIndex}
+                    onSelect={this.changeEasing}
+                    renderSelected={this.renderEasing}
+                >
+                    {EasingValues.map(v => {
+                        return <p key={v.label}><FormattedMessage id={v.label} /></p>
+                    })}
+                </Dropdown>
+            </DialogLine>
+        </TransitionDialog>
     }
 }
+
 
 interface IAnimationSettingsPopupProps {
     onOpened?: () => void;
@@ -198,6 +170,10 @@ interface IAnimationSettingsPopupProps {
 
 interface IAnimationSettingsPopupState {
     open: boolean;
+    action: any;
+    target: any;
+    x?: number;
+    y?: number;
 }
 
 export default class AnimationSettingsPopup extends Component<IAnimationSettingsPopupProps, IAnimationSettingsPopupState> {
@@ -209,7 +185,9 @@ export default class AnimationSettingsPopup extends Component<IAnimationSettings
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            open: false,
+            action: null,
+            target: null
         };
     }
 
@@ -240,40 +218,19 @@ export default class AnimationSettingsPopup extends Component<IAnimationSettings
     };
 
     toggle = (event?, target?, action?) => {
-        // this.setState({ open: !this.state.open });
-        // if (this.state.open) {
-        //     var newProps = this._newActionProps = clone(action.props);
-        //     richApp.dispatch(FlyoutActions.show(null, this.renderPopup(target, action.props, newProps), {
-        //         absolute: true,
-        //         x: event.pageX,
-        //         y: event.pageY
-        //     }, () => {
-        //         action.setProps(this._newActionProps);
-        //     }));
-        // } else {
-        //     richApp.dispatch(FlyoutActions.hide());
-        // }
-
-        // if (event) {
-        //     event.stopPropagation();
-        // }
+        let x = 0, y = 0;
+        if (event) {
+            x = event.pageX;
+            y = event.pageY;
+        }
+        this.setState({ open: !this.state.open, action: action, target: target, x: x, y: y });
     };
 
-    // @listenTo(flyoutStore)
-    // storeChanged() {
-    //     var target = flyoutStore.state.target;
-    //     if (target === this.refs.host) {
-    //         this.props.onOpened && this.props.onOpened();
-    //     }
-    //     else if (!target && this.state.open) {
-    //         this.setState({ open: !this.state.open });
-    //         this.props.onClosed && this.props.onClosed();
-    //     }
-    // }
 
     onKeyDown = (e) => {
         //TODO: handle ESC
     };
+
     onMouseDown = (e) => {
         e.stopPropagation();
     };
@@ -294,11 +251,79 @@ export default class AnimationSettingsPopup extends Component<IAnimationSettings
     }
 
     render() {
-        return (
-            <div>
+        if (!this.state.open) {
+            return <div></div>;
+        }
 
-            </div>
-        );
+        var newProps = clone(this.state.action.props);
+        return ReactDom.createPortal(<ContextMenuContainer onClose={this.toggle} style={{ position: 'absolute', left: this.state.x, top: this.state.y }}><AnimationSettings target={this.state.target} action={this.state.action.props} newAction={newProps} /></ContextMenuContainer>, document.body);
+    }
+}
+
+class ContextMenuContainer extends Component<any, any> {
+    refs: {
+        menu: HTMLElement
     }
 
+    _onMouseDown = (event) => {
+        this.props.onClose();
+    }
+
+    _preventDefault = (event) => {
+        event.stopPropagation();
+    }
+
+    componentDidMount() {
+        let menu = this.refs.menu;
+        if (!menu) {
+            return;
+        }
+        ensureElementVisible(menu, document.documentElement, 0, 40);
+    }
+
+    render() {
+        return <div onMouseDown={this._onMouseDown} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 10000 }}>
+            <div ref="menu" onMouseDown={this._preventDefault} {...this.props}>{this.props.children}</div>
+        </div>
+    }
 }
+
+
+const DialogLine = styled.div`
+    & ._label {
+        font:${theme.link_font};
+        color:${theme.text_color};
+        margin:4px 0;
+    }
+`;
+
+const LineHeight = '28px';
+
+const InputStyled = styled.input`
+    background-color:${theme.input_background};
+    color:${theme.text_color};
+    height:${LineHeight};
+    text-align:left;
+    line-height:${LineHeight};
+    font:${theme.font_largeInput};
+    width:100%;
+    padding: 0 0 0 ${theme.margin1};
+    border-radius:3px;
+    &::placeholder {
+        color:${theme.text_color.darken()};
+    }
+`;
+
+const TransitionDialog = styled.div`
+    min-width: 20rem;
+    height:auto;
+    border-radius:4px;
+    padding: ${theme.margin1};
+    background: ${theme.flyout_background};
+    box-shadow: ${theme.flyout_shadow};
+    color: ${theme.text_color};
+    display:grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-row-gap:8px;
+    z-index:10000;
+`;

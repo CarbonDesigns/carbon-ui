@@ -8,7 +8,6 @@ import { FormHeading, FormLine, FormGroup } from "../../../shared/FormComponents
 import { MarkupLine } from "../../../shared/ui/Markup";
 import { BladeBody } from "../BladePage";
 import EditImageBlade from "../imageEdit/EditImageBlade";
-import Dropdown from "../../../shared/Dropdown";
 import bem from '../../../utils/commonUtils';
 import appStore from "../../../AppStore";
 import { ProjectAvatarSize } from "../../../Constants";

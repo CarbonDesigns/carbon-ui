@@ -1,8 +1,12 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
 import { Component } from "../CarbonFlux";
-import * as cx from "classnames";
 import { nodeOffset, ensureElementVisible } from "../utils/domUtil";
+import styled from "styled-components";
+import Icon from "../components/Icon";
+import icons from "../theme-icons";
+import theme from "../theme";
+import * as cx from "classnames";
 
 function stopPropagation(e) {
     if (e) {
@@ -23,7 +27,7 @@ export interface IDropdownProps {
     renderSelected?: (item?: any) => void,
     renderEmpty?: () => void,
 }
-interface IDropDownState{
+interface IDropDownState {
     open: boolean;
 }
 export default class Dropdown extends Component<IDropdownProps, IDropDownState> {
@@ -35,8 +39,8 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
     }
 
     refs: {
-        content:any,
-        dropContainer:HTMLElement
+        content: any,
+        dropContainer: HTMLElement
     }
 
     selectItem = (e) => {
@@ -99,7 +103,7 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
 
     ensurePosition() {
         var content = this.refs["content"] as HTMLElement;
-        if(content) {
+        if (content) {
             ensureElementVisible(content, document.documentElement);
         }
     }
@@ -119,7 +123,7 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
 
         return React.Children.map(this.props.children, (child_component: React.DOMElement<any, any>, i) => {
             const classes = cx(
-                'drop__item  drop__item_line  drop__item_selectable',
+                '_item',
                 { _active: selectedItemIndex === i },
                 child_component.props.className
             );
@@ -142,25 +146,91 @@ export default class Dropdown extends Component<IDropdownProps, IDropDownState> 
             options = this._renderContent()
         }
 
-        var dropClasses = cx('drop_down', { drop_open: this.state.open }, this.props.className);
+        var dropClasses = cx({ open: this.state.open }, this.props.className);
 
-        return <div
+        return <DropdownContainer
             id={this.props.id}
             className={dropClasses}
             onMouseDown={this.toggle}
             onKeyDown={this.onKeyDown}
             onBlur={this.onBlur}
             tabIndex={0}>
-            <div className="drop__pill">
+            <div className="selectedElement">
                 {selectedChild}
-                <i className="ico ico-triangle" />
+                <Icon className="icon" icon={icons.triangle_down} color={theme.icon_default} />
             </div>
 
-            <div ref="content" className="drop__content drop-content_auto-width">
-                <div className="drop__list" ref="dropContainer">
+            <div ref="content" className="drop_content">
+                <div className="list" ref="dropContainer">
                     {options}
                 </div>
             </div>
-        </div>;
+        </DropdownContainer>;
     }
 }
+
+const DropdownContainer = styled.div`
+    width:100%;
+    position:relative;
+
+    & .selectedElement {
+        height:28px;
+        line-height:28px;
+        width:100%;
+        background:${theme.input_background};
+        font:${theme.font_largeInput};
+        color:${theme.text_color};
+        display:grid;
+        grid-template-columns: 1fr 10px;
+        align-items:center;
+        padding: 0 ${theme.margin1};
+    }
+
+    &.open .selectedElement {
+        box-shadow: ${theme.dropdown_shadow};
+        opacity:0.3;
+        & .icon {
+            display:none;
+        }
+    }
+
+    & .drop_content {
+        max-height: 0px;
+        min-width: 100%;
+        width: auto;
+        overflow:hidden;
+        background: ${theme.input_background};
+        box-shadow: ${theme.dropdown_shadow};
+        z-index:100;
+        position:absolute;
+        white-space: normal;
+        left:0;
+        right:0;
+
+        & ._item {
+            padding: 0 ${theme.margin1};
+            height: 28px;
+            line-height: 28px;
+            cursor:pointer;
+            &:hover {
+                background: ${theme.accent};
+                border-left: 2px solid ${theme.accent};
+            }
+
+            border-left: 2px solid ${theme.input_background};
+
+            &._active {
+                border-left: 2px solid ${theme.accent};
+            }
+        }
+    }
+
+    &.open .drop_content {
+        max-height: 1000px;
+        transition:max-height 0.4s cubic-bezier(.39, .38, .59,  1.32) 0s;
+    }
+
+    & .list {
+
+    }
+`;

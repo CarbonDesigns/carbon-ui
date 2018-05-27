@@ -25,6 +25,7 @@ export const colors = {
     workspace_background:'#131313',
     h1font: "400 18px 'Roboto', sans-serif;",
     h2font: "400 14px 'Roboto', sans-serif;",
+    font_largeInput: "400 16px 'Roboto', sans-serif;",
     default_font: "400 12px 'Roboto', sans-serif;",
     link_font: "400 10px 'Roboto', sans-serif;",
     input_font: "400 12px 'Roboto', sans-serif;",

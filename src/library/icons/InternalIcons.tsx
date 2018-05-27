@@ -1,6 +1,5 @@
 import * as React from "react";
 import SpriteView from "../SpriteView";
-import Dropdown from "../../shared/Dropdown";
 import Navigatable from "../../shared/Navigatable";
 import { Component, listenTo, Dispatcher, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import { richApp } from "../../RichApp";

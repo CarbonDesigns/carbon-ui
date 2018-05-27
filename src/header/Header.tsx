@@ -7,7 +7,6 @@ import AppActions from '../RichAppActions';
 import * as cx from "classnames";
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { Record } from "immutable";
-import Dropdown from "../shared/Dropdown";
 import PreviewActions from "../preview/PreviewActions";
 import PreviewStore from "../preview/PreviewStore";
 import { StoriesPopupList, StoriesListItem } from "../stories/StoriesList";

@@ -11,6 +11,8 @@ import {
     FormattedPlural
 } from "react-intl";
 import { CarbonAction } from "../../CarbonActions";
+import styled from "styled-components";
+import theme from "../../theme";
 
 export default class Breadcrumbs extends Component<any, any> {
     static contextTypes = {
@@ -254,13 +256,22 @@ export default class Breadcrumbs extends Component<any, any> {
             }
         }
 
-        return (<div className="breadcrumbs">
+        return (<BreadcrumbsContainer>
             {renderedBreadcrumbs}
             <div className="breadcrumbs__actions">
                 <div className={"breadcrumbs__action"} title="Select all" onClick={this._selectAll}><i className="ico-select-all" /></div>
                 {selectedAmount > 0 &&
                     <div className={"breadcrumbs__action"} title="Deselect" onClick={this._selectNone}><i className="ico-select-none" /></div>}
             </div>
-        </div>)
+        </BreadcrumbsContainer>)
     }
 }
+
+const BreadcrumbsContainer = styled.div`
+    font:${theme.default_font};
+    color:${theme.text_color};
+    display:flex;
+    align-items:center;
+    height:100%;
+
+`;

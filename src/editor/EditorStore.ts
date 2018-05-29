@@ -40,11 +40,12 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
     constructor(dispatcher?) {
         super(dispatcher);
         this._restartModel = core.util.debounce(this.restartModel, 30);
-        this.state = { currentItem: null, codeItems: [] };
+        this.state = { currentItem: null, codeItems: this._codeItemsMetainfo()  };
     }
 
     initialize(editor: monaco.editor.IStandaloneCodeEditor) {
         this._setEditor(editor);
+        this.setState({ codeItems: this._codeItemsMetainfo() });
 
         let previewModel = core.PreviewModel.current;
         if (!previewModel) {
@@ -59,13 +60,6 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         //     id = previewModel.activeArtboard.compilationUnitId;
         //     stateId = previewModel.activeArtboard.stateId;
         // }
-
-        // this.setState({
-        //     currentItem: previewModel.activeArtboard,
-        //     currentItemName: name,
-        //     currentCompilationUnitId:id,
-        //     stateId:stateId,
-        //     codeItems: this._codeItemsMetainfo() });
 
         if (this.initialized) {
             return;

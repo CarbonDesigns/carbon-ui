@@ -245,10 +245,10 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
                         <ContextBar key="contextBar" />
                     </div> */}
 
-                    <div id="workspace-bottom-edge">
-                        <PagesBar key="boards" />
+                    <BottomBar>
+                        {/* <PagesBar key="boards" /> */}
                         <Breadcrumbs key="breadcrumbs" />
-                    </div>
+                    </BottomBar>
 
                     <ContextMenu ref="contextMenu" onBuildMenu={this._buildContextMenu.bind(this)} />
                     <AnimationSettings ref="animationSettings" />
@@ -295,4 +295,17 @@ const MonacoContainer = styled(WorkspaceStyled)`
     width:100%;
     height:100%;
     flex: auto;
+`;
+
+const BottomBar = styled.div`
+    height: 28px;
+    display:flex;
+    background:${theme.panel_background};
+    border-radius:2px;
+    position:absolute;
+    user-select: none;
+    bottom : 0;
+    left   : 0;
+    right  : 0;
+    z-index: 2;
 `;

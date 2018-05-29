@@ -37,6 +37,7 @@ import { TouchEmulator } from './TouchEmulator';
 import styled from "styled-components";
 import theme from "../theme";
 import CarbonActions from "../CarbonActions";
+import EditorStore from "../editor/EditorStore";
 
 // TODO:
 
@@ -422,6 +423,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             view.viewContainerElement = this.viewport;
             var previewModel = new PreviewModel(app, view, controller);
             var controller = new PreviewController(app, view, previewModel);
+            EditorStore.initialize(null);
 
             app.onLoad(() => {
                 if (app.activePage === NullPage) {

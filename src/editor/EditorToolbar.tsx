@@ -7,6 +7,7 @@ import * as core from "carbon-core";
 import PreviewActions from "../preview/PreviewActions";
 import EditorStore from "./EditorStore";
 import PreviewStore from "../preview/PreviewStore";
+import styled from "styled-components";
 
 export default class EditorToolbar extends Component<any, any> {
     _onRestart = (e) => {
@@ -68,9 +69,7 @@ export default class EditorToolbar extends Component<any, any> {
             current = this.state.codeItems[selectedItemIndex].name;
         }
 
-        return <div className="editor-toolbar__dropdown">
-            <div className="editor-toolbar__dropdown-value">{current}</div>
-        </div>
+        return current;
     }
 
     renderDisplayMode = () => {
@@ -99,11 +98,7 @@ export default class EditorToolbar extends Component<any, any> {
             return;
         }
 
-        // if (item.type === "artboard") {
         dispatch(PreviewActions.navigateTo(item.id, {}));
-        // } else if (item.type === "page") {
-            // dispatch(EditorActions.showPageCode(item.id));
-        // }
     }
 
     changeState=(index)=> {
@@ -117,9 +112,7 @@ export default class EditorToolbar extends Component<any, any> {
             current = this.state.states[selectedStateIndex].name;
         }
 
-        return <div className="editor-toolbar__dropdown">
-            <div className="editor-toolbar__dropdown-value">{current}</div>
-        </div>
+        return current;
     }
 
     renderStates() {
@@ -129,7 +122,6 @@ export default class EditorToolbar extends Component<any, any> {
 
         return <Dropdown
             autoClose={true}
-            className="drop_down_toolbar"
             selectedItem={this.state.stateIndex}
             onSelect={this.changeState}
             renderSelected={this.renderCurrentState}
@@ -140,19 +132,18 @@ export default class EditorToolbar extends Component<any, any> {
 
     render() {
         return <div className="editor-toolbar">
-            <Dropdown
+            <CurrentArtboard
                 autoClose={true}
-                className="drop_down_toolbar"
                 selectedItem={this.state.artboardIndex}
                 onSelect={this.changeArtboard}
                 renderSelected={this.renderCurrentArtboard}
             >
                 {this.state.codeItems.map(a => <p key={a.id}><span>{a.name}</span></p>)}
-            </Dropdown>
+            </CurrentArtboard>
             {this.renderStates()}
             <div className="editor-toolbar_button editor-toolbar_button__restart" onClick={this._onRestart}></div>
 
-            <Dropdown
+            <DisplayMode
                 autoClose={true}
                 className="drop_down_fixed80 toolbar-align-end"
                 selectedItem={this.state.displayMode}
@@ -162,7 +153,15 @@ export default class EditorToolbar extends Component<any, any> {
                 <p><CarbonLabel id="@preview.fit" /></p>
                 <p><CarbonLabel id="@preview.fill" /></p>
                 <p><CarbonLabel id="@preview.responsive" /></p>
-            </Dropdown>
+            </DisplayMode>
         </div>
     }
 }
+
+const CurrentArtboard = styled(Dropdown).attrs<any>({})`
+    width: 160px;
+`;
+
+const DisplayMode = styled(Dropdown).attrs<any>({})`
+    width: 120px;
+`;

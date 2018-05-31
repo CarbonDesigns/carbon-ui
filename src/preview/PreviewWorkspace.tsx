@@ -463,6 +463,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
                     this._onStateChangedBinding = previewModel.activeArtboard.stateChanged.bind(this, this.onStateChanged)
                 }
             }));
+
+            dispatch(EditorActions.initializeModel());
         }
     }
 

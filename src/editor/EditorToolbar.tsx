@@ -1,5 +1,5 @@
 import * as React from "react";
-import { dispatch, Component, listenTo, CarbonLabel } from "../CarbonFlux";
+import { dispatch, Component, listenTo, CarbonLabel, handles } from "../CarbonFlux";
 import EditorActions from "./EditorActions";
 import Dropdown from "../shared/Dropdown";
 import { FormattedMessage } from "react-intl";
@@ -18,15 +18,24 @@ export default class EditorToolbar extends Component<any, any> {
 
     constructor(props, context) {
         super(props, context);
-        this.state = { codeItems: [], artboardIndex: 0, stateIndex: 0, states: [] }
+        this.state = this.getStateFromStore();
     }
 
     @listenTo(EditorStore)
     onEditorStoreChanged() {
-        if(!this.mounted) {
+        if (!this.mounted) {
             return;
         }
 
+        this.setState(this.getStateFromStore());
+    }
+
+    @handles(EditorActions.initializeModel)
+    onInit() {
+        this.setState(this.getStateFromStore());
+    }
+
+    getStateFromStore() {
         let id = null;
         if (EditorStore.state.currentItem && !(EditorStore.state.currentItem as any).isDisposed()) {
             id = EditorStore.state.currentItem.id;
@@ -42,22 +51,23 @@ export default class EditorToolbar extends Component<any, any> {
                 if ((item instanceof core.Artboard)) {
                     states = item.getStates();
                     let stateId = EditorStore.state.stateId;
-                    stateIndex = states.findIndex(s=>s.id === stateId);
+                    stateIndex = states.findIndex(s => s.id === stateId);
                 }
             }
         }
 
-        this.setState({
+        return {
             codeItems: EditorStore.state.codeItems,
             artboardIndex: Math.max(0, currentIndex),
             states: states,
             stateIndex: stateIndex
-        });
+        };
+
     }
 
     @listenTo(PreviewStore)
     onChange() {
-        if(!this.mounted) {
+        if (!this.mounted) {
             return;
         }
         this.setState({ displayMode: PreviewStore.state.displayMode });
@@ -101,9 +111,9 @@ export default class EditorToolbar extends Component<any, any> {
         dispatch(PreviewActions.navigateTo(item.id, {}));
     }
 
-    changeState=(index)=> {
+    changeState = (index) => {
         let state = this.state.states[index];
-        core.PreviewModel.current.activeArtboard.setProps({stateId:state.id});
+        core.PreviewModel.current.activeArtboard.setProps({ stateId: state.id });
     }
 
     renderCurrentState = (selectedStateIndex) => {
@@ -116,7 +126,7 @@ export default class EditorToolbar extends Component<any, any> {
     }
 
     renderStates() {
-        if(!(this.state.states && this.state.states.length > 1) ) {
+        if (!(this.state.states && this.state.states.length > 1)) {
             return;
         }
 
@@ -158,10 +168,10 @@ export default class EditorToolbar extends Component<any, any> {
     }
 }
 
-const CurrentArtboard = styled(Dropdown).attrs<any>({})`
+const CurrentArtboard = styled(Dropdown).attrs<any>({}) `
     width: 160px;
 `;
 
-const DisplayMode = styled(Dropdown).attrs<any>({})`
+const DisplayMode = styled(Dropdown).attrs<any>({}) `
     width: 120px;
 `;

@@ -11,6 +11,12 @@ export default {
             async: true
         }
     },
+    initializeModel: () => {
+        return {
+            type: 'Editor_initializeModel',
+            async: true
+        }
+    },
     changeState:(stateId) => {
         return {
             type:'PreviewActions_changeState',

@@ -43,12 +43,17 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         this.state = { currentItem: null, codeItems: this._codeItemsMetainfo()  };
     }
 
+    refreshCodeItems() {
+        this.setState({ codeItems: this._codeItemsMetainfo() });
+    }
+
     initialize(editor: monaco.editor.IStandaloneCodeEditor) {
         this._setEditor(editor);
-        this.setState({ codeItems: this._codeItemsMetainfo() });
+
+        this.refreshCodeItems();
 
         let previewModel = core.PreviewModel.current;
-        if (!previewModel) {
+        if (!previewModel || !editor) {
             return;
         }
 

@@ -42,7 +42,7 @@ export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IT
 
         this.state = {
             error: false,
-            term: "cars",
+            term: "",
             results: []
         };
     }

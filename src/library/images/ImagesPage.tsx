@@ -32,8 +32,10 @@ export default class ImagesPage extends Component<any, any> {
     }
 
     onSearch = (term) => {
-        if (term && this.tabContainer.state.tabId !== "2") {
-            this.tabContainer.changeTabById("2");
+        if (term) {
+            if (this.tabContainer.state.tabId !== "2") {
+                this.tabContainer.changeTabById("2");
+            }
         } else if (this.tabContainer.state.tabId !== "1") {
             this.tabContainer.changeTabById("1");
         }

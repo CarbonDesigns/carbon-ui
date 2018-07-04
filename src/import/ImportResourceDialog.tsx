@@ -1,13 +1,10 @@
 import * as React from "react";
-import { AutoSizer, List } from "react-virtualized";
-import { Component, dispatchAction } from "../CarbonFlux";
-import { GuiButton, GuiButtonBlock } from "../shared/ui/GuiComponents";
+import { dispatchAction } from "../CarbonFlux";
 import DialogRegistry from "../dialogs/DialogRegistry";
 import Dialog from "../dialogs/Dialog";
 import { FormattedMessage } from "react-intl";
-import { app, backend, IDisposable, ISharedResource, IPaginatedResult, ResourceScope } from "carbon-core";
-import { TabContainer, TabTabs, TabHeader, TabPage, TabArea } from "../shared/TabContainer";
-import { Markup, MarkupLine, MarkupSubmit } from "../shared/ui/Markup";
+import { backend, ISharedResource, IPaginatedResult } from "carbon-core";
+import { TabContainer, TabTabs} from "../shared/TabContainer";
 import Search from "../shared/Search";
 import ResourceSharer from "../library/ResourceSharer";
 import bem from '../utils/commonUtils';

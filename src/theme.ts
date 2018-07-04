@@ -19,6 +19,7 @@ export const colors = {
     text_color_alternate: '#000',
     text_color_lowimportance:'#afacac',
     button_default: "#9b9a9b",
+    stencil_background: "#fff",
     button_hover: "white",
     button_active: "#e94565",
     button_disabled:"#525252",
@@ -28,6 +29,7 @@ export const colors = {
     font_largeInput: "400 16px 'Roboto', sans-serif;",
     default_font: "400 12px 'Roboto', sans-serif;",
     link_font: "400 10px 'Roboto', sans-serif;",
+    tab_font: "400 10px 'Roboto', sans-serif;",
     input_font: "400 12px 'Roboto', sans-serif;",
     prop_font: "400 9px 'Roboto', sans-serif;",
     prop_name_font: "400 14px 'Roboto', sans-serif;",
@@ -35,7 +37,8 @@ export const colors = {
     input_background: "#212121",
     layer_page_background: "#212121",
     layer_selection_background: "#3498DB",
-    layer_hover_background: "#2980B9"
+    layer_hover_background: "#2980B9",
+    inactive_tab_button: '#212121'
 }
 
 const theme = createTheme(...Object.keys(colors));

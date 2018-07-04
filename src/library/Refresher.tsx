@@ -12,8 +12,11 @@ type RefresherProps = {
 
 export default class Refresher extends Component<RefresherProps> {
     render() {
-        var cn = bem("stencils-refresher", null, { hidden: !this.props.visible });
-        return <div className={cn}>
+        if(!this.props.visible) {
+            return <div></div>;
+        }
+
+        return <div className="nav-refresher">
             <GuiProgressButton loading={this.props.loading} onClick={this.props.onClick}
                 mods={['small', 'hover-white']}
                 icon="refresh"

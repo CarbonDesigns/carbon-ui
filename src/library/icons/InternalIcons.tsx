@@ -42,10 +42,10 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
             }
 
             return <Markup>
-                <MarkupLine mods="center">
+                <MarkupLine center>
                     <FormattedMessage tagName="p" id="@icons.noneFound"/>
                 </MarkupLine>
-                <MarkupLine mods="center">
+                <MarkupLine center>
                     <GuiButton caption="@icons.import" mods="hover-white" onClick={this.onAddMore} />
                 </MarkupLine>
             </Markup>;

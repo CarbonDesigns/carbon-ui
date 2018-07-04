@@ -3,7 +3,7 @@ import { IUIElement, IPage, IArtboard, app, IRect, backend } from "carbon-core";
 import { FormattedMessage } from "react-intl";
 import { ArtboardSelect } from "../../shared/ui/GuiSelect";
 import { Component } from "../../CarbonFlux";
-import { MarkupLine, MarkupSubmit } from "../../shared/ui/Markup";
+import { MarkupLine } from "../../shared/ui/Markup";
 import { GuiButton, GuiButtonBlock } from "../../shared/ui/GuiComponents";
 import { BladeBody } from "./BladePage";
 import { ElementPreview } from "./ElementPreview";
@@ -62,7 +62,7 @@ export class ArtboardSelectorBlade extends Blade<ArtboardSelectorBladeProps, Art
 
     render() {
         return <BladeBody className="select-artboard">
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <div className="gui-input">
                     <ArtboardSelect
                         className="drop_down"
@@ -79,12 +79,12 @@ export class ArtboardSelectorBlade extends Blade<ArtboardSelectorBladeProps, Art
                 <ElementPreview className="select-artboard__preview" ref="preview" element={this.state.artboard} dpr={this.props.dpr} />
             </MarkupLine>
 
-            <MarkupSubmit>
+            <MarkupLine submit>
                 <GuiButtonBlock>
                     <GuiButton mods="hover-cancel" onClick={this.onCancel} caption="@cancel" />
                     <GuiButton mods="submit" onClick={this.onOk} caption="@save" disabled={!this.state.artboard} />
                 </GuiButtonBlock>
-            </MarkupSubmit>
+            </MarkupLine>
         </BladeBody>
     }
 }

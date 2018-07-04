@@ -79,7 +79,7 @@ export default class ProjectSettingsBlade extends Component<{}, ProjectSettingsB
     render() {
         return <BladeBody>
             <form onSubmit={this.onSave}>
-                <MarkupLine mods={["space", "stretch"]}>
+                <MarkupLine space stretch>
                     <GuiInput defaultValue={app.props.name} caption="@project.name" ref="name" autoFocus selectOnFocus />
                 </MarkupLine>
 
@@ -87,7 +87,7 @@ export default class ProjectSettingsBlade extends Component<{}, ProjectSettingsB
                     <FormattedMessage id="@project.avatar" tagName="label" />
                 </MarkupLine>
 
-                <MarkupLine className="project__avatar" mods={["stretch", "horizontal"]}>
+                <MarkupLine className="project__avatar" stretch horizontal>
                     <figure className="project__avatar-image"
                         style={{ backgroundImage: "url('" + this.state.avatarUrl + "')" }}
                     />
@@ -110,7 +110,7 @@ export default class ProjectSettingsBlade extends Component<{}, ProjectSettingsB
                     </GuiButtonStack>
                 </MarkupLine>
 
-                <MarkupLine mods="space">
+                <MarkupLine space>
                     <GuiButton mods="submit" onClick={this.onSave} caption="@save" />
                 </MarkupLine>
             </form>

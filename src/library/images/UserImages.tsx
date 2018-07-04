@@ -296,8 +296,10 @@ export default class UserImages extends Component<any, any>{
         const config = {
             init: function () {
                 let eventName;
-                for (eventName in handlers) if (handlers.hasOwnProperty(eventName)) {
-                    this.on(eventName, handlers[eventName]);
+                for (eventName in handlers) {
+                    if (handlers.hasOwnProperty(eventName)) {
+                        this.on(eventName, handlers[eventName]);
+                    }
                 }
             },
             url: backend.servicesEndpoint + "/api/file/upload",
@@ -349,7 +351,7 @@ export default class UserImages extends Component<any, any>{
 
     private renderNoResults() {
         return <Markup>
-            <MarkupLine mods="center">
+            <MarkupLine center>
                 <FormattedMessage tagName="p" id="@images.noneFound" />
             </MarkupLine>
         </Markup>;

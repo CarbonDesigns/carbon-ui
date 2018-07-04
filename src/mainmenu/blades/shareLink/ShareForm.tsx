@@ -54,7 +54,7 @@ export default class ShareForm extends Component<ShareFormProps, ShareFormState>
                         onClick={this.onShareClick} onDone={this.onShared} />
                 }
             </MarkupLine>
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 {this.state.codes.length ? <GuiCopyInput value={location.origin + "/q/" + this.state.codes[0].code} /> : null}
             </MarkupLine>
         </div>

@@ -67,16 +67,16 @@ export default class SearchIcons extends StoreComponent<{}, SearchIconsStoreStat
 
     private renderNoResults() {
         return <Markup>
-            <MarkupLine mods="center">
+            <MarkupLine center>
                 <FormattedMessage tagName="p" id="@icons.noneFoundSearch" />
             </MarkupLine>
-            <MarkupLine mods={["center", "slim"]}>
+            <MarkupLine center slim>
                 <GuiButton caption="@icons.searchOnline" mods="hover-white" onClick={this.onGallerySearch} />
             </MarkupLine>
-            <MarkupLine mods="center">
+            <MarkupLine center>
                 <FormattedMessage tagName="p" id="@icons.searchIconFinderMsg" />
             </MarkupLine>
-            <MarkupLine mods={["center", "slim"]}>
+            <MarkupLine center slim>
                 <GuiButton caption="@icons.searchIconFinder" mods="hover-white" onClick={this.onIconFinderSearch} />
             </MarkupLine>
         </Markup>;

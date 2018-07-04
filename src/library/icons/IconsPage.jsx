@@ -25,30 +25,32 @@ export default class IconsPage extends Component {
     }
 
     render(){
-        return <TabContainer id="icons-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({type: "Library_Tab", area: "icons", tabId})}>
-            <TabTabs
-                items={[
-                    <i className="ico-library"/>,
-                    <i className="ico-recent"/>,
-                    <i className="ico-earth"/>,
-                    <i className="ico-search"/>
-                ]}
-                tabMods="level2"
-            />
-            <TabAreaStyled id="icons-page__pages">
-                <TabPageStyled tabId="1">
-                    <InternalIcons ref="tab1"/>
-                </TabPageStyled>
-                <TabPageStyled tabId="2">
-                    <RecentIcons ref="tab2"/>
-                </TabPageStyled>
-                <TabPageStyled tabId="3">
-                    <IconFinder ref="tab3"/>
-                </TabPageStyled>
-                <TabPageStyled tabId="4">
-                    <SearchIcons ref="tab4"/>
-                </TabPageStyled>
-            </TabAreaStyled>
-        </TabContainer>
+
+        return <IconFinder ref="tab3"/>;
+        // return <TabContainer id="icons-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({type: "Library_Tab", area: "icons", tabId})}>
+        //     <TabTabs
+        //         items={[
+        //             <i className="ico-library"/>,
+        //             <i className="ico-recent"/>,
+        //             <i className="ico-earth"/>,
+        //             <i className="ico-search"/>
+        //         ]}
+        //         tabMods="level2"
+        //     />
+        //     <TabAreaStyled id="icons-page__pages">
+        //         <TabPageStyled tabId="1">
+        //             <InternalIcons ref="tab1"/>
+        //         </TabPageStyled>
+        //         <TabPageStyled tabId="2">
+        //             <RecentIcons ref="tab2"/>
+        //         </TabPageStyled>
+        //         <TabPageStyled tabId="3">
+        //             <IconFinder ref="tab3"/>
+        //         </TabPageStyled>
+        //         <TabPageStyled tabId="4">
+        //             <SearchIcons ref="tab4"/>
+        //         </TabPageStyled>
+        //     </TabAreaStyled>
+        // </TabContainer>
     }
 }

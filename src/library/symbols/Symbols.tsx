@@ -3,7 +3,6 @@ import SpriteView from "../SpriteView";
 import Navigatable from "../../shared/Navigatable";
 import { dispatchAction, StoreComponent } from "../../CarbonFlux";
 import { FormattedMessage } from "react-intl";
-import { GuiButton } from "../../shared/ui/GuiComponents";
 import bem from '../../utils/commonUtils';
 import { PageSelect } from "../../shared/ui/GuiSelect";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
@@ -11,6 +10,9 @@ import SymbolsStore, { SymbolsStoreState } from "./SymbolsStore";
 import { IPage, app } from "carbon-core";
 import Refresher from "../Refresher";
 import { SymbolsColumnWidth, SymbolsOverscanCount } from "../LibraryDefs";
+import styled from "styled-components";
+import theme from "../../theme";
+import MainButton from "../../components/MainButton";
 
 require("../../import/ImportResourceDialog");
 
@@ -53,11 +55,11 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
     render() {
         if (!this.state.config) {
             return <Markup>
-                <MarkupLine mods="center">
-                    <FormattedMessage tagName="p" id="@symbols.noneFound"/>
-                </MarkupLine>
-                <MarkupLine mods="center">
-                    <GuiButton caption="@symbols.import" mods="hover-white" onClick={this.onAddMore} />
+                <EmptyMessage>
+                    <FormattedMessage tagName="p" id="@symbols.noneFound" />
+                </EmptyMessage>
+                <MarkupLine center>
+                    <ImportButton label="@symbols.import" onClick={this.onAddMore} />
                 </MarkupLine>
             </Markup>;
         }
@@ -65,16 +67,16 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
         var page = this.state.currentPage;
         var config = this.state.config;
 
-        return <div>
-            <div className={bem("library-page", "header", "with-dropdown")}>
+        return <SymbolsContainer>
+            <LibraryHeaderContainer>
                 {this.renderPageSelect(page)}
-            </div>
-            <Navigatable className={bem("library-page", "content")}
+            </LibraryHeaderContainer>
+            <NavigatableContent
                 activeCategory={this.state.activeCategory}
                 onCategoryChanged={this.onCategoryChanged}
                 config={config}>
 
-                <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary} loading={!!this.state.operation}/>
+                <Refresher visible={this.state.dirtyConfig} onClick={this.onRefreshLibrary} loading={!!this.state.operation} />
 
                 <SpriteView
                     config={config}
@@ -86,9 +88,9 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
                     columnWidth={SymbolsColumnWidth}
                     sourceId={page.id}
                     borders={true}
-                    templateType={SymbolsStore.storeType}/>
-            </Navigatable>
-        </div>
+                    templateType={SymbolsStore.storeType} />
+            </NavigatableContent>
+        </SymbolsContainer>
     }
 
     private renderPageSelect(page: IPage) {
@@ -103,3 +105,40 @@ export default class Symbols extends StoreComponent<{}, SymbolsStoreState> {
             ]} />;
     }
 }
+
+const LibraryHeaderContainer = styled.div`
+    position:relative;
+    margin: 0 ${theme.margin1} 0 ${theme.margin1};
+    box-sizing: border-box;
+    z-index: 3;
+    height:24px;
+`;
+
+const EmptyMessage = styled(MarkupLine).attrs({ center: true })`
+    font:${theme.text_normal};
+    color:${theme.text_color};
+`;
+
+const SymbolsContainer = styled.div`
+    display:grid;
+    position:relative;
+    grid-template-rows: 26px 1fr;
+    width:100%;
+    height:100%;
+`;
+
+const ImportButton = styled(MainButton).attrs<any>({})`
+    padding: 10px 20px;
+    height: 36px;
+`;
+
+const NavigatableContent = styled(Navigatable).attrs<any>({})`
+     width: 100%;
+    padding: 0 0;
+    bottom: 0;
+    top:0;
+    display: flex;
+    flex-direction: column;
+    overflow:hidden;
+
+`;

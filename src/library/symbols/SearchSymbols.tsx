@@ -63,10 +63,10 @@ export default class SearchSymbols extends StoreComponent<{}, SearchSymbolsStore
 
     private renderNoResults() {
         return <Markup>
-            <MarkupLine mods="center">
+            <MarkupLine center>
                 <FormattedMessage tagName="p" id="@symbols.noneFoundSearch" />
             </MarkupLine>
-            <MarkupLine mods="center">
+            <MarkupLine center>
                 <GuiButton caption="@symbols.searchOnline" mods="hover-white" onClick={this.onAddMore} />
             </MarkupLine>
         </Markup>;

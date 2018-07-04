@@ -243,7 +243,7 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
 
     render() {
         return <div>
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <GuiValidatedInput ref="name" caption="@publish.name" placeholder={this.formatLabel("@publish.nameHint")}
                     value={this.state.name} onChange={this.onNameChanged}
                     onValidate={this.validateName}
@@ -252,21 +252,21 @@ export default class PublishPageForm extends Component<IPublishPageFormProps, IP
                     trigger={ValidationTrigger.blur} />
             </MarkupLine>
 
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <GuiTextArea ref="description" caption="@publish.description"
                     mods="resize-v"
                     value={this.state.description} onChange={this.onDescriptionChanged}
                     disabled={!this.props.page}
                     placeholder={this.formatLabel("@publish.descriptionHint")} />
             </MarkupLine>
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <GuiRequiredInput ref="tags" caption="@tags"
                     value={this.state.tags} onChange={this.onTagsChanged}
                     disabled={!this.props.page}
                     placeholder="buttons, ios, flat, etc" />
             </MarkupLine>
 
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <div className="gui-input">
                     <p className={"gui-input__label"}>
                         <FormattedMessage id="@publish.privacy" />

@@ -64,7 +64,7 @@ export default class CatalogView extends Component<CatalogViewProps> {
 
         return <ScrollContainer className="fill" onScroll={this.onScroll}>
             {this.props.config.groups.map(g => {
-                return <section className="stencils-group" key={g.name} data-name={g.name}>
+                return <section className="nav-group" key={g.name} data-name={g.name}>
                     <div className="stencils-group__name" ref={this.registerCategoryNode}>
                         <strong><FormattedMessage id={g.name} defaultMessage={g.name} /></strong>
                     </div>

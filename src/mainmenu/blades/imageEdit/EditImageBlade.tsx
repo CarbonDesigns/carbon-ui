@@ -4,7 +4,7 @@ import { Component } from "../../../CarbonFlux";
 import ImageDropzone from "./ImageDropzone";
 import { TabContainer, TabPage, TabArea } from "../../../shared/TabContainer";
 import { GuiButtonBlock, GuiButtonedInput, GuiInput, GuiButton, GuiValidatedInput } from "../../../shared/ui/GuiComponents";
-import { MarkupSubmit, MarkupLine } from "../../../shared/ui/Markup";
+import { MarkupLine } from "../../../shared/ui/Markup";
 import { say } from "../../../shared/Utils";
 import separatorOr from "../../../shared/SeparatorOr";
 import CropEditor from "./CropEditor";
@@ -154,11 +154,11 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
 
     private renderEditTab() {
         return <TabPageStyled tabId="1">
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <CropEditor ref="cropEditor" image={this.state.image} dpr={this.props.dpr} size={this.props.previewSize} />
             </MarkupLine>
 
-            <MarkupSubmit>
+            <MarkupLine submit>
                 <GuiButtonBlock mods="equal">
                     <GuiButton
                         onClick={this.saveCropped}
@@ -171,7 +171,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
                         caption="@changeImage"
                     />
                 </GuiButtonBlock>
-            </MarkupSubmit>
+            </MarkupLine>
         </TabPageStyled>
     }
 
@@ -179,7 +179,7 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
         var loading = this.state.loading;
 
         return <TabPageStyled tabId="2" className={b('upload-page', { loading })}>
-            <MarkupLine className="edit-image__make-snapshot" onClick={this.hideAllErrors} mods="stretch">
+            <MarkupLine className="edit-image__make-snapshot" onClick={this.hideAllErrors} stretch>
                 <p className="edit-image__message">
                     <FormattedMessage id="@imageEdit.artboardSnapshot" />
                 </p>
@@ -195,17 +195,17 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
                 </div>
             </MarkupLine>
 
-            <MarkupLine mods="stretch">{separatorOr("or")}</MarkupLine>
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>{separatorOr("or")}</MarkupLine>
+            <MarkupLine stretch>
                 <ImageDropzone
                     ref="dropzone"
                     onSuccess={this.onUploadSuccess}
                 />
             </MarkupLine>
 
-            <MarkupLine mods="stretch">{separatorOr("or")}</MarkupLine>
+            <MarkupLine stretch>{separatorOr("or")}</MarkupLine>
 
-            <MarkupLine mods="stretch" className="edit-image__paste-url" onClick={this.hideAllErrors}>
+            <MarkupLine stretch className="edit-image__paste-url" onClick={this.hideAllErrors}>
                 <p className="edit-image__message">
                     <FormattedMessage id="@imageEdit.pasteUrl" />
                 </p>
@@ -224,13 +224,13 @@ export default class EditImageBlade extends Component<IEditImageBladeProps, IEdi
             </MarkupLine>
 
             {(this.state.image || !this.props.allowCropping) &&
-                <MarkupSubmit>
+                <MarkupLine submit>
                     <GuiButton
                         mods="hover-cancel"
                         onClick={() => this.saveImageOption({ type: "none" })}
                         caption="@cancel"
                     />
-                </MarkupSubmit>
+                </MarkupLine>
             }
         </TabPageStyled>
     }

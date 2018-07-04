@@ -16,7 +16,7 @@ type AppStatusFlyoutState = {
 }
 
 export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, AppStatusFlyoutState> {
-    private timer: number = 0;
+    private timer: any = 0;
 
     constructor(props: AppStatusFlyoutProps) {
         super(props);
@@ -76,7 +76,7 @@ export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, App
                     <MarkupLine>
                         <FormattedMessage id="@status.connectionLost" />
                     </MarkupLine>
-                    <MarkupLine mods="horizontal">
+                    <MarkupLine horizontal>
                         <FormattedMessage id="@status.willRetry" values={{ seconds: this.state.secondsToRetry }} />
                         <GuiButton className="appstatus__tryNow" mods={["link-hover", "link"]} caption="@status.tryNow"
                             onClick={this.onTryNow} />
@@ -144,7 +144,7 @@ export default class AppStatusFlyout extends Component<AppStatusFlyoutProps, App
     }
 
     render() {
-        return <Markup className={"flyout__content appstatus__flyout appstatus__flyout_" + this.props.status} mods="space">
+        return <Markup className={"flyout__content appstatus__flyout appstatus__flyout_" + this.props.status} space>
             {this.renderContent()}
         </Markup>
     }

@@ -4,7 +4,7 @@ import { GuiButton, GuiInput, GuiCheckbox, GuiTextArea } from "../../shared/ui/G
 import { Component, StoreComponent, dispatchAction } from "../../CarbonFlux";
 import CatalogView from "./CatalogView";
 import customCatalogStore, { CustomCatalogStoreState } from "./CustomCatalogStore";
-import { Markup, MarkupLine, MarkupSubmit } from "../../shared/ui/Markup";
+import { Markup, MarkupLine } from "../../shared/ui/Markup";
 
 export default class CustomProviders extends StoreComponent<{}, CustomCatalogStoreState> {
     refs: {
@@ -42,14 +42,14 @@ export default class CustomProviders extends StoreComponent<{}, CustomCatalogSto
 
     _renderEdit() {
         return <Markup>
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <GuiInput ref="name" type="text" placeholder="@data.customName" mods="small" autoFocus />
             </MarkupLine>
-            <MarkupLine mods={["fill", "slim", "stretch"]}>
+            <MarkupLine fill slim stretch>
                 <GuiTextArea ref="text" placeholder="@data.customBody" mods={["small", "fill"]} />
             </MarkupLine>
 
-            <MarkupLine mods="horizontal">
+            <MarkupLine horizontal>
                 <GuiButton mods={["hover-success"]} onClick={this._saveCatalog} caption="button.save" defaultMessage="Save" bold />
                 <GuiButton mods={["hover-cancel"]} onClick={this._cancelEditing} caption="button.cancel" defaultMessage="Cancel" bold />
             </MarkupLine>

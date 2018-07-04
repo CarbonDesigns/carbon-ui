@@ -59,13 +59,13 @@ export class MirrorForm extends Component<MirrorFormProps, MirrorFormState> {
             <MarkupLine>
                 <FormattedMessage tagName="p" id="mirroringblade.scancodehelp" />
             </MarkupLine>
-            <MarkupLine mods="center">
+            <MarkupLine center>
                 <QRCode value={url} size={256} bgColor="rgba(0,0,0,0)" fgColor="#fff" />
             </MarkupLine>
             <MarkupLine>
                 <FormattedMessage id="mirroring.urllabel" tagName="p" />
             </MarkupLine>
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <GuiCopyInput value={url} />
             </MarkupLine>
         </div>;

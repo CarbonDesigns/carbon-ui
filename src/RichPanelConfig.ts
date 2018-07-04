@@ -1,6 +1,6 @@
 import { LayoutDirection, LayoutDockPosition } from "carbon-core";
 
-const version = 13; // update version if layout has to changed on the client
+const version = 15; // update version if layout has to changed on the client
 
 export default {
     edit: {
@@ -19,12 +19,12 @@ export default {
                 collapseDirection: LayoutDockPosition.Left,
                 children: [
                     {
-                        panelName: 'library',
-                        height: 2 / 3
+                        panelName: 'layers',
+                        height: 1/2
                     },
                     {
-                        panelName: 'layers',
-                        height: 1 / 3
+                        panelName: 'library',
+                        height: 1 / 2
                     }
                 ]
             },

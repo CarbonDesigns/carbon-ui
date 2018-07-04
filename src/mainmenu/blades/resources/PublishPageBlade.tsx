@@ -278,7 +278,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
             <TabContainer currentTabId={this.state.publishStep}>
                 <TabAreaStyled>
                     <TabPageStyled tabId="1">
-                        <MarkupLine mods="stretch">
+                        <MarkupLine stretch>
                             <div className="gui-input">
                                 <p className={"gui-input__label"}>
                                     <FormattedMessage id="@publish.choosePage" />
@@ -287,12 +287,12 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                             </div>
                         </MarkupLine>
 
-                        <MarkupLine mods="stretch">
+                        <MarkupLine stretch>
                             <p className={"gui-input__label"}>
                                 <FormattedMessage id="@publish.createCover"  />
                             </p>
                         </MarkupLine>
-                        <MarkupLine className="publish__avatar" mods={["stretch", "horizontal"]}>
+                        <MarkupLine className="publish__avatar" stretch horizontal>
                             <figure className="publish__avatar-image"
                                 style={{ backgroundImage: "url('" + this.state.coverUrl + "')" }}
                             />
@@ -312,7 +312,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                             </GuiButtonStack>
                         </MarkupLine>
 
-                        <MarkupLine mods="stretch">
+                        <MarkupLine stretch>
                             <p className={"gui-input__label"}>
                                 <FormattedMessage id="@publish.screenshots"  />
                             </p>
@@ -326,7 +326,7 @@ export default class PublishBlade extends Component<void, IPublishBladeState> {
                     </TabPageStyled>
                     <TabPageStyled tabId="2">
                         <MarkupLine><FormattedMessage id="@publish.done" tagName="p" /></MarkupLine>
-                        <MarkupLine mods="slim">
+                        <MarkupLine slim>
                             <a className="publish__link" href={"/library/" + this.state.publishedPageId} target="_blank">
                                 <FormattedMessage tagName="p" id="@publish.viewInGallery" />
                             </a>

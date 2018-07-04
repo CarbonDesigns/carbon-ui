@@ -63,7 +63,7 @@ export class FatalDialog extends Dialog<{}, FatalDialogState> {
             <MarkupLine>
                 <FormattedMessage id="@fatal.message2" tagName="p" />
             </MarkupLine>
-            <MarkupLine mods="stretch">
+            <MarkupLine stretch>
                 <GuiTextArea value={this.state.message} onChange={this.onMessageChanged} onKeyDown={this.onKeyDown} autoFocus placeholder="@fatal.reason" />
             </MarkupLine>
             <MarkupLine>

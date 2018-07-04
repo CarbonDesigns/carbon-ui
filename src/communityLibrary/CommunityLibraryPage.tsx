@@ -84,7 +84,7 @@ export default class CommunityLibraryPage extends Component<CommunityLibraryPage
             </section>
 
             <section className="searchlib-container section-center">
-                <Search query={this.props.search} onQuery={this.onSearch} className={bem("searchlib-container", "input")} autoFocus mods="dark" />
+                <Search query={this.props.search} onQuery={this.onSearch} className={bem("searchlib-container", "input")} autoFocus/>
             </section>
 
             <section className="searchtags-container section-center">

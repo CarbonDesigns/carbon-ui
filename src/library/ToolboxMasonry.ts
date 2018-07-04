@@ -73,10 +73,10 @@ export default class ToolboxMasonry {
         }
 
         return {
-            x: col * (columnWidth + flexShare),
-            y,
-            width: columnWidth * span + flexShare * span,
-            height: height
+            x: col * (columnWidth + flexShare) + 2,
+            y: y+2,
+            width: columnWidth * span + flexShare * span - 4,
+            height: height - 4,
         };
     }
 

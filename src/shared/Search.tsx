@@ -1,16 +1,13 @@
-import React    from "react";
+import * as React    from "react";
 import * as ReactDom from "react-dom";
 import {util}   from "carbon-api";
 import cx       from "classnames";
 import { Component } from "../CarbonFlux";
 import { searchStack, ISearchHandler } from "./ComponentStack";
-import bem, { IHasMods } from "../utils/commonUtils";
 
 const DEBOUNCE_DELAY_MS = 500;
 
-export type SearchMod = "dark";
-
-interface SearchProps extends ISimpleReactElementProps, IHasMods<SearchMod> {
+interface SearchProps extends ISimpleReactElementProps {
     onQuery: (term: string) => void;
     query?: string;
     placeholder?: string;
@@ -77,11 +74,11 @@ export default class Search extends Component<SearchProps, SearchState> implemen
         input.select();
     }
     render(){
-        let { placeholder, autoFocus, onQuery, className, mods, children, query, ...other } = this.props;
+        let { placeholder, autoFocus, onQuery, className, children, query, ...other } = this.props;
         placeholder = placeholder || "@search";
-        const cn = cx('search-field', className);
-        return <div {...other} className={cn}>
-            <input className={bem("search-field", "input", mods)} placeholder={this.formatLabel(placeholder)} onChange={this.onChange}
+        // const cn = cx('search-field', className);
+        return <div {...other} >
+            <input  placeholder={this.formatLabel(placeholder)} onChange={this.onChange}
                 value={this.state.query}
                 autoFocus={autoFocus}
                 ref="input"/>

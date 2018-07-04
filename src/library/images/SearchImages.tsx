@@ -66,10 +66,10 @@ export default class SearchImages extends StoreComponent<{}, SearchImagesStoreSt
 
     private renderNoResults() {
         return <Markup>
-            <MarkupLine mods="center">
+            <MarkupLine center>
                 <FormattedMessage tagName="p" id="@images.noneFoundSearch" />
             </MarkupLine>
-            <MarkupLine mods="center">
+            <MarkupLine center>
                 <GuiButton caption="@images.searchUnsplash" mods="hover-white" onClick={this.onUnsplashSearch} />
             </MarkupLine>
         </Markup>;

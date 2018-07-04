@@ -1,39 +1,46 @@
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
-import { Component } from "../../CarbonFlux";
-import * as cx from "classnames";
-import bem, { IHasMods } from '../../utils/commonUtils';
+import styled, {css} from "styled-components";
 
+export const MarkupLine = styled.div.attrs<{
+    slim?:boolean,
+    submit?:boolean,
+    space?:boolean,
+    center?:boolean,
+    stretch?:boolean,
+    horizontal?:boolean,
+    fill?:boolean}>({})`
+    margin-top   : 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    flex: 0 0 auto;
+    flex-direction: column;
 
-export class MarkupSubmit extends Component<IReactElementProps> {
-    render() {
-        var { className, children, ...rest } = this.props;
-        var cn = bem("markup-submit", null, null, className);
-        return <div {...rest} className={cn}>{children}</div>
-    }
-}
+    ${p=>p.slim? css`
+        margin-top: 0;
+        margin-bottom: 0;
+    `:''}
 
-export type MarkupLineMod = "space" |
-    "fill" |
-    "slim" |
-    "center" |
-    "stretch" |
-    "fill" |
-    "horizontal";
-export class MarkupLine extends Component<IReactElementProps & IHasMods<MarkupLineMod>> {
-    render() {
-        var { className, mods, children, ...rest } = this.props;
-        var cn = bem("markup-line", null, mods, className);
-        return <div {...rest} className={cn}>{children}</div>
-    }
+    ${p=>p.submit? css`
+        margin-top   : 2rem;
+        margin-bottom: 1rem;
+    `:''}
 
-    static CenterSlim: MarkupLineMod[] = ["center", "slim"];
-}
+    ${p=>p.center? css`
+        align-items: center;
+    `:''}
 
-export class Markup extends Component<IReactElementProps & IHasMods<"space">> {
-    render() {
-        var { className, mods, children, ...rest } = this.props;
-        var cn = bem("markup", null, mods, className);
-        return <div {...rest} className={cn}>{children}</div>
-    }
-}
+    ${p=>p.stretch? css`
+        align-items: stretch;
+    `:''}
+
+    ${p=>p.fill? css`
+        flex: auto;
+    `:''}
+`;
+
+export const Markup = styled.div.attrs<{space?:boolean}>({})`
+    display:flex;
+    flex-direction: column;
+    flex: auto;
+`;

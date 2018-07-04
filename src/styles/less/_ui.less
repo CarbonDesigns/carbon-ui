@@ -744,7 +744,6 @@
     label {
         .bl;
         .cursor_pointer;
-        .f14;
     }
 
     label.inline {
@@ -773,11 +772,6 @@
         input[type="checkbox"], input[type="radio"] {
             margin: 0 5px 0 0;
         }
-    }
-
-
-    select {
-        .f14;
     }
 }
 
@@ -813,8 +807,6 @@
         .bl;
         .bgc(white);
         border: none;
-        color: #303030;
-        font-size: @s;
 
         padding: (10/16) * 1em;
         .w100;
@@ -905,10 +897,6 @@
     }
     &_resize-v textarea{
         resize: vertical;
-    }
-
-    &&_small {
-        .f14;
     }
 }
 
@@ -1255,7 +1243,6 @@
         height: 100%;
         width: 0;
         margin-right: -.25em;
-        font-size: 0;
     }
     & > * {
         .inbl;
@@ -1615,7 +1602,6 @@
     }
 
     &_small {
-        font-size: 1rem;
         padding-left: 1em;
         padding-right: 1em;
     }
@@ -1747,14 +1733,12 @@
 
         padding:  @line_air/2 @line_air  @line_air/2 @line_air*2.5;
 
-        .f14;
         //.upp(50);
         border: none;
         line-height: 1;
 
 
         .condensed &{
-            .f14;
             padding: 2px;
         }
 
@@ -2021,8 +2005,6 @@
 
         &-name {
             flex: auto;
-            line-height: 1.1;
-            font-size: @fsize;
             white-space: normal;
             .h100;
 
@@ -2078,7 +2060,6 @@
             .tcenter;
 
             padding: @line_air;
-            font-size: @fsize;
 
             .rounded(2);
             .cursor_pointer;
@@ -2342,7 +2323,6 @@
     &_item {
       line-height: 28px;
       height:28px;
-      font-size: 14px;
       text-decoration: none;
       padding-left:5px;
       display: block;
@@ -2449,14 +2429,6 @@
   align-content: flex-start;
 }
 
-.fs-header {
-    // h3 {
-    //     font-size: 2.5em;
-    //     font-family: Poppins, Open Sans, Helvetica, sans-serif;
-    //     font-weight: 900;
-    //     color: black;
-    // }
-}
 
 .fs-form {
     .form__submit {
@@ -2464,13 +2436,6 @@
     }
 }
 
-@media screen and (max-width:400px) {
-    // .fs-header {
-    //     h3 {
-    //         font-size: 2em;
-    //     }
-    // }
-}
 
 .signup__with-socials_line {
     height: 80px;

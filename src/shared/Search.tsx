@@ -4,6 +4,8 @@ import {util}   from "carbon-api";
 import cx       from "classnames";
 import { Component } from "../CarbonFlux";
 import { searchStack, ISearchHandler } from "./ComponentStack";
+import styled from "styled-components";
+import theme from "../theme";
 
 const DEBOUNCE_DELAY_MS = 500;
 
@@ -77,7 +79,7 @@ export default class Search extends Component<SearchProps, SearchState> implemen
         let { placeholder, autoFocus, onQuery, className, children, query, ...other } = this.props;
         placeholder = placeholder || "@search";
         // const cn = cx('search-field', className);
-        return <div {...other} >
+        return <SearchContainer {...other} >
             <input  placeholder={this.formatLabel(placeholder)} onChange={this.onChange}
                 value={this.state.query}
                 autoFocus={autoFocus}
@@ -85,6 +87,26 @@ export default class Search extends Component<SearchProps, SearchState> implemen
             <div className="search-field__ico">
                 <i className="ico-search"/>
             </div>
-        </div>;
+        </SearchContainer>;
     }
 }
+
+const SearchContainer = styled.div`
+    width:100%;
+    padding: ${theme.margin1};
+
+    input {
+        width:100%;
+        height:27px;
+        border-radius: 2px;
+        background-color: ${theme.input_background};
+        color: ${theme.text_color};
+        font: ${theme.input_font};
+        box-shadow: ${theme.input_shadow};
+        padding: 0 ${theme.margin1};
+
+        &::placeholder {
+            color:${theme.input_placeholder_color};
+        }
+    }
+`;

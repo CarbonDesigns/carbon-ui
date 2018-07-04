@@ -16,6 +16,8 @@ import bem from "bem"
 import VirtualList from "../../shared/collections/VirtualList";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
 import { UserImage, getUserImageHeight } from "./UserImage";
+import styled from "styled-components";
+import theme from "../../theme";
 
 function b(a, b?, c?) { return bem("image-upload", a, b, c) }
 
@@ -329,7 +331,7 @@ export default class UserImages extends Component<any, any>{
     private renderError() {
         if (this.state.error) {
             return <Markup>
-                <MarkupLine>
+                <MarkupLine center>
                     <FormattedMessage tagName="p" id="@userImages.error" />
                 </MarkupLine>
             </Markup>;
@@ -384,9 +386,9 @@ export default class UserImages extends Component<any, any>{
         };
 
 
-        return <div className="library-page__content">
+        return <UserImagesContent>
 
-            <div className="library-page__upload  dropzone " ref="dropzone" >
+            <div className="library-page__upload dropzone" ref="dropzone" >
                 {this.renderList()}
 
                 <div className={bem('zone', null, { "list-open": this.state.list_is_open })}>
@@ -431,6 +433,11 @@ export default class UserImages extends Component<any, any>{
                     <div style={{ display: 'none' }}> <div className="dz-message"></div> <div className="dz-previews"></div> </div>
                 </div>
             </div>
-        </div>
+        </UserImagesContent>
     }
 }
+
+const UserImagesContent = styled.div`
+    font:${theme.default_font};
+    color:${theme.text_color};
+`;

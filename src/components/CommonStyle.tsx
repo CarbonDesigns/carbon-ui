@@ -55,6 +55,13 @@ export const MainButtonComponent = styled.button`
     color: ${theme.text_color};
     background-image: linear-gradient(to right, #ff4295 0%, #ff292c 100%);
     border-radius: 1px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    outline: 0;
+
+}
+
 `
 
 export function arrDown(size, color) {

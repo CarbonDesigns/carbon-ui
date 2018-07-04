@@ -669,7 +669,7 @@ export default
         "@icons.searchIconFinder": "Search in IconFinder",
         "@iconfinder.error": "Could not concant the IconFinder.com service. Please try again later.",
 
-        "@images.find": "Find image...",
+        "@images.find": "Search on Unsplash",
         "@images.noneFound": "You don't have any uploaded images yet",
         "@images.noneFoundSearch": "We did not find a matching image in your uploads",
         "@images.searchUnsplash": "Search on Unsplash",

@@ -16,13 +16,16 @@ import VirtualList from "../../shared/collections/VirtualList";
 import { UserImageStencil } from "./UserImagesStore";
 import { UserImage, getUserImageHeight } from "./UserImage";
 import { onCssTransitionEnd } from "../../utils/domUtil";
+import styled from "styled-components";
+import theme from "../../theme";
 
 type ImageList = new (props) => VirtualList<UserImageStencil>;
 const ImageList = VirtualList as ImageList;
 
 export default class SearchImages extends StoreComponent<{}, SearchImagesStoreState>{
+    page: HTMLElement;
+
     refs: {
-        page: HTMLElement;
         search: Search;
     }
 
@@ -33,7 +36,7 @@ export default class SearchImages extends StoreComponent<{}, SearchImagesStoreSt
     componentDidMount() {
         super.componentDidMount();
 
-        var page = ReactDom.findDOMNode(this.refs.page);
+        var page = ReactDom.findDOMNode(this.page);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
         onCssTransitionEnd(page, () => this.refs.search.focus(), LessVars.tabTransitionTime);
@@ -55,13 +58,13 @@ export default class SearchImages extends StoreComponent<{}, SearchImagesStoreSt
     render() {
         let noResults = this.state.images && !this.state.images.length && this.state.query;
 
-        return <div ref="page">
+        return <SearchImagesContainer innerRef={x=>this.page = x}>
             <div className="library-page__header">
                 <Search query={this.state.query} onQuery={this.onSearch} placeholder="@images.find" ref="search" />
             </div>
 
             {this.state.error ? this.renderError() : noResults ? this.renderNoResults() : this.renderResults()}
-        </div>;
+        </SearchImagesContainer>;
     }
 
     private renderNoResults() {
@@ -101,3 +104,9 @@ export default class SearchImages extends StoreComponent<{}, SearchImagesStoreSt
         </div>;
     }
 }
+
+
+const SearchImagesContainer = styled.div`
+    font:${theme.default_font};
+    color:${theme.text_color};
+`;

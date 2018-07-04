@@ -1,24 +1,23 @@
 import * as React from "react";
-import * as cx from "classnames";
 import * as ReactDom from "react-dom";
-import { Component, listenTo, dispatch, handles, StoreComponent, dispatchAction } from "../../CarbonFlux";
+import { StoreComponent, dispatchAction } from "../../CarbonFlux";
 import Search from "../../shared/Search";
-import ImagesActions from './ImagesActions';
-import LayoutActions from '../../layout/LayoutActions';
-import unsplashStore, { UnsplashStoreState, UnsplashStore, UnsplashStencil } from "./UnsplashStore";
+import unsplashStore, { UnsplashStoreState, UnsplashStencil } from "./UnsplashStore";
 import InfiniteList from "../../shared/collections/InfiniteList";
-import { ImagePortraitHeight, ImageLandscapeHeight } from "../LibraryDefs";
+import { ImageLandscapeHeight } from "../LibraryDefs";
 import { MarkupLine, Markup } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
 import { getUnsplashImageHeight, UnsplashImage } from "./UnsplashImage";
-import { onCssTransitionEnd } from "../../utils/domUtil";
+import styled from "styled-components";
+import theme from "../../theme";
 
 type UnsplashList = new (props) => InfiniteList<UnsplashStencil>;
 const UnsplashList = InfiniteList as UnsplashList;
 
 export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
+    page: HTMLElement;
+
     refs: {
-        page: HTMLElement;
         search: Search;
         list: InfiniteList<any>;
     }
@@ -29,17 +28,17 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
 
     componentDidMount() {
         super.componentDidMount();
-        var page = ReactDom.findDOMNode(this.refs.page);
+        var page = ReactDom.findDOMNode(this.page);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
-        onCssTransitionEnd(page, () => this.refs.search.focus(), 800);
+        // onCssTransitionEnd(page, () => this.refs.search.focus(), 800);
     }
 
     private onLoadMore = (start, stop) => {
         return unsplashStore.runQuery(start, stop);
     }
 
-    private onSearch = term => {
+    public onSearch = term => {
         dispatchAction({ type: "Images_UnsplashSearch", q: term });
         this.refs.list.reset();
     }
@@ -81,16 +80,44 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
     };
 
     render() {
-        return <div ref="page" className="unsplash">
+        return <UnsplashContainer innerRef={p=>this.page = p} className="unsplash">
             <div className="library-page__content">
-                <div className="filter">
-                    <Search query={this.state.term} onQuery={this.onSearch} placeholder="@images.find" ref="search" className="search-container" />
-                </div>
                 <section className="fill">
                     {this.renderError()}
                     {this.renderList()}
                 </section>
             </div>
-        </div>;
+        </UnsplashContainer>;
     }
 }
+
+const UnsplashContainer = styled.div`
+    .unsplash__holder {
+        position:relative;;
+        width:100%;
+        height:100%;
+        border-radius: 3px;
+        padding:0 ${theme.margin1} ${theme.margin2} ${theme.margin1};
+        overflow:hidden;
+    }
+
+    .unsplash__image {
+        width:100%;
+        height:100%;
+        background-size: cover;
+        display:inline-block;
+        border-radius: 3px;
+    }
+
+    .unsplash__credits {
+        right: 0;
+        background: rgba(0, 0, 0, .5);
+        position: absolute;
+        bottom: ${theme.margin2};
+        right:${theme.margin1};
+        text-decoration: none;
+        color: #EEE;
+        padding: 2px 4px;
+        cursor:pointer;
+    }
+`;

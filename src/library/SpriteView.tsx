@@ -227,19 +227,27 @@ export default class SpriteView extends Component<SpriteViewProps>{
         }
 
         let cellCount = this.calculateCellCount();
-        return <SpriteViewContainer
-            innerRef={x=>this.collection = x}
-            cellCount={cellCount}
-            cellRenderer={this.renderCell}
-            cellsMeasurer={this.measureCells}
-            scrollToCell={this.calculateScrollToCell(this.props.scrollToCategory)}
-            overscanCount={this.props.overscanCount}
-            onScroll={this.onScroll}
-        />
+        return <SpriteViewContainer className="sprite-view">
+            <VirtualCollection
+                ref={x=>this.collection = x}
+                cellCount={cellCount}
+                cellRenderer={this.renderCell}
+                cellsMeasurer={this.measureCells}
+                scrollToCell={this.calculateScrollToCell(this.props.scrollToCategory)}
+                overscanCount={this.props.overscanCount}
+                onScroll={this.onScroll}/>
+        </SpriteViewContainer>
     }
 }
 
-const vcss = css`
+const SpriteViewContainer = styled.div`
+    width:100%;
+    height:100%;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    position:absolute;
     .group__name {
         white-space: nowrap;
         overflow: hidden;
@@ -249,7 +257,6 @@ const vcss = css`
         font:${theme.default_font};
         color:${theme.text_color};
     }
-
 
     .stencil {
         position:relative;
@@ -282,6 +289,33 @@ const vcss = css`
             }
         }
 
+        &_icon {
+            padding: 4px;
+            align-items: stretch;
+        }
+
+        &_icon__holder {
+            flex: auto;
+            background-size: contain;
+            background-position: center center;
+        }
+
+        &_userImage {
+            width:100%;
+            height:100%;
+            i {
+                width:100%;
+                height:100%;
+                background-position: center center;
+            }
+        }
+
+        &_data {
+            width: 100px;
+            height: 80px;
+            overflow: hidden;
+        }
+    }
 /* .sidebar &.smart-child {
     &:before {
         .bef;
@@ -341,32 +375,6 @@ const vcss = css`
     border-color: @bg4_panel_body;
 }
 
-&&_icon {
-    padding: 4px;
-    align-items: stretch;
-}
-
-&_icon__holder {
-    flex: auto;
-    background-size: contain;
-    background-position: center center;
-}
-
-&&_userImage {
-    .w100;
-    .h100;
-    i {
-        .w100;
-        .h100;
-        background-position: center center;
-    }
-}
-
-&&_data {
-    width: 100px;
-    height: 80px;
-    overflow: hidden;
-}
 
 .panel[data-mode="narrow"] & {
     @w : 100% / 6;
@@ -396,5 +404,3 @@ const vcss = css`
     cursor: not-allowed;
 } */
 `
-
-const SpriteViewContainer = styled(VirtualCollection).attrs<any>({})`${vcss}`;

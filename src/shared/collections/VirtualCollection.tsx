@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
+import * as cx from "classnames";
 import { AutoSizer, Dimensions, Index, IndexRange, List, ListRowProps, Collection, CollectionCellRendererParams, SectionRenderedParams } from "react-virtualized";
 import { Component } from "../../CarbonFlux";
 import { IPaginatedResult } from "carbon-api";
@@ -114,9 +115,8 @@ export default class VirtualCollection extends Component<VirtualCollectionProps>
 
                 let cellCount = dimensions.width && dimensions.width ? this.props.cellCount : 0;
 
-                return <div style={{ width: dimensions.width, height: dimensions.height }}>
+                return <div style={{ width: dimensions.width, height: dimensions.height }} className={cx("vc", this.props.className)}>
                     <Collection
-                        className={this.props.className}
                         cellRenderer={this.cellRenderer}
                         cellCount={cellCount}
                         cellSizeAndPositionGetter={this.cellMeasurer}

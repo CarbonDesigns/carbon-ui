@@ -1,16 +1,9 @@
 import * as React from "react";
 import UserImages from "./UserImages";
-import RecentImages from "./RecentImages";
-//import RecentIcons from "./RecentIcons";
 import Unsplash from "./Unsplash";
-//import SearchIcons from "./SearchIcons";
-import { richApp } from "../../RichApp";
-import { listenTo, Component, dispatch, dispatchAction } from "../../CarbonFlux";
-import { TabContainer, TabTabs, TabArea, TabPage } from "../../shared/TabContainer";
-import bem from '../../utils/commonUtils';
-
+import { listenTo, Component, dispatchAction } from "../../CarbonFlux";
+import { TabContainer } from "../../shared/TabContainer";
 import libraryTabStore from "../LibraryTabStore";
-import SearchImages from "./SearchImages";
 import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
 import styled from "styled-components";
 import Search from "../../shared/Search";
@@ -44,9 +37,7 @@ export default class ImagesPage extends Component<any, any> {
 
     render() {
         return <TabContainer ref={t => this.tabContainer = t} id="images-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({ type: "Library_Tab", area: "images", tabId })}>
-            <SearchContainer>
-                <Search query={this.state.query} onQuery={this.onSearch} placeholder="@images.find" ref="search" />
-            </SearchContainer>
+            <Search query={this.state.query} onQuery={this.onSearch} placeholder="@images.find" ref="search" />
 
             <TabAreaStyled id="icons-page__pages">
                 <TabPageStyled tabId="1">
@@ -62,7 +53,3 @@ export default class ImagesPage extends Component<any, any> {
         </TabContainer>
     }
 }
-
-const SearchContainer = styled.div`
-
-`;

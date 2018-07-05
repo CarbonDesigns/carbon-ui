@@ -25,7 +25,7 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
 
         this.state = {
             error: false,
-            term: "football",
+            term: "",
             results: []
         };
     }

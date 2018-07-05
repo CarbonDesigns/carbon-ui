@@ -34,7 +34,7 @@ export default class Search extends Component<SearchProps, SearchState> implemen
     }
 
     componentWillReceiveProps(nextProps: Readonly<SearchProps>, context) {
-        if (nextProps.query !== this.state.query) {
+        if (nextProps.query !== undefined && nextProps.query !== this.state.query) {
             this.setState({ query: nextProps.query });
         }
     }
@@ -57,7 +57,7 @@ export default class Search extends Component<SearchProps, SearchState> implemen
     }
 
     query(term){
-        this.setState({query: term});
+        this.setState({query: term || ""});
         this.props.onQuery(term);
     }
     onChange = (e) => {
@@ -82,6 +82,7 @@ export default class Search extends Component<SearchProps, SearchState> implemen
         return <SearchContainer {...other} >
             <input  placeholder={this.formatLabel(placeholder)} onChange={this.onChange}
                 value={this.state.query}
+                type="text"
                 autoFocus={autoFocus}
                 ref="input"/>
             <div className="search-field__ico">

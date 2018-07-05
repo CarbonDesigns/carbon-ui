@@ -20,7 +20,7 @@ export default class ActionButton extends Component<ActionButtonProps> {
     }
 
     render() {
-        var classname = cx("action-button", {disabled: this.props.disabled});
+        var classname = cx("action-button", this.props.className, {disabled: this.props.disabled});
         var label = this.formatLabel(this.props.action);
         return (
             <div className={classname} id={this.props.id} title={label} onMouseDown={this._stopPropagation}

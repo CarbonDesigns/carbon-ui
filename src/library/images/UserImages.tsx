@@ -1,15 +1,13 @@
 import * as React from "react";
-import * as ReactDom from "react-dom";
 import * as Dropzone from "dropzone";
 
-import { app, backend, createUUID, IDisposable } from "carbon-core";
-import { Component, listenTo, dispatch, handles, dispatchAction } from "../../CarbonFlux";
+import { backend, IDisposable } from "carbon-core";
+import { Component, listenTo, dispatch, dispatchAction } from "../../CarbonFlux";
 import ImagesActions from "./ImagesActions";
 import { FormattedMessage } from "react-intl";
-import LayoutActions from '../../layout/LayoutActions';
 import UserImagesStore, { UserImageStencil } from "./UserImagesStore";
 import ImageUploadQueueStore from "./ImageUploadQueueStore";
-import { UploadStatus, IQueueFile } from "./ImageUploadQueueStore";
+import { UploadStatus } from "./ImageUploadQueueStore";
 import ScrollContainer from "../../shared/ScrollContainer";
 import DropzoneRegistry from "../../workspace/DropzoneRegistry";
 import bem from "bem"

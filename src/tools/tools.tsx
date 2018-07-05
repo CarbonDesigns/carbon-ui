@@ -174,11 +174,13 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         prototype: [
             {
                 type: "single",
-                tool: "protoTool"
+                tool: "protoTool",
+                icon: icons.tool_selection
             },
             {
                 type: "single",
-                tool: "artboardTool"
+                tool: "artboardTool",
+                icon: icons.tool_artboard
             }
         ],
         preview: []

@@ -6,13 +6,15 @@ import IconFinder from "./IconFinder";
 import SearchIcons from "./SearchIcons";
 import { listenTo, Component, dispatch, dispatchAction } from '../../CarbonFlux';
 import { TabContainer, TabArea, TabTabs, TabPage } from "../../shared/TabContainer";
-import bem from '../../utils/commonUtils';
 import libraryTabStore from "../LibraryTabStore";
 import InternalIconsStore from "./InternalIconsStore";
 import { TabAreaStyled, TabPageStyled } from "../../components/CommonStyle";
+import styled from "styled-components";
+import Search from "../../shared/Search";
 
-export default class IconsPage extends Component {
-    iconfinder: IconFinder;
+export default class IconsPage extends Component<any, any> {
+    private iconfinder: IconFinder;
+    private tabContainer: TabContainer;
 
     constructor(props) {
         super(props);
@@ -38,11 +40,8 @@ export default class IconsPage extends Component {
     }
 
     render() {
-
-        return  return <TabContainer id="icons-page" className="gui-page__content" currentTabId={this.state.tabId} onTabChanged={tabId => dispatchAction({ type: "Library_Tab", area: "icons", tabId })}>
-            <SearchContainer>
-                <Search query={this.state.query} onQuery={this.onSearch} placeholder="@icons.find" ref="search" />
-            </SearchContainer>
+        return <TabContainer id="icons-page" className="gui-page__content" currentTabId={this.state.tabId} ref={x=>this.tabContainer = x} onTabChanged={tabId => dispatchAction({ type: "Library_Tab", area: "icons", tabId })}>
+            <Search query={this.state.query} onQuery={this.onSearch} placeholder="@icons.find" ref="search" />
 
             <TabAreaStyled id="icons-page__pages">
                 <TabPageStyled tabId="1">

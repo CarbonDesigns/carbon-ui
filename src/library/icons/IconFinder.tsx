@@ -35,7 +35,7 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
         return iconFinderStore.runQuery(start, stop);
     }
 
-    private onSearch = term => {
+    public onSearch = term => {
         dispatchAction({ type: "Icons_WebSearch", q: term });
         this.refs.grid.reset();
     }

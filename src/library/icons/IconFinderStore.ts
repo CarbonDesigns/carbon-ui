@@ -1,6 +1,6 @@
 import IconFinderApi from "./IconFinderApi";
 import IconsActions, { IconsAction } from "./IconsActions";
-import { handles, CarbonStore, dispatch } from '../../CarbonFlux';
+import { handles, CarbonStore, dispatch, dispatchAction } from '../../CarbonFlux';
 import { Image, Brush, ContentSizing, IPaginatedResult } from "carbon-core";
 import Toolbox from "../Toolbox";
 import { IToolboxStore, StencilInfo } from "../LibraryDefs";
@@ -17,6 +17,7 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
     storeType = "iconFinder";
 
     private api: any;
+    private results: any[];
 
     constructor() {
         super();
@@ -28,10 +29,11 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
             term: "",
             results: []
         };
+        this.results = [];
     }
 
     findStencil(info: StencilInfo) {
-        return this.state.results.find(x => x.id === info.stencilId);
+        return this.state.results.find(x => x && x.id === info.stencilId);
     }
     createElement(stencil) {
         var element = new Image();
@@ -63,7 +65,11 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
                     this.setState({
                         term: action.q, error: false, results: []
                     });
+                    this.results = [];
                 }
+                return;
+            case "Icons_WebSearchResult":
+                this.setState({results:action.result})
                 return;
         }
     }
@@ -107,7 +113,8 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
             var baseUrl = thumbUrl.substring(0, thumbUrl.lastIndexOf('/'));
 
             var icon: any = {
-                id: ++key + "", //sometimes the same icon is returned on different pages
+                id: x.icon_id + "", //sometimes the same icon is returned on different pages
+                key: ++key+"",
                 type: this.storeType,
                 name: sizeDesc + ", " + x.tags.join(", "),
                 url: thumbUrl,
@@ -137,11 +144,14 @@ export class IconFinderStore extends CarbonStore<IconFinderStoreState> implement
             return icon;
         });
 
-        let results = this.state.results;
+        let results = this.results;
         for (let i = 0; i < page.length; ++i) {
             results[i + start] = page[i];
         }
-        this.setState({ results });
+
+        this.results = results;
+        // this.setState({ results });
+        dispatchAction({ type: "Icons_WebSearchResult", result: results, async:true });
 
         return {
             pageData: page,

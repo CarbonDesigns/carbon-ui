@@ -48,7 +48,7 @@ export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IT
     }
 
     findStencil(info: StencilInfo) {
-        return this.state.results.find(x => x.id === info.stencilId);
+        return this.state.results.find(x => x && x.id === info.stencilId);
     }
 
     createElement(stencil: UnsplashStencil){
@@ -79,7 +79,7 @@ export class UnsplashStore extends CarbonStore<UnsplashStoreState> implements IT
 
     runQuery(start: number, stop: number): Promise<IPaginatedResult<any>> {
         if (!this.state.term){
-            return Promise.reject(new Error("No unsplash search term"));
+            return Promise.resolve( { pageData: [], totalCount: 0 });
         }
 
         let startPage = Math.floor(start / PageSize);

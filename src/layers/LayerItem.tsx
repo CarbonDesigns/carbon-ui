@@ -248,6 +248,9 @@ const LayerCaption = styled.div`
     font:${theme.default_font};
     color:${theme.text_color};
     padding-left: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     flex:1;
     input {
         height:${layer_height}px;

@@ -21,6 +21,7 @@ export const colors = {
     text_color_lowimportance:'#afacac',
     button_default: "#9b9a9b",
     stencil_background: "#fff",
+    action_underline: "#fff",
     button_hover: "white",
     button_active: "#e94565",
     button_disabled:"#525252",

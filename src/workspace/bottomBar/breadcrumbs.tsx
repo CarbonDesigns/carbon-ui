@@ -271,7 +271,110 @@ const BreadcrumbsContainer = styled.div`
     font:${theme.default_font};
     color:${theme.text_color};
     display:flex;
-    align-items:center;
-    height:100%;
 
+    white-space:nowrap;
+    height:100%;
+    align-items: stretch;
+    flex-wrap:nowrap;
+
+    margin-right: auto;
+
+    .breadcrumbs {
+        &__selected-amount{
+            margin-right: .3em;
+            color: ${theme.text_color};
+        }
+
+        &__actions {
+            display:flex;
+            align-items: stretch;
+            flex-wrap:nowrap;
+            margin-left: ${theme.margin1};
+        }
+
+        &__action {
+            opacity:0.7
+            &:hover {
+                opacity:1;
+            }
+
+            padding: 0 ${theme.margin1};
+            cursor:pointer;
+            font:${theme.default_font};
+            color:${theme.text_color};
+            display:flex;
+            align-items:center;
+            line-height: 1;
+        }
+    }
+
+    .breadcrumb,
+    .breadcrumbs__message {
+        padding: 0 ${theme.margin1};
+        font:${theme.default_font};
+        color:${theme.text_color};
+        display:flex;
+        justify-content:left;
+        line-height: 1;
+    }
+
+    .breadcrumb {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width:100px;
+        position:relative;
+
+        &_first {
+            padding-left: ${theme.margin1};
+        }
+
+        &__icon {
+            width:12px;
+            height:11px;
+            position:relative;
+        }
+
+        cursor:pointer;
+        user-select: none;
+        &_last {
+            cursor: inherit;
+        }
+
+        &:hover &__caption {
+            border-bottom: 1px dotted ${theme.action_underline};
+        }
+
+        &_last:hover &__caption {
+            border-bottom: none;
+        }
+
+        &__arrow {
+            position:absolute;
+            right:3px;
+            height:100%;
+            top:0;
+            width:0;
+
+            &:after, &:before {
+                content: "";
+                position: absolute;
+                display: block;
+                left: 100%;
+                width:0;
+                height:16%;
+
+                border-right: 1px solid ${theme.action_underline};
+            }
+
+            &:before {
+                transform:skewX(40deg);
+                top: 34%;
+            }
+            &:after {
+                transform:skewX(-40deg);
+                bottom: 34%;
+            }
+        }
+    }
 `;

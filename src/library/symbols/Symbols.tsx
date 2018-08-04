@@ -133,12 +133,11 @@ const ImportButton = styled(MainButton).attrs<any>({})`
 `;
 
 const NavigatableContent = styled(Navigatable).attrs<any>({})`
-     width: 100%;
+    width: 100%;
     padding: 0 0;
     bottom: 0;
     top:0;
     display: flex;
     flex-direction: column;
     overflow:hidden;
-
 `;

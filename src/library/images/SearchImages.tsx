@@ -1,13 +1,8 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
-import { Component, listenTo, dispatchAction, StoreComponent } from "../../CarbonFlux";
+import { dispatchAction, StoreComponent } from "../../CarbonFlux";
 import Search from "../../shared/Search";
-import ScrollContainer from "../../shared/ScrollContainer";
-import SpriteView from "../SpriteView";
 import searchImagesStore, { SearchImagesStoreState } from "./SearchImagesStore";
-import Navigatable from "../../shared/Navigatable";
-import bem from "../../utils/commonUtils";
-import { SymbolsOverscanCount, SymbolsColumnWidth, IconsOverscanCount, IconSize } from "../LibraryDefs";
 import LessVars from "../../styles/LessVars";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";

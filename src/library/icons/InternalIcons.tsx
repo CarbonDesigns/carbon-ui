@@ -53,7 +53,7 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
         }
 
         return <InternalIconsContainer>
-            <Navigatable className="_navigatable"
+            <NavigatableContent className="_navigatable"
                 activeCategory={this.state.activeCategory}
                 onCategoryChanged={this.onCategoryChanged}
                 config={config}>
@@ -68,15 +68,32 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
                     columnWidth={IconSize}
                     keepAspectRatio={true}
                     templateType={InternalIconsStore.storeType}/>
-            </Navigatable>
+            </NavigatableContent>
         </InternalIconsContainer>;
     }
 }
 
+const NavigatableContent = styled(Navigatable).attrs<any>({})`
+    width: 100%;
+    padding: 0 0;
+    bottom: 0;
+    top:0;
+    display: flex;
+    flex-direction: column;
+    overflow:hidden;
+`;
 
 const InternalIconsContainer = styled.div`
     font:${theme.default_font};
     color:${theme.text_color};
+    position:absolute;
+    display:flex;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    width:100%;
+    height:100%;
 
     i {
         display:inline-block;

@@ -1,7 +1,5 @@
 import { handles, CarbonStore, dispatchAction } from "../CarbonFlux";
-import {richApp} from '../RichApp';
 import CarbonActions from "../CarbonActions";
-
 import { app, ArtboardType } from "carbon-core";
 
 export default class WorkspaceStore extends CarbonStore {
@@ -17,16 +15,6 @@ export default class WorkspaceStore extends CarbonStore {
             else if (hasIcons) {
                 dispatchAction({type: "Library_Tab", area: "library", tabId: "2", async: true});
             }
-        }
-    }
-
-    @handles(CarbonActions.inlineEditModeChanged)
-    inlineEditModeChanged({mode}){
-        if (mode){
-            // HotKeyListener.suspend();
-        }
-        else{
-            // HotKeyListener.resume();
         }
     }
 }

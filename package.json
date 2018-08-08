@@ -6,6 +6,7 @@
   "author": "",
   "scripts": {
     "start": "node ./scripts/watch.js",
+    "startLinkCore": "node ./scripts/watch.js --linkCore",
     "pack": "node ./scripts/pack.js",
     "test": "node ./scripts/test.js",
     "storybook": "start-storybook -p 9001 -c .storybook"

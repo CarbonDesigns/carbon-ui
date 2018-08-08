@@ -1,42 +1,25 @@
 {
-    "version": "0.1.0",
-    "command": "node",
-    "isShellCommand": true,
-    "showOutput": "always",
-    "suppressTaskName": true,
+    "version": "2.0.0",
     "tasks": [
         {
-            "taskName": "build ui",
-            "args": [
-                "./scripts/watch.js"
+            "group": "build",
+            "label": "Start UI",
+            "type": "npm",
+            "script": "start",
+            "problemMatcher": [
+                "$tsc-watch"
             ],
-            "isBackground": true,
-            "isBuildCommand": true,
-            "problemMatcher": {
-                "owner": "webpack",
-                "watching": {
-                    "activeOnStart": true,
-                    "beginsPattern": "Checking started in a separate process",
-                    "endsPattern": "webpack: Failed to compile\\.|webpack: bundle is|webpack: Compiled"
-                },
-                "severity": "error",
-                "fileLocation": [
-                    "relative",
-                    "${workspaceRoot}"
-                ],
-                "pattern": [
-                    {
-                        "regexp": "(.*?):(\\d+):(\\d+)",
-                        "file": 1,
-                        "line": 2,
-                        "column": 3
-                    },
-                    {
-                        "regexp": "\\s+(.*)",
-                        "message": 1
-                    }
-                ]
-            }
+            "isBackground": true
+        },
+        {
+            "group": "build",
+            "label": "Start UI (link core)",
+            "type": "npm",
+            "script": "startLinkCore",
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "isBackground": true
         }
     ]
 }

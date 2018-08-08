@@ -5,6 +5,7 @@ export type CarbonAction =
     { type: "Carbon_AppUpdated" } |
     { type: "Carbon_Cancel" } |
     { type: "Carbon_Scroll" } |
+    { type: "Carbon_TextEditModeChanged", editing: boolean; } |
     { type: "Carbon_PrototypeMode", mode: "visual" | "code" } |
     { type: "Carbon_AppChanged", primitives: Primitive[] } |
     { type: "Carbon_AppSettingsChanged", settings: AppSettings } |
@@ -84,12 +85,6 @@ var CarbonActions = {
         return {
             type: "CARBON_RECENTCOLORS_CHANGED",
             colors
-        }
-    },
-    inlineEditModeChanged: mode => {
-        return {
-            type: "CARBON_INLINE_MODE",
-            mode
         }
     },
     toolChanged: tool => {

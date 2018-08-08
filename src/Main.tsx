@@ -294,12 +294,15 @@ ReactDom.render(
                 <Switch>
                     <Route exact path='/' component={LandingSelector} />
                     <Route path='/landing' component={LandingPage} />
-                    <Route path='/app(/@:companyName)?(/:appId)?' render={appStartChunk} />
+                    <Route path='/app/@:companyName/:appId?' render={appStartChunk} />
+                    <Route path='/app/:appId?' render={appStartChunk} />
                     <Route path='/m' render={previewIndexChunk} />
                     <Route path='/q/:code' render={quickAppStartChunk} />
-                    <Route path='/m/app(/@:companyName)(/:appId)' render={mirrorringAppStartChunk} />
+                    <Route path='/m/app/@:companyName/:appId' render={mirrorringAppStartChunk} />
+                    <Route path='/m/app//:appId' render={mirrorringAppStartChunk} />
                     <Route path='/m/:code' render={mirrorringAppStartChunk} />
-                    <Route path='/p/app(/@:companyName)(/:appId)' render={previewAppStartChunk} />
+                    <Route path='/p/app/@:companyName/:appId' render={previewAppStartChunk} />
+                    <Route path='/p/app/:appId' render={previewAppStartChunk} />
 
                     <Route path='/a/renew' component={RenewToken} />
                     <Route path='/a/external' component={ExternalLogin} />

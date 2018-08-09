@@ -1,6 +1,5 @@
 import * as React from "react";
 import EditorComponent, { IEditorProps } from "./EditorComponent";
-import * as cx from "classnames";
 import { FormattedMessage } from "react-intl";
 import EnterInput from "../../shared/EnterInput";
 import { app } from "carbon-core";
@@ -243,6 +242,7 @@ const InputStyled = styled(EnterInput) `
     width:100%;
     background:transparent;
     text-align:center;
+    cursor: text;
 `;
 
 const InputContainer = styled.div.attrs<any>({}) `

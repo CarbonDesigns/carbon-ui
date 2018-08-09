@@ -1,16 +1,13 @@
 import * as React from "react";
-import * as ReactDom from "react-dom";
-import * as cx from "classnames";
-import bem from '../../utils/commonUtils';
 import { CarbonLabel } from "../../CarbonFlux";
-
 import EditorComponent, { IEditorProps } from "./EditorComponent";
 import FlyoutButton from '../../shared/FlyoutButton';
 import ScrollContainer from '../../shared/ScrollContainer';
-import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
 import theme from "../../theme";
 import { PropertyLineContainer, PropertyNameContainer } from "../PropertyStyles";
+import Icon from "../../components/Icon";
+import icons from "../../theme-icons";
 
 export interface IDropdownEditorProps extends IEditorProps {
     onValueChanged?: (item: any) => void;
@@ -76,7 +73,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
         return item && item.icon ? <i key='icon' className={item.icon} /> : null
     }
 
-    _renderValue = (item) => {
+    _renderValue = () => {
         return;
     };
 
@@ -102,6 +99,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
             return <SelectedValue>
                 <CarbonLabel id={caption} />
                 {this._renderIcon(selectedItem)}
+                <Icon icon={icons.triangle_down} color={theme.icon_default}></Icon>
             </SelectedValue>
         }
     };
@@ -125,7 +123,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
                         return <DropItem
                             key={item.name}
                             selected={is_selected}
-                            onClick={((item) => ((ev) => this._onOptionSelected(item)))(item)}
+                            onClick={((item) => (() => this._onOptionSelected(item)))(item)}
                             data-name={item.name}
                         >
                             {item.content ? item.content : <b key="name"><CarbonLabel id={item.name} /></b>}
@@ -139,7 +137,6 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
     }
 
     render() {
-        let p = this.props.p;
         return <PropertyLineContainer>
             <PropertyNameContainer><CarbonLabel id={this.displayName()} /></PropertyNameContainer>
             <DropButton
@@ -194,6 +191,7 @@ const SelectedValue = styled.div`
     line-height:${theme.prop_height};
     background:${theme.input_background};
     padding: 0 4px 0 ${theme.margin1};
+    cursor: pointer;
     width:100%;
     z-index:1001;
 `;

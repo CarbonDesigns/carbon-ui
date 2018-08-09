@@ -9,8 +9,8 @@ import MultiToggleEditor from "../MultiToggleEditor";
 import MultiSwitchEditor from "../MultiSwitchEditor";
 import FontFamilyList from './FontFamilyList';
 
-import { app, Font, Text, TextAlign, FontScript, FontWeight, FontStyle, UnderlineStyle, Brush, PatchType } from "carbon-core";
-import { dispatch, CarbonLabel } from "../../../CarbonFlux";
+import { app, Font, TextAlign, FontWeight, FontStyle, UnderlineStyle, Brush } from "carbon-core";
+import { CarbonLabel } from "../../../CarbonFlux";
 import { PropertyLineContainer, PropertyListContainer, PropertyNameContainer } from "../../PropertyStyles";
 import styled from "styled-components";
 import theme from "../../../theme";

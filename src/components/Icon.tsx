@@ -1,12 +1,7 @@
 import * as React from "react";
-import PropTypes, { bool } from "prop-types";
-import { listenTo, Component, handles, dispatch } from "../CarbonFlux";
+import { Component } from "../CarbonFlux";
 import styled from "styled-components";
-import { FormattedMessage, defineMessages } from 'react-intl';
-import * as cx from "classnames";
-import theme from "../theme";
 import icons from "../theme-icons";
-import { backend } from "carbon-core"
 
 interface IIconProps extends IReactElementProps {
     icon?: {src:string;width:number;height:number};

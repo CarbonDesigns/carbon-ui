@@ -1,10 +1,8 @@
 import * as React from "react";
 import EditorComponent, { IEditorProps } from "./EditorComponent";
-import * as cx from "classnames";
 import { FormattedMessage } from "react-intl";
 import bem from '../../utils/commonUtils';
 import { Constraints } from "carbon-core";
-import DropDownEditor from "./DropdownEditor";
 import { HorizontalConstraint, VerticalConstraint, IConstraints } from "carbon-core";
 import GuiSelect from "../../shared/ui/GuiSelect";
 import styled from "styled-components";

@@ -132,6 +132,7 @@ const CurrentItem = styled.div`
     padding: 0 4px 0 ${theme.margin1};
     width:100%;
     z-index:1001;
+    cursor:pointer;
 `;
 
 const DropItem = styled.div`

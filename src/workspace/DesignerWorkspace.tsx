@@ -19,7 +19,7 @@ import { cancellationStack, ICancellationHandler } from "../shared/ComponentStac
 import styled from "styled-components";
 import theme from "../theme";
 import Tools from '../tools/tools';
-import CarbonActions from '../CarbonActions';
+import CarbonActions, { CarbonAction } from '../CarbonActions';
 import Toolbox from '../library/Toolbox';
 import { MonacoEditor } from '../editor/MonacoEditor';
 
@@ -27,6 +27,7 @@ require("./IdleDialog");
 
 const State = Record({
     activeMode: null,
+    prototypeMode:null    
     prototypeMode: null,
     isolationActive:false
 })
@@ -116,9 +117,13 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
         });
     }
 
-    onAction(action: any) {
-        if (action.type === CarbonActions.inlineEditModeChanged) {
-            if (action.mode) {
+    canHandleActions() {
+        return true;
+    }
+
+    onAction(action: CarbonAction) {
+        if (action.type === "Carbon_TextEditModeChanged") {
+            if (action.editing) {
                 HotKeyListener.suspend();
             }
             else {
@@ -199,7 +204,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
 
     registerDispatchEvents(view, controller) {
         if (controller.inlineEditModeChanged) {
-            let token = controller.inlineEditModeChanged.bindAsync(mode => dispatch(CarbonActions.inlineEditModeChanged(mode)));
+            let token = controller.inlineEditModeChanged.bindAsync(editing => dispatchAction({ type: "Carbon_TextEditModeChanged", editing }));
             this.dispatchDisposables.add(token);
         }
 

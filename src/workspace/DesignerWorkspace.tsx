@@ -1,24 +1,17 @@
-//require("./__workspace.less");
-import WindowControls from './topBar/windowControls';
-import ContextBar from './topBar/contextbar';
-// import Tools          from './topBar/tools';
 import Breadcrumbs from './bottomBar/breadcrumbs';
-import PagesBar from './bottomBar/pagesbar';
 import HotKeyListener from "../HotkeyListener";
 
 import * as React from "react";
 import * as PropTypes from "prop-types";
 
-import { app, Selection, Workspace, RenderLoop, SystemExtensions, IDisposable, AutoDisposable } from "carbon-core";
+import { app, Selection, RenderLoop, SystemExtensions, IDisposable, AutoDisposable, IsolationContext } from "carbon-core";
 import ContextMenu from "../shared/ContextMenu";
 
 import ImageDrop from "./ImageDrop";
 
 import { richApp } from "../RichApp";
-import { listenTo, Component, ComponentWithImmutableState, handles, dispatch, dispatchAction } from "../CarbonFlux";
-import { Clipboard } from "carbon-core";
+import { listenTo, ComponentWithImmutableState, handles, dispatch, dispatchAction, CarbonLabel } from "../CarbonFlux";
 import { Record } from "immutable";
-import * as cx from "classnames";
 import AnimationSettings from "../animation/AnimationSetting";
 
 import appStore from "../AppStore";
@@ -34,7 +27,8 @@ require("./IdleDialog");
 
 const State = Record({
     activeMode: null,
-    prototypeMode:null
+    prototypeMode: null,
+    isolationActive:false
 })
 
 const WorkspaceStyled = styled.div`
@@ -60,6 +54,23 @@ const Viewport = styled.div`
     user-select: none;
 `;
 
+const ExitIsolationbutton = styled.div`
+    position:absolute;
+    top: 20px;
+    left:80px;
+    height:25px;
+    line-height: 25px;
+    min-width:30px;
+    cursor:pointer;
+    margin:0;
+    color: ${theme.text_color};
+    background-image: linear-gradient(to right, #ff4295 0%, #ff292c 100%);
+    border-radius: 1px;
+    border: 0;
+    padding:0 ${theme.margin2};
+    outline: 0;
+`;
+
 
 class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements ICancellationHandler {
     private _renderLoop = new RenderLoop();
@@ -80,6 +91,16 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
     private viewport: HTMLElement;
     private workspace = { view: null, controller: null };
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: new State({
+                activeMode: appStore.state.activeMode,
+                prototypeMode: appStore.state.prototypeMode,
+                isolationActive: IsolationContext.isActive
+            })
+        };
+    }
 
     @listenTo(richApp.workspaceStore, appStore)
     onChange() {
@@ -90,6 +111,9 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
         if (app.isLoaded && this._imageDrop && !this._imageDrop.active() && this._renderLoop.isAttached()) {
             this._imageDrop.setup(this._renderLoop.viewContainer);
         }
+        this.mergeStateData({
+            isolationActive: IsolationContext.isActive
+        });
     }
 
     onAction(action: any) {
@@ -231,9 +255,15 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
 
         cancellationStack.pop();
     }
-    render() {
-        var status_text = 'saved2';
 
+    exitisolation=()=> {
+        this.mergeStateData({
+            isolationActive: false
+        });
+        app.actionManager.invoke("exitisolation");
+    }
+
+    render() {
         return (
             <WorkspaceStyled>
                 <Tools key="tools" />
@@ -253,6 +283,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
                     <ContextMenu ref="contextMenu" onBuildMenu={this._buildContextMenu.bind(this)} />
                     <AnimationSettings ref="animationSettings" />
                 </Viewport>
+                {this.state.data.isolationActive && <ExitIsolationbutton onClick={this.exitisolation}><CarbonLabel id="@action.exitisolation"/></ExitIsolationbutton>}
             </WorkspaceStyled>);
     }
 }

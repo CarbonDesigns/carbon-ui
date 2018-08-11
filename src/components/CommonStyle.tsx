@@ -61,7 +61,6 @@ export const MainButtonComponent = styled.button`
     outline: 0;
 
 }
-
 `
 
 export function arrDown(size, color) {

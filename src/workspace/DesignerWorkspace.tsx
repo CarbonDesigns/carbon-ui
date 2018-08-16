@@ -27,8 +27,7 @@ require("./IdleDialog");
 
 const State = Record({
     activeMode: null,
-    prototypeMode:null    
-    prototypeMode: null,
+    prototypeMode:null,
     isolationActive:false
 })
 

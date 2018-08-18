@@ -1,14 +1,11 @@
 import { CarbonStore, dispatch, handles } from "../CarbonFlux";
-import * as Immutable from "immutable";
 
 var emptyCode: string = require("./model/empty.txt") as any;
 
 import * as core from "carbon-core";
 import { ensureMonacoLoaded } from "./MonacoLoader";
 import EditorActions from "./EditorActions";
-import { instanceOf } from "../../node_modules/@types/prop-types/index";
-import { Page, NullPage } from "carbon-core";
-import PreviewActions from "../preview/PreviewActions";
+import { NullPage } from "carbon-core";
 
 interface IEditorStoreState {
     currentItem?: core.IElementWithCode & core.IDisposable;

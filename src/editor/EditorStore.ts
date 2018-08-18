@@ -157,7 +157,7 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
             }
             this.editor = editor;
             if (editor) {
-                this.editor.setModel(this.currentEditorModel); // detach current model if any
+                this.editor.setModel(this.currentEditorModel);
                 this.refreshProxyModel();
                 this.editorDisposables.push(editor.onKeyDown(() => {
                     this.refreshProxyModel();

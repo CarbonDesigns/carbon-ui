@@ -97,6 +97,10 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
 
         this.setFromArtboard(previewModel.activeArtboard);
 
+        previewModel.onPageChanged.bind((page)=>{
+            dispatch(EditorActions.changePage(page));
+        });
+
 
         // TODO: bind on event to refresh list of artboards
     }
@@ -116,6 +120,15 @@ class EditorStore extends CarbonStore<IEditorStoreState> implements core.IDispos
         if (artboard) {
             this.setFromArtboard(artboard);
         }
+    }
+
+    @handles(EditorActions.changePage)
+    onChangePage({ page }) {
+        let previewModel = core.PreviewModel.current;
+        if(!previewModel) {
+            return;
+        }
+        this.setFromArtboard(previewModel.activeArtboard);
     }
 
     @handles(EditorActions.showPageCode)

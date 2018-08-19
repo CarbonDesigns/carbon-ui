@@ -30,6 +30,13 @@ export default {
             async:true
         }
     },
+    changePage: (page) => {
+        return {
+            typed: 'Editor_changePage',
+            page,
+            async:true
+        }
+    },
     showPageCode:(id)=> {
         return {
             type:'Editor_showPageCode',

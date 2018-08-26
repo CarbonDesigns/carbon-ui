@@ -206,22 +206,26 @@ const DropdownContainer = styled.div`
         white-space: normal;
         left:0;
         right:0;
+    }
 
-        & ._item {
-            padding: 0 ${theme.margin1};
-            height: 28px;
-            line-height: 28px;
-            cursor:pointer;
-            &:hover {
-                background: ${theme.accent};
-                border-left: 2px solid ${theme.accent};
-            }
+    & ._item {
+        padding: 0 ${theme.margin1};
+        height: 28px;
+        line-height: 28px;
+        display:flex;
+        align-items:center;
+        color:${theme.text_color};
+        font:${theme.default_font};
+        cursor:pointer;
+        &:hover {
+            background: ${theme.accent};
+            border-left: 2px solid ${theme.accent};
+        }
 
-            border-left: 2px solid ${theme.input_background};
+        border-left: 2px solid ${theme.input_background};
 
-            &._active {
-                border-left: 2px solid ${theme.accent};
-            }
+        &._active {
+            border-left: 2px solid ${theme.accent};
         }
     }
 

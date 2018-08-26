@@ -425,6 +425,10 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             var controller = new PreviewController(app, view, previewModel);
             EditorStore.initialize(null);
 
+            this.detachDisposables.add(previewModel.onPageChanged.bind(this, (page)=>{
+                dispatch(PreviewActions.navigateTo(page.children[0].props.source.artboardId, null));
+            }));
+
             app.onLoad(() => {
                 if (app.activePage === NullPage) {
                     var pageChangedToken = app.pageChanged.bind(() => {

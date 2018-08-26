@@ -296,6 +296,8 @@ export default
         "@repeater.copiesX": "H copies", //
         "@repeater.copiesY": "V copies", //
 
+        "@display.background.preview": "Fill background in preview",
+
         "@page.defaultSymbolGroup": "My Symbols",
         "@page.newSymbolGroup": "Add group",
         "@page.symbolGroup": "Group",

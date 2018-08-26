@@ -21,7 +21,7 @@ export default class EditorToolbar extends Component<any, any> {
         this.state = this.getStateFromStore();
     }
 
-    @listenTo(EditorStore)
+    @listenTo(PreviewStore)
     onEditorStoreChanged() {
         if (!this.mounted) {
             return;
@@ -30,15 +30,15 @@ export default class EditorToolbar extends Component<any, any> {
         this.setState(this.getStateFromStore());
     }
 
-    @handles(EditorActions.initializeModel)
-    onInit() {
-        this.setState(this.getStateFromStore());
-    }
+    // @handles(EditorActions.initializeModel)
+    // onInit() {
+    //     this.setState(this.getStateFromStore());
+    // }
 
     getStateFromStore() {
         let id = null;
-        if (EditorStore.state.currentItem && !(EditorStore.state.currentItem as any).isDisposed()) {
-            id = EditorStore.state.currentItem.id;
+        if (PreviewStore.state.activeArtboardId) {
+            id = PreviewStore.state.activeArtboardId;
         }
 
         let currentIndex = EditorStore.state.codeItems.findIndex(a => a.id === id);
@@ -62,7 +62,6 @@ export default class EditorToolbar extends Component<any, any> {
             states: states,
             stateIndex: stateIndex
         };
-
     }
 
     @listenTo(PreviewStore)
@@ -108,7 +107,7 @@ export default class EditorToolbar extends Component<any, any> {
             return;
         }
 
-        dispatch(PreviewActions.navigateTo(item.id, {}));
+        core.PreviewModel.current.navigateToArtboard(item.id);
     }
 
     changeState = (index) => {

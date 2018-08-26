@@ -8,7 +8,8 @@ var State = Record({
     frameVisible: false,
     displayMode: core.PreviewDisplayMode.Fit,
     previewActive: true,
-    activeDevice:0
+    activeDevice:0,
+    activeArtboardId:""
 });
 
 class PreviewStore extends CarbonStore<any> {
@@ -31,9 +32,9 @@ class PreviewStore extends CarbonStore<any> {
 
     @handles(PreviewActions.navigateTo)
     onNavigateToPage({artboardId, animation, data}) {
-        //this.state = this.state.set("activePage",{artboardId, animation});
-        let previewModel = core.PreviewModel.current;
-        core.PreviewModel.current.navigateToArtboard(artboardId, animation, data);
+        this.state = this.state.set("activeArtboardId", artboardId);
+        //let previewModel = core.PreviewModel.current;
+        //core.PreviewModel.current.navigateToArtboard(artboardId, animation, data);
     }
 
     @handles(PreviewActions.navigateBack)

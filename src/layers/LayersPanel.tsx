@@ -1,22 +1,16 @@
 import { CarbonLabel, StoreComponent, listenTo, dispatch } from '../CarbonFlux';
 import * as React from "react";
-import * as ReactDom from "react-dom";
-import * as PropTypes from "prop-types";
 import Panel from '../layout/Panel'
 import { richApp } from '../RichApp';
-import * as cx from "classnames";
 import VirtualList from "../shared/collections/VirtualList";
 import LessVars from "../styles/LessVars";
-import ScrollContainer from "../shared/ScrollContainer";
-import { app, Invalidate, Selection, IArtboardPage, LayerType, IIsolationLayer, IsolationContext } from "carbon-core";
-import { say } from "../shared/Utils";
-import { MarkupLine } from "../shared/ui/Markup";
+import { app, Selection, IArtboardPage, IIsolationLayer, IsolationContext } from "carbon-core";
 import LayerItem from "./LayerItem";
 import layersStore, { LayerNode, LayersStoreState } from "./LayersStore";
 import dragController from "./LayersDragController";
 import BackButton from "../shared/ui/BackButton";
 import icons from "../theme-icons";
-import styled, {css} from "styled-components";
+import styled, { css } from "styled-components";
 import theme from '../theme';
 import CarbonActions from '../CarbonActions';
 
@@ -205,6 +199,12 @@ const PanelContent = styled.div`
     display: flex;
 
     & .layers__container_moving {
+        .layerButtons {
+            display:none;
+        }
+    }
+
+    & .layers__container_moving {
         &.single {
             /* .c-layer_drag_single(); */
         }
@@ -219,18 +219,13 @@ const PanelContent = styled.div`
         }
 
         .layer {
-            &__dropAbove:after {
+            &__dropInside:after, &__dropAbove:after {
                 ${layer_overlay};
                 top: -${overlay_height/2}px;
             }
-            &__dropBelow:before {
+            &__dropInside:before, &__dropBelow:before {
                 ${layer_overlay};
                 bottom: -${overlay_height/2}px;
-            }
-            &__dropInside {
-                ${layer_overlay};
-                outline: red ${overlay_border}px solid;
-                outline-offset: -1px;
             }
         }
 

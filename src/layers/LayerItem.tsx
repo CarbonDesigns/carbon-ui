@@ -174,6 +174,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
             icon={this.props.expanded ? icons.layer_expanded : icons.layer_collapsed}
             width={10}
             height={10}
+            className="collapser"
             data-index={this.props.index}
             onClick={this.onToggleExpand} />
     }
@@ -197,7 +198,7 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
             >
                 {this.renderCollapser()}
                 <LayerCaption>{this.renderTitle()}</LayerCaption>
-                <ActionButtons>
+                <ActionButtons className="layerButtons">
                     <IconButton className={cx("layerButton", { active: !visible })} icon={icons.layer_visible} width={16} height={16} onClick={this.onToggleVisible} title="@hide/show" />
                     <IconButton className={cx("layerButton", { active: locked })} icon={icons.layer_lock} width={16} height={16} onClick={this.onToggleLock} title="@lock/unlock" />
                     <IconButton className={cx("layerButton", { active: useInCode })} icon={icons.layer_code} width={16} height={16} onClick={this.onToggleCode} title="@useInCode" />

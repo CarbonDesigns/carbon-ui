@@ -8,6 +8,7 @@ import * as Immutable from "immutable";
 import theme from "../../theme";
 import { PropertyLineContainer, PropertyNameContainer } from "../PropertyStyles";
 import { CarbonLabel } from "../../CarbonFlux";
+import icons from "../../theme-icons";
 
 interface IMultiSwitchEditorProps extends IEditorProps {
     type?: "subproperty";
@@ -34,8 +35,12 @@ export default class MultiSwitchEditor extends EditorComponent<IEditorProps, any
     }
 
     renderItem(x, first, last) {
+        var icon =x.icon;
+        if(typeof icon === 'string') {
+            icon = icons[icon];
+        }
         return <SwitchItem active={x.value === this.propertyValue()} first={first} last={last} onClick={this.onChange} key={"value__" + x.value} data-field={x.value}>
-            <Icon className="icon" icon={x.icon}></Icon>
+            <Icon className="icon" icon={icon}></Icon>
         </SwitchItem>
     }
 

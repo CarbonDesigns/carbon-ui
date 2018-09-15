@@ -16,6 +16,8 @@ export interface IDropdownEditorProps extends IEditorProps {
     formatSelectedValue?: (item: any) => any;
     disableAutoClose?: boolean;
     syncWidth?:boolean;
+    targetHorizontal?:"left"|"right"|"center";
+    sourceHorizontal?:"left"|"right"|"center";
 }
 
 export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends EditorComponent<T, TProps> {
@@ -144,8 +146,8 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
                 renderContent={this._renderSelectedValue}
                 position={{
                     targetVertical: "bottom",
-                    targetHorizontal:"left",
-                    sourceHorizontal:"left",
+                    targetHorizontal:this.props.targetHorizontal || "left",
+                    sourceHorizontal:this.props.sourceHorizontal || "left",
                     disableAutoClose: this.props.disableAutoClose,
                     syncWidth: this.props.syncWidth === undefined?true:this.props.syncWidth
                 }}

@@ -164,6 +164,7 @@ const FontOptionsContainer = styled.div`
     box-shadow:${theme.dropdown_shadow};
     padding:${theme.margin1} 0;
     z-index:1000;
+    min-width:35rem;
 
      ._header {
             padding-bottom: 5px;

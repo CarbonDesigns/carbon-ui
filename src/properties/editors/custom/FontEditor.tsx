@@ -215,8 +215,8 @@ export default class FontEditor extends EditorComponent<Font, IEditorProps, IFon
 
     render() {
         return <PropertyListContainer>
-            <DropDownEditor e={this.props.e} p={this.state.family} disableAutoClose formatSelectedValue={() => { return { name: this.state.family.get("value") } }}>
-                <FontFamilyList e={this.props.e} p={this.state.family} onSelected={this.changeFontFamily} ref="fontFamilyList" />
+            <DropDownEditor e={this.props.e} p={this.state.family} syncWidth={false} disableAutoClose formatSelectedValue={() => { return { name: this.state.family.get("value") } }}>
+                <FontFamilyList e={this.props.e} p={this.state.family} onSelected={this.changeFontFamily} />
             </DropDownEditor>
 
             <DropDownEditor e={this.props.e} p={this.state.weight}

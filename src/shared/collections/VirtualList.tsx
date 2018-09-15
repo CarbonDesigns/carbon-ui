@@ -85,8 +85,8 @@ export default class VirtualList<T = any> extends Component<VirtualListProps<T>>
                         scrollToAlignment={this.props.scrollToAlignment}
                         rowCount={this.props.data.length}
                         rowHeight={this.getRowHeight}
-                        width={dimensions.width}
-                        height={dimensions.height}
+                        width={dimensions.width || 10}
+                        height={dimensions.height || 10}
                         ref={this.registerList}
                     />
                 </div>

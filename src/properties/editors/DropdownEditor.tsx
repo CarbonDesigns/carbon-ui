@@ -15,6 +15,7 @@ export interface IDropdownEditorProps extends IEditorProps {
     onClosed?: () => void;
     formatSelectedValue?: (item: any) => any;
     disableAutoClose?: boolean;
+    syncWidth?:boolean;
 }
 
 export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends EditorComponent<T, TProps> {
@@ -146,7 +147,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
                     targetHorizontal:"left",
                     sourceHorizontal:"left",
                     disableAutoClose: this.props.disableAutoClose,
-                    syncWidth: true
+                    syncWidth: this.props.syncWidth === undefined?true:this.props.syncWidth
                 }}
                 innerRef={x=>this.flyout = x}
                 onOpened={this._onOpened}

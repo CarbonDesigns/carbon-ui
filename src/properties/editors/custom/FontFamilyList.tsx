@@ -12,6 +12,8 @@ import { FontCategory } from "./FontActions";
 import { Markup, MarkupLine } from "../../../shared/ui/Markup";
 import { FormattedMessage } from "react-intl";
 import CarbonActions from '../../../CarbonActions';
+import styled from "styled-components";
+import theme from "../../../theme";
 
 type VirtualFontList = new (props) => VirtualList<FontMetadata>;
 const VirtualFontList = VirtualList as VirtualFontList;
@@ -47,16 +49,16 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
     }
 
     private renderSwitches() {
-        return <div className="font-options__filter-switches">
-            {/* <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Favorites })} title="Show favourites fonts"
+        return <div className="_filter-switches">
+            {/* <div className={bem("_filter-switch", null, { active: this.state.category === FontCategory.Favorites })} title="Show favourites fonts"
                 onClick={() => this.onCategoryToggle(FontCategory.Favorites)}>
                 <i className="ico-star" />
             </div> */}
-            <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Popular })} title="Show popular fonts"
+            <div className={bem("_filter-switch", null, { active: this.state.category === FontCategory.Popular })} title="Show popular fonts"
                 onClick={() => this.onCategoryToggle(FontCategory.Popular)}>
                 <i className="ico-popular" />
             </div>
-            <div className={bem("font-options__filter-switch", null, { active: this.state.category === FontCategory.Recent })} title="Show recent fonts"
+            <div className={bem("_filter-switch", null, { active: this.state.category === FontCategory.Recent })} title="Show recent fonts"
                 onClick={() => this.onCategoryToggle(FontCategory.Recent)}>
                 <i className="ico-recent" />
             </div>
@@ -76,7 +78,7 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
         };
 
         return <section
-            className="prop__option font-options__typeface"
+            className="prop__option _typeface"
             data-index={index}
             onClick={this.onClick}
         >
@@ -84,13 +86,13 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
                 <i className="ico-star" />
             </div> */}
 
-            <div className="font-options__typeface-meta">
-                <div className="font-options__typeface-name">{metadata.name}</div>
+            <div className="_typeface-meta">
+                <div className="_typeface-name">{metadata.name}</div>
                 {this.renderVariants(metadata)}
             </div>
 
-            <div className="font-options__typeface-sample-container">
-                <div className="font-options__typeface-sample-image" style={style}></div>
+            <div className="_typeface-sample-container">
+                <div className="_typeface-sample-image" style={style}></div>
             </div>
         </section>
     }
@@ -110,9 +112,9 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
             variants.push({ symbol: "ru", title: "Russian" });
         }
 
-        return <div className="font-options__typeface-variants">
-            {variants.map(x => <div className="font-options__typeface-variant">
-                <div className="font-options__typeface-variant-icon" title={x.title}>{x.symbol}</div>
+        return <div className="_typeface-variants">
+            {variants.map(x => <div className="_typeface-variant">
+                <div className="_typeface-variant-icon" title={x.title}>{x.symbol}</div>
             </div>)}
         </div>;
     }
@@ -126,14 +128,14 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
     }
 
     render() {
-        return <div className="flyout__content prop__options-container font-options" >
-            <div className="font-options__header">
+        return <FontOptionsContainer>
+            <div className="_header">
 
                 {/* 1st header line */}
-                <div className="font-options__header-line  font-options__header-line_filters">
+                <div className="_header-line  _header-line_filters">
 
                     {/*<div className={bem("font-options", "header-line", "filters")}>*/}
-                    <div className="font-options__search">
+                    <div className="_search">
                         <Search query={this.state.searchTerm} onQuery={this.onSearch} autoFocus />
                     </div>
 
@@ -141,13 +143,179 @@ export default class FontFamilyList extends StoreComponent<any, FontStoreState>{
                 </div>
             </div>
 
-            <VirtualFontList className="font-options__body"
+            <VirtualFontList className="_body"
                 ref="list"
                 data={this.state.currentList}
                 rowHeight={LessVars.propOptionHeight}
                 rowRenderer={this.renderFont}
                 noContentRenderer={this.renderNoContent}
             />
-        </div>
+        </FontOptionsContainer>
     }
 }
+
+const FontOptionsContainer = styled.div`
+    padding-bottom: 20px;
+    height: 27rem;
+    max-height: 27rem;
+    color:${theme.text_color};
+    font:${theme.input_font};
+    background:${theme.input_background};
+    box-shadow:${theme.dropdown_shadow};
+    padding:${theme.margin1} 0;
+    z-index:1000;
+
+     ._header {
+            padding-bottom: 5px;
+            &-line {
+                &_filters {
+                    display:flex;
+                    align-items: stretch;
+                    flex-wrap: nowrap;
+                }
+                &_heading {
+                    display:flex;
+                    padding:  5px 10px;
+                    align-items: center;
+                }
+
+            }
+        }
+
+        ._body {
+            position:relative;
+            padding-bottom: 15px;
+        }
+
+        ._search {
+            flex-grow: 2;
+        }
+
+        ._filter-switches {
+            display:flex;
+            align-items: stretch;
+            flex-wrap: nowrap;
+        }
+
+        ._filter-switch {
+            display:flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            width: 32px;
+            opacity:0.5;
+            &:hover {
+                opacity:1;
+
+            }
+            &_active {
+                opacity:1;
+            }
+
+            >i {
+                transform: scale(0.8);
+                transition: all 0.1s;
+            }
+            &:hover i {
+                transform: scale(0.8);
+            }
+        }
+
+        ._collapse-styles {
+            margin-left: auto;
+        }
+
+
+
+
+        .prop__optgroup-title {
+            display:none;
+        }
+
+        .prop__optgroup-title,
+        ._typeface {
+            padding: 0 0 0 10px;
+
+            ._body_narrow & {
+                padding: 5px 10px;
+            }
+        }
+
+        ._typeface {
+            text-align:left;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: nowrap;
+            width:100%;
+            height:100%;
+
+            &-star {
+                display: flex;
+                align-items: center;
+                flex-wrap: nowrap;
+                padding: 2px 10px;
+                margin-left: -10px;
+                >i {
+                    opacity:0.2;
+                    transform:scale(0.8);
+                    transition:all 0.1s;
+
+                }
+                &_faved > i {
+                    opacity:1;
+                }
+                &:hover > i {
+                    transform:scale(1);
+                }
+            }
+
+            &-meta {
+                display: flex;
+                align-items: stretch;
+                flex-wrap: nowrap;
+                ._body_narrow & {
+                    flex-direction: column;
+                }
+                flex-grow: 1;
+                padding: 2px 0;
+            }
+
+            &-name {
+                display: flex;
+                align-items: center;
+                flex-wrap: nowrap;
+                width: 15rem;
+                overflow: hidden;
+            }
+
+            &-variants {
+                display: flex;
+                align-items: center;
+                flex-wrap: nowrap;
+
+                flex-grow : 1;
+                margin-left: 10px;
+            }
+
+            &-variant {
+                display:flex;
+                align-items:center;
+                flex-wrap:nowrap;
+                height: 2em;
+                width: 1.5em;
+                margin-right: 1px;
+
+
+                &-icon {
+                    opacity:0.3;
+                }
+            }
+
+            &-sample-container {
+                width: 150px;
+            }
+            &-sample-image {
+                position: absolute;
+                transform-origin: 2px 2px;
+            }
+        }
+`;

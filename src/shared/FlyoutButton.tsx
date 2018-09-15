@@ -173,7 +173,7 @@ export default class FlyoutButton extends Component<IFlyoutButtonProps, FlyoutBu
                 this.close();
                 return;
             case "Carbon_Scroll": {
-                this.close();
+               // this.close();
                 return;
             }
         }

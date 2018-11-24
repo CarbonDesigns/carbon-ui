@@ -1,6 +1,7 @@
 import createTheme from 'styled-components-theme';
 import * as tinycolor from "tinycolor2";
 const accent = '#ff3d7d';
+
 export const colors = {
     accent:accent,
     accent_secondary: tinycolor(accent).spin(19).darken(4).toString(),
@@ -28,6 +29,7 @@ export const colors = {
     workspace_background:'#131313',
     h1font: "400 18px 'Roboto', sans-serif;",
     h2font: "400 14px 'Roboto', sans-serif;",
+    landing_h1font: "400 55px 'Roboto', sans-serif;",
     font_largeInput: "400 16px 'Roboto', sans-serif;",
     default_font: "400 12px 'Roboto', sans-serif;",
     link_font: "400 10px 'Roboto', sans-serif;",

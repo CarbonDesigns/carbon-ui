@@ -59,9 +59,7 @@ export const MainButtonComponent = styled.button`
     padding: 0;
     margin: 0;
     outline: 0;
-
-}
-`
+`;
 
 export function arrDown(size, color) {
     return css`

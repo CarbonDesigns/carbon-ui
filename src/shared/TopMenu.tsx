@@ -11,6 +11,11 @@ import bem from "../utils/commonUtils";
 import { backend } from "carbon-api";
 import UserAvatarButton from "./UserAvatarButton";
 import DropButtonItem from "./DropButtonItem";
+import styled from "styled-components";
+
+function cdnUrl(url:string) {
+    return backend.cdnEndpoint + "/target/" + url;
+}
 
 interface TopMenuProps extends IReactElementProps {
     dark?: boolean;
@@ -83,12 +88,32 @@ export default class TopMenu extends Component<TopMenuProps, any>{
     }
 
     render() {
-        return <nav className="header-container">
-            <Link to={"/landing"} className={bem("header-container", "logo", { dark: this.props.dark })} title="carbonium.io"></Link>
+        return <MenuBody>
+            <Logo/>
+        </MenuBody>
+        // return <div className="header-container">
+        //     <Link to={"/landing"} className={bem("header-container", "logo", { dark: this.props.dark })} title="carbonium.io"></Link>
 
-            <ul className="navigation-menu">
-                {this._renderMenuItems()}
-            </ul>
-        </nav>
+        //     <ul className="navigation-menu">
+        //         {this._renderMenuItems()}
+        //     </ul>
+        // </div>
     }
 }
+
+const Logo = styled.div`
+    width: 26px;
+    height: 26px;
+    background-image: url('${cdnUrl('img/logo.svg')}');
+    background-size: cover;
+`;
+
+const MenuBody = styled.div`
+    width: 100%;
+    height: 60px;
+    display: grid;
+    grid-template-columns: 30px 1fr 1fr;
+    padding: 0 118px;
+    z-index: 66;
+    align-items:center;
+`;

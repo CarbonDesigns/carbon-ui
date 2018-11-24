@@ -762,7 +762,7 @@ export default
         "@login.header": "Sign In",
         "@forgotPassword.header": "Restore password",
 
-        "@hero.title" : "Addictive design solution",
+        "@hero.title" : "Addictive Design Solution",
         "@hero.subheading" : "Create designs for iOS, Android, Web or any other platform",
         "@hero.subtitle": "for prototypes, wireframes, high fidelity design and much more...",
         "@subscribe.details": "We are currently in private beta. For news, updates and first releases subscribe now and become an early adopter!",

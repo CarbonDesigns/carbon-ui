@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="119px" height="121px" viewBox="0 0 119 121" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>Group@2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="10.4876475%" cy="2.58056499%" fx="10.4876475%" fy="2.58056499%" r="105.229569%" gradientTransform="translate(0.104876,0.025806),scale(1.000000,0.759036),rotate(54.650725),translate(-0.104876,-0.025806)" id="radialGradient-1">
+            <stop stop-color="#F9C0EB" offset="0%"></stop>
+            <stop stop-color="#A42ECF" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="97.4273985%" cy="46.8560465%" fx="97.4273985%" fy="46.8560465%" r="131.746032%" gradientTransform="translate(0.974274,0.468560),scale(1.000000,0.759036),rotate(90.000000),scale(1.000000,0.589660),translate(-0.974274,-0.468560)" id="radialGradient-2">
+            <stop stop-color="#5A1A73" offset="0%"></stop>
+            <stop stop-color="#F683EC" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+        <polygon id="path-3" points="41 0 98 38 73 83 35 19"></polygon>
+        <radialGradient cx="7.58710908%" cy="0%" fx="7.58710908%" fy="0%" r="171.769213%" gradientTransform="translate(0.075871,0.000000),scale(0.517857,1.000000),rotate(35.603772),translate(-0.075871,-0.000000)" id="radialGradient-4">
+            <stop stop-color="#BF2BAE" offset="0%"></stop>
+            <stop stop-color="#581971" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="50%" cy="0%" fx="50%" fy="0%" r="126.829268%" gradientTransform="translate(0.500000,0.000000),scale(1.000000,0.788462),rotate(90.000000),translate(-0.500000,-0.000000)" id="radialGradient-5">
+            <stop stop-color="#581971" offset="0%"></stop>
+            <stop stop-color="#501C97" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="45.6466488%" cy="4.46148194%" fx="45.6466488%" fy="4.46148194%" r="83.3162162%" gradientTransform="translate(0.456466,0.044615),scale(0.897059,1.000000),rotate(88.299797),translate(-0.456466,-0.044615)" id="radialGradient-6">
+            <stop stop-color="#E095E3" offset="0%"></stop>
+            <stop stop-color="#AC3FC7" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="100%" cy="98.3603411%" fx="100%" fy="98.3603411%" r="39.5851249%" gradientTransform="translate(1.000000,0.983603),scale(0.897059,1.000000),rotate(84.437038),scale(1.000000,1.906990),translate(-1.000000,-0.983603)" id="radialGradient-7">
+            <stop stop-color="#501B93" offset="0%"></stop>
+            <stop stop-color="#D681DE" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+        <polygon id="path-8" points="32 25 69 86 1 78"></polygon>
+        <radialGradient cx="53.9011213%" cy="84.1429522%" fx="53.9011213%" fy="84.1429522%" r="171.052632%" gradientTransform="translate(0.539011,0.841430),scale(0.584615,1.000000),rotate(180.000000),scale(1.000000,0.522336),translate(-0.539011,-0.841430)" id="radialGradient-9">
+            <stop stop-color="#4F21B0" offset="0%"></stop>
+            <stop stop-color="#B751CD" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="48.7344422%" cy="0%" fx="48.7344422%" fy="0%" r="30.0255946%" gradientTransform="translate(0.487344,0.000000),scale(0.509804,1.000000),rotate(58.643296),scale(1.000000,3.768732),translate(-0.487344,-0.000000)" id="radialGradient-10">
+            <stop stop-color="#B651CD" offset="0%"></stop>
+            <stop stop-color="#501C97" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="18.9131362%" cy="17.9967833%" fx="18.9131362%" fy="17.9967833%" r="57.2119125%" gradientTransform="translate(0.189131,0.179968),scale(1.000000,0.586957),rotate(72.367365),translate(-0.189131,-0.179968)" id="radialGradient-11">
+            <stop stop-color="#F55EFB" offset="0%"></stop>
+            <stop stop-color="#CD75D9" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="76.0792541%" cy="65.2255263%" fx="76.0792541%" fy="65.2255263%" r="96.8017797%" gradientTransform="translate(0.760793,0.652255),scale(0.884615,1.000000),rotate(161.048803),scale(1.000000,0.709810),translate(-0.760793,-0.652255)" id="radialGradient-12">
+            <stop stop-color="#E69FE5" offset="0%"></stop>
+            <stop stop-color="#F263F7" offset="52.2445609%"></stop>
+            <stop stop-color="#F260F8" offset="100%"></stop>
+        </radialGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <g id="Path-3-Copy">
+                <use fill="url(#radialGradient-1)" xlink:href="#path-3"></use>
+                <use fill="url(#radialGradient-2)" xlink:href="#path-3"></use>
+            </g>
+            <polygon id="Path-4-Copy" fill="url(#radialGradient-4)" points="58 5 114 30 103 34"></polygon>
+            <polygon id="Path-5-Copy" fill="url(#radialGradient-5)" points="104 39 119 34 109 86 78 86"></polygon>
+            <g id="Path-7">
+                <use fill="url(#radialGradient-6)" xlink:href="#path-8"></use>
+                <use fill="url(#radialGradient-7)" xlink:href="#path-8"></use>
+            </g>
+            <polygon id="Path-8" fill="url(#radialGradient-9)" points="4 83 40 121 69 91"></polygon>
+            <polygon id="Path-9" fill="url(#radialGradient-10)" points="76 91 102 91 51 117"></polygon>
+            <polygon id="Path-11" fill="url(#radialGradient-11)" points="4 32 27 24 0 70"></polygon>
+            <polygon id="Path-12" fill="url(#radialGradient-12)" points="8 27 29 19 34 4"></polygon>
+        </g>
+    </g>
+</svg>

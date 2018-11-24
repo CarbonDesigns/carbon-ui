@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
 import * as PropTypes from "prop-types";
-import { FormattedMessage } from 'react-intl';
-import { Link } from "react-router";
+// import { FormattedMessage } from 'react-intl';
+// import { Link } from "react-router";
 import * as cx from "classnames";
 
 import { backend, util } from "carbon-api";
-import { handles, Component, CarbonLabel } from "../CarbonFlux";
-import FlyoutButton from "../shared/FlyoutButton";
+import { CarbonLabel } from "../CarbonFlux";
+// import FlyoutButton from "../shared/FlyoutButton";
 import LoginPopup from "../account/LoginPopup";
 import { AccountAction } from "../account/AccountActions";
 import RouteComponent, { RouteComponentProps } from "../RouteComponent";
@@ -15,6 +15,8 @@ import TopMenu from "../shared/TopMenu";
 // import SubscribeForm from "../shared/SubscribeForm";
 import ScrollContainer from "../shared/ScrollContainer";
 import Antiscroll from "../external/antiscroll";
+import styled, { css } from "styled-components";
+import theme from "../theme"
 
 const GifActivationThreshold = .5;
 const PreloadedResources = ["features_data.gif", "features_data.png"];
@@ -23,9 +25,9 @@ type LandingPageState = {
     activeGifs: number;
 }
 
+
 export class LandingPage extends RouteComponent<RouteComponentProps, LandingPageState>{
     sections: any;
-    backgrounds: any[];
     activeSection: any;
     currentSectionClass: any;
     gifs: HTMLElement[] = [];
@@ -60,14 +62,7 @@ export class LandingPage extends RouteComponent<RouteComponentProps, LandingPage
 
     componentDidMount() {
         super.componentDidMount();
-        window.addEventListener("scroll", this.onScroll)
         this.sections = document.querySelectorAll(".feature-section");
-        this.backgrounds = [this.refs.background1, this.refs.background2, this.refs.background3];
-        for (let j = 0; j < this.backgrounds.length; ++j) {
-            this.backgrounds[j].style.opacity = 0;
-            this.backgrounds[j].style.zIndex = 10 + j;
-        }
-        this.backgrounds[0].style.opacity = 1;
 
         this.setActiveGifs();
         this.scroller = ScrollContainer.initScroller(document.documentElement);
@@ -77,7 +72,6 @@ export class LandingPage extends RouteComponent<RouteComponentProps, LandingPage
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        window.removeEventListener("scroll", this.onScroll)
         this.scroller.destroy();
     }
 
@@ -94,58 +88,6 @@ export class LandingPage extends RouteComponent<RouteComponentProps, LandingPage
 
     private registerGif = (gif: React.ReactInstance) => {
         this.gifs.push(ReactDom.findDOMNode(gif) as HTMLElement);
-    }
-
-    private onScroll = (event) => {
-        var scrollTop = document.documentElement.scrollTop;
-
-        var found = false;
-        for (var i = this.sections.length - 1; i >= 0; --i) {
-            var section = this.sections[i];
-            if (section.offsetTop <= scrollTop) {
-                this.activeSection = section;
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            if (this.activeSection) {
-                for (let j = 1; j < this.backgrounds.length; ++j) {
-                    this.backgrounds[j].style.opacity = 0;
-                }
-                this.backgrounds[0].style.opacity = 1;
-            }
-            this.activeSection = null;
-
-            return;
-        }
-
-        var height = window.innerHeight;
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            height = screen.height;
-        }
-
-        for (var k = 0; k < this.sections.length; ++k) {
-            let section: any = this.sections[k];
-            var ds = scrollTop - section.offsetTop;
-            if (ds < -height || ds > height) {
-                this.backgrounds[k].style.opacity = 0;
-                continue;
-            }
-
-            var opacity = 0;
-            if (ds < 0) {
-                opacity = (height + ds) / height;
-            } else {
-                opacity = 1 - ds / height;
-            }
-
-            this.backgrounds[k].style.opacity = opacity;
-        }
-
-        //this.backgrounds[i].style.opacity = 1;
-        this.onScrollComplete();
     }
 
     private onScrollComplete() {
@@ -220,84 +162,94 @@ export class LandingPage extends RouteComponent<RouteComponentProps, LandingPage
     }
 
     render() {
-        return <div className="landing-page">
-            <div ref="background1" className="page-background green-section"></div>
-            <div ref="background2" className="page-background blue-section"></div>
-            <div ref="background3" className="page-background purple-section"></div>
-            {/* <div ref="background4" className="page-background yellow-section"></div> */}
-            {/* <div ref="background5" className="page-background red-section"></div> */}
-            <section ref="heroContainer" className="hero-container">
-                <TopMenu />
+        return <LandingPageBody>
+            <div className="background"></div>
 
-                {/* <canvas ref="backCanvas" className="hero-container__canvas"></canvas> */}
-                <div className="hero-container__canvas"></div>
-                <header className="hero-container__heading">
-                    <h1 className="hero-container__hero-title"><CarbonLabel id="@hero.title" /></h1>
-                    <strong className="hero-container__hero-subtitle"><CarbonLabel id="@hero.subtitle" /></strong>
-                </header>
-                <div className="hero-container__preview">
+            <TopMenu />
+            <HeroSection ref="heroContainer">
+
+
+                <h1 className="title"><CarbonLabel id="@hero.title" /></h1>
+                <h2 className="subtitle"><CarbonLabel id="@hero.subtitle" /></h2>
+                {/* <div className="hero-container__preview">
                     <div className="hero-container__preview-image">
                         <figure className="play-button">
                             <div className="play-button__icon"></div>
                         </figure>
                     </div>
-                </div>
+                </div> */}
 
-                <h3 className="hero-container__subheading"><CarbonLabel id="@hero.subheading" /></h3>
-            </section>
+                {/* <h3 className="hero-container__subheading"><CarbonLabel id="@hero.subheading" /></h3> */}
+            </HeroSection>
 
-            <section className="subheader-container">
+            {/* <section className="subheader-container">
                 <h3 className="subheader-container__h"><CarbonLabel id="@logos.header" /></h3>
-            </section>
+            </section> */}
 
-            <section className="hero-container__logos">
+            {/* <section className="hero-container__logos">
                 <div className="hero-container__logo microsoft"></div>
                 <div className="hero-container__logo amazon"></div>
                 <div className="hero-container__logo evernote"></div>
                 <div className="hero-container__logo paypal"></div>
                 <div className="hero-container__logo airbnb"></div>
-            </section>
+            </section> */}
 
             {/* <SubscribeForm mainTextLabelId="@subscribe.details" /> */}
 
-            {this.renderFeaturesSection({
-                className: "first-section",
-                index: 0,
-                symbol: "Li",
-                headerLabel: "@libsec.header",
-                detailsLabel: "@libsec.details",
-                p1Label: "@libsec.p1",
-                p2Label: "@libsec.p2",
-                p3Label: "@libsec.p3",
-                imageClass: "symbols-image"
-            })}
-            {this.renderFeaturesSection({
-                index: 1,
-                symbol: "Do",
-                headerLabel: "@datasec.header",
-                detailsLabel: "@datasec.details",
-                p1Label: "@datasec.p1",
-                p2Label: "@datasec.p2",
-                p3Label: "@datasec.p3",
-                imageClass: "data-image"
-            })}
-
-            {this.renderFeaturesSection({
-                index: 2,
-                symbol: "Pu",
-                headerLabel: "@pusec.header",
-                detailsLabel: "@pusec.details",
-                p1Label: "@pusec.p1",
-                p2Label: "@pusec.p2",
-                p3Label: "@pusec.p3",
-                imageClass: "plugins-image"
-            })}
-
-            <section className="quote-container">
+            {/* <section className="quote-container">
                 <article><CarbonLabel id="@opensource.join" /><a target="_blank" href="https://github.com/CarbonDesigns/carbon-ui">GitHub</a></article>
-            </section>
+            </section> */}
 
             {/* <SubscribeForm mainTextLabelId="@subscribe.details2" /> */}
-        </div>;
+        </LandingPageBody>;
     }
 }
+
+function cdnUrl(url:string) {
+    return backend.cdnEndpoint + "/target/" + url;
+}
+
+const LandingPageBody = styled.div`
+    min-height: 100%;
+    width:100%;
+    user-select:auto;
+
+    & .background {
+        position: absolute;
+        width:100%;
+        height: 100%;
+        left:0;
+        top:0;
+        z-index: -1;
+        background-image:  url('${cdnUrl('img/back.jpg')}');
+        background-repeat: no-repeat;
+    }
+`;
+
+const HeroSection = styled.section`
+    width:100%;
+    height: 480px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    z-index: 50;
+
+    color: #fff;
+    & .title {
+        font: 400 55px 'Roboto', sans-serif;
+        line-height: 61px;
+        text-align: center;
+        letter-spacing: -0.602381px;
+        width: 500px;
+        margin:0 auto;
+    }
+
+    .subtitle {
+        letter-spacing: -0.44px;
+        font: 500 22px 'Roboto', sans-serif;
+        margin-top: 22px;
+    }
+`;

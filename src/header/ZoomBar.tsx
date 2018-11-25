@@ -1,12 +1,8 @@
 import * as React from "react";
-import { CompositeElement } from "carbon-core";
 import { app } from "carbon-core";
 import Slider from "../components/Slider";
 import EnterInput from "../shared/EnterInput";
-import { richApp } from "../RichApp";
 import { listenTo, Component } from '../CarbonFlux';
-import AppActions from '../RichAppActions';
-import { default as bem, join_bem_mods } from '../utils/commonUtils';
 import appStore from "../AppStore";
 import styled from "styled-components";
 import icons from "../theme-icons";

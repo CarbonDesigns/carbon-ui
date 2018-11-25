@@ -16,7 +16,7 @@ import TopMenu from "../shared/TopMenu";
 import ScrollContainer from "../shared/ScrollContainer";
 import Antiscroll from "../external/antiscroll";
 import styled, { css } from "styled-components";
-import theme from "../theme"
+import SubscribeForm from "../shared/SubscribeForm";
 
 const GifActivationThreshold = .5;
 const PreloadedResources = ["features_data.gif", "features_data.png"];
@@ -171,6 +171,8 @@ export class LandingPage extends RouteComponent<RouteComponentProps, LandingPage
 
                 <h1 className="title"><CarbonLabel id="@hero.title" /></h1>
                 <h2 className="subtitle"><CarbonLabel id="@hero.subtitle" /></h2>
+
+                <SubscribeForm mainTextLabelId="@subscribe.details2" />
                 {/* <div className="hero-container__preview">
                     <div className="hero-container__preview-image">
                         <figure className="play-button">

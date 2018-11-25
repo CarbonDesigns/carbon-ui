@@ -16,7 +16,7 @@ interface IFlyoutHeaderProps extends IReactElementProps {
 const FlyoutHeaderComponent = styled.div`
     width: 100%;
     color: ${theme.text_color};
-    font:${theme.link_font};
+    font: ${theme.link_font};
     display: flex;
     align-items:center;
     margin-bottom:8px;

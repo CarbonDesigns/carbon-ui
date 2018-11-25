@@ -9,6 +9,8 @@ import LoginPopup from "../account/LoginPopup";
 import bem from "../utils/commonUtils";
 import { backend } from "carbon-api";
 import { ValidationTrigger, IFieldState, GuiValidatedInput } from "./ui/GuiComponents";
+import styled from "styled-components";
+import theme from "../theme";
 
 interface TopMenuProps extends IReactElementProps {
     mainTextLabelId: string;
@@ -24,19 +26,19 @@ export default class SubscribeForm extends Component<TopMenuProps, any>{
         super(props);
     }
 
-    _onSubmit=()=>{
+    _onSubmit = () => {
         var input = (this.refs.input as any);
         var email = input.getValue();
-        if(input.state.fieldState.status === "error" || !email) {
+        if (input.state.fieldState.status === "error" || !email) {
             return;
         }
 
-        backend.activityProxy.subscribeForBeta(email).then(()=>{
+        backend.activityProxy.subscribeForBeta(email).then(() => {
             this.context.router.push({
-                pathname:"/thankyou",
-                state:{
-                    header:"@message.thankyou",
-                    message:"@message.wewillnotify"
+                pathname: "/thankyou",
+                state: {
+                    header: "@message.thankyou",
+                    message: "@message.wewillnotify"
                 }
             })
         })
@@ -55,22 +57,45 @@ export default class SubscribeForm extends Component<TopMenuProps, any>{
     }
 
     render() {
-        if(backend.isLoggedIn()) {
+        if (backend.isLoggedIn()) {
             return null;
         }
-        return <section className="subscribe-container">
-                <p className="subscribe-container__details"><CarbonLabel id={this.props.mainTextLabelId} /></p>
-                <div className="subscribe-form">
-                    <GuiValidatedInput ref="input" id="email"
-                    component="fs-input"
-                    placeholder={this.context.intl.formatMessage({id:"@email.placeholder"})}
-                    onValidate={this.validateEmail}
-                    className="subscribe-form__email"
-                    type="email"
-                    trigger={ValidationTrigger.blur} />
+        return <SubscribeContainer>
+            <GuiValidatedInput ref="input" id="email"
+                component="fs-input"
+                placeholder={this.context.intl.formatMessage({ id: "@email.placeholder" })}
+                onValidate={this.validateEmail}
+                className="subscribe-form__email"
+                type="email"
+                trigger={ValidationTrigger.blur} />
 
-                    <button onClick={this._onSubmit} className="subscribe-form__button fs-main-button"><CarbonLabel id="@subscribe" /></button>
-                </div>
-            </section>
+            <button onClick={this._onSubmit}><CarbonLabel id="@subscribe" /></button>
+        </SubscribeContainer>
     }
 }
+
+const SubscribeContainer = styled.div`
+    width: 100%;
+    display:grid;
+    grid-template-columns: 1fr 148px;
+    grid-column-gap: 9px;
+    max-width: 580px;
+    margin: 30px auto;
+    align-items: center;
+
+    #email {
+        background: rgba(249, 249, 249, 0.139946);
+        backdrop-filter: blur(20px);
+        width: 100%;
+    }
+
+    button {
+        width: 135px;
+        height: 32px;
+        background:#F72B4E;
+        font: "400 11px 'Roboto', sans-serif;";
+        color: #fff;
+        border: none;
+        text-transform: uppercase;
+    }
+`;

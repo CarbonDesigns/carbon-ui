@@ -12,3 +12,4 @@ node_modules/*
 *_REMOTE_*
 *_BACKUP_*
 package-lock.json
+tsconfig.json

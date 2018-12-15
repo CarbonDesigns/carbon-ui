@@ -13,6 +13,11 @@ import theme from "../../theme";
 
 const IconSize = 40;
 
+const EmptyMessage = styled(MarkupLine).attrs({ center: true })`
+    font:${theme.text_normal};
+    color:${theme.text_color};
+`;
+
 export default class IconFinder extends StoreComponent<{}, IconFinderStoreState> {
     page: HTMLElement;
     refs: {
@@ -87,9 +92,9 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
 
     private renderNoContent = () => {
         return <Markup>
-            <MarkupLine>
+            <EmptyMessage>
                 <FormattedMessage tagName="p" id="@empty" />
-            </MarkupLine>
+            </EmptyMessage>
         </Markup>;
     }
 

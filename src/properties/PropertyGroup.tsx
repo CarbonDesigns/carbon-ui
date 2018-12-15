@@ -79,6 +79,8 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
             prop = prop.set('options', descriptor.getOptions(elem));
         }
 
+        options = prop.get('options');
+
         switch (descriptor.type) {
             case "shadow":
                 return <ShadowsEditor e={elem} p={prop} key={key} items={null} />;
@@ -189,6 +191,27 @@ export class PropertyGroup extends Component<IPropertyGroupProps, any> {
                             displayName: "@y"
                         },
                         value: prop.get('value').y
+                    })
+                ]} />
+            }
+
+            case "tuple": {
+                return <TupleEditor e={elem} p={prop} key={key} properties={[
+                    Immutable.Map({
+                        descriptor: {
+                            name: options.name1,
+                            displayName: options.displayName1
+                        },
+                        options: options.options1,
+                        value: prop.get('value')[options.name1]
+                    }),
+                    Immutable.Map({
+                        descriptor: {
+                            name: options.name2,
+                            displayName: options.displayName2
+                        },
+                        options: options.options2,
+                        value: prop.get('value')[options.name2]
                     })
                 ]} />
             }

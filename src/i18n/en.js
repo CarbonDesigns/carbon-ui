@@ -289,12 +289,11 @@ export default
         "Group": "Group", //
         "Repeater": "Repeater", //
         "@regular" : "Regular",
-        "@repeater.marginX": "H spacing", //
-        "@repeater.marginY": "V spacing", //
-        "@repeater.offsetX": "Offset X", //
-        "@repeater.offsetY": "Offset Y", //
-        "@repeater.copiesX": "H copies", //
-        "@repeater.copiesY": "V copies", //
+        "@repeater.margin": "Spacing", //
+        "@vertical": "Vertical", //
+        "@horizontal": "Horizontal", //
+        "@repeater.offset": "Offset", //
+        "@repeater.copies": "Copies", //
 
         "@display.background.preview": "Fill background in preview",
 

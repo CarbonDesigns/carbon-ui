@@ -6,14 +6,23 @@ import { richApp } from "../../RichApp";
 import AppActions from '../../RichAppActions';
 import IconsActions from "./IconsActions";
 import { FormattedMessage } from "react-intl";
-import { app, NullPage, IPage } from "carbon-core";
 import InternalIconsStore, { InternalIconsStoreState } from "./InternalIconsStore";
-import { GuiButton } from "../../shared/ui/GuiComponents";
 import Refresher from "../Refresher";
 import { IconsOverscanCount, IconSize } from "../LibraryDefs";
 import { Markup, MarkupLine } from "../../shared/ui/Markup";
 import styled from "styled-components";
 import theme from "../../theme";
+import MainButton from "../../components/MainButton";
+
+const ImportButton = styled(MainButton).attrs<any>({})`
+    padding: 10px 20px;
+    height: 36px;
+`;
+
+const EmptyMessage = styled(MarkupLine).attrs({ center: true })`
+    font:${theme.text_normal};
+    color:${theme.text_color};
+`;
 
 export default class InternalIcons extends StoreComponent<any, InternalIconsStoreState> {
     constructor(props) {
@@ -43,11 +52,11 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
             }
 
             return <Markup>
-                <MarkupLine center>
+                <EmptyMessage center>
                     <FormattedMessage tagName="p" id="@icons.noneFound"/>
-                </MarkupLine>
+                </EmptyMessage>
                 <MarkupLine center>
-                    <GuiButton caption="@icons.import" mods="hover-white" onClick={this.onAddMore} />
+                    <ImportButton label="@icons.import" onClick={this.onAddMore} />
                 </MarkupLine>
             </Markup>;
         }

@@ -38,18 +38,21 @@ export const colors = {
     link_font: "400 10px 'Roboto', sans-serif;",
     tab_font: "400 10px 'Roboto', sans-serif;",
     input_font: "400 12px 'Roboto', sans-serif;",
-    input_placeholder_color: 'rgba(255, 255, 255, 0.5)',
+    input_placeholder_color: '#5D7590',
     prop_font: "400 9px 'Roboto', sans-serif;",
     button_caption_font: "400 9px 'Roboto', sans-serif;",
-    prop_name_font: "400 14px 'Roboto', sans-serif;",
+    prop_name_font: "400 12px 'Roboto', sans-serif;",
     leadFont: "bold 12pt 'Roboto', sans-serif;",
     link_padding: "8px",
-    input_background: "#212121",
+    input_background: "#1D2636",
     layer_page_background: "#212121",
     layer_selection_background: "#3498DB",
     layer_hover_background: "#2980B9",
     layer_artboard_background: "#172131",
-    inactive_tab_button: '#212121'
+    prop_container_background: "#172131",
+    inactive_tab_button: '#212121',
+    slider_progress: "#30AFFF",
+    slider_track: "#242E3D"
 }
 
 const theme = createTheme(...Object.keys(colors));

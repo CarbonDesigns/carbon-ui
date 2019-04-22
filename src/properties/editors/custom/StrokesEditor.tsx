@@ -383,7 +383,7 @@ const StrokeLineContainer = styled.div`
     grid-template-columns: 26px 54px 1fr 50px 18px;
     align-items:center;
     padding:0 ${theme.margin1};
-    margin-bottom: ${theme.margin1};
+    padding-bottom: ${theme.margin2};
 `;
 
 const SliderContainer = styled.div`

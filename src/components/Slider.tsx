@@ -168,7 +168,6 @@ var SliderTrack = styled.div.attrs<{vertical:boolean}>({})`
     margin-top: -2px;
   `}
   background-color: ${theme.slider_track};
-  background-color: rgba(255, 255, 255, 0.25);
   transition: background 0.2s;
   box-shadow: 0 1px 3px rgba(1, 2, 3, 0.2) inset;
 `;
@@ -201,6 +200,6 @@ const SliderProgress = styled.div`
   left: 0;
   height:100%;
   width: 100%;
-  background-image: linear-gradient(to right, #ff4295 0%, #ff292c 100%);
+  background-color: ${theme.slider_progress};
 `;
 

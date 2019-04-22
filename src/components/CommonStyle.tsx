@@ -46,6 +46,7 @@ export const TabPageStyled = styled(TabPage).attrs<any>({})`
     min-width: 100%;
     flex-shrink: 0;
     position:relative;
+    border-radius:4px;
 `
 
 export const MainButtonComponent = styled.button`

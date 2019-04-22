@@ -24,7 +24,9 @@ export const PropertyFullLineContainer = styled.div`
 `;
 
 export const PropertyListContainer = styled.div`
-    margin-top: 9px;
+    margin: ${theme.margin1} ${theme.margin1} 0 ${theme.margin1};
+    border-radius: 4.5px;
+    background-color: ${theme.prop_container_background};
     width:100%;
 `;
 
@@ -66,7 +68,6 @@ export const PropertyListHeader = styled.div`
     grid-template-columns: 1fr 14px;
     align-items:center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background:${theme.input_background};
     font:${theme.prop_name_font};
     color:${theme.text_color};
     padding: 0 ${theme.margin1};

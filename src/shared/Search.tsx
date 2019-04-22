@@ -99,7 +99,7 @@ const SearchContainer = styled.div`
     input {
         width:100%;
         height:27px;
-        border-radius: 2px;
+        border-radius: 4.5px;
         background-color: ${theme.input_background};
         color: ${theme.text_color};
         font: ${theme.input_font};

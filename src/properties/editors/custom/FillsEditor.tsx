@@ -109,4 +109,5 @@ const PropertyFillLineContainer = styled.div`
     grid-column-gap: ${theme.margin1};
     padding:0 ${theme.margin1};
     width:100%;
+    padding-bottom: ${theme.margin2};
 `;

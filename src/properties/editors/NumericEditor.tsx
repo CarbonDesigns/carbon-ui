@@ -248,7 +248,7 @@ const InputStyled = styled(EnterInput) `
 const InputContainer = styled.div.attrs<any>({}) `
     height:24px;
     background-color: ${theme.input_background};
-    border-radius: 1px;
+    border-radius: 2px;
     width:100%;
     display:flex;
     align-items: center;

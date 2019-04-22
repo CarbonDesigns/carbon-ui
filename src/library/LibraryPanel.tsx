@@ -70,18 +70,17 @@ export default class LibraryPanel extends Component<any, any> {
                         </TabPageStyled>
                     </TabAreaStyled>
                 </TabContainer>
-
             </Panel>
         );
     }
 }
 
 const LibraryTabs = styled.div`
-    height:50px;
+    height:45px;
     width:100%;
     margin-top:${theme.margin1};
     display:grid;
-    padding:0 ${theme.margin2};
+    padding:0 ${theme.margin1};
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-column-gap: ${theme.margin1};
     align-content:center;
@@ -106,7 +105,7 @@ class LibraryTab extends React.Component<any>{
 }
 
 const LibraryTabContainer = styled.div.attrs<any>({}) `
-    height:40px;
+    height:35px;
     display:flex;
     justify-content: center;
     align-items: center;

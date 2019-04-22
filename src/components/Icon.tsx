@@ -17,6 +17,14 @@ const IconStyled = styled.div.attrs<{ src?: any, defaultColor?: any, width?: any
     mask-repeat: no-repeat;
 `;
 
+const RawIconStyled = styled.div.attrs<{ src?: any, defaultColor?: any, width?: any, height?: any }>({}) `
+    background-image: url(${props => props.src});
+    background-color: unset;
+    background-repeat: no-repeat;
+    width:${props => props.width}px;
+    height:${props => props.height}px;
+`;
+
 export default class Icon extends Component<IIconProps, {}> {
     render() {
         var { icon, color, className, ...props } = this.props;
@@ -26,7 +34,13 @@ export default class Icon extends Component<IIconProps, {}> {
 
         var { src, width, height } = icon || { src: "", width: 0, height: 0 };
 
-        return <IconStyled src={src} width={width} height={height} defaultColor={color} className={className} {...props}>
-        </IconStyled>;
+        if (color)
+        {
+             return <IconStyled src={src} width={width} height={height} defaultColor={color} className={className} {...props}>
+                     </IconStyled>;
+        }
+
+        return <RawIconStyled src={src} width={width} height={height} className={className} {...props}>
+                     </RawIconStyled>;
     }
 }

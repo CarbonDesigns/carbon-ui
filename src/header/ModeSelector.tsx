@@ -45,10 +45,11 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
                     return (
                         <ModeBarItem active={(item === this.state.activeMode)} key={item}
                             onClick={() => app.setMode(item)}>
-                            <SelectorIcon icon={icons['top_'+item]} active={(item === this.state.activeMode)}></SelectorIcon>
+                            {/* <SelectorIcon icon={icons['top_'+item]} active={(item === this.state.activeMode)}></SelectorIcon> */}
                             <Cap>
                                 <FormattedMessage id={'mode.' + item} />
                             </Cap>
+                            {(item === this.state.activeMode) && <SelectionIndicator/>}
                         </ModeBarItem>
                     )
                 })
@@ -57,47 +58,41 @@ export default class ModeSelector extends Component<IModeSelectorProps, IModeSel
     }
 }
 
-const SelectorIcon = styled(Icon).attrs<any>({})`
-    background-color:${props=>props.active?theme.text_active:theme.text};
+const SelectionIndicator = styled.div`
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    width:3px;
+    background:${theme.accent};
 `;
 
 const ModeBar = styled.div`
     white-space:nowrap;
-    padding: 0 10px;
     position:relative;
     display:flex;
     align-items:center;
+    flex-direction:column;
 `;
 
 const Cap = styled.div`
-    margin-left: 15px;
     position: relative;
-    letter-spacing: 2.6px;
 `;
 
 const ModeBarItem = styled.div.attrs<{active?:boolean}>({})`
-    color: ${(props:any)=>props.active?theme.text_active:theme.text};
-    font: ${theme.h1font};
-    padding: 0 10px 0 6px;
+    color: ${(props:any)=>props.active?theme.text_color:theme.text_inactive};
+    font: ${theme.leadFont};
     position: relative;
-    height: 100%;
     display: inline-flex;
-    line-height:47px;
-    height:47px;
-    margin-right:40px;
+    line-height:40px;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    width:40px;
+    margin: 20px 0;
     align-items:center;
     cursor:pointer;
     position:relative;
-    ${props=>props.active?css`
-        &::after {
-            content: " ";
-            position:absolute;
-            display:block;
-            left:0;
-            right:0;
-            bottom: 2px;
-            height:1px;
-            background-color:${theme.accent};
-        }
-    `:''};
+    transform: rotate(180deg);
+    text-transform:uppercase;
+   ;
 `;

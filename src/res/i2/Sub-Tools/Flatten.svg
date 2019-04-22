@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Flatten</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-381.000000, -4477.000000)">
+            <g id="Stockholm-icons-/-Design-/-Flatten" transform="translate(379.000000, 4474.000000)">
+                <rect id="bound" x="0" y="0" width="19" height="19"></rect>
+                <circle id="Combined-Shape" fill="#DADFEA" fill-rule="evenodd" cx="7.125" cy="11.875" r="4.75"></circle>
+                <path d="M6.96769132,5.54358213 C7.78871572,4.12274762 9.32437219,3.16666667 11.0833333,3.16666667 C13.7066859,3.16666667 15.8333333,5.29331411 15.8333333,7.91666667 C15.8333333,9.67562781 14.8772524,11.2112843 13.4564179,12.0323087 C13.4576924,11.9800271 13.4583333,11.9275884 13.4583333,11.875 C13.4583333,8.37719658 10.6228034,5.54166667 7.125,5.54166667 C7.07241161,5.54166667 7.01997292,5.54230762 6.96769132,5.54358213 Z" id="Combined-Shape" fill="#5D7590" fill-rule="evenodd"></path>
+            </g>
+        </g>
+    </g>
+</svg>

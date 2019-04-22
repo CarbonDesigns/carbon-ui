@@ -98,7 +98,6 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
         if (index === 0 || index === this.state.layers.length - 1) {
             return this.renderLayerPadding();
         }
-        var children = null;
         var selected = !!this.state.selected[layer.id];
         var expanded = this.state.expanded[layer.id];
 
@@ -164,8 +163,8 @@ export default class LayersPanel extends StoreComponent<{}, LayersStoreState> {
 
     render() {
         let { children, ...rest } = this.props;
-        return <Panel ref="panel" header="Layers" icon={icons.p_layers} id="layers_panel" {...rest}>
-            {this.renderBackButton()}
+        return <Panel ref="panel" noheader header="Layers" icon={icons.p_layers} id="layers_panel" {...rest}>
+            {/* {this.renderBackButton()} */}
 
             <PanelContent>
                 <VirtualLayersList className="layers__container"

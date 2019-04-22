@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Union</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-300.000000, -4618.000000)">
+            <g id="Stockholm-icons-/-Design-/-Union" transform="translate(298.000000, 4615.000000)">
+                <rect id="bound" x="0" y="0" width="19" height="19"></rect>
+                <path d="M6.33333333,7.125 L6.33333333,4.89393939 C6.33333333,3.77428022 6.94094689,3.16666667 8.06060606,3.16666667 L14.1060606,3.16666667 C15.2257198,3.16666667 15.8333333,3.77428022 15.8333333,4.89393939 L15.8333333,10.9393939 C15.8333333,12.0590531 15.2257198,12.6666667 14.1060606,12.6666667 L11.875,12.6666667 L11.875,14.8977273 C11.875,16.0173864 11.2673864,16.625 10.1477273,16.625 L4.10227273,16.625 C2.98261355,16.625 2.375,16.0173864 2.375,14.8977273 L2.375,8.85227273 C2.375,7.73261355 2.98261355,7.125 4.10227273,7.125 L6.33333333,7.125 Z" id="Combined-Shape" fill="#DADFEA" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

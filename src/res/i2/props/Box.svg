@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Box</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-1157.000000, -3941.000000)">
+            <g id="Stockholm-icons-/-Home-/-Box" transform="translate(1156.000000, 3940.000000)">
+                <rect id="bound" x="0" y="0" width="15" height="15"></rect>
+                <path d="M2.5,4.375 L12.5,4.375 L12.5,12.1875 C12.5,12.705267 12.080267,13.125 11.5625,13.125 L3.4375,13.125 C2.91973305,13.125 2.5,12.705267 2.5,12.1875 L2.5,4.375 Z M6.25,6.25 C5.90482203,6.25 5.625,6.52982203 5.625,6.875 C5.625,7.22017797 5.90482203,7.5 6.25,7.5 L8.75,7.5 C9.09517797,7.5 9.375,7.22017797 9.375,6.875 C9.375,6.52982203 9.09517797,6.25 8.75,6.25 L6.25,6.25 Z" id="Combined-Shape" fill="#5D7590" fill-rule="evenodd"></path>
+                <rect id="Rectangle-143" fill="#DADFEA" fill-rule="evenodd" x="1.25" y="1.875" width="12.5" height="2.5" rx="0.625"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

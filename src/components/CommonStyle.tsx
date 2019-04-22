@@ -53,7 +53,7 @@ export const MainButtonComponent = styled.button`
     min-width:30px;
     cursor:pointer;
     color: ${theme.text_color};
-    background-image: linear-gradient(to right, #ff4295 0%, #ff292c 100%);
+    background-color: ${theme.button_normal};
     border-radius: 1px;
     border: 0;
     padding: 0;

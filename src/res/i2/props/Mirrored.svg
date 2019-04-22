@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="11px" viewBox="0 0 19 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Mirrored</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-1005.000000, -3942.000000)">
+            <g id="Mirrored" transform="translate(1005.000000, 3943.000000)">
+                <path d="M0.849626557,9.96196174 C1.65997708,4.52490592 4.41595434,1.79723088 9.11755834,1.77893662 C13.8191623,1.76064236 16.7199573,4.46630652 17.8199433,9.89592909 L0.849626557,9.96196174 Z" id="Path-14" fill="#5D7590"></path>
+                <ellipse id="Oval-3" fill="#DADFEA" cx="0.9975" cy="1.872" rx="1" ry="1.008"></ellipse>
+                <ellipse id="Oval-3" fill="#DADFEA" cx="17.8125" cy="1.872" rx="1" ry="1.008"></ellipse>
+                <path d="M0.927884648,1.83349245 L18.03887,1.83349245" id="Path-2" stroke="#DADFEA" stroke-width="0.576"></path>
+                <ellipse id="Oval" stroke="#DADFEA" stroke-width="0.576" fill="#172131" cx="9.2625" cy="1.872" rx="1.8525" ry="1.872"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>

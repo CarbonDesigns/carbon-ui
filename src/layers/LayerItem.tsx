@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDom from "react-dom";
 import * as PropTypes from "prop-types";
 import * as cx from "classnames";
-import { Selection, Invalidate, app, IArtboardPage, Brush, Text, IText, Artboard } from "carbon-core";
+import { Selection, Invalidate, app, IArtboardPage, Brush, Text, IText, Artboard, Types } from "carbon-core";
 import { Component, dispatch, dispatchAction } from "../CarbonFlux";
 import { LayerNode } from "./LayersStore";
 import dragController from "./LayersDragController";
@@ -12,6 +12,7 @@ import styled from "styled-components";
 import theme from "../theme";
 import icons from "../theme-icons";
 import IconButton from "../components/IconButton";
+import Icon from "../components/Icon";
 
 
 interface LayerItemProps extends ISimpleReactElementProps {
@@ -179,6 +180,19 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
             onClick={this.onToggleExpand} />
     }
 
+    private renderIcon() {
+        var layer = this.props.layer;
+        if (!layer.hasChildren) {
+            return <IconContainer className="_icon">
+                <Icon icon={icons["l_" + layer.type]}/>
+            </IconContainer>
+        }
+
+        return <IconContainer className="_icon">
+                <Icon icon={this.props.expanded ? icons.l_group_open : icons.l_group_closed}/>
+             </IconContainer>
+    }
+
     render() {
         var layer = this.props.layer;
         let locked = layer.element.locked();
@@ -194,9 +208,10 @@ export default class LayerItem extends Component<LayerItemProps, LayerItemState>
                 onMouseUp={dragController.onDrop}
                 onClick={this.selectElement}
                 indent={layer.indent}
-                className={cx("layer", { selected: this.props.selected })}
+                className={cx("layer", { selected: this.props.selected, artboard: layer.type == "page" })}
             >
                 {this.renderCollapser()}
+                {this.renderIcon()}
                 <LayerCaption>{this.renderTitle()}</LayerCaption>
                 <ActionButtons className="layerButtons">
                     <IconButton className={cx("layerButton", { active: !visible })} icon={icons.layer_visible} width={16} height={16} onClick={this.onToggleVisible} title="@hide/show" />
@@ -216,7 +231,14 @@ const ActionButtons = styled.div`
     padding-right:4px;
 `;
 
-const layer_height = 32;
+const layer_height = 36;
+
+const IconContainer = styled.div`
+    width: 16px;
+    height: 15px;
+    margin-left: 8px;
+    display:flex;
+`;
 
 const LayerContainer = styled.div.attrs<any>({}) `
     display:flex;
@@ -225,6 +247,7 @@ const LayerContainer = styled.div.attrs<any>({}) `
     padding-left:${props => (props.indent + 1) * 16}px;
     border-radius:1px;
     cursor:pointer;
+    position:relative;
 
     .layers__container_moving &:hover {
         background:none;
@@ -232,6 +255,19 @@ const LayerContainer = styled.div.attrs<any>({}) `
 
     &:hover {
         background-color:${theme.layer_hover_background};
+    }
+
+    &.artboard::before {
+        content: "";
+        display:block;
+        background-color: ${theme.layer_artboard_background};
+        border-radius: 4px;
+        position:absolute;
+        top:4px;
+        bottom:4px;
+        left:8px;
+        right:8px;
+        z-index:-1;
     }
 
     &.selected {

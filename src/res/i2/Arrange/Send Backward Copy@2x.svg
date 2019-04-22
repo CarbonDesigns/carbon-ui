@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Send Backward Copy@2x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-572.000000, -4617.000000)">
+            <g id="Send-Backward-Copy" transform="translate(572.000000, 4617.000000)">
+                <path d="M5.625,0 C4.58953125,0 3.75,0.83953125 3.75,1.875 L3.75,9.375 C3.75,10.4104688 4.58953125,11.25 5.625,11.25 L13.125,11.25 C14.1604687,11.25 15,10.4104688 15,9.375 L15,1.875 C15,0.83953125 14.1604687,0 13.125,0 L5.625,0 Z" id="Fill-60-Copy-2" fill="#DADFEA"></path>
+                <path d="M1.875,3.75 C0.83953125,3.75 -1.70530257e-13,4.58953125 -1.70530257e-13,5.625 L-1.70530257e-13,13.125 C-1.70530257e-13,14.1604688 0.83953125,15 1.875,15 L9.375,15 C10.4104687,15 11.25,14.1604688 11.25,13.125 L11.25,5.625 C11.25,4.58953125 10.4104687,3.75 9.375,3.75 L1.875,3.75 Z" id="Fill-60-Copy-3" fill="#5D7590"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -102,6 +102,7 @@ export default
         "@tool.pencil": "Pencil tool", //
         "@tool.handRelease": "Hand tool release", //
         "@repeater": "Repeater", //
+        "@repeat": "Repeat", //
         "@repeater.showOthers": "Show in other cells", //
         "@repeater.hideOthers": "Hide in other cells", //
         "@repeater.group": "Repeate grid", //
@@ -375,9 +376,10 @@ export default
         "@hide/show": "Hide / Show",
         "@lock/unlock": "Lock / Unlock",
         "@group.menu": "Group",
+        "@path.menu": "Path",
         "@arrange.menu": "Arrange",
         "@symbol.menu": "Symbols",
-
+        "@menu": "Menu",
         "featurenotready": "This feature is not ready yet, but we are actively working on it. Press a button below if you would like to get notified when it is ready. (and to motivate us work faster ;) )", //
         "btn.notifyfeature": "Notify me", //
         "notify.thankyou": "Thank you! We will get back to you when it is ready.", //

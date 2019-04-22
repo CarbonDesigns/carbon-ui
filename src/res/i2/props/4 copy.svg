@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>icon/pro/4 copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-392.000000, -3939.000000)">
+            <g id="icon/pro/4" transform="translate(392.000000, 3939.000000)">
+                <g id="Ortalama2-Copy" transform="translate(7.500000, 7.500000) scale(-1, 1) rotate(-270.000000) translate(-7.500000, -7.500000) ">
+                    <path d="M0.387358583,7.10526316 L14.6126414,7.10526316 C14.8265737,7.10526316 15,7.2786895 15,7.49262174 L15,7.49262174 C15,7.70655398 14.8265737,7.87998032 14.6126414,7.87998032 L0.387358583,7.87998032 C0.173426345,7.87998032 2.61991431e-17,7.70655398 0,7.49262174 L0,7.49262174 C-2.61991431e-17,7.2786895 0.173426345,7.10526316 0.387358583,7.10526316 Z" id="Rectangle-15" fill="#394859"></path>
+                    <rect id="Rectangle-14" fill="#30AFFF" transform="translate(3.947368, 7.500000) rotate(-270.000000) translate(-3.947368, -7.500000) " x="-3.55263158" y="5.92105263" width="15" height="3.15789474" rx="0.789473684"></rect>
+                    <path d="M8.28953593,5.92111488 L13.8157272,5.92111488 C14.2517415,5.92111488 14.6052009,6.27457428 14.6052009,6.71058856 L14.6052009,8.28953593 C14.6052009,8.72555021 14.2517415,9.07900961 13.8157272,9.07900961 L8.28953593,9.07900961 C7.85352165,9.07900961 7.50006224,8.72555021 7.50006224,8.28953593 L7.50006224,6.71058856 C7.50006224,6.27457428 7.85352165,5.92111488 8.28953593,5.92111488 Z" id="Rectangle-14" fill="#394859" transform="translate(11.052632, 7.500062) rotate(-270.000000) translate(-11.052632, -7.500062) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

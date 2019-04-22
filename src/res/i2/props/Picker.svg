@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Picker</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-1122.000000, -3941.000000)">
+            <g id="Stockholm-icons-/-Design-/-Picker" transform="translate(1119.000000, 3938.000000)">
+                <rect id="bound" x="0" y="0" width="19" height="19"></rect>
+                <path d="M8.10051783,8.10051783 L10.8994822,10.8994822 L6.70103566,15.0979287 C5.928123,15.8708413 4.67498398,15.8708413 3.90207132,15.0979287 C3.12915865,14.325016 3.12915865,13.071877 3.90207132,12.2989643 L8.10051783,8.10051783 Z" id="Rectangle-42" fill="#DADFEA" fill-rule="evenodd"></path>
+                <path d="M10.8994822,5.30155349 L12.2989643,3.90207132 C13.071877,3.12915865 14.325016,3.12915865 15.0979287,3.90207132 C15.8708413,4.67498398 15.8708413,5.928123 15.0979287,6.70103566 L13.6984465,8.10051783 L14.5381358,8.94020713 C15.0018834,9.40395473 15.0018834,10.1558381 14.5381358,10.6195857 C14.0743882,11.0833333 13.3225048,11.0833333 12.8587572,10.6195857 L8.38041426,6.14124279 C7.91666667,5.67749519 7.91666667,4.92561178 8.38041426,4.46186418 C8.84416186,3.99811659 9.59604527,3.99811659 10.0597929,4.46186418 L10.8994822,5.30155349 Z" id="Combined-Shape" fill="#5D7590" fill-rule="evenodd"></path>
+            </g>
+        </g>
+    </g>
+</svg>

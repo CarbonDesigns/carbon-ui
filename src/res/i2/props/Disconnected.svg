@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="11px" viewBox="0 0 18 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Disconnected</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-927.000000, -3942.000000)">
+            <g id="Disconnected" transform="translate(928.000000, 3943.000000)">
+                <path d="M0.240485101,8.58789805 C0.891183724,6.6402022 1.66507347,5.21201374 2.56215435,4.30333269 C3.45923522,3.39465163 5.12718722,2.34942279 7.56601035,1.16764619 L14.8353376,8.53097336 L0.240485101,8.58789805 Z" id="Path-14" fill="#5D7590"></path>
+                <polyline id="Path-14" stroke="#DADFEA" stroke-width="0.5" points="1.07597676 1.65949903 7.95565718 1.65949903 14.8353376 8.53097336"></polyline>
+                <ellipse id="Oval" stroke="#FFFFFF" stroke-width="0.5" fill="#111A29" cx="7.47574468" cy="1.6137931" rx="1.59319149" ry="1.6137931"></ellipse>
+                <ellipse id="Oval-3" stroke="#F2F2F0" stroke-width="0.5" fill="#DADFEA" cx="0.85787234" cy="1.86206897" rx="1" ry="1"></ellipse>
+                <ellipse id="Oval-3" stroke="#F2F2F0" stroke-width="0.5" fill="#DADFEA" cx="15.0740426" cy="8.8137931" rx="1" ry="1"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>

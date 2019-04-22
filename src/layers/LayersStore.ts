@@ -42,13 +42,14 @@ class LayersStore extends CarbonStore<LayersStoreState> {
             elements = IsolationContext.isolationLayer.children;
         }
         else {
-            let artboard = app.activePage.getActiveArtboard();
-            if (artboard) {
-                elements = artboard.children;
-            }
-            else {
-                elements = app.activePage.children;
-            }
+            elements = app.activePage.children;
+            // let artboard = app.activePage.getActiveArtboard();
+            // if (artboard) {
+            //     elements = artboard.children;
+            // }
+            // else {
+            //     elements = app.activePage.children;
+            // }
         }
 
         //first and last elements are paddings for virtual list, need to handle it better

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="11px" height="13px" viewBox="0 0 11 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Flip-horizontal</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-1088.000000, -3941.000000)">
+            <g id="Stockholm-icons-/-Design-/-Flip-horizontal" transform="translate(1086.000000, 3940.000000)">
+                <rect id="bound" x="0" y="0" width="15" height="15"></rect>
+                <path d="M2.3365728,11.875 L5.3125,11.875 C5.48508898,11.875 5.625,11.735089 5.625,11.5625 L5.625,4.122682 C5.625,3.95009302 5.48508898,3.810182 5.3125,3.810182 C5.18471732,3.810182 5.06980833,3.88797917 5.02235103,4.00662241 L2.04642383,11.4464404 C1.98232589,11.6066853 2.06026837,11.788551 2.22051321,11.852649 C2.2574258,11.867414 2.29681673,11.875 2.3365728,11.875 Z" id="Path-14" fill="#5D7590" fill-rule="evenodd" opacity="0.439999998"></path>
+                <path d="M9.8365728,11.875 L12.8125,11.875 C12.985089,11.875 13.125,11.735089 13.125,11.5625 L13.125,4.122682 C13.125,3.95009302 12.985089,3.810182 12.8125,3.810182 C12.6847173,3.810182 12.5698083,3.88797917 12.522351,4.00662241 L9.54642383,11.4464404 C9.48232589,11.6066853 9.56026837,11.788551 9.72051321,11.852649 C9.7574258,11.867414 9.79681673,11.875 9.8365728,11.875 Z" id="Path-14-Copy" fill="#DADFEA" fill-rule="evenodd" transform="translate(11.250000, 7.812500) scale(-1, 1) translate(-11.250000, -7.812500) "></path>
+                <rect id="Rectangle" fill="#5D7590" fill-rule="evenodd" opacity="0.439999998" x="6.875" y="1.25" width="1.25" height="12.5" rx="0.625"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

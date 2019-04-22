@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="11px" viewBox="0 0 13 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Flip-vertical</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-1049.000000, -3942.000000)">
+            <g id="Stockholm-icons-/-Design-/-Flip-vertical" transform="translate(1048.000000, 3940.000000)">
+                <rect id="bound" x="0" y="0" width="15" height="15"></rect>
+                <path d="M5.66948696,7.85690384 L8.64541416,7.85690384 C8.81800315,7.85690384 8.95791416,7.71699282 8.95791416,7.54440384 L8.95791416,0.104585837 C8.95791416,-0.068003147 8.81800315,-0.207914163 8.64541416,-0.207914163 C8.51763148,-0.207914163 8.40272249,-0.130116993 8.3552652,-0.011473749 L5.379338,7.42834425 C5.31524006,7.5885891 5.39318253,7.77045486 5.55342738,7.8345528 C5.59033996,7.84931784 5.62973089,7.85690384 5.66948696,7.85690384 Z" id="Path-14" fill="#5D7590" fill-rule="evenodd" transform="translate(7.157409, 3.824495) rotate(-270.000000) translate(-7.157409, -3.824495) "></path>
+                <path d="M5.7740728,15.3125 L8.75,15.3125 C8.92258898,15.3125 9.0625,15.172589 9.0625,15 L9.0625,7.560182 C9.0625,7.38759302 8.92258898,7.247682 8.75,7.247682 C8.62221732,7.247682 8.50730833,7.32547917 8.45985103,7.44412241 L5.48392383,14.8839404 C5.41982589,15.0441853 5.49776837,15.226051 5.65801321,15.290149 C5.6949258,15.304914 5.73431673,15.3125 5.7740728,15.3125 Z" id="Path-14-Copy" fill="#DADFEA" fill-rule="evenodd" transform="translate(7.187500, 11.250000) scale(1, -1) rotate(-270.000000) translate(-7.187500, -11.250000) "></path>
+                <rect id="Rectangle" fill="#5D7590" fill-rule="evenodd" transform="translate(7.500000, 7.500000) rotate(-270.000000) translate(-7.500000, -7.500000) " x="6.875" y="1.25" width="1.25" height="12.5" rx="0.625"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

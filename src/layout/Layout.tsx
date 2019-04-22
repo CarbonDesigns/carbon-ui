@@ -7,15 +7,14 @@ import PanelContainer from './PanelContainer';
 import { listenTo, Component, dispatch, handles } from "../CarbonFlux";
 import LayoutActions from './LayoutActions';
 import * as cx from "classnames";
-import bem_mod from '../utils/commonUtils';
 import { util, LayoutDockPosition, LayoutDirection, Invalidate } from "carbon-core";
 import Header from '../header/Header';
 import { default as layoutStore } from "./LayoutStore";
 
 import { findTransformProp } from "../utils/domUtil"
 import * as interact from "interact.js";
-import styled from "styled-components";
 import theme from "../theme";
+import styled from "styled-components";
 
 const PillsSize = 35;
 const CatcherPointSize = 30;
@@ -68,7 +67,7 @@ function transparentForSplit(panel) {
 
 const Layout = styled.div.attrs<{resizing?:boolean, minimized?:boolean}>({})`
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     min-width:100%;
     min-height: 100%;
     width:100vh;
@@ -89,10 +88,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
     private _dispatchWindowResizedDebounced: any;
     private _splitterIndex: number;
     private _tmpVisibleContainer: any;
-
-    refs: {
-        layoutBody: HTMLElement
-    }
+    private layoutBody: HTMLElement;
 
     constructor(props) {
         super(props);
@@ -227,7 +223,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
     }
 
     _dispatchWindowResized() {
-        dispatch(LayoutActions.windowResized(this.refs.layoutBody.clientWidth, this.refs.layoutBody.clientHeight));
+        dispatch(LayoutActions.windowResized(this.layoutBody.clientWidth, this.layoutBody.clientHeight));
     }
 
     componentDidMount() {
@@ -235,7 +231,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
         window.addEventListener("keydown", this._onKeyPressed);
         window.addEventListener("resize", this._dispatchWindowResizedDebounced);
 
-        dispatch(LayoutActions.windowResized(this.refs.layoutBody.clientWidth, this.refs.layoutBody.clientHeight));
+        dispatch(LayoutActions.windowResized(this.layoutBody.clientWidth, this.layoutBody.clientHeight));
         this.setState({ ready: true });
     }
 
@@ -291,8 +287,8 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
                 }
                 var target = event.interaction.node;
                 var offset = $(target).offset();
-                var bodyOffset = $(this.refs.layoutBody).offset();
-                let top = this.refs.layoutBody.clientTop;
+                var bodyOffset = $(this.layoutBody).offset();
+                let top = this.layoutBody.clientTop;
                 target.style[transformProp] = '';
                 setTimeout(() => {
                     target.classList.remove('dragging');
@@ -316,7 +312,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
 
                     var target: HTMLElement = event.target;
                     target.classList.add("droptarget");
-                    that.refs.layoutBody.classList.add("droptarget");
+                    that.layoutBody.classList.add("droptarget");
                     lastTarget = target;
                 })
                 .on('dragleave', function (event) {
@@ -324,11 +320,11 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
                 })
                 .on('drop', function ({ target, dragEvent, interaction }) {
                     target.classList.remove("droptarget");
-                    that.refs.layoutBody.classList.remove("droptarget");
+                    that.layoutBody.classList.remove("droptarget");
                     let offset = $(target).offset();
                     var dropIndex = parseInt(target.getAttribute("data-index"));
                     if (!that._handlePanelDrop(target, offset.left, offset.top, target.clientWidth, target.clientHeight, dragEvent, CatcherSize, CatcherSize, dropIndex, interaction.panelIndex)) {
-                        var layoutBody = that.refs.layoutBody;
+                        var layoutBody = that.layoutBody;
                         let offset = $(layoutBody).offset();
                         var w = layoutBody.clientWidth;
                         var h = layoutBody.clientHeight;
@@ -441,7 +437,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
             <Layout resizing={this.state.resizing} minimized={layoutStore.state.minimized} onMouseDown={this._onDocumentMouseDown}>
                 <Header />
 
-                <div className="layout__body" ref="layoutBody" data-version={this.state.version}>
+                <LayoutBody innerRef={x=>this.layoutBody=x} className="layout__body" data-version={this.state.version}>
                     <div className={left_classname}>{this.renderPills(collapsedLeft)}</div>
                     <div className={top_classname}>{this.renderPills(collapsedTop)}</div>
                     {childrentList}
@@ -449,14 +445,22 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
                     <div className={right_classname}>{this.renderPills(collapsedRight)}</div>
                     <div className={bottom_classname}>{this.renderPills(collapsedBottom)}</div>
 
-                    <div className="lbox_catcher root">
+                    {/* <div className="lbox_catcher root">
                         <div className="lbox_catcher__point up"></div>
                         <div className="lbox_catcher__point left"></div>
                         <div className="lbox_catcher__point down"></div>
                         <div className="lbox_catcher__point right"></div>
-                    </div>
-                </div>
+                    </div> */}
+                </LayoutBody>
             </Layout>
         );
     }
 }
+
+const LayoutBody = styled.div`
+    position: relative;
+    flex: 1 1 100%;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+`;

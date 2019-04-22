@@ -25,9 +25,7 @@ class ToolButton extends Component<any, any> {
     }
 
     _renderGroupIndicator() {
-        return <GroupIndicator>
-            <Icon icon={icons.layer_collapsed} className="icon"></Icon>
-        </GroupIndicator>
+        return <GroupIndicator/>
     }
 
     render() {
@@ -352,7 +350,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
             return (
                 <FlyoutButton data-group={item.name} key={item.name} onOpened={x=>this.flyout = x} onClosed={()=>this.flyout=null}
                     showAction="longpress"
-                    position={{targetVertical:"center", targetHorizontal:"right", sourceHorizontal:"left"}}
+                    position={{targetVertical:"bottom", targetHorizontal:"left", sourceVertical:"top"}}
                     renderContent={()=>this._renderButton(activeButton.tool, activeButton.icon, activeTool === activeButton.tool, item.name, true)}
                 >
                     <FlyoutBodyNoPadding>
@@ -383,7 +381,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         }
 
         return (
-            <ToolsStyled key="tools" innerRef={x => this.tools = x}>
+            <ToolsStyled className="tools" innerRef={x => this.tools = x}>
                 {this.toolsMetadata[this.state.data.activeMode].map(this._renderToolButtonGroup)}
             </ToolsStyled>
         );
@@ -393,19 +391,16 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
 const ToolsStyled = styled.div`
     user-select: none;
     display:flex;
-    flex-direction:column;
-    background-color: ${theme.panel_background};
-    width: 55px;
+    flex-direction:row;
+    align-items:center;
+    width: 100%;
     height: 100%;
-`;
-
-const ToolButtonGroup = styled.div`
 `;
 
 const ToolButtonStyled = styled.div.attrs<{active?:boolean}>({})`
     display:flex;
-    width: 55px;
-    height:50px;
+    width: 32px;
+    height:38px;
     align-items:center;
     justify-content:center;
     cursor:pointer;
@@ -430,9 +425,11 @@ const ToolButtonStyled = styled.div.attrs<{active?:boolean}>({})`
 
 const GroupIndicator = styled.div`
     position:absolute;
-    right:3px;
-    top:0;
+    right:0px;
+    left:0px;
+    margin: 0 5px;
     bottom:0;
-    display:flex;
-    align-items:center;
+    height: 1px;
+    display:block;
+    background: ${theme.separator_color};
 `;

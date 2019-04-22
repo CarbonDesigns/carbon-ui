@@ -2,6 +2,10 @@ import * as React from "react";
 import { Component } from "../CarbonFlux";
 import { DialogAction } from "./DialogActions";
 import DialogRegistry from "./DialogRegistry";
+import styled from "styled-components";
+
+import { ThemeProvider } from 'styled-components';
+import {colors} from '../theme';
 
 interface DialogState {
     visible: boolean;
@@ -37,8 +41,23 @@ export default class DialogContainer extends Component<{}, DialogState>{
         if (!this.state.visible) {
             return null;
         }
-        return <div className="dialog-overlay">
-            <this.state.dialogComponent {...this.state.dialogArgs} />
-        </div>;
+        return <DialogOverlay>
+            <ThemeProvider theme={colors}>
+                <this.state.dialogComponent {...this.state.dialogArgs} />
+            </ThemeProvider>
+        </DialogOverlay>;
     }
 }
+
+const DialogOverlay = styled.div`
+    position:absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;

@@ -63,7 +63,7 @@ class PropertiesPanel extends Component<IPropertiesPanelProps, IPropertiesPanelS
     render() {
         let { children, ...rest } = this.props;
         return (
-            <Panel ref="panel" {...rest} icon={icons.p_properties} header="Properties" id="edit-panel">
+            <Panel ref="panel" {...rest} icon={icons.p_properties} noheader header="Properties" id="edit-panel">
                 <TabContainer currentTabId={this.state.tabId}>
                     <TabAreaStyled>
                         <TabPageStyled tabId="1">

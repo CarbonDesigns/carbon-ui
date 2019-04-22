@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="11px" viewBox="0 0 19 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Asymmetric</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-968.000000, -3942.000000)">
+            <g id="Asymmetric" transform="translate(968.000000, 3943.000000)">
+                <path d="M0.849626557,9.96196174 C0.934047211,4.41890132 3.32713367,1.64737111 8.02888592,1.64737111 C14.073978,1.64737111 17.3376638,4.39689044 17.8199433,9.89592909 L0.849626557,9.96196174 Z" id="Path-14" fill="#5D7590"></path>
+                <ellipse id="Oval-3" fill="#DADFEA" cx="0.9975" cy="1.872" rx="1" ry="1.008"></ellipse>
+                <ellipse id="Oval-3" fill="#DADFEA" cx="17.8125" cy="1.872" rx="1" ry="1.008"></ellipse>
+                <path d="M0.927884648,1.83349245 L18.03887,1.83349245" id="Path-2" stroke="#EAEAEA" stroke-width="0.576"></path>
+                <ellipse id="Oval" stroke="#FFFFFF" stroke-width="0.576" fill="#172131" cx="6.4125" cy="1.872" rx="1.8525" ry="1.872"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>

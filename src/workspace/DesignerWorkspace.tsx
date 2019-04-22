@@ -22,6 +22,7 @@ import Tools from '../tools/tools';
 import CarbonActions, { CarbonAction } from '../CarbonActions';
 import Toolbox from '../library/Toolbox';
 import { MonacoEditor } from '../editor/MonacoEditor';
+import TopBar from './topBar/TopBar';
 
 require("./IdleDialog");
 
@@ -45,9 +46,9 @@ const WorkspaceStyled = styled.div`
 
 const Viewport = styled.div`
     position:absolute;
-    top:0;
+    top:64px;
     bottom:0;
-    left:58px;
+    left:0;
     right:0;
     /* background-color: ${theme.workspace_background}; */
     overflow: hidden;
@@ -270,7 +271,8 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
     render() {
         return (
             <WorkspaceStyled>
-                <Tools key="tools" />
+                {/* <Tools key="tools" /> */}
+                <TopBar></TopBar>
                 <Viewport id="viewport" innerRef={x => { this.viewport = x }} key="viewport">
                     {/* canvases and view container will be inserted here */}
 

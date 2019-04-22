@@ -141,25 +141,32 @@ type HeaderState = {
 
 const ProjectBar = styled.div`
     position:relative;
-    display: flex;
+    display: grid;
     align-items: center;
     align-content:center;
-    flex-wrap: wrap;
-    flex: 1;
-    overflow:hidden;
-    padding-left:20px;
+    grid-template-rows: 1fr 1fr;
+    height: 90px;
+    width: 100%;
+    margin-top: 21px;
+    & > * {
+        transform: rotate(270deg);
+        color: ${theme.text_color};
+        font: ${theme.leadFont};
+        text-transform: uppercase;
+    }
 `
 
 const HeaderBase = styled.div`
-    height: 47px;
-    background:${theme.panel_background};
+    width: 40px;
+    height: 100%;
+    background:${theme.workspace_background};
     position:relative;
-    margin-bottom: 5px;
     display: grid;
-    grid-template-columns: 60px 360px 1fr auto;
+    grid-template-rows: 1fr 1fr 1fr;
     align-items: center;
     flex-wrap: nowrap;
     align-items: stretch;
+    overflow:hidden;
 `
 
 export default class Header extends Component<HeaderProps, HeaderState> {
@@ -204,31 +211,17 @@ export default class Header extends Component<HeaderProps, HeaderState> {
         var that = this;
 
         return (
-            <HeaderBase>
-                {/* <div className="projectbar">
-                    {this.state.appAvatar && <div className="projectbar__pic" onClick={Header.onProjectClick}>
-                        <div className="projectbar__project-avatar" style={{ backgroundImage: "url('" + this.state.appAvatar + "')" }} onClick={Header.onProjectClick}></div>
-                    </div>
-                    }
-                    <div className={bem("projectbar", "name", { big: this.state.appName.length > 10 })} onClick={Header.onProjectClick}>
-                        <h2>{this.state.appName}</h2>
-                    </div>
-                </div> */}
-
-                <ProjectBar>
-                    <IconButton icon={icons.menu_main} color="white" onClick={Header.onProjectClick}/>
+            <HeaderBase className="_headerBase">
+                <ProjectBar className="_projectBase">
+                    <CarbonLabel id="@menu" />
+                    <IconButton icon={icons.menu_main} color="white" onClick={Header.onProjectClick} />
                 </ProjectBar>
 
-                {/* Modebar */}
-                <ModeSelector/>
-
-                <ActionHeader/>
-
-                { /*   Userbar / Signup   */}
-                <div className="statusbar">
+                <ModeSelector className="_modeSelector" />
+                {/* <div className="statusbar">
                     <AppStatus />
                     <UserBar />
-                </div>
+                </div> */}
             </HeaderBase>
         );
     }

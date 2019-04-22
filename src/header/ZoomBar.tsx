@@ -174,16 +174,19 @@ export default class ZoomBar extends Component<any, any> {
         return (
             <ZoomBarComponent>
                 <ContiniouseAction icon={icons.zoom_out} action="zoomOut" tabIndex="0" />
-                <ZoomInputLabel htmlFor="zoom__input">
-                    <ZoomInput dataType="int" size={4} value={~~(scale * 100)}
-                        divOnBlur={true}
-                        tabIndex={1}
-                        onValueEntered={this.onZoomTyped}
-                        onKeyDown={this.onKeyDown}
-                        name="zoom__input" />
-                    <span>%</span>
-                    <div className="bg" />
-                </ZoomInputLabel>
+                <ZoomInputContainer>
+                    <ZoomInputLabel htmlFor="zoom__input">
+                        <ZoomInput dataType="int" size={4} value={~~(scale * 100)}
+                            divOnBlur={true}
+                            tabIndex={1}
+                            onValueEntered={this.onZoomTyped}
+                            onKeyDown={this.onKeyDown}
+                            name="zoom__input" />
+                        <span>%</span>
+                        <div className="bg" />
+                    </ZoomInputLabel>
+                    <Line/>
+                </ZoomInputContainer>
 
                 <FlyoutButton renderContent={this.renderZoomMenuButton} position={{ targetVertical: "bottom", targetHorizontal: "right", sourceHorizontal: "right" }}>
                     <ZoomMenu>
@@ -225,6 +228,7 @@ const ZoomBarComponent = styled.div`
     display: flex;
     align-items: stretch;
     flex-wrap: nowrap;
+    align-items:center;
 `;
 
 const ZoomMenu = styled.div`
@@ -237,8 +241,25 @@ const ZoomMenu = styled.div`
     border-radius: 2px;
 `;
 
+const ZoomInputContainer = styled.div`
+    min-width: 38px;
+    position:relative;
+    height:38px;
+    padding: 0 5px;
+`;
+
+const Line = styled.div`
+    position:absolute;
+    right:0px;
+    left:0px;
+    bottom:0;
+    height: 1px;
+    display:block;
+    background: ${theme.separator_color};
+`;
+
 const ZoomInputLabel = styled.div.attrs<any>({}) `
-    width: 46px;
+    min-width: 38px;
     box-sizing: border-box;
     height: 100%;
 
@@ -248,7 +269,7 @@ const ZoomInputLabel = styled.div.attrs<any>({}) `
     align-items:center;
 
     span {
-        font-size:14px;
+        font-size:13px;
         color: ${theme.text_color};
         opacity: 0.4;
     }
@@ -264,13 +285,13 @@ const ZoomInputLabel = styled.div.attrs<any>({}) `
 `
 const ZoomInput = styled(EnterInput) `
     background-color: transparent;
-    text-align: right;
-    width:100%;
+    /* text-align: right; */
+    /* width:100%; */
     z-index: 1;
     padding-right : 3px;
 
     color: ${theme.text_color};
-    font-size:14px;
+    font-size:13px;
 
     &:focus {
         color: ${theme.text_color};

@@ -116,5 +116,5 @@ const LibraryTabContainer = styled.div.attrs<any>({}) `
     font:${theme.tab_font};
     color:${theme.text_color};
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.09);
-    background: ${p => p.active ? 'linear-gradient(to right, #ff4295 0%, #ff292c 100%)' : theme.inactive_tab_button};
+    background-color: ${p => p.active ? theme.button_active : theme.button_normal};
 `;

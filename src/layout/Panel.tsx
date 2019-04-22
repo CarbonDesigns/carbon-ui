@@ -101,11 +101,11 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
         }
 
         return <PanelHeader>
-            <Icon className="icon" icon={this.props.icon}></Icon>
+            {/* <Icon className="icon" icon={this.props.icon}></Icon> */}
             <PanelName>
                 <FormattedMessage id={this.props.header} defaultMessage={this.props.header} />
             </PanelName>
-            <IconButton className="panel_closer" icon={icons.panel_closer} onMouseDown={(e) => e.preventDefault()} onClick={this._resolveOnGroupCloseClick({ index: this.props.index })} />
+            {/* <IconButton className="panel_closer" icon={icons.panel_closer} onMouseDown={(e) => e.preventDefault()} onClick={this._resolveOnGroupCloseClick({ index: this.props.index })} /> */}
         </PanelHeader>
     }
 
@@ -164,6 +164,6 @@ const PanelName = styled.div`
     display: flex;
     align-items: center;
     text-transform: uppercase;
-    letter-spacing: 4.44px;
-    margin-left:11px;
+    letter-spacing: 1.44px;
+    margin-left:12px;
 `;

@@ -112,7 +112,7 @@
     "immutable": "3.8.2",
     "interact.js": "1.2.8",
     "invariant": "2.1.1",
-    "monaco-editor": "0.10.1",
+    "monaco-editor": "^0.10.1",
     "mousetrap": "1.5.3",
     "prop-types": "15.6.1",
     "qrcode.react": "0.8.0",

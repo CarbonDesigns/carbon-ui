@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="15px" viewBox="0 0 20 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Folder Open Icon</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-292.000000, -4197.000000)">
+            <g id="Folder-Open-Icon" transform="translate(292.000000, 4197.000000)">
+                <g>
+                    <path d="M7.875,1.125 L16.875,1.125 C17.1856602,1.125 17.4375,1.37683983 17.4375,1.6875 L17.4375,2.8125 L7.875,2.8125 L0.5625,2.8125 L0.5625,0 L7.3125,0 C7.62316017,-5.70673477e-17 7.875,0.251839828 7.875,0.5625 L7.875,1.125 Z" id="Combined-Shape-Copy" fill="#5D7590"></path>
+                    <path d="M0.628461571,3.9375 L18.4965384,3.9375 C18.8071986,3.9375 19.0590384,4.18933983 19.0590384,4.5 C19.0590384,4.52075352 19.0578899,4.54149114 19.055598,4.56211773 L18.055598,13.5621177 C18.023946,13.8469861 17.7831599,14.0625 17.4965384,14.0625 L1.62846157,14.0625 C1.34184014,14.0625 1.10105401,13.8469861 1.06940197,13.5621177 L0.0694019704,4.56211773 C0.0350952935,4.25335764 0.257583746,3.97524708 0.566343838,3.9409404 C0.586970427,3.93864856 0.607708048,3.9375 0.628461571,3.9375 Z" id="Rectangle-Copy-7" fill="#394859"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

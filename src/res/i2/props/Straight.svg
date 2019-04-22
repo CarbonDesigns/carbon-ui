@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="11px" viewBox="0 0 19 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Straight</title>
+    <desc>Created with Sketch.</desc>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-887.000000, -3941.000000)">
+            <g id="Straight" transform="translate(888.000000, 3942.000000)">
+                <polygon id="Path-14" fill="#5D7590" points="0.994473974 8.58789805 8.46015595 1.16764619 15.8685647 8.53097336"></polygon>
+                <polyline id="Path-14" stroke="#DADFEA" stroke-width="0.5" points="0.994473974 8.58789805 8.46015595 1.16764619 15.8685647 8.53097336"></polyline>
+                <ellipse id="Oval" stroke="#DADFEA" stroke-width="0.5" fill="#111A29" cx="8.36816327" cy="1.6137931" rx="1.62367347" ry="1.6137931"></ellipse>
+                <ellipse id="Oval-3" stroke="#DADFEA" stroke-width="0.5" fill="#DADFEA" cx="0.874285714" cy="8.8137931" rx="1" ry="1"></ellipse>
+                <ellipse id="Oval-3" stroke="#DADFEA" stroke-width="0.5" fill="#DADFEA" cx="16.1118367" cy="8.8137931" rx="1" ry="1"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>

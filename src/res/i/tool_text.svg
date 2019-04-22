@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="14px" height="20px" viewBox="0 0 14 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
-    <title>icon/text/pink</title>
+<svg width="19px" height="13px" viewBox="0 0 19 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Font</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Icon-Set" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="TrajanPro-Regular, Trajan Pro" font-size="20" font-weight="normal">
-        <g id="icon/text/pink" fill="#9B9B9B">
-            <text id="T">
-                <tspan x="0" y="15">T</tspan>
-            </text>
+    <g id="CarbUI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Style-Guide" transform="translate(-368.000000, -4347.000000)">
+            <g id="Stockholm-icons-/-Text-/-Font" transform="translate(368.000000, 4344.000000)">
+                <rect id="bound" x="0" y="0" width="19" height="19"></rect>
+                <path d="M0.1425,15.0416667 L5.62083333,3.67333333 L11.0991667,15.0416667 L9.5475,15.0416667 L8.15416667,12.0966667 L3.0875,12.0966667 L1.69416667,15.0416667 L0.1425,15.0416667 Z M5.62083333,6.745 L3.72083333,10.7666667 L7.52083333,10.7666667 L5.62083333,6.745 Z" id="Aa" fill="#DADFEA" fill-rule="evenodd"></path>
+                <path d="M16.8941667,15.0416667 L16.8941667,14.25 C16.2291667,14.8516667 15.3425,15.1683333 14.3766667,15.1683333 C12.0491667,15.1683333 10.3391667,13.3791667 10.3391667,11.0833333 C10.3391667,8.7875 12.0491667,6.99833333 14.3766667,6.99833333 C15.3425,6.99833333 16.2291667,7.315 16.8941667,7.91666667 L16.8941667,7.125 L18.2558333,7.125 L18.2558333,15.0416667 L16.8941667,15.0416667 Z M14.4083333,13.8858333 C15.5483333,13.8858333 16.435,13.3475 16.8941667,12.6033333 L16.8941667,9.56333333 C16.435,8.81916667 15.5483333,8.28083333 14.4083333,8.28083333 C12.8566667,8.28083333 11.7483333,9.51583333 11.7483333,11.0833333 C11.7483333,12.6508333 12.8566667,13.8858333 14.4083333,13.8858333 Z" id="Combined-Shape" fill="#5D7590" fill-rule="evenodd"></path>
+            </g>
         </g>
     </g>
 </svg>

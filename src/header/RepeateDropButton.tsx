@@ -13,6 +13,7 @@ import TextInput from "../components/TextInput";
 import { HorizontalGroup, FlyoutBody } from "../components/CommonStyle";
 import MainButton from "../components/MainButton";
 import NumericEditor from "../properties/editors/NumericEditor";
+import theme from "../theme";
 
 var rows = Immutable.Map({
     descriptor: {
@@ -91,7 +92,7 @@ export default class RepateDropButton extends Component<any> {
     _repeate = () => {
         var cols = this.columns;
         var rows = this.rows;
-        app.actionManager.invoke("repeater.group", JSON.stringify({ columns: cols, rows: rows, innerMarginX:this.hmargin, innerMarginY:this.vmargin }));
+        app.actionManager.invoke("repeater.group", JSON.stringify({ columns: cols, rows: rows, innerMarginX: this.hmargin, innerMarginY: this.vmargin }));
         this.refs.flyout.close();
     }
 
@@ -119,7 +120,9 @@ export default class RepateDropButton extends Component<any> {
         return <FlyoutButton ref="flyout"
             position={{ targetVertical: "bottom", targetHorizontal: "center" }}
             renderContent={() =>
-                <IconButton icon={icons.repeat_menu} width={46} height={46} />
+                <ButtonContainer>
+                    <IconButton icon={icons.repeat_menu} width={46} height={46} label="@repeat" />
+                </ButtonContainer>
             }>
             <RepeatFlyoutBody onClick={e => e.stopPropagation()}>
                 <FlyoutHeader icon={icons.repeat_small} label="@repeater.group" />
@@ -137,7 +140,7 @@ export default class RepateDropButton extends Component<any> {
     }
 }
 
-const TextGroup = styled(HorizontalGroup) `
+const TextGroup = styled(HorizontalGroup)`
     justify-content:space-between;
     & > * {
         margin-top:22px;
@@ -145,11 +148,15 @@ const TextGroup = styled(HorizontalGroup) `
     }
 `
 
-const RepeatButton = styled(MainButton).attrs<any>({}) `
+const ButtonContainer = styled.div`
+
+`;
+
+const RepeatButton = styled(MainButton).attrs<any>({})`
     width:100%;
     margin: 30px 0 10px 0;
 `;
 
-const RepeatFlyoutBody = styled(FlyoutBody) `
+const RepeatFlyoutBody = styled(FlyoutBody)`
     min-width:180px;
 `

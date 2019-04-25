@@ -51,7 +51,8 @@ export default class CommunityLibrary extends RouteComponent<CommunityLibraryPro
 
     private renderList() {
         if (this.state.showList) {
-            var query = queryString.parse(this.props.location.search);
+            var query:any = queryString.parse(this.props.location.search);
+
             return <CommunityLibraryPage search={query.s || ""} visible={!this.props.params.resourceId} />;
         }
         return null;

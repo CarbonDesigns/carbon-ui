@@ -104,7 +104,7 @@ const SliderContainer = styled.div`
 
 const PropertyFillLineContainer = styled.div`
     display:grid;
-    grid-template-columns:26px 54px 1fr;
+    grid-template-columns:26px 28px 1fr;
     align-items:center;
     grid-column-gap: ${theme.margin1};
     padding:0 ${theme.margin1};

@@ -54,19 +54,19 @@ export default class BrushEditor extends EditorComponent<Brush> {
 }
 
 const BrushIndicator = styled.div`
-    width:47px;
-    height:28px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.11);
-    border-radius: 3px;
-    background:${theme.input_background};
+    width:24px;
+    height:24px;
+    /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.11); */
+    /* border-radius: 3px; */
+    /* background:${theme.input_background}; */
     display: flex;
     justify-content: center;
     align-items: center;
 
     & div {
-        width: 35px;
-        height: 21px;
-        box-shadow: 0 0 6px rgba(0, 0, 0, 0.11);
-        border-radius: 2px;
+        width: 22px;
+        height: 22px;
+        /* box-shadow: 0 0 6px rgba(0, 0, 0, 0.11); */
+        border-radius: 11px;
     }
 `;

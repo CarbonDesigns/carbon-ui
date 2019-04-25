@@ -47,6 +47,7 @@ export const PropertyWithSubtitleContainer = styled.div`
 
 export const PropertySmallNameContainer = styled(PropertyNameContainer)`
     font:${theme.prop_font};
+    color:${theme.prop_sub_color};
     text-align:center;
     cursor:ew-resize;
 `

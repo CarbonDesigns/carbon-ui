@@ -44,6 +44,7 @@ export const colors = {
     prop_name_font: "400 12px 'Roboto', sans-serif;",
     leadFont: "bold 12pt 'Roboto', sans-serif;",
     link_padding: "8px",
+    prop_sub_color: "#394859",
     input_background: "#1D2636",
     layer_page_background: "#212121",
     layer_selection_background: "#3498DB",

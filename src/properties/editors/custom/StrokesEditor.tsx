@@ -380,7 +380,7 @@ export default class StrokesEditor extends EditorComponent<ISize, IEditorProps, 
 const StrokeLineContainer = styled.div`
     display:grid;
     grid-column-gap: ${theme.margin1};
-    grid-template-columns: 26px 54px 1fr 50px 18px;
+    grid-template-columns: 26px 28px 1fr 50px 18px;
     align-items:center;
     padding:0 ${theme.margin1};
     padding-bottom: ${theme.margin2};

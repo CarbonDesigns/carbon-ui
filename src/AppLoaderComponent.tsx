@@ -98,7 +98,7 @@ export default class AppLoaderComponent extends RouteComponent<IAppLoaderCompone
                 if (params.appId) {
                     app.id = (params.appId);
                 }
-                var queryParams = queryString.parse(this.props.location.search)
+                var queryParams:any = queryString.parse(this.props.location.search)
                 if (queryParams.r) {
                     app.initializeWithResource(queryParams.r);
                 }

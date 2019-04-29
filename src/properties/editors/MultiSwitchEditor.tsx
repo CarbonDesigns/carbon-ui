@@ -54,7 +54,7 @@ export default class MultiSwitchEditor extends EditorComponent<IEditorProps, any
     };
 }
 
-const SwitchItem = styled.div.attrs<any>({}) `
+const SwitchItem = styled.div<any>`
     height:24px;
     flex:1;
     background:${theme.input_background};

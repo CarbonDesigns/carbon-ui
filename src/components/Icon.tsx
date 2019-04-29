@@ -8,7 +8,7 @@ interface IIconProps extends IReactElementProps {
     color?: string;
 }
 
-const IconStyled = styled.div.attrs<{ src?: any, defaultColor?: any, width?: any, height?: any }>({}) `
+const IconStyled = styled.div<{ src?: any, defaultColor?: any, width?: any, height?: any }>`
     mask: url(${props => props.src});
     background-color: ${props => props.defaultColor};
     background-repeat: no-repeat;
@@ -17,7 +17,7 @@ const IconStyled = styled.div.attrs<{ src?: any, defaultColor?: any, width?: any
     mask-repeat: no-repeat;
 `;
 
-const RawIconStyled = styled.div.attrs<{ src?: any, defaultColor?: any, width?: any, height?: any }>({}) `
+const RawIconStyled = styled.div<{ src?: any, defaultColor?: any, width?: any, height?: any }>`
     background-image: url(${props => props.src});
     background-color: unset;
     background-repeat: no-repeat;

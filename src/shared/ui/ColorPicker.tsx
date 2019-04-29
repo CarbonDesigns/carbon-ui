@@ -133,7 +133,7 @@ class SketchPicker extends React.Component<any, any> {
   render() {
     let { width, rgb, hex, hsv, hsl, onChange, disableAlpha,
       presetColors, renderers } = this.props;
-
+    let SketchPresetColorsAny: any = SketchPresetColors;
     var activeColor = { background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})` }
     return <ColorPickerContainer onMouseDown={this.props.onMouseDown} onMouseUp={this.props.onMouseUp}>
       <Cell>
@@ -172,7 +172,7 @@ class SketchPicker extends React.Component<any, any> {
       </Cell>
 
       <Cell>
-        <SketchPresetColors colors={presetColors} onClick={onChange} />
+        <SketchPresetColorsAny  colors={presetColors} onClick={onChange} />
       </Cell>
     </ColorPickerContainer>
   }

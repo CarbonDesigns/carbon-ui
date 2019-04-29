@@ -20,7 +20,7 @@ export const VerticalGroup = styled.div`
     flex-direction:column;
 `;
 
-export const TabAreaStyled = styled(TabArea).attrs<any>({})`
+export const TabAreaStyled = styled(TabArea)<any>`
     overflow:hidden;
     position:relative;
     flex: auto;
@@ -38,7 +38,7 @@ export const TabAreaStyled = styled(TabArea).attrs<any>({})`
     &[data-current-tab="8"] > div{ transform: translateX(-700%)}
 `;
 
-export const TabPageStyled = styled(TabPage).attrs<any>({})`
+export const TabPageStyled = styled(TabPage)<any>`
     display: flex;
     flex-direction: column;
     transition: transform .3s;

@@ -249,7 +249,7 @@ const VerticalSeparator = styled.div`
     background: ${theme.separator_color};
 `;
 
-const ActionIconButtonStyled = styled(ActionIconButton).attrs<any>({})`
+const ActionIconButtonStyled = styled(ActionIconButton)<any>`
     background: ${theme.panel_background};
     width:46px;
     height:46px;

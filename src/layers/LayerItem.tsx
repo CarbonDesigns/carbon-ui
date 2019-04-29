@@ -240,7 +240,7 @@ const IconContainer = styled.div`
     display:flex;
 `;
 
-const LayerContainer = styled.div.attrs<any>({}) `
+const LayerContainer = styled.div<any>`
     display:flex;
     align-items:center;
     height:${layer_height}px;

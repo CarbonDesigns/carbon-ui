@@ -381,7 +381,7 @@ export default class Tools extends ComponentWithImmutableState<any, any> {
         }
 
         return (
-            <ToolsStyled className="tools" innerRef={x => this.tools = x}>
+            <ToolsStyled className="tools">
                 {this.toolsMetadata[this.state.data.activeMode].map(this._renderToolButtonGroup)}
             </ToolsStyled>
         );
@@ -397,7 +397,7 @@ const ToolsStyled = styled.div`
     height: 100%;
 `;
 
-const ToolButtonStyled = styled.div.attrs<{active?:boolean}>({})`
+const ToolButtonStyled = styled.div<{active?:boolean}>`
     display:flex;
     width: 32px;
     height:38px;

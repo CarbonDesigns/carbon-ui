@@ -60,7 +60,7 @@ export default class BrushSelector extends Component<any, IBrushSelectorState> {
     }
 }
 
-const BrushPopup = styled.div.attrs<any>({})`
+const BrushPopup = styled.div<any>`
     box-shadow: 0 0 14px #000000;
     border-radius: 4px;
     width:264px;

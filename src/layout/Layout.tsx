@@ -65,7 +65,7 @@ function transparentForSplit(panel) {
     return panel.collapsed || panel.floating || panel.fixed;
 }
 
-const Layout = styled.div.attrs<{resizing?:boolean, minimized?:boolean}>({})`
+const Layout = styled.div<{resizing?:boolean, minimized?:boolean}>`
     display:flex;
     flex-direction:row;
     min-width:100%;
@@ -88,7 +88,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
     private _dispatchWindowResizedDebounced: any;
     private _splitterIndex: number;
     private _tmpVisibleContainer: any;
-    private layoutBody: HTMLElement;
+    private layoutBody: React.RefObject<HTMLDivElement>;
 
     constructor(props) {
         super(props);
@@ -101,6 +101,8 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
         };
         this.panelCache = {};
         this._dispatchWindowResizedDebounced = util.debounce(this._dispatchWindowResized.bind(this), 200);
+
+        this.layoutBody = React.createRef<HTMLDivElement>();
     }
 
     @listenTo(layoutStore)
@@ -223,7 +225,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
     }
 
     _dispatchWindowResized() {
-        dispatch(LayoutActions.windowResized(this.layoutBody.clientWidth, this.layoutBody.clientHeight));
+        dispatch(LayoutActions.windowResized(this.layoutBody.current.clientWidth, this.layoutBody.current.clientHeight));
     }
 
     componentDidMount() {
@@ -231,7 +233,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
         window.addEventListener("keydown", this._onKeyPressed);
         window.addEventListener("resize", this._dispatchWindowResizedDebounced);
 
-        dispatch(LayoutActions.windowResized(this.layoutBody.clientWidth, this.layoutBody.clientHeight));
+        dispatch(LayoutActions.windowResized(this.layoutBody.current.clientWidth, this.layoutBody.current.clientHeight));
         this.setState({ ready: true });
     }
 
@@ -287,8 +289,8 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
                 }
                 var target = event.interaction.node;
                 var offset = $(target).offset();
-                var bodyOffset = $(this.layoutBody).offset();
-                let top = this.layoutBody.clientTop;
+                var bodyOffset = $(this.layoutBody.current).offset();
+                let top = this.layoutBody.current.clientTop;
                 target.style[transformProp] = '';
                 setTimeout(() => {
                     target.classList.remove('dragging');
@@ -312,7 +314,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
 
                     var target: HTMLElement = event.target;
                     target.classList.add("droptarget");
-                    that.layoutBody.classList.add("droptarget");
+                    that.layoutBody.current.classList.add("droptarget");
                     lastTarget = target;
                 })
                 .on('dragleave', function (event) {
@@ -320,11 +322,11 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
                 })
                 .on('drop', function ({ target, dragEvent, interaction }) {
                     target.classList.remove("droptarget");
-                    that.layoutBody.classList.remove("droptarget");
+                    that.layoutBody.current.classList.remove("droptarget");
                     let offset = $(target).offset();
                     var dropIndex = parseInt(target.getAttribute("data-index"));
                     if (!that._handlePanelDrop(target, offset.left, offset.top, target.clientWidth, target.clientHeight, dragEvent, CatcherSize, CatcherSize, dropIndex, interaction.panelIndex)) {
-                        var layoutBody = that.layoutBody;
+                        var layoutBody = that.layoutBody.current;
                         let offset = $(layoutBody).offset();
                         var w = layoutBody.clientWidth;
                         var h = layoutBody.clientHeight;
@@ -437,7 +439,7 @@ export default class LayoutContainer extends Component<ILayoutContainerProps, IL
             <Layout resizing={this.state.resizing} minimized={layoutStore.state.minimized} onMouseDown={this._onDocumentMouseDown}>
                 <Header />
 
-                <LayoutBody innerRef={x=>this.layoutBody=x} className="layout__body" data-version={this.state.version}>
+                <LayoutBody ref={this.layoutBody} className="layout__body" data-version={this.state.version}>
                     <div className={left_classname}>{this.renderPills(collapsedLeft)}</div>
                     <div className={top_classname}>{this.renderPills(collapsedTop)}</div>
                     {childrentList}

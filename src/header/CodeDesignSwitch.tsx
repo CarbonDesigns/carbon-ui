@@ -50,7 +50,7 @@ const SwitchContainer = styled.div`
     width:100%;
 `;
 
-const SwitchItem = styled.div.attrs<{ active: boolean }>({}) `
+const SwitchItem = styled.div<{ active: boolean }>`
     height: 20px;
     width:82px;
     background-color:${p => !p.active ? '#d7d7d7' : theme.accent};

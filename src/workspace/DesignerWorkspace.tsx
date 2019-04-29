@@ -89,7 +89,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
         animationSettings: any;
     };
 
-    private viewport: HTMLElement;
+    private viewport: React.RefObject<HTMLDivElement>;
     private workspace = { view: null, controller: null };
 
     constructor(props) {
@@ -101,6 +101,8 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
                 isolationActive: IsolationContext.isActive
             })
         };
+
+        this.viewport = React.createRef();
     }
 
     @listenTo(richApp.workspaceStore, appStore)
@@ -170,7 +172,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
         this.mounted = true;
 
         // at this point view and controller will be created
-        this._renderLoop.mountDesignerView(app, this.viewport);
+        this._renderLoop.mountDesignerView(app, this.viewport.current);
         let view = this._renderLoop.view;
         let controller = this._renderLoop.controller;
         this.workspace.view = view;
@@ -273,7 +275,7 @@ class DesignerWorkspace extends ComponentWithImmutableState<any, any> implements
             <WorkspaceStyled>
                 {/* <Tools key="tools" /> */}
                 <TopBar></TopBar>
-                <Viewport id="viewport" innerRef={x => { this.viewport = x }} key="viewport">
+                <Viewport id="viewport" ref={this.viewport} key="viewport">
                     {/* canvases and view container will be inserted here */}
 
                     {/* <div id="workspace-top-edge" className="rulers">

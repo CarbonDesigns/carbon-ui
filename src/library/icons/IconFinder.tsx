@@ -99,7 +99,7 @@ export default class IconFinder extends StoreComponent<{}, IconFinderStoreState>
     }
 
     render() {
-        return <IconFinderContainer innerRef={x=>this.page=x}>
+        return <IconFinderContainer>
                 {this.renderError()}
                 {this.renderList()}
         </IconFinderContainer>;

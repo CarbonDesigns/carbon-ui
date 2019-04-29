@@ -38,11 +38,12 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
         icon: PropTypes.any
     }
 
-    private panel: HTMLElement;
+    private panel: React.RefObject<HTMLDivElement>;
 
     constructor(props) {
         super(props);
         this.state = { widthClass: null, heightClass: null };
+        this.panel = React.createRef<HTMLDivElement>();
     }
 
     componentDidMount() {
@@ -54,12 +55,12 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
     }
 
     width() {
-        var panel = this.panel;
+        var panel = this.panel.current;
         return panel.offsetWidth;
     }
 
     height() {
-        var panel = this.panel;
+        var panel = this.panel.current;
         return panel.offsetHeight;
     }
 
@@ -88,7 +89,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
     }
 
     _resolveOnGroupCloseClick = (container) => (e) => {
-        if (this.panel.parentElement.classList.contains('dragging')) {
+        if (this.panel.current.parentElement.classList.contains('dragging')) {
             return;
         }
 
@@ -113,7 +114,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
         var classname = bem_mod("panel", null, [this.state.heightClass, this.state.widthClass], this.props.className);
 
         return (
-            <PanelStyled name={this.props.panelName} id={this.props.id} innerRef={x => this.panel = x} data-mode={this.state.mode}>
+            <PanelStyled name={this.props.panelName} id={this.props.id} ref={this.panel} data-mode={this.state.mode}>
                 {this.renderHeader()}
 
                 <PanelBody>
@@ -124,7 +125,7 @@ export default class Panel extends Component<IPanelProps, IPanelState> {
     }
 }
 
-const PanelStyled = styled.div.attrs<{name?:string, id?:any}>({})`
+const PanelStyled = styled.div<{name?:string, id?:any}>`
     background-color:${theme.panel_background};
     display: flex;
     flex-direction: column;

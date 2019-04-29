@@ -258,7 +258,7 @@ const Line = styled.div`
     background: ${theme.separator_color};
 `;
 
-const ZoomInputLabel = styled.div.attrs<any>({}) `
+const ZoomInputLabel = styled.div<any>`
     min-width: 38px;
     box-sizing: border-box;
     height: 100%;
@@ -313,7 +313,7 @@ const ZoomScale = styled.div`
     }
 `;
 
-const ZoomAction = styled.div.attrs<{disabled:boolean}>({})`
+const ZoomAction = styled.div<{disabled:boolean}>`
     flex: 1;
     padding: 20px;
     display: flex;

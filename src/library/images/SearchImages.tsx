@@ -18,7 +18,7 @@ type ImageList = new (props) => VirtualList<UserImageStencil>;
 const ImageList = VirtualList as ImageList;
 
 export default class SearchImages extends StoreComponent<{}, SearchImagesStoreState>{
-    page: HTMLElement;
+    page: React.RefObject<HTMLDivElement>;
 
     refs: {
         search: Search;
@@ -26,12 +26,13 @@ export default class SearchImages extends StoreComponent<{}, SearchImagesStoreSt
 
     constructor(props) {
         super(props, searchImagesStore);
+        this.page = React.createRef();
     }
 
     componentDidMount() {
         super.componentDidMount();
 
-        var page = ReactDom.findDOMNode(this.page);
+        var page = ReactDom.findDOMNode(this.page.current);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
         onCssTransitionEnd(page, () => this.refs.search.focus(), LessVars.tabTransitionTime);
@@ -53,7 +54,7 @@ export default class SearchImages extends StoreComponent<{}, SearchImagesStoreSt
     render() {
         let noResults = this.state.images && !this.state.images.length && this.state.query;
 
-        return <SearchImagesContainer innerRef={x=>this.page = x}>
+        return <SearchImagesContainer ref={this.page}>
             <div className="library-page__header">
                 <Search query={this.state.query} onQuery={this.onSearch} placeholder="@images.find" ref="search" />
             </div>

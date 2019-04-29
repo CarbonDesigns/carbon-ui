@@ -104,7 +104,7 @@ class LibraryTab extends React.Component<any>{
     }
 }
 
-const LibraryTabContainer = styled.div.attrs<any>({}) `
+const LibraryTabContainer = styled.div<any>`
     height:35px;
     display:flex;
     justify-content: center;

@@ -45,7 +45,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
         if (this.props.item.items) {
             return <ContextMenuItemContainer hasIcon={this.props.hasIcons} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
                 {/* {item.icon && <i className={cx("icon", item.icon)} />} */}
-                <ContextMenuItemLabel>{this.props.item.label || this.formatLabel(item.name)}</ContextMenuItemLabel>
+                <span>{this.props.item.label || this.formatLabel(item.name)}</span>
                 {/* <div className={b('item-arrow')}></div> */}
                 {this.state.submenuVisible && <SubMenu disabled={item.disabled} onClose={this.props.onClose} items={this.props.item.items} onCancelled={this.onSubmenuCancelled} />}
             </ContextMenuItemContainer>
@@ -54,7 +54,7 @@ class ContextMenuItem extends Component<any, ContextMenuItemState> {
             disabled={this.props.item.disabled}
             onMouseDown={stopPropagationHandler} onClick={this.onClick.bind(this)}>
             {/* {item.icon && <i className={cx("icon", item.icon)} />} */}
-            <ContextMenuItemLabel>{this.props.item.label || this.formatLabel(this.props.item.name)}</ContextMenuItemLabel>
+            <span>{this.props.item.label || this.formatLabel(this.props.item.name)}</span>
             <ContextMenuItemShortcut>{Workspace.shortcutManager.getActionHotkey(item.actionId)}</ContextMenuItemShortcut>
         </ContextMenuItemContainer>
     }
@@ -250,7 +250,7 @@ const ContextSubMenuStyled = styled(ContextMenuStyled) `
     position: absolute;
 `;
 
-const ContextMenuItemContainer = styled.li.attrs<any>({}) `
+const ContextMenuItemContainer = styled.li<any>`
     height:22px;
     display: flex;
     align-items: center;

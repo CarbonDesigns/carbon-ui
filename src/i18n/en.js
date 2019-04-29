@@ -296,6 +296,10 @@ export default
         "@repeater.offset": "Offset", //
         "@repeater.copies": "Copies", //
 
+        "@menu_tutorials":"Tutorials",
+        "@menu_feedback":"Give feedback",
+        "@menu_settings":"Settings",
+
         "@display.background.preview": "Fill background in preview",
 
         "@page.defaultSymbolGroup": "My Symbols",

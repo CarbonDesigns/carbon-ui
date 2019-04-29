@@ -15,7 +15,7 @@ type UnsplashList = new (props) => InfiniteList<UnsplashStencil>;
 const UnsplashList = InfiniteList as UnsplashList;
 
 export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
-    page: HTMLElement;
+    page: React.RefObject<HTMLDivElement>;
 
     refs: {
         search: Search;
@@ -24,11 +24,12 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
 
     constructor(props) {
         super(props, unsplashStore);
+        this.page = React.createRef();
     }
 
     componentDidMount() {
         super.componentDidMount();
-        var page = ReactDom.findDOMNode(this.page);
+        var page = ReactDom.findDOMNode(this.page.current);
         // setting focus during css transition causes weird side effects
         // because browser tries to scroll to focused element visible
         // onCssTransitionEnd(page, () => this.refs.search.focus(), 800);
@@ -80,7 +81,7 @@ export default class Unsplash extends StoreComponent<{}, UnsplashStoreState>{
     };
 
     render() {
-        return <UnsplashContainer innerRef={p=>this.page = p} className="unsplash">
+        return <UnsplashContainer ref={this.page} className="unsplash">
             <div className="library-page__content">
                 <section className="fill">
                     {this.renderError()}

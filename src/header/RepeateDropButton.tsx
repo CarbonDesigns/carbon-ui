@@ -152,7 +152,7 @@ const ButtonContainer = styled.div`
 
 `;
 
-const RepeatButton = styled(MainButton).attrs<any>({})`
+const RepeatButton = styled(MainButton)<any>`
     width:100%;
     margin: 30px 0 10px 0;
 `;

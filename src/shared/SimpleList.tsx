@@ -70,7 +70,7 @@ export class SimpleListItem extends React.Component<any, any> {
     }
 }
 
-const ListItem = styled.div.attrs<{active:boolean}>({})`
+const ListItem = styled.div<{active:boolean}>`
     display:grid;
     width:100%;
     grid-template-columns: 1fr 14px;

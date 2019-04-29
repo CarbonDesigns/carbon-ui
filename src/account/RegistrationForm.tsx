@@ -183,7 +183,7 @@ const SubmitButton = styled(MainButtonComponent)`
     height:40px;
 `;
 
-const RegistrationFormContainer = styled.form.attrs<{ status: string }>({}) `
+const RegistrationFormContainer = styled.form<{ status: string }>`
     display:grid;
     grid-template-rows: 50px auto auto auto 60px 100px;
     align-items:center;

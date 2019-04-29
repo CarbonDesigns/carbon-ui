@@ -486,14 +486,19 @@ export interface IGuiInputProps extends React.InputHTMLAttributes<HTMLInputEleme
 }
 
 export class GuiInput extends Component<IGuiInputProps>{
-    private input: HTMLInputElement;
+    private input: React.RefObject<HTMLInputElement>;
+
+    constructor(props, context) {
+        super(props, context);
+        this.input = React.createRef();
+    }
 
     focus() {
-        this.input.focus();
+        this.input.current.focus();
     }
 
     blur() {
-        this.input.blur();
+        this.input.current.blur();
     }
 
     selectOnFocus = (e) => {
@@ -503,11 +508,11 @@ export class GuiInput extends Component<IGuiInputProps>{
     }
 
     select() {
-        this.input.select();
+        this.input.current.select();
     }
 
     getValue() {
-        return this.input.value;
+        return this.input.current.value;
     }
 
     render() {
@@ -529,7 +534,7 @@ export class GuiInput extends Component<IGuiInputProps>{
         }
 
         var renderedInput = <GuiInputStyled
-            innerRef={x => this.input = x}
+            ref={this.input}
             onFocus={this.selectOnFocus}
             type={this.props.type}
             placeholder={placeholder}

@@ -126,7 +126,7 @@ class ArrangeCommands extends React.Component<any, any>{
     }
 }
 
-const ActionIconButtonStyled = styled(ActionIconButton).attrs<any>({}) `
+const ActionIconButtonStyled = styled(ActionIconButton)<any>`
     background: ${theme.panel_background};
     width:20px;
     height:20px;
@@ -141,7 +141,7 @@ const ActionIconButtonStyled = styled(ActionIconButton).attrs<any>({}) `
     }
 `;
 
-export default styled(ArrangeCommands).attrs<any>({}) `
+export default styled(ArrangeCommands)<any>`
     width:100%;
     height: 24px;
     display:flex;

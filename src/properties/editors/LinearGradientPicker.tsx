@@ -17,7 +17,7 @@ function LinearGradientPoint(props) {
 }
 
 const LineSize = 8;
-const GradientPoint = styled.div.attrs<any>({}) `
+const GradientPoint = styled.div<any>`
     width:${LineSize}px;
     border-radius:${LineSize / 2}px;
     height: ${LineSize}px;;
@@ -34,7 +34,7 @@ class LinearGradient extends React.Component<any, any> {
         canvas: any;
     };
 
-    line: HTMLElement;
+    line: React.RefObject<HTMLDivElement>;
 
     private _startX: number;
     private _startY: number;
@@ -48,6 +48,7 @@ class LinearGradient extends React.Component<any, any> {
     constructor(props, context) {
         super(props, context);
         this.state = { activePoint: 0, gradient: clone(this.props.gradient) };
+        this.line = React.createRef();
     }
 
     setActivePoint(index) {
@@ -59,7 +60,7 @@ class LinearGradient extends React.Component<any, any> {
     onMouseDown = (event) => {
         // check if hit existing
         let x = event.nativeEvent.offsetX
-        let size = this.line.clientWidth;
+        let size = this.line.current.clientWidth;
         let pcnt = x / size;
         let stops = this.state.gradient.stops;
         let clickExisting = false;
@@ -150,7 +151,7 @@ class LinearGradient extends React.Component<any, any> {
 
     componentDidMount() {
         var canvas = this.refs.canvas;
-        var line = this.line;
+        var line = this.line.current;
         canvas.width = line.clientWidth;
         canvas.height = line.clientHeight;
         this.ctx = canvas.getContext("2d");
@@ -164,7 +165,7 @@ class LinearGradient extends React.Component<any, any> {
     }
 
     _refreshCanvas() {
-        let width = this.line.clientWidth;
+        let width = this.line.current.clientWidth;
         let ctx = this.ctx;
         if (!ctx) {
             return;
@@ -181,7 +182,7 @@ class LinearGradient extends React.Component<any, any> {
     render() {
         var g = this.state.gradient;
 
-        return <LinearGradientContainer innerRef={r => this.line = r} onMouseDownCapture={this.onMouseDown} >
+        return <LinearGradientContainer ref={this.line} onMouseDownCapture={this.onMouseDown} >
             <canvas ref="canvas"></canvas>
             {g.stops.map((s, idx) => <LinearGradientPoint key={"p" + s[0]} value={s} active={idx === this.state.activePoint} />)}
         </LinearGradientContainer>

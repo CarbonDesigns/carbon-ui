@@ -86,6 +86,6 @@ export default class DropButton extends React.Component<IDropButtonProps, IDropB
     }
 }
 
-const ActionButton = styled.div.attrs<{ open: boolean, disabled: boolean, black: boolean }>({}) `
+const ActionButton = styled.div<{ open: boolean, disabled: boolean, black: boolean }>`
     display:grid;
 `;

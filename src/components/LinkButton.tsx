@@ -18,7 +18,7 @@ interface ILinkButtonProps extends IReactElementProps {
     disabled?: boolean;
 }
 
-const LinkButtonComponent = styled.div.attrs<{ width?: number, height?: number, color?: any, hoverColor?: any, disabled?: any }>({}) `
+const LinkButtonComponent = styled.div<{ width?: number, height?: number, color?: any, hoverColor?: any, disabled?: any }>`
     height:${props => props.height}px;
     width:${props=>props.width?props.width+'px' : '100%'};
     cursor:pointer;
@@ -29,7 +29,7 @@ const LinkButtonComponent = styled.div.attrs<{ width?: number, height?: number, 
 
     ${props => props.disabled ? '' : css`
         &:hover {
-            color: ${props => props.hoverColor || theme.button_hover};
+            color: ${props.hoverColor || theme.button_hover};
         }
     `}
 `

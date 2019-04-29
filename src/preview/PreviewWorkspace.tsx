@@ -123,8 +123,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     private _lastDrawnPage: any;
     private _renderingCallback: () => void;
     private _renderingCallbackContinuous: () => void;
-    private viewport: HTMLDivElement;
-    private device: HTMLDivElement;
+    private viewport: React.RefObject<HTMLDivElement>;
+    private device: React.RefObject<HTMLDivElement>;
     private detachDisposables = new AutoDisposable();
     private _onStateChangedBinding: IDisposable;
 
@@ -138,6 +138,9 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         super(props);
         this.state = { data: PreviewStore.state, emulateTouch: true };
         this._renderingRequestId = 0;
+
+        this.viewport = React.createRef();
+        this.device = React.createRef();
     }
 
     _onInvalidateRequested = () => {
@@ -156,7 +159,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var data = this.state.data;
         var newData = PreviewStore.state;
 
-        if (!this._attached || !this.viewport) {
+        if (!this._attached || !this.viewport.current) {
             return;
         }
 
@@ -175,7 +178,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
 
     draw() {
         if (this.previewModel) {
-            let viewport = this.viewport;
+            let viewport = this.viewport.current;
             if (!viewport) {
                 return;
             }
@@ -226,7 +229,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         this.attachToView();
         window.addEventListener("resize", this.onresize);
         if (this.state.emulateTouch) {
-            this.touchEmulator.enable(this.viewport, true);
+            this.touchEmulator.enable(this.viewport.current, true);
         }
 
         document.body.classList.add("fullscreen");
@@ -285,13 +288,13 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     }
 
     ensureCanvasSize(viewportSize?) {
-        if (!this._attached || !this.viewport) {
+        if (!this._attached || !this.viewport.current) {
             return;
         }
 
         let previewDisplayMode = PreviewStore.state.displayMode;
 
-        let viewport = this.viewport;
+        let viewport = this.viewport.current;
 
         viewportSize = viewportSize || {
             width: viewport.clientWidth - ViewportMargin,
@@ -323,7 +326,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         }
 
         var canvas = this.canvas;
-        var device = this.device;
+        var device = this.device.current;
         if (needResize || canvas.width !== (0 | (canvasWidth * this.contextScale))) {
             canvas.width = canvasWidth * this.contextScale;
             canvas.style.width = canvasWidth + "px";
@@ -355,7 +358,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
             var view = new PreviewView(app);
             view.setActivePage(app.activePage);
             view.setup({ Layer: Page });
-            view.viewContainerElement = this.viewport;
+            view.viewContainerElement = this.viewport.current;
             var previewModel = new PreviewModel(app, view, controller);
             var controller = new PreviewController(app, view, previewModel);
             EditorStore.initialize(null);
@@ -410,7 +413,7 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
     platformHandler: IPlatformSpecificHandler;
     _initialize(view, previewModel, controller) {
         this.platformHandler = createPlatformHandler();
-        this.platformHandler.attachEvents(this.viewport, app, view, controller);
+        this.platformHandler.attachEvents(this.viewport.current, app, view, controller);
 
         this.view = view;
         view.setupRendering([this.context], redrawCallback.bind(this), cancelRedrawCallback.bind(this), renderingScheduledCallback.bind(this));
@@ -449,8 +452,8 @@ export default class PreviewWorkspace extends ComponentWithImmutableState<any, a
         var data = this.state.data;
 
         return (
-            <Viewport id="viewport" innerRef={x => this.viewport = x} key="viewport" tabIndex={1}>
-                <PreviewDevice innerRef={x => this.device = x}>
+            <Viewport id="viewport" ref={this.viewport} key="viewport" tabIndex={1}>
+                <PreviewDevice ref={this.device}>
                     <canvas ref="canvas"
                         style={{
                             position: 'absolute'

@@ -245,7 +245,7 @@ const InputStyled = styled(EnterInput) `
     cursor: text;
 `;
 
-const InputContainer = styled.div.attrs<any>({}) `
+const InputContainer = styled.div<any>`
     height:24px;
     background-color: ${theme.input_background};
     border-radius: 2px;

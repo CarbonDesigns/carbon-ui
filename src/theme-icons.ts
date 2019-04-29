@@ -34,6 +34,8 @@ export default {
     p_symbols: icon("p_symbols.svg", 15, 17),
     p_preview: icon("p_preview.svg", 20, 20),//TODO:
     menu_main: icon("menu_main.svg", 20, 20),
+    menu_feedback: icon("menu_feedback.svg", 13, 13),
+    menu_tutorial: icon("menu_tutorial.svg", 10, 12),
     undo: icon("undo.svg", 17, 13),
     redo: icon("redo.svg", 17, 13),
     zoom_in: icon("zoom-in.svg", 15, 15),

@@ -167,10 +167,10 @@ export default class EditorToolbar extends Component<any, any> {
     }
 }
 
-const CurrentArtboard = styled(Dropdown).attrs<any>({}) `
+const CurrentArtboard = styled(Dropdown)<any>`
     width: 160px;
 `;
 
-const DisplayMode = styled(Dropdown).attrs<any>({}) `
+const DisplayMode = styled(Dropdown)<any>`
     width: 120px;
 `;

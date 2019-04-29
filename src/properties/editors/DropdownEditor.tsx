@@ -25,7 +25,13 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
         prop: HTMLElement
     }
 
-    flyout:FlyoutButton;
+    flyout:React.RefObject<FlyoutButton>;
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.flyout = React.createRef();
+    }
 
     _getItemBy = (key, value) => {
         var items = this.extractOption(this.props, "items");
@@ -57,7 +63,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
                 this.setValueByCommand(matchingItem.value);
             }
         }
-        this.flyout.close();
+        this.flyout.current.close();
     };
 
     _onOpened = () => {
@@ -151,7 +157,7 @@ export class BaseDropdownEditor<T, TProps extends IDropdownEditorProps> extends 
                     disableAutoClose: this.props.disableAutoClose,
                     syncWidth: this.props.syncWidth === undefined?true:this.props.syncWidth
                 }}
-                innerRef={x=>this.flyout = x}
+                ref={this.flyout}
                 onOpened={this._onOpened}
                 onClosed={this._onClosed}
             >
@@ -170,11 +176,11 @@ const DropContent = styled.div`
     z-index:1000;
 `;
 
-const DropButton = styled(FlyoutButton).attrs<any>({}) `
+const DropButton = styled(FlyoutButton)<any>`
     width:100%;
 `;
 
-const DropItem = styled.div.attrs<{selected:boolean}>({})`
+const DropItem = styled.div<{selected:boolean}>`
     height:${theme.prop_height};
     line-height:${theme.prop_height};
     padding: 0 ${theme.margin1};

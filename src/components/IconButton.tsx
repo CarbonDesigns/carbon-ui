@@ -38,7 +38,9 @@ export default class IconButton extends Component<IIconButtonProps, {}> {
     }
 }
 
-const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, color?: any, hoverColor?: any, disabled?: any }>({}) `
+const IconButtonComponent = styled.div<{
+    width?: number, height?: number, color?: any, hoverColor?: any, disabled?: any
+    }>`
     width:${props => props.width}px;
     height:${props => props.height}px;
     cursor:pointer;
@@ -62,7 +64,7 @@ const IconButtonComponent = styled.div.attrs<{ width?: number, height?: number, 
 
     ${props => props.disabled ? '' : css`
         &:hover > .icon {
-            background-color: ${props => props.hoverColor || theme.button_hover}
+            background-color: ${props.hoverColor || theme.button_hover}
         }
     `}
 `;

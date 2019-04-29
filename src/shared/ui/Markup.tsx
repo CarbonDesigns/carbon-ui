@@ -1,14 +1,14 @@
 import * as React from "react";
 import styled, {css} from "styled-components";
 
-export const MarkupLine = styled.div.attrs<{
+export const MarkupLine = styled.div<{
     slim?:boolean,
     submit?:boolean,
     space?:boolean,
     center?:boolean,
     stretch?:boolean,
     horizontal?:boolean,
-    fill?:boolean}>({})`
+    fill?:boolean}>`
     margin-top   : 1rem;
     margin-bottom: 1rem;
     display: flex;
@@ -39,7 +39,7 @@ export const MarkupLine = styled.div.attrs<{
     `:''}
 `;
 
-export const Markup = styled.div.attrs<{space?:boolean}>({})`
+export const Markup = styled.div<{space?:boolean}>`
     display:flex;
     flex-direction: column;
     flex: auto;

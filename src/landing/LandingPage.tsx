@@ -166,9 +166,7 @@ export class LandingPage extends RouteComponent<RouteComponentProps, LandingPage
             <div className="background"></div>
 
             <TopMenu />
-            <HeroSection ref="heroContainer">
-
-
+            <HeroSection>
                 <h1 className="title"><CarbonLabel id="@hero.title" /></h1>
                 <h2 className="subtitle"><CarbonLabel id="@hero.subtitle" /></h2>
 

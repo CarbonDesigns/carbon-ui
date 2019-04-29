@@ -79,7 +79,7 @@ const Cap = styled.div`
     position: relative;
 `;
 
-const ModeBarItem = styled.div.attrs<{active?:boolean}>({})`
+const ModeBarItem = styled.div<{active?:boolean}>`
     color: ${(props:any)=>props.active?theme.text_color:theme.text_inactive};
     font: ${theme.leadFont};
     position: relative;

@@ -14,7 +14,7 @@ import styled from "styled-components";
 import theme from "../../theme";
 import MainButton from "../../components/MainButton";
 
-const ImportButton = styled(MainButton).attrs<any>({})`
+const ImportButton = styled(MainButton)<any>`
     padding: 10px 20px;
     height: 36px;
 `;
@@ -82,7 +82,7 @@ export default class InternalIcons extends StoreComponent<any, InternalIconsStor
     }
 }
 
-const NavigatableContent = styled(Navigatable).attrs<any>({})`
+const NavigatableContent = styled(Navigatable)<any>`
     width: 100%;
     padding: 0 0;
     bottom: 0;

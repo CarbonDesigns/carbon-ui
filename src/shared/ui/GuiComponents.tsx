@@ -556,7 +556,6 @@ const GuiInputStyled = styled.input`
     text-align:center;
     line-height:32px;
     width:100%;
-    border-radius:1px;
     &::placeholder {
         color:${theme.text_color.darken()};
     }

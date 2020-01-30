@@ -100,15 +100,18 @@ interface ITabHeaderProps extends IReactElementProps {
     activeClassName: string;
     tabId: string;
 }
+
 //derived from react component on purpose, tabs must re-render when tab container changes
 export class TabHeader extends React.Component<ITabHeaderProps> {
     render() {
         var { className, activeClassName, tabId, children, ...other } = this.props;
         var mods = {};
+        let active = false;
         if (tabId === this.context.activeTabId) {
-            mods[activeClassName || 'active'] = true;
+           active = true;
         }
-        var cn = cx(className, mods);
+
+        var cn = cx(className, {active});
         return <div
             className={cn}
             data-target-tab={this.props.tabId}
@@ -193,12 +196,12 @@ export class TabItem extends React.Component<ITabItemProps> {
 
 export class TabTabs extends React.Component<ITabTabsProps> {
     render() {
-        var { items, tabsClassName, tabClassName, tabActiveClassName, tabMods, insertBefore, insertAfter, children, ...rest } = this.props;
-        var tabs_cn = cx("gui-tabs", tabsClassName);
-        var tab_cn = bem("gui-tabs", "tab", tabMods, tabClassName);
-        var active_tab_cn = cx("gui-tabs__tab_active", tabActiveClassName);
+        var { items, tabsClassName, tabClassName, tabActiveClassName, insertBefore, insertAfter, children, ...rest } = this.props;
+        var tabs_cn = cx("tabs", tabsClassName);
+        var tab_cn = cx("tab", tabClassName);
+
         var newChildren = items.map((item, ind) => {
-            return <TabHeader key={"tab" + (ind + 1)} className={tab_cn} tabId={ind + 1 + ""} activeClassName={active_tab_cn}>
+            return <TabHeader key={"tab" + (ind + 1)} className={tab_cn} tabId={ind + 1 + ""} activeClassName={tabActiveClassName}>
                 {item}
             </TabHeader>
         });

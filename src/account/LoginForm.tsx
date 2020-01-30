@@ -9,9 +9,11 @@ import { GuiButton, GuiRadio, GuiInput, IFieldState, ValidationTrigger, GuiValid
 import RouteComponent, { RouteComponentProps } from "../RouteComponent";
 import Socials from "./Socials";
 import * as Immutable from "immutable";
+import styled from "styled-components";
+import theme from "../theme";
 
 interface ILoginFormProps extends RouteComponentProps {
-    messageId: string;
+    messageId?: string;
 }
 
 export default class LoginForm extends RouteComponent<ILoginFormProps, IFormState> {
@@ -30,6 +32,7 @@ export default class LoginForm extends RouteComponent<ILoginFormProps, IFormStat
     canHandleActions() {
         return true;
     }
+
     onAction(action: AccountAction) {
         if (action.type === "Account_LoginResponse") {
             this.refs.email.clearError();
@@ -109,40 +112,45 @@ export default class LoginForm extends RouteComponent<ILoginFormProps, IFormStat
         return false;
     };
 
+    private register() {
+        // TODO:
+    }
+
     render() {
-        var form_status_classname = (this.state.status) ? (" form_" + this.state.status) : "";
+        // var form_status_classname = (this.state.status) ? (" form_" + this.state.status) : "";
 
-        return <form className={`signup flyout__content form form_spacy form__group${form_status_classname}`} onSubmit={this._onSubmit}>
-            <div className="form__heading">
-                <FormattedMessage tagName="h3" id={this.props.messageId} />
-            </div>
-
-            <div className="form__line">
+        return <FormContainer onSubmit={this._onSubmit}>
+            <div>
                 <GuiValidatedInput ref="email" id="email" autoFocus
                     placeholder="Your e-mail address"
                     onValidate={this.validateEmail}
                     trigger={ValidationTrigger.blur} />
             </div>
-            <div className="form__line">
+            <div>
                 <GuiValidatedInput ref="password" id="password" type="password"
                     placeholder="Your password"
                     onValidate={this.validatePassword}
                     trigger={ValidationTrigger.blur} />
             </div>
 
-            <div className="form__submit">
-                <section className="gui-button gui-button_yellow">
-                    <button type="submit" className="btn"><FormattedMessage id="@account.login" /></button>
-                </section>
+            <div>
+                <SubmitButton type="submit"><FormattedMessage id="@account.login" /></SubmitButton>
                 {this.renderConnectionErrorIfAny()}
             </div>
 
-            <section className="form__line form__line-right">
+            <LoginDetailsSection>
                 <a href="#" onClick={this.forgotPasswordLink}><FormattedMessage id="@account.forgotPassword?" /></a>
-            </section>
+            </LoginDetailsSection>
 
-            <Socials message="or log in with" />
-        </form>;
+            <LoginDetailsSection>
+                <FormattedMessage id="@account.notamember" />&nbsp;<a href="#" onClick={this.register}><FormattedMessage id="@account.create" /></a>
+            </LoginDetailsSection>
+
+            <SocialsContainer>
+                <FormattedMessage id="@account.orsocials" />
+                <Socials/>
+            </SocialsContainer>
+        </FormContainer>;
     }
 
     protected renderConnectionErrorIfAny() {
@@ -158,3 +166,45 @@ export default class LoginForm extends RouteComponent<ILoginFormProps, IFormStat
         intl: PropTypes.object
     }
 }
+
+const SocialsContainer = styled.div`
+    display: grid;
+    grid-template-columns: auto 1fr;
+    font: ${theme.default_font};
+    color: ${theme.text_color};
+    padding-top: 24px;
+    line-height: 24px;
+`;
+
+const FormContainer = styled.form`
+    margin-top: 25px;
+    display: grid;
+    grid-template-rows: 52px 52px 42px auto auto auto;
+`;
+
+const LoginDetailsSection = styled.section`
+    padding-top:10px;
+    &, a:link {
+        color: ${theme.text_color_secondary};
+        font: ${theme.default_font};
+        text-decoration:none;
+    }
+
+    a:hover {
+        text-decoration:underline;
+    }
+`;
+
+const SubmitButton = styled.button`
+    background: ${theme.button_active};
+    height: 32px;
+    width: 100%;
+    color: ${theme.text_color};
+    border-radius:0;
+    border:none;
+    padding:0;
+    cursor: pointer;
+    &:hover{
+        background: ${theme.button_active.lighten(0.1)};
+    }
+`;

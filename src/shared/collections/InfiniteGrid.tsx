@@ -247,7 +247,7 @@ export default class InfiniteGrid<T = any> extends Component<InfiniteGridProps<T
                 this.onNewDimensions(dimensions);
 
                 //cells with aspect ratio
-                let actualCellWidth = dimensions.width / (this.state.columnCount || 1);
+                let actualCellWidth = dimensions.width / Math.max(this.state.columnCount, 1);
                 let actualCellHeight = this.props.cellHeight * actualCellWidth / this.props.cellWidth;
 
                 return <div className={this.props.className} style={{ width: dimensions.width, height: dimensions.height }}>

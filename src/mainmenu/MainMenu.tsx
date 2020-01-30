@@ -11,7 +11,8 @@ import MainMenuHeader from "./MainMenuHeader";
 import { backend } from "carbon-api";
 import MainMenuProjects from "./MainMenuProjects";
 import MainMenuLogin from "./MainMenuLogin";
-import MainMenuGallery from "./MainMenuGallery";
+// import MainMenuGallery from "./MainMenuGallery";
+import ImportResourceControl from "../import/ImportResourceControl";
 
 var State = Record({
     mainMenuVisible: false,
@@ -45,12 +46,13 @@ export default class MainMenu extends ComponentWithImmutableState<any, any> {
 
     render() {
         let loggedIn = backend.isLoggedIn() && !backend.isGuest();
+        let recentProjects = [];
         return <MainMenuBackground ref={this.menuContainer} className="@mainMenu">
             <MainMenuContainer>
                 <MainMenuHeader></MainMenuHeader>
                 <MainMenuBody>
-                    {loggedIn?<MainMenuProjects/>:<MainMenuLogin/>}
-                    <MainMenuGallery/>
+                    {loggedIn?<MainMenuProjects recentProjects={recentProjects}/>:<MainMenuLogin/>}
+                    <ImportResourceControl/>
                 </MainMenuBody>
             </MainMenuContainer>
         </MainMenuBackground>;

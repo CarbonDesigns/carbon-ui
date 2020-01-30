@@ -62,6 +62,16 @@ export const MainButtonComponent = styled.button`
     outline: 0;
 `;
 
+export const LineBottom = css`
+    position:absolute;
+    height:0.5px;
+    content: " ";
+    left:0;
+    right:0;
+    bottom:0;
+    background: ${theme.separator_color};
+`;
+
 export function arrDown(size, color) {
     return css`
         border-color: transparent ${color} ${color} transparent;

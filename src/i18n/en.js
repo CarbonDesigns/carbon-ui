@@ -299,6 +299,7 @@ export default
         "@menu_tutorials":"Tutorials",
         "@menu_feedback":"Give feedback",
         "@menu_settings":"Settings",
+        "@menu_logout":"LogOut",
 
         "@display.background.preview": "Fill background in preview",
 
@@ -446,6 +447,7 @@ export default
         "@project.editAvatar": "Edit project avatar",
         "@project.settings": "Project settings",
         "@project.new": "+ New project",
+        "@project.recent": "Recent projects",
 
         "@properties.empty": "Nothing is selected",
         "@properties.selectArtboard": "Select active artboard",
@@ -588,14 +590,15 @@ export default
 
         "@animation.header":"Transition",
 
+        "@account.notamember": "Not a member yet?",
         "@account.joinMessage": "Join Carbonium Community!",
         "@account.loginMessage": "Welcome Back!",
         "@account.loginNeededMessage": "Your session has expired",
         "@account.nameHint": "Your name",
         "@account.emailHint": "Your e-mail",
         "@account.passwordHint": "Password (6+ characters)",
-        "@account.login": "Log in",
-        "@account.logout": "Log out",
+        "@account.login": "Sign in",
+        "@account.logout": "Sign out",
         "@account.settings": "Settings",
         "@account.infoitem": "Account info",
         "@account.managepassword": "Manage password",
@@ -607,7 +610,7 @@ export default
         "@account.oldPasswordLabel": "Old Password:",
         "@account.newPasswordLabel": "New Password:",
         "@account.registrationMessage": "You don't have an account yet. It takes just a few seconds to register...",
-        "@account.create": "Create account",
+        "@account.create": "Get a Carbonium ID",
         "@account.noUsername": "Please enter your name",
         "@account.noEmail": "Please enter your email",
         "@account.badEmail": "Please enter a valid email",
@@ -627,6 +630,8 @@ export default
         "@account.sendResetPasswordLink": "Send password reset link",
         "@account.resetPasswordHint": "Please use the form below to reset your password",
         "@account.resetPassword": "Reset password",
+        "@account.orsocials": "Or sign in with: ",
+        "@resource.by": "by ",
 
         "@passwordResetRequested": "We have sent you an email with the password reset link.",
         "@passwordReset": "Your password has been reset.",
@@ -764,7 +769,7 @@ export default
         "@nav.dashboard": "Dashboard",
         "@nav.github": "GitHub",
         "@nav.login": "LogIn",
-        "@login.header": "Sign In",
+        "@login.header": "Sign in to continue",
         "@forgotPassword.header": "Restore password",
 
         "@hero.title" : "Addictive Design Solution",

@@ -162,7 +162,7 @@ export default class RegistrationForm extends Component<IRegistrationFormProps, 
                 {this.renderConnectionErrorIfAny()}
             </div>
 
-            <Socials message="@socialHeader" />
+            <Socials/>
         </RegistrationFormContainer>;
     }
 

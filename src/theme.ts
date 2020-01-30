@@ -20,6 +20,7 @@ export const colors = {
     text_active:accent,
     text_inactive:'#5D7590',
     text_color: '#ffffff',
+    text_color_secondary: '#A0A4AB',
     text_color_alternate: '#000',
     text_color_lowimportance:'#afacac',
     button_default: "#9b9a9b",
@@ -32,6 +33,7 @@ export const colors = {
     workspace_background:'#172131',
     h1font: "400 25px 'ProximaNova-Regular', 'Roboto', sans-serif;",
     h2font: "bold 12px 'Roboto', sans-serif;",
+    h3font: "bold 10px 'Roboto', sans-serif;",
     logo_font: "bold 15px 'Roboto', sans-serif;",
     menu_link_font: "bold 11px 'Proxima Nova', 'Roboto', sans-serif;",
     landing_h1font: "400 55px 'Roboto', sans-serif;",
@@ -40,14 +42,16 @@ export const colors = {
     link_font: "400 10px 'Roboto', sans-serif;",
     tab_font: "400 10px 'Roboto', sans-serif;",
     input_font: "400 12px 'Roboto', sans-serif;",
+    tabs_font: "400 13px 'ProximaNova-Regular', 'Roboto', sans-serif;",
     input_placeholder_color: '#5D7590',
+    search_placeholder_color: "#DADFEA",
     prop_font: "400 9px 'Roboto', sans-serif;",
     button_caption_font: "400 9px 'Roboto', sans-serif;",
     prop_name_font: "400 12px 'Roboto', sans-serif;",
     leadFont: "bold 12pt 'Roboto', sans-serif;",
     link_padding: "8px",
     prop_sub_color: "#394859",
-    input_background: "#1D2636",
+    input_background: "#111A29",
     layer_page_background: "#212121",
     layer_selection_background: "#3498DB",
     layer_hover_background: "#2980B9",
@@ -55,7 +59,8 @@ export const colors = {
     prop_container_background: "#172131",
     inactive_tab_button: '#212121',
     slider_progress: "#30AFFF",
-    slider_track: "#242E3D"
+    slider_track: "#242E3D",
+    alternative_button: "#242E3D"
 }
 
 const theme = createTheme(...Object.keys(colors));

@@ -76,7 +76,7 @@ export default class Search extends Component<SearchProps, SearchState> implemen
         input.select();
     }
     render(){
-        let { placeholder, autoFocus, onQuery, className, children, query, ...other } = this.props;
+        let { placeholder, autoFocus, onQuery, children, query, ...other } = this.props;
         placeholder = placeholder || "@search";
         // const cn = cx('search-field', className);
         return <SearchContainer {...other} >
@@ -94,20 +94,23 @@ export default class Search extends Component<SearchProps, SearchState> implemen
 
 const SearchContainer = styled.div`
     width:100%;
-    padding: ${theme.margin1};
-
     input {
         width:100%;
-        height:27px;
-        border-radius: 4.5px;
-        background-color: ${theme.input_background};
+        height:32px;
+        line-height:32px;
+        border-radius: 0;
+        background-color: ${theme.workspace_background};
         color: ${theme.text_color};
         font: ${theme.input_font};
-        box-shadow: ${theme.input_shadow};
         padding: 0 ${theme.margin1};
 
+        &:focus {
+            background-color: ${theme.input_background};
+            transition: all 0.2s linear;
+        }
+
         &::placeholder {
-            color:${theme.input_placeholder_color};
+            color:${theme.search_placeholder_color};
         }
     }
 `;

@@ -47,6 +47,11 @@ export default {
     path_subtract: icon("path_subtract.svg", 24, 23),
     path_intersect: icon("path_intersect.svg", 23, 22),
 
+    google: icon("google.svg", 20, 12),
+    facebook: icon("facebook.svg", 8, 17),
+    microsoft: icon("microsoft.svg", 14, 14),
+    twitter: icon("twitter.svg", 14, 12),
+
     repeat_menu: icon("repeat.svg", 19, 19),
     repeat_small: icon("repeat.svg", 19, 19),
     symbols_small: icon("symbols_small.svg", 16, 20),
